@@ -1,11 +1,11 @@
 // ============================================================================
-// NEXUS STACK - The Solid Shield Column
-// Implements "Hexagonal String Protection" with interlocking blocks
+// NEXUS STACK V3 - The Vertebrae Column
+// Clean background, heavy physics, interlocking spine system
 // ============================================================================
 
 import { motion, AnimatePresence } from 'motion/react';
-import { NexusSolidBlock } from './BlockPrimitives';
-import { HexGridBackground } from './HexGridBackground';
+import { ShieldCheck } from 'lucide-react';
+import { NexusVertebraBlock } from './BlockPrimitives';
 import type { NexusStackItem } from '../types';
 
 interface NexusStackProps {
@@ -15,82 +15,59 @@ interface NexusStackProps {
 
 export const NexusStack = ({ data, stage }: NexusStackProps) => {
   const activeBlocks = data.slice(0, stage);
-  const glowIntensity = stage * 4;
-  const glowOpacity = stage * 0.1;
+  const isComplete = stage >= data.length;
 
   return (
     <div className="relative flex flex-col justify-end items-center">
-      {/* 1. Hexagonal Force Field Background */}
-      <div 
-        className="absolute inset-0 border border-nexus-structure/30 overflow-hidden transition-all duration-1000"
-        style={{
-          background: `radial-gradient(circle at bottom center, rgba(40, 231, 162, ${stage * 0.05}) 0%, transparent 70%)`
-        }}
-      >
-        <HexGridBackground stage={stage} maxStages={data.length} />
+      
+      {/* Clean Background (No blurry noise) */}
+      <div className="absolute inset-0 bg-[#050a07] border border-white/5 overflow-hidden">
+        {/* Subtle Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:2rem_2rem]" />
       </div>
 
-      {/* Ambient Top Glow */}
-      <motion.div 
-        className="absolute inset-0 pointer-events-none"
-        animate={{ 
-          boxShadow: `inset 0 -100px 100px -100px rgba(40, 231, 162, ${stage * 0.08})`
-        }}
-      />
-
-      {/* 2. The Solid Protection Stack */}
-      <motion.div 
-        className="relative w-72 pb-12 z-10 flex flex-col-reverse min-h-[350px]"
-        animate={{
-          filter: `drop-shadow(0 0 ${glowIntensity}px rgba(40, 231, 162, ${glowOpacity}))`
-        }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* The Vertical Spine / String */}
-        <motion.div 
-          className="absolute left-1/2 bottom-12 w-[2px] bg-gradient-to-t from-nexus-green/50 to-transparent -translate-x-1/2 z-0"
-          initial={{ height: 0 }}
-          animate={{ height: `${Math.min(stage * 16.6, 100)}%` }}
-          transition={{ duration: 0.5 }}
-        />
+      {/* The Solid Vertebrae Stack */}
+      <div className="relative w-72 pb-12 z-10 flex flex-col-reverse min-h-[350px]">
+        
+        {/* The Central Spine (Static reference line) */}
+        <div className="absolute left-1/2 bottom-12 top-0 w-[1px] bg-nexus-green/10 -translate-x-1/2 z-0" />
 
         {/* The Interlocking Blocks */}
         <AnimatePresence mode="popLayout">
           {activeBlocks.map((block, index) => (
-            <NexusSolidBlock 
+            <NexusVertebraBlock 
               key={block.id} 
               data={block}
               index={index}
+              isNew={index === stage - 1}
             />
           ))}
         </AnimatePresence>
 
-        {/* The Base Foundation */}
-        <motion.div 
-          className="absolute bottom-10 left-0 right-0 h-1 bg-nexus-green/50 blur-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: stage > 0 ? 1 : 0 }}
-        />
+        {/* Baseplate */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-48 h-1 bg-nexus-green shadow-[0_0_20px_rgba(40,231,162,0.5)] rounded-full" />
 
-        {/* Shield Indicator at max capacity */}
+        {/* Shield Active Badge */}
         <AnimatePresence>
-          {stage >= data.length && (
+          {isComplete && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-nexus-green/10 border border-nexus-green/50 text-nexus-green text-[9px] font-mono tracking-widest uppercase"
+              className="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-nexus-green/10 border border-nexus-green text-nexus-green text-[9px] font-mono tracking-widest uppercase flex items-center gap-2"
             >
+              <ShieldCheck className="w-3 h-3" />
               SHIELD ACTIVE
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* Floor Label */}
-      <div className="absolute bottom-0 w-full text-center border-t border-nexus-structure pt-3">
-        <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green/70 uppercase">
-          Hexagonal Shield (v2.0)
+      <div className="absolute bottom-0 w-full text-center border-t border-nexus-green/20 pt-3">
+        <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green uppercase flex items-center justify-center gap-2">
+          <ShieldCheck className="w-3 h-3" />
+          Nexus Vertebrae (v2.0)
         </span>
       </div>
     </div>

@@ -3,5 +3,11 @@ export { ForensicHeader } from './ForensicHeader';
 export { LegacyStack } from './LegacyStack';
 export { NexusStack } from './NexusStack';
 export { HexGridBackground } from './HexGridBackground';
-export { LegacyBlock, NexusBlock, NexusSolidBlock, CollapsedRubble } from './BlockPrimitives';
+export { 
+  LegacyBlock, 
+  NexusBlock, 
+  NexusSolidBlock, 
+  NexusVertebraBlock,
+  CollapsedRubble 
+} from './BlockPrimitives';
 

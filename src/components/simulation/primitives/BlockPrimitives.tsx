@@ -1,8 +1,7 @@
 // ============================================================================
-// BLOCK PRIMITIVES - Individual block designs for stacks
+// BLOCK PRIMITIVES V3 - Heavy Physics & Vertebrae System
 // LegacyBlock: The "Rust" aesthetic (decaying, shaking)
-// NexusBlock: The "Crystal" aesthetic (stable, glowing) - LEGACY
-// NexusSolidBlock: The "Shield Wall" aesthetic (interlocking, solid)
+// NexusVertebraBlock: The "Spine" aesthetic (interlocking, solidifying)
 // CollapsedRubble: Digital fragmentation display
 // ============================================================================
 
@@ -26,6 +25,7 @@ export const LegacyBlock = ({ data, shakeLevel }: LegacyBlockProps) => {
 
   return (
     <motion.div
+      layout
       initial={{ y: -50, opacity: 0 }}
       animate={{
         y: 0,
@@ -40,7 +40,7 @@ export const LegacyBlock = ({ data, shakeLevel }: LegacyBlockProps) => {
         rotate: { repeat: isShaking ? Infinity : 0, duration: 0.15 },
       }}
       className={cn(
-        'w-full h-14 flex items-center justify-between px-4 border',
+        'w-full h-14 flex items-center justify-between px-4 border mb-1',
         'bg-[#111] border-[#333] text-nexus-noise',
         isShaking && 'border-red-500/50 text-red-400 bg-red-950/10',
       )}
@@ -51,7 +51,6 @@ export const LegacyBlock = ({ data, shakeLevel }: LegacyBlockProps) => {
       </div>
       
       <div className="flex items-center gap-2">
-        {/* Risk indicator */}
         <span className={cn(
           'text-[8px] font-mono uppercase px-1.5 py-0.5 border',
           data.risk === 'CRITICAL' && 'border-red-500/50 text-red-400',
@@ -67,7 +66,94 @@ export const LegacyBlock = ({ data, shakeLevel }: LegacyBlockProps) => {
   );
 };
 
-// --- NEXUS BLOCK (The Crystal) ---
+// --- NEXUS VERTEBRA BLOCK (V3 - Heavy Physics) ---
+interface NexusVertebraBlockProps {
+  data: NexusStackItem;
+  index: number;
+  isNew: boolean;
+}
+
+export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockProps) => {
+  const isBottomBlock = index === 0;
+  
+  return (
+    <motion.div
+      layout
+      // PHYSICS: Drop from sky (-400px) with heavy damping for "Thud" feel
+      initial={{ y: -400, opacity: 0, scale: 0.9 }}
+      animate={{ y: 0, opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 200, 
+        damping: 20, 
+        mass: 1.5 
+      }}
+      className="relative z-10"
+      style={{ zIndex: index }}
+    >
+      {/* The Block Itself (Armor Plate) */}
+      <div className={cn(
+        "relative h-14 w-full flex items-center justify-between px-6 transition-colors duration-500",
+        // Visual Logic: New blocks are bright, older blocks harden into dark armor
+        isNew ? "bg-[#0f1f15] border-nexus-green" : "bg-[#050a07] border-nexus-green/30",
+        "border-x border-t",
+        isBottomBlock && "border-b" // Only bottom block has bottom border
+      )}>
+        
+        {/* Left Indicator */}
+        <div className="flex items-center gap-4">
+          <Hexagon className={cn(
+            "w-3 h-3 transition-colors duration-500",
+            isNew ? "text-nexus-green fill-nexus-green" : "text-nexus-green/40 fill-transparent"
+          )} />
+          <span className={cn(
+            "text-[10px] font-bold tracking-wider transition-colors duration-500",
+            isNew ? "text-white" : "text-white/60"
+          )}>
+            {data.label}
+          </span>
+        </div>
+
+        {/* Right Status */}
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-mono text-nexus-green/60">{data.status}</span>
+          <Lock className={cn(
+            "w-3 h-3 transition-colors duration-500",
+            isNew ? "text-nexus-green animate-pulse" : "text-nexus-green/40"
+          )} />
+        </div>
+
+        {/* The Spine Connector (Through the block) */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-nexus-green/10 -translate-x-1/2">
+          {/* Active Energy Pulse */}
+          {isNew && (
+            <motion.div 
+              className="w-full bg-nexus-green"
+              initial={{ height: 0 }}
+              animate={{ height: '100%' }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            />
+          )}
+        </div>
+
+        {/* The Interlock Node (Diamond connector) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#050a07] border border-nexus-green rotate-45 z-20 flex items-center justify-center">
+          <div className={cn(
+            "w-1 h-1 bg-nexus-green rounded-full transition-all duration-500",
+            isNew ? "opacity-100 shadow-[0_0_5px_#28E7A2]" : "opacity-40"
+          )} />
+        </div>
+      </div>
+      
+      {/* Side Shielding */}
+      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-nexus-green/20 to-transparent" />
+      <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-nexus-green/20 to-transparent" />
+    </motion.div>
+  );
+};
+
+// --- LEGACY NEXUS BLOCK (Glass style - kept for compatibility) ---
 interface NexusBlockProps {
   data: NexusStackItem;
   index?: number;
@@ -106,7 +192,7 @@ export const NexusBlock = ({ data, index = 0 }: NexusBlockProps) => {
   );
 };
 
-// --- NEXUS SOLID BLOCK (The Shield Wall) ---
+// --- LEGACY SOLID BLOCK (kept for compatibility) ---
 interface NexusSolidBlockProps {
   data: NexusStackItem;
   index: number;
@@ -124,31 +210,23 @@ export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
       transition={{ type: 'spring', stiffness: 200, delay: index * 0.05 }}
       className={cn(
         'relative w-full h-14 flex items-center justify-between px-6',
-        // Solid background instead of glass
         'bg-[#0a0f0d]',
-        // Border logic: interlock by removing bottom border except for base
         'border-x-2 border-t-2 border-nexus-green/40',
         isBottomBlock && 'border-b-2',
         'shadow-[inset_0_0_20px_rgba(40,231,162,0.05)]'
       )}
       style={{ zIndex: 10 - index }}
     >
-      {/* Hex Connection Node (The String Node) */}
       <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#0a0f0d] border border-nexus-green flex items-center justify-center rotate-45 z-20">
         <div className="w-1.5 h-1.5 bg-nexus-green" />
       </div>
 
-      {/* Left Content */}
       <div className="flex items-center gap-4">
         <Hexagon className="w-4 h-4 text-nexus-green fill-nexus-green/20" />
-        <span className="text-[10px] font-bold tracking-wider text-white">
-          {data.label}
-        </span>
+        <span className="text-[10px] font-bold tracking-wider text-white">{data.label}</span>
       </div>
 
-      {/* Right Content */}
       <div className="flex items-center gap-2">
-        {/* Progress bar */}
         <div className="h-1 w-12 bg-nexus-green/10 overflow-hidden rounded-full">
           <motion.div 
             className="h-full bg-nexus-green"
@@ -160,7 +238,6 @@ export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
         <Lock className="w-3 h-3 text-nexus-green" />
       </div>
       
-      {/* Side Glow Bars - Force Field effect */}
       <div className="absolute inset-y-0 left-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
       <div className="absolute inset-y-0 right-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
     </motion.div>
@@ -214,4 +291,3 @@ export const CollapsedRubble = () => {
     </motion.div>
   );
 };
-
