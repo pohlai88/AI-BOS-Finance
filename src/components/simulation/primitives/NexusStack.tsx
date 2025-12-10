@@ -1,6 +1,5 @@
 // ============================================================================
-// NEXUS STACK V6 - Inverted Pyramid (V-Shape)
-// From Vulnerable Origin → To Unshakable Canopy
+// NEXUS STACK V6 - Optimized for Performance
 // ============================================================================
 
 import { memo } from 'react';
@@ -30,41 +29,26 @@ export const NexusStack = memo(function NexusStack({ data, stage }: NexusStackPr
 
   return (
     <div className="relative flex flex-col justify-end items-center">
-      {/* Environment */}
       <div className="absolute inset-0 bg-[#020403] border border-white/5 overflow-hidden">
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nexus-green/5 to-transparent" />
       </div>
 
-      {/* Exoskeleton */}
       <VShapeExoskeleton progress={progress} />
 
-      {/* Stack Container */}
       <div className="relative w-full pb-12 z-10 flex flex-col-reverse items-center min-h-[350px]">
-        {/* Central Spine */}
         <div className="absolute left-1/2 bottom-12 top-0 w-1.5 bg-[#0f1f15] border-x border-nexus-green/20 -translate-x-1/2 z-0" />
 
-        {/* Blocks */}
         <AnimatePresence mode="popLayout">
           {activeBlocks.map((block, index) => (
-            <NexusInvertedBlock
-              key={block.id}
-              data={block}
-              index={index}
-              isNew={index === clampedStage - 1}
-            />
+            <NexusInvertedBlock key={block.id} data={block} index={index} isNew={index === clampedStage - 1} />
           ))}
         </AnimatePresence>
 
-        {/* Singularity Point */}
         <SingularityPoint stage={clampedStage} />
 
-        {/* Completion Badge */}
-        <AnimatePresence>
-          {isComplete && <CompletionBadge />}
-        </AnimatePresence>
+        <AnimatePresence>{isComplete && <CompletionBadge />}</AnimatePresence>
       </div>
 
-      {/* Footer */}
       <div className="absolute bottom-0 w-full text-center border-t border-nexus-green/20 pt-3">
         <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green uppercase flex items-center justify-center gap-2">
           <Hexagon className="w-3 h-3" />
@@ -78,11 +62,7 @@ export const NexusStack = memo(function NexusStack({ data, stage }: NexusStackPr
 // ============================================================================
 // SINGULARITY POINT
 // ============================================================================
-interface SingularityPointProps {
-  stage: number;
-}
-
-const SingularityPoint = memo(function SingularityPoint({ stage }: SingularityPointProps) {
+const SingularityPoint = memo(function SingularityPoint({ stage }: { stage: number }) {
   return (
     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
       <div className="w-4 h-4 bg-nexus-green rotate-45 shadow-[0_0_30px_#28E7A2]" />
@@ -101,6 +81,7 @@ const CompletionBadge = memo(function CompletionBadge() {
       initial={{ opacity: 0, scale: 0.8, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'tween', duration: 0.3 }}
       className="absolute -top-16 left-1/2 -translate-x-1/2"
     >
       <div className="px-4 py-1.5 bg-[#050a07] border border-nexus-green shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
@@ -114,7 +95,7 @@ const CompletionBadge = memo(function CompletionBadge() {
 });
 
 // ============================================================================
-// NEXUS INVERTED BLOCK
+// NEXUS INVERTED BLOCK (Optimized)
 // ============================================================================
 interface NexusInvertedBlockProps {
   data: NexusStackItem;
@@ -122,55 +103,44 @@ interface NexusInvertedBlockProps {
   isNew: boolean;
 }
 
-const NexusInvertedBlock = memo(function NexusInvertedBlock({
-  data,
-  index,
-  isNew,
-}: NexusInvertedBlockProps) {
+const NexusInvertedBlock = memo(function NexusInvertedBlock({ data, index, isNew }: NexusInvertedBlockProps) {
   const currentWidth = WIDTH_CLASSES[Math.min(index, WIDTH_CLASSES.length - 1)];
-  const wobbleAmount = Math.max(0, 3 - index);
 
   return (
     <motion.div
-      layout
-      initial={{ y: -400, opacity: 0, scale: 0.5 }}
-      animate={{
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        x: isNew && wobbleAmount > 0 ? [-wobbleAmount * 2, wobbleAmount * 2, 0] : 0,
-      }}
-      exit={{ opacity: 0, y: -50 }}
+      initial={{ opacity: 0, y: -200 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -30 }}
       transition={{
         type: 'spring',
-        stiffness: 300,
-        damping: 30 + index * 5,
-        mass: 1 + index * 0.2,
+        stiffness: 200,
+        damping: 25 + index * 3,
+        mass: 0.8 + index * 0.1,
       }}
       className={cn(
-        'relative z-10 flex items-center justify-between px-6 overflow-hidden h-14',
+        'relative flex items-center justify-between px-6 overflow-hidden h-14',
         currentWidth,
         'bg-[#030805]',
         'border-t border-t-white/10 border-b border-b-black/80',
         'border-x border-x-nexus-green/30',
+        'will-change-transform',
         isNew && 'shadow-[0_-5px_20px_rgba(40,231,162,0.15)]',
       )}
       style={{ zIndex: index }}
     >
-      {/* Texture */}
-      <NoiseTexture />
+      {/* CSS gradient texture instead of SVG */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4px_4px]" />
 
-      {/* Content */}
       <div className="relative z-10 flex items-center gap-4">
         <div
           className={cn(
-            'w-2 h-2 rotate-45 transition-colors duration-500',
-            isNew ? 'bg-white shadow-[0_0_10px_white]' : 'bg-nexus-green',
+            'w-2 h-2 rotate-45 transition-colors duration-300',
+            isNew ? 'bg-white shadow-[0_0_8px_white]' : 'bg-nexus-green',
           )}
         />
         <span
           className={cn(
-            'text-[10px] font-bold tracking-wider transition-colors duration-500 truncate',
+            'text-[10px] font-bold tracking-wider transition-colors duration-300 truncate',
             isNew ? 'text-white' : 'text-nexus-green/80',
           )}
         >
@@ -179,13 +149,10 @@ const NexusInvertedBlock = memo(function NexusInvertedBlock({
       </div>
 
       <div className="relative z-10 flex items-center gap-2">
-        <span className="text-[9px] font-mono text-nexus-green/40 hidden sm:block">
-          {data.status}
-        </span>
+        <span className="text-[9px] font-mono text-nexus-green/40 hidden sm:block">{data.status}</span>
         <Lock className="w-3 h-3 text-nexus-green/60" />
       </div>
 
-      {/* Struts */}
       <div className="absolute top-0 right-0 w-[1px] h-full bg-nexus-green/10 -skew-x-12 origin-top" />
       <div className="absolute top-0 left-0 w-[1px] h-full bg-nexus-green/10 skew-x-12 origin-top" />
     </motion.div>
@@ -193,21 +160,7 @@ const NexusInvertedBlock = memo(function NexusInvertedBlock({
 });
 
 // ============================================================================
-// NOISE TEXTURE
-// ============================================================================
-const NoiseTexture = memo(function NoiseTexture() {
-  return (
-    <div
-      className="absolute inset-0 opacity-20 pointer-events-none"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      }}
-    />
-  );
-});
-
-// ============================================================================
-// V-SHAPE EXOSKELETON
+// V-SHAPE EXOSKELETON (Optimized)
 // ============================================================================
 interface VShapeExoskeletonProps {
   progress: number;
@@ -216,78 +169,50 @@ interface VShapeExoskeletonProps {
 const VShapeExoskeleton = memo(function VShapeExoskeleton({ progress }: VShapeExoskeletonProps) {
   const clamped = Math.max(0, Math.min(progress, 1));
   const showCanopy = clamped > 0.8;
-  const showNodes = clamped > 0.5;
 
   return (
     <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
-      {/* V-Shape Struts */}
       <motion.div
-        className="absolute bottom-12 left-1/2 w-0.5 bg-gradient-to-t from-nexus-green/40 to-transparent origin-bottom"
-        style={{ height: 350, transform: 'translateX(-50%) rotate(-25deg)' }}
-        initial={{ scaleY: 0 }}
+        className="absolute bottom-12 left-1/2 w-0.5 bg-gradient-to-t from-nexus-green/40 to-transparent origin-bottom will-change-transform"
+        style={{ height: 350 }}
+        initial={{ scaleY: 0, rotate: -25, x: '-50%' }}
         animate={{ scaleY: clamped }}
-        transition={{ duration: 0.5 }}
+        transition={{ type: 'tween', duration: 0.4 }}
       />
       <motion.div
-        className="absolute bottom-12 left-1/2 w-0.5 bg-gradient-to-t from-nexus-green/40 to-transparent origin-bottom"
-        style={{ height: 350, transform: 'translateX(-50%) rotate(25deg)' }}
-        initial={{ scaleY: 0 }}
+        className="absolute bottom-12 left-1/2 w-0.5 bg-gradient-to-t from-nexus-green/40 to-transparent origin-bottom will-change-transform"
+        style={{ height: 350 }}
+        initial={{ scaleY: 0, rotate: 25, x: '-50%' }}
         animate={{ scaleY: clamped }}
-        transition={{ duration: 0.5 }}
+        transition={{ type: 'tween', duration: 0.4 }}
       />
 
-      {/* Canopy Field */}
-      <motion.div
-        className="absolute top-24 h-12 border-t border-nexus-green/40 bg-nexus-green/5 blur-xl"
-        initial={{ opacity: 0, width: 0 }}
-        animate={{
-          opacity: showCanopy ? 0.5 : 0,
-          width: showCanopy ? 384 : 0,
-        }}
-        transition={{ duration: 1 }}
-      />
-
-      {/* Corner Nodes */}
-      <AnimatePresence>
-        {showNodes && (
-          <>
-            <motion.div
-              className="absolute bottom-12 left-[15%] w-2 h-2 rotate-45 bg-nexus-green/60"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ delay: 0.3 }}
-            />
-            <motion.div
-              className="absolute bottom-12 right-[15%] w-2 h-2 rotate-45 bg-nexus-green/60"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ delay: 0.3 }}
-            />
-          </>
-        )}
-      </AnimatePresence>
+      {showCanopy && (
+        <motion.div
+          className="absolute top-24 h-12 bg-nexus-green/10 blur-xl will-change-opacity"
+          initial={{ opacity: 0, width: 0 }}
+          animate={{ opacity: 0.5, width: 384 }}
+          transition={{ duration: 0.6 }}
+        />
+      )}
     </div>
   );
 });
 
 // ============================================================================
-// SHOCKWAVE EFFECT
+// SHOCKWAVE EFFECT (Optimized)
 // ============================================================================
-interface ShockwaveEffectProps {
-  trigger: number;
-}
+const ShockwaveEffect = memo(function ShockwaveEffect({ trigger }: { trigger: number }) {
+  if (trigger === 0) return null;
 
-const ShockwaveEffect = memo(function ShockwaveEffect({ trigger }: ShockwaveEffectProps) {
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
       <motion.div
         key={trigger}
-        className="w-20 h-20 border border-nexus-green/50 rounded-full"
-        initial={{ scale: 0.1, opacity: 1 }}
+        className="w-16 h-16 border border-nexus-green/50 rounded-full will-change-transform"
+        initial={{ scale: 0.2, opacity: 0.8 }}
         animate={{ scale: 2, opacity: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
       />
     </div>
   );
