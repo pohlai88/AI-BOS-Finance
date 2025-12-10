@@ -1,26 +1,24 @@
-import type { Preview } from '@storybook/react-vite';
-import '../src/styles/globals.css'; // Import Forensic Design Tokens
+import type { Preview } from '@storybook/react';
+import '../src/styles/globals.css'; // 🔌 CRITICAL: Inject your Forensic Design Tokens
 
 const preview: Preview = {
   parameters: {
-    // Dark background to match Forensic aesthetic
-    backgrounds: {
-      default: 'nexus-void',
-      values: [
-        { name: 'nexus-void', value: '#0a0a0a' },
-        { name: 'nexus-matter', value: '#111111' },
-        { name: 'white', value: '#ffffff' },
-      ],
-    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
     },
-    a11y: {
-      test: 'todo',
+    // Force the "Void" background in Storybook so components don't look broken on white
+    backgrounds: {
+      default: 'nexus-void',
+      values: [
+        { name: 'nexus-void', value: '#000000' },
+        { name: 'nexus-matter', value: '#0A0A0A' },
+      ],
     },
+    // Center components for easier inspection
+    layout: 'centered',
   },
 };
 
