@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { cn } from '@/lib/utils';
 
@@ -33,7 +33,7 @@ export const Header = ({
         {/* BRAND IDENTITY */}
         <div className="flex items-center gap-3 cursor-pointer group" onClick={onCanonClick}>
           {/* Logo Component */}
-          <NexusCanonLogo variant="icon" size="sm" />
+          <NexusIcon size="sm" />
           <div className="hidden md:block">
             <h1 className="text-sm font-medium text-white tracking-tight group-hover:text-nexus-green transition-colors">
               NexusCanon

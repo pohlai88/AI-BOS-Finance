@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NexusCanonLogoCircular } from '../NexusCanonLogoCircular';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 
 interface ForensicStripProps {
   code: string;
@@ -21,7 +21,7 @@ export function ForensicClassificationStrip({ code, status = 'ACTIVE' }: Forensi
             className="flex items-center gap-2 group hover:opacity-80 transition-opacity"
             title="Return to Home"
           >
-            <NexusCanonLogoCircular size="sm" />
+            <NexusIcon size="sm" />
           </Link>
           <div className="w-[1px] h-3 bg-[#333]" />
           <span className="font-mono text-[10px] md:text-[12px] tracking-[0.15em] text-[#666] uppercase">

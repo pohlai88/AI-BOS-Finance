@@ -9,7 +9,7 @@ import {
   Lock,
   Link2,
 } from 'lucide-react';
-import { NexusCanonLogo } from '../../NexusCanonLogo';
+import { NexusIcon } from '../nexus/NexusIcon';
 
 export const CanonMapping = () => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
@@ -134,7 +134,7 @@ export const CanonMapping = () => {
           >
             {!isLocked ? (
               <div className="group-hover:scale-110 transition-transform duration-300">
-                <NexusCanonLogo variant="icon" size="xl" />
+                <NexusIcon size="lg" />
               </div>
             ) : (
               <Lock className="w-12 h-12 text-emerald-400" />

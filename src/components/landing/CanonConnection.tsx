@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Database, ShieldCheck, Lock, Search } from 'lucide-react';
-import { NexusCanonLogo } from '../../NexusCanonLogo';
+import { NexusIcon } from '../nexus/NexusIcon';
 
 const DATA_ASSETS = [
   { id: 'src_1', label: 'SALES PIPELINE', source: 'SALESFORCE', connectsTo: 'std_1' },
@@ -180,7 +180,7 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                   }
                   transition={{ duration: 0.5, repeat: hoveredId ? Infinity : 0 }}
                 >
-                  <NexusCanonLogo variant="icon" size="xl" />
+                  <NexusIcon size="lg" />
                 </motion.div>
               </div>
 

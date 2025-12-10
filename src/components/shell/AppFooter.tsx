@@ -1,5 +1,5 @@
 import { Github, Twitter, Linkedin } from 'lucide-react';
-import { NexusCanonLogoCircular } from '../../NexusCanonLogoCircular';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 
 export function AppFooter() {
   return (
@@ -7,7 +7,7 @@ export function AppFooter() {
       <div className="px-6 py-4 flex items-center justify-between">
         {/* LEFT: Brand + Tagline */}
         <div className="flex items-center gap-4">
-          <NexusCanonLogoCircular size="sm" />
+          <NexusIcon size="sm" />
           <span className="font-mono text-[#888] text-[10px] uppercase tracking-widest">
             NexusCanon
           </span>

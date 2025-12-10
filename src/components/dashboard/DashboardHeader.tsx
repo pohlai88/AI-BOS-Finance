@@ -1,4 +1,4 @@
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { Search, Bell, Settings } from 'lucide-react';
 
 export function DashboardHeader() {

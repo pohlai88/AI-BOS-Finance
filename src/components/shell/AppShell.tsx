@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Database, Settings as SettingsIcon } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { NexusCanonLogoCircular } from '../../NexusCanonLogoCircular';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { CommandPalette } from '../landing/CommandPalette';
 import { MiniSidebar } from './MiniSidebar';
 import { AppFooter } from './AppFooter';
@@ -52,7 +52,7 @@ export function AppShell({ children }: AppShellProps) {
           <div className="flex items-center justify-between px-6 py-3">
             {/* LEFT: Logo (no nav links, they're in sidebar now) */}
             <button onClick={() => navigate('/')} className="flex items-center gap-3 group">
-              <NexusCanonLogoCircular variant="icon" size="sm" />
+              <NexusIcon size="sm" />
               <span className="font-mono text-[#888] group-hover:text-[#28E7A2] text-[11px] tracking-widest uppercase transition-colors">
                 NexusCanon
               </span>

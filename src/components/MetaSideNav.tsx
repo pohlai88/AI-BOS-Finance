@@ -20,7 +20,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 
 interface MetaSideNavProps {
   isOpen: boolean;
@@ -213,7 +213,7 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
 
         {/* Header with Logo */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-[#1F1F1F] shrink-0">
-          <NexusCanonLogo variant="icon" size="sm" />
+          <NexusIcon size="sm" />
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center hover:bg-[#1F1F1F] rounded transition-colors"

@@ -9,7 +9,7 @@ import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AlertTriangle, ArrowLeft, Zap, Power, ShieldAlert } from 'lucide-react';
 import { motion, useMotionValue } from 'motion/react';
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { EngineProvider, HighVoltageSystem } from '../components/auth/IntegratedEngine';
 
 // --- SUB-COMPONENT: HAZARD STRIPE ---
@@ -125,7 +125,7 @@ export const ResetPasswordPage = () => {
                     <span>{isSuccess ? 'POWER FLUSH COMPLETE' : 'LOCKOUT PROTOCOL ACTIVE'}</span>
                   </div>
                 </div>
-                <NexusCanonLogo variant="icon" size="sm" />
+                <NexusIcon size="sm" />
               </div>
             </div>
 

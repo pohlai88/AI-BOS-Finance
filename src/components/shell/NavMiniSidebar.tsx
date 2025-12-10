@@ -5,7 +5,7 @@
 
 import { Home, Database, Settings, BookOpen } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { NexusCanonLogoCircular } from '../../NexusCanonLogoCircular';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 
 export function NavMiniSidebar() {
   const location = useLocation();
@@ -21,7 +21,7 @@ export function NavMiniSidebar() {
     <div className="fixed left-0 top-0 bottom-0 w-16 bg-black border-r border-[#1F1F1F] flex flex-col items-center py-6 z-40">
       {/* Logo at top */}
       <Link to="/" className="mb-8 hover:opacity-70 transition-opacity">
-        <NexusCanonLogoCircular size="sm" />
+        <NexusIcon size="sm" />
       </Link>
 
       {/* Navigation icons */}

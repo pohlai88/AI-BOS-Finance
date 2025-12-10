@@ -10,7 +10,7 @@ import {
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MetaSideNav } from '../MetaSideNav';
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { SetupCompanion } from '../sys/SetupCompanion';
 
 interface MetaAppShellProps {
@@ -43,7 +43,7 @@ export function MetaAppShell({ children }: MetaAppShellProps) {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => navigate('/dashboard')}
           >
-            <NexusCanonLogo variant="icon" size="sm" />
+            <NexusIcon size="sm" />
             <span className="font-mono text-sm tracking-widest text-zinc-300 uppercase hidden md:block">
               Nexus<span className="text-zinc-600">Canon</span>
             </span>

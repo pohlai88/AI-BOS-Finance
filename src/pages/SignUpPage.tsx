@@ -8,7 +8,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Shield, ArrowRight, Zap, Activity, Database, Cpu } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform } from 'motion/react';
-import { NexusCanonLogo } from '@/components/NexusCanonLogo';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import {
   EngineProvider,
   ReactorCore,
@@ -484,7 +484,7 @@ export const SignUpPage = () => {
                 {/* HEADER */}
                 <div className="text-center mb-8">
                   <Link to="/" className="inline-block mb-6 hover:opacity-70 transition-opacity">
-                    <NexusCanonLogo variant="icon" size="md" />
+                    <NexusIcon size="md" />
                   </Link>
                   <div className="space-y-1">
                     <motion.div
