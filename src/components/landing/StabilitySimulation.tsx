@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AlertTriangle, ShieldCheck, Activity, Terminal } from 'lucide-react';
+import { AlertTriangle, Activity, Terminal } from 'lucide-react';
 import { cn } from '@/lib/utils'; // Ensure you have a class merger
 
 // --- SCHEMA-DRIVEN DATA (Narrative, not random) ---
@@ -119,7 +119,7 @@ export default function StabilitySimulation() {
           <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10">
             {!isCollapsed ? (
               <AnimatePresence>
-                {LEGACY_STACK.slice(0, stage).map((block, i) => (
+                {LEGACY_STACK.slice(0, stage).map((block) => (
                   <LegacyBlock key={block.id} data={block} shakeLevel={shakeLevel} />
                 ))}
               </AnimatePresence>
@@ -144,7 +144,7 @@ export default function StabilitySimulation() {
           {/* The Stack */}
           <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10">
             <AnimatePresence>
-              {NEXUS_STACK.slice(0, stage).map((block, i) => (
+              {NEXUS_STACK.slice(0, stage).map((block) => (
                 <NexusBlock key={block.id} data={block} />
               ))}
             </AnimatePresence>
