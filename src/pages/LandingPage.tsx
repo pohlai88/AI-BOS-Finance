@@ -8,7 +8,7 @@ import { TruthBar } from '@/components/landing/TruthBar';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { LandingFooter } from '@/components/landing/LandingFooter';
-import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap, Layers, Search } from 'lucide-react';
 
 export const LandingPage = ({
   onTryIt,
@@ -36,7 +36,10 @@ export const LandingPage = ({
         <section id="lineage" className="py-32 px-6">
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <span className="nexus-label text-nexus-green">Structural Integrity Protocol</span>
+              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+                <Layers className="w-3 h-3" />
+                Structural Integrity Protocol
+              </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 The Inevitable Divergence
               </h2>
@@ -56,8 +59,11 @@ export const LandingPage = ({
         >
           <div className="max-w-7xl mx-auto">
             <div className="mb-16">
-              <span className="nexus-label">Core Capabilities</span>
-              <h2 className="text-4xl font-medium tracking-tighter text-white mt-2">
+              <span className="nexus-label text-nexus-green flex items-center gap-2">
+                <ShieldCheck className="w-3 h-3" />
+                Core Capabilities
+              </span>
+              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mt-2">
                 Forensic Architecture
               </h2>
             </div>
@@ -107,7 +113,7 @@ export const LandingPage = ({
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 The Truth Engine
               </h2>
-              <p className="text-nexus-noise max-w-2xl mx-auto">
+              <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Watch transactions flow through our Glass Box audit system. 
                 Every decision is traced. Every rule is visible. Zero hallucinations.
               </p>
@@ -122,11 +128,14 @@ export const LandingPage = ({
         <section id="query" className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/30">
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <span className="nexus-label text-nexus-green">Interactive Query Interface</span>
+              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+                <Search className="w-3 h-3" />
+                Interactive Query Interface
+              </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 Ask the System
               </h2>
-              <p className="text-nexus-noise max-w-2xl mx-auto">
+              <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Select a transaction and see the full logic traversal path. 
                 Click "Show Proof" to reveal exactly how the verdict was reached.
               </p>
@@ -138,7 +147,7 @@ export const LandingPage = ({
         </section>
 
         {/* SECTION 5: FINAL CTA - The Crystallization Event */}
-        <section className="py-24 px-6 border-t border-nexus-structure relative overflow-hidden bg-[#020403]">
+        <section className="py-24 px-6 border-t border-nexus-structure relative overflow-hidden bg-nexus-void">
           {/* Background Radial for Depth */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)]" />
 
