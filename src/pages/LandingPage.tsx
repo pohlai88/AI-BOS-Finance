@@ -1,14 +1,14 @@
 import { HeroSection } from '@/components/landing/HeroSection';
 import { Header } from '@/components/landing/Header';
 import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
-import { CanonMapping } from '@/components/landing/CanonMapping';
+import { CrystallizationSphere } from '@/components/landing/CrystallizationSphere';
 import { StabilitySimulation } from '@/components/simulation';
 import { LivingLens } from '@/components/landing/LivingLens';
 import { TruthBar } from '@/components/landing/TruthBar';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { LandingFooter } from '@/components/landing/LandingFooter';
-import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap } from 'lucide-react';
 
 export const LandingPage = ({
   onTryIt,
@@ -137,29 +137,39 @@ export const LandingPage = ({
           </div>
         </section>
 
-        {/* SECTION 5: FINAL CTA - Interactive Crystallization */}
-        <section className="py-16 px-6 border-t border-nexus-structure relative overflow-hidden">
+        {/* SECTION 5: FINAL CTA - The Crystallization Event */}
+        <section className="py-24 px-6 border-t border-nexus-structure relative overflow-hidden bg-[#020403]">
+          {/* Background Radial for Depth */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)]" />
+
           {/* Header */}
-          <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 mb-8">
-            <span className="nexus-label text-nexus-green">Experience the Crystallization</span>
-            <h2 className="text-4xl md:text-6xl font-medium tracking-tighter text-white">
-              Watch Your Ledger <span className="text-nexus-noise">Freeze.</span>
+          <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10 mb-12">
+            <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+              <Zap className="w-4 h-4" />
+              State Transformation Event
+            </span>
+            <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
+              Freeze Your <br/>
+              <span className="text-nexus-noise">Financial Truth.</span>
             </h2>
-            <p className="text-nexus-noise max-w-xl mx-auto text-base">
-              Click the center to crystallize. Once locked, your documents become immutable — forever linked, forever verified.
+            <p className="text-nexus-noise max-w-xl mx-auto text-lg leading-relaxed">
+              Drifting data is a liability. NexusCanon locks your ledger into an 
+              immutable crystalline state, ready for instant audit.
             </p>
           </div>
 
-          {/* Interactive Canon Mapping */}
-          <CanonMapping />
+          {/* THE CRYSTALLIZATION SPHERE */}
+          <div className="relative z-10 -my-12 scale-90 md:scale-100">
+            <CrystallizationSphere />
+          </div>
 
           {/* CTA Buttons */}
-          <div className="flex justify-center gap-4 pt-8 relative z-10">
-            <NexusButton variant="primary" onClick={onTryIt}>
-              LAUNCH SYSTEM
+          <div className="flex flex-col md:flex-row justify-center gap-6 pt-12 relative z-10">
+            <NexusButton variant="primary" onClick={onTryIt} className="w-full md:w-auto h-12 text-base">
+              INITIALIZE PROTOCOL
             </NexusButton>
-            <NexusButton variant="secondary" onClick={onCanonClick} icon={<ArrowRight />}>
-              VIEW DOCUMENTATION
+            <NexusButton variant="secondary" onClick={onCanonClick} icon={<ArrowRight />} className="w-full md:w-auto h-12">
+              READ THE CANON
             </NexusButton>
           </div>
         </section>
