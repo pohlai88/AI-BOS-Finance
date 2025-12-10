@@ -16,6 +16,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
 import RadarDisplay, { RadarConfig, RadarPoint } from './RadarDisplay';
+import { LynxIcon } from '@/components/icons/LynxIcon';
 import { cn } from '@/lib/utils';
 
 interface LogEntry {
@@ -25,53 +26,32 @@ interface LogEntry {
   message: string;
 }
 
-/**
- * Generate organic blob path using sine wave deformation
- * @param center - center point (x,y same)
- * @param radius - base radius
- * @param points - number of points on the blob
- * @param seed - seed for variation (0, 1, 2 for different shapes)
- */
-const generateBlobPath = (center: number, radius: number, points: number, seed: number): string => {
-  const deformations = [
-    [0.15, 0.08, 0.12, 0.05, 0.1, 0.07, 0.11, 0.06],
-    [0.08, 0.14, 0.06, 0.11, 0.09, 0.13, 0.07, 0.1],
-    [0.12, 0.06, 0.1, 0.14, 0.07, 0.09, 0.13, 0.08],
-  ];
-  const deform = deformations[seed % 3];
-  
-  const pathPoints: string[] = [];
-  
-  for (let i = 0; i <= points; i++) {
-    const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
-    const deformAmount = deform[i % deform.length];
-    const r = radius * (1 + deformAmount * Math.sin(angle * 3 + seed));
-    const x = center + r * Math.cos(angle);
-    const y = center + r * Math.sin(angle);
-    
-    if (i === 0) {
-      pathPoints.push(`M ${x.toFixed(2)} ${y.toFixed(2)}`);
-    } else {
-      // Use quadratic curves for smooth organic feel
-      const prevAngle = ((i - 1) / points) * Math.PI * 2 - Math.PI / 2;
-      const midAngle = (angle + prevAngle) / 2;
-      const midR = radius * (1 + deform[(i - 1) % deform.length] * 0.5);
-      const cpX = center + midR * 1.1 * Math.cos(midAngle);
-      const cpY = center + midR * 1.1 * Math.sin(midAngle);
-      pathPoints.push(`Q ${cpX.toFixed(2)} ${cpY.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`);
-    }
-  }
-  
-  pathPoints.push('Z');
-  return pathPoints.join(' ');
-};
-
 interface ThreatRadarProps {
   activeRisks?: number;
   className?: string;
   size?: number;
   showLog?: boolean;
 }
+
+// Emerald green color for Lynx protection
+const LYNX_GREEN = '#28E7A2';
+
+// Generate deterministic particle paths from Lynx (top-left) to center
+const generateLynxParticles = (count: number): Array<{
+  id: number;
+  startX: number;
+  startY: number;
+  delay: number;
+  duration: number;
+}> => {
+  return Array.from({ length: count }).map((_, i) => ({
+    id: i,
+    startX: -200 - (i % 5) * 20, // From top-left (nav area)
+    startY: -300 - (i % 3) * 30,
+    delay: i * 0.15,
+    duration: 1.5 + (i % 3) * 0.3,
+  }));
+};
 
 export const ThreatRadar = ({ 
   activeRisks = 3, 
@@ -81,9 +61,42 @@ export const ThreatRadar = ({
 }: ThreatRadarProps) => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [frameSwapped, setFrameSwapped] = useState(false);
+  
+  // Lynx Protection Sequence State
+  const [lynxProtectionActive, setLynxProtectionActive] = useState(false);
+  const [lynxMaterialized, setLynxMaterialized] = useState(false);
+  const [particlesFlowing, setParticlesFlowing] = useState(false);
 
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
+
+  // Lynx Protection Sequence: Triggers at Level 4
+  useEffect(() => {
+    if (activeRisks === 4 && !lynxProtectionActive) {
+      // Phase 1: Start particle emission
+      setLynxProtectionActive(true);
+      setParticlesFlowing(true);
+      
+      // Phase 2: After 3s, particles reach center - start morphology
+      const morphTimer = setTimeout(() => {
+        setParticlesFlowing(false);
+        // Phase 3: After 6s total, Lynx materializes
+        setTimeout(() => {
+          setLynxMaterialized(true);
+        }, 3000);
+      }, 3000);
+      
+      return () => clearTimeout(morphTimer);
+    } else if (activeRisks !== 4) {
+      // Reset when leaving level 4
+      setLynxProtectionActive(false);
+      setLynxMaterialized(false);
+      setParticlesFlowing(false);
+    }
+  }, [activeRisks, lynxProtectionActive]);
+
+  // Lynx particles for the protection sequence
+  const lynxParticles = useMemo(() => generateLynxParticles(20), []);
 
   // Frame interchange animation - swap every 8 seconds
   useEffect(() => {
@@ -367,104 +380,6 @@ export const ThreatRadar = ({
                 strokeOpacity="0.08"
               />
 
-              {/* === MORPHOLOGY LAYER === */}
-              
-              {/* Organic blob ring - morphing shape */}
-              <motion.path
-                d={generateBlobPath(center, outerRadius * 0.85, 8, 0)}
-                fill="none"
-                stroke={theme.color}
-                strokeWidth="1.5"
-                strokeOpacity="0.25"
-                animate={{
-                  d: [
-                    generateBlobPath(center, outerRadius * 0.85, 8, 0),
-                    generateBlobPath(center, outerRadius * 0.85, 8, 1),
-                    generateBlobPath(center, outerRadius * 0.85, 8, 2),
-                    generateBlobPath(center, outerRadius * 0.85, 8, 0),
-                  ],
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-              />
-
-              {/* Inner organic blob - faster morph */}
-              <motion.path
-                d={generateBlobPath(center, outerRadius * 0.5, 6, 0)}
-                fill={`${theme.color}08`}
-                stroke={theme.color}
-                strokeWidth="1"
-                strokeOpacity="0.15"
-                animate={{
-                  d: [
-                    generateBlobPath(center, outerRadius * 0.5, 6, 0),
-                    generateBlobPath(center, outerRadius * 0.5, 6, 2),
-                    generateBlobPath(center, outerRadius * 0.5, 6, 1),
-                    generateBlobPath(center, outerRadius * 0.5, 6, 0),
-                  ],
-                }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              />
-
-              {/* Neural tendrils connecting center to edge */}
-              {[0, 72, 144, 216, 288].map((baseAngle, i) => {
-                const angle = (baseAngle - 90) * Math.PI / 180;
-                const endX = center + outerRadius * 0.9 * Math.cos(angle);
-                const endY = center + outerRadius * 0.9 * Math.sin(angle);
-                const ctrlOffset = 30 + i * 10;
-                
-                return (
-                  <motion.path
-                    key={`tendril-${i}`}
-                    d={`M ${center} ${center} 
-                        Q ${center + ctrlOffset * Math.cos(angle + 0.3)} ${center + ctrlOffset * Math.sin(angle + 0.3)}
-                        ${endX} ${endY}`}
-                    fill="none"
-                    stroke={theme.color}
-                    strokeWidth="1"
-                    strokeOpacity="0.1"
-                    animate={{
-                      strokeOpacity: [0.05, 0.2, 0.05],
-                      strokeWidth: [0.5, 1.5, 0.5],
-                    }}
-                    transition={{
-                      duration: 3,
-                      delay: i * 0.5,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                );
-              })}
-
-              {/* Cellular pulse nodes on rings */}
-              {[0.4, 0.6, 0.8].map((ringDist, ringIdx) =>
-                [0, 60, 120, 180, 240, 300].map((angleDeg, nodeIdx) => {
-                  const angle = (angleDeg - 90) * Math.PI / 180;
-                  const x = center + outerRadius * ringDist * Math.cos(angle);
-                  const y = center + outerRadius * ringDist * Math.sin(angle);
-                  
-                  return (
-                    <motion.circle
-                      key={`cell-${ringIdx}-${nodeIdx}`}
-                      cx={x}
-                      cy={y}
-                      r="2"
-                      fill={theme.color}
-                      animate={{
-                        r: [1.5, 3, 1.5],
-                        opacity: [0.2, 0.5, 0.2],
-                      }}
-                      transition={{
-                        duration: 2 + ringIdx * 0.5,
-                        delay: nodeIdx * 0.2 + ringIdx * 0.3,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                    />
-                  );
-                })
-              )}
-
               {/* SCANNING WEDGE (cake slice) */}
               <g style={{ transformOrigin: `${center}px ${center}px` }}>
                 <motion.g
@@ -545,16 +460,111 @@ export const ThreatRadar = ({
               </motion.g>
             </svg>
 
+            {/* === LYNX PROTECTION SEQUENCE === */}
+            
+            {/* Phase 1: Particle Stream from Lynx (Top-Left) to Center */}
+            <AnimatePresence>
+              {particlesFlowing && (
+                <>
+                  {lynxParticles.map((particle) => (
+                    <motion.div
+                      key={`lynx-particle-${particle.id}`}
+                      className="absolute w-2 h-2 rounded-full pointer-events-none"
+                      style={{
+                        backgroundColor: LYNX_GREEN,
+                        boxShadow: `0 0 10px ${LYNX_GREEN}, 0 0 20px ${LYNX_GREEN}`,
+                        left: '50%',
+                        top: '50%',
+                      }}
+                      initial={{
+                        x: particle.startX,
+                        y: particle.startY,
+                        scale: 0,
+                        opacity: 0,
+                      }}
+                      animate={{
+                        x: 0,
+                        y: 0,
+                        scale: [0, 1.5, 0.5],
+                        opacity: [0, 1, 0],
+                      }}
+                      transition={{
+                        duration: particle.duration,
+                        delay: particle.delay,
+                        repeat: Infinity,
+                        ease: 'easeOut',
+                      }}
+                    />
+                  ))}
+                  
+                  {/* Energy Trail Effect */}
+                  <motion.div
+                    className="absolute pointer-events-none"
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      width: 300,
+                      height: 4,
+                      background: `linear-gradient(90deg, ${LYNX_GREEN}00, ${LYNX_GREEN}80, ${LYNX_GREEN})`,
+                      transformOrigin: 'right center',
+                    }}
+                    initial={{ rotate: 225, scaleX: 0, opacity: 0 }}
+                    animate={{ 
+                      scaleX: [0, 1, 0.8],
+                      opacity: [0, 0.8, 0.3],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                </>
+              )}
+            </AnimatePresence>
+
+            {/* Phase 2: Green Overlay Morphology (when particles reach center) */}
+            <AnimatePresence>
+              {lynxProtectionActive && !particlesFlowing && !lynxMaterialized && (
+                <motion.div
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    width: 100,
+                    height: 100,
+                    marginLeft: -50,
+                    marginTop: -50,
+                    border: `3px solid ${LYNX_GREEN}`,
+                    boxShadow: `0 0 40px ${LYNX_GREEN}80, inset 0 0 30px ${LYNX_GREEN}40`,
+                  }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.8],
+                  }}
+                  exit={{ scale: 1.5, opacity: 0 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+              )}
+            </AnimatePresence>
+
             {/* Center HUD Overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <motion.div 
-                className="flex flex-col items-center justify-center rounded-full border-2"
+                className="flex flex-col items-center justify-center rounded-full border-2 relative overflow-hidden"
                 style={{ 
                   width: 90,
                   height: 90,
                   backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                  borderColor: theme.color,
-                  boxShadow: `0 0 30px ${theme.glowColor}, inset 0 0 20px ${theme.glowColor}`
+                  borderColor: lynxMaterialized ? LYNX_GREEN : theme.color,
+                  boxShadow: lynxMaterialized 
+                    ? `0 0 40px ${LYNX_GREEN}80, inset 0 0 25px ${LYNX_GREEN}40`
+                    : `0 0 30px ${theme.glowColor}, inset 0 0 20px ${theme.glowColor}`
                 }}
                 animate={{ 
                   scale: isCritical ? [1, 1.08, 1] : [1, 1.03, 1],
@@ -565,18 +575,85 @@ export const ThreatRadar = ({
                   ease: 'easeInOut'
                 }}
               >
-                <motion.span 
-                  className="text-4xl font-mono font-bold"
-                  style={{ color: theme.color }}
-                >
-                  {activeRisks}
-                </motion.span>
-                <span 
-                  className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
-                  style={{ color: `${theme.color}80` }}
-                >
-                  Threats
-                </span>
+                {/* Phase 3: Lynx Materialization */}
+                <AnimatePresence mode="wait">
+                  {lynxMaterialized ? (
+                    <motion.div
+                      key="lynx-guardian"
+                      className="flex flex-col items-center justify-center"
+                      initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                      animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                      transition={{ 
+                        type: 'spring',
+                        stiffness: 200,
+                        damping: 15,
+                      }}
+                    >
+                      {/* Lynx Icon */}
+                      <motion.div
+                        animate={{
+                          filter: [
+                            `drop-shadow(0 0 8px ${LYNX_GREEN})`,
+                            `drop-shadow(0 0 16px ${LYNX_GREEN})`,
+                            `drop-shadow(0 0 8px ${LYNX_GREEN})`,
+                          ],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      >
+                        <LynxIcon size={36} className="text-[#28E7A2]" />
+                      </motion.div>
+                      <span 
+                        className="text-[7px] font-mono uppercase tracking-widest mt-1"
+                        style={{ color: LYNX_GREEN }}
+                      >
+                        GUARDED
+                      </span>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="threat-count"
+                      className="flex flex-col items-center justify-center"
+                      exit={{ scale: 0, opacity: 0 }}
+                    >
+                      <motion.span 
+                        className="text-4xl font-mono font-bold"
+                        style={{ color: theme.color }}
+                      >
+                        {activeRisks}
+                      </motion.span>
+                      <span 
+                        className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
+                        style={{ color: `${theme.color}80` }}
+                      >
+                        Threats
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Green particle overlay during morphology */}
+                <AnimatePresence>
+                  {lynxProtectionActive && !lynxMaterialized && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: `radial-gradient(circle, ${LYNX_GREEN}40 0%, transparent 70%)`,
+                      }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0.3, 0.8, 0.3] }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                  )}
+                </AnimatePresence>
               </motion.div>
             </div>
           </div>
