@@ -31,6 +31,9 @@ function App() {
     <Router>
       <SysConfigProvider>
         <div className="antialiased text-nexus-signal bg-nexus-void min-h-screen font-sans selection:bg-nexus-green/30">
+          {/* THE CINEMATIC VIGNETTE - Focus the eye to center */}
+          <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
+          
           <AppRoutes />
           <Toaster position="bottom-right" theme="dark" />
         </div>

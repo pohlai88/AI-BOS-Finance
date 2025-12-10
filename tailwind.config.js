@@ -59,9 +59,14 @@ export default {
         mono: ["var(--font-mono)"],
       },
       letterSpacing: {
-        headline: "-0.04em",
-        tight: "-0.02em",
-        widest: "0.08em",
+        // OPTICAL TYPOGRAPHY - Fortune 500 Grade
+        tighter: "-0.04em",  // Headlines (6xl+)
+        tight: "-0.02em",    // Subheads (3xl-5xl)
+        normal: "-0.01em",   // Body text (crisp)
+        wide: "0.02em",      // Small text
+        widest: "0.08em",    // ALL CAPS LABELS
+        headline: "-0.04em", // Alias for tighter
+        micro: "0.12em",     // Tiny labels
       },
       borderRadius: {
         lg: "var(--radius)",
