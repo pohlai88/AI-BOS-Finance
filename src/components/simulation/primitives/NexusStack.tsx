@@ -1,17 +1,45 @@
 // ============================================================================
-// NEXUS STACK V6 - Optimized for Performance
+// NEXUS STACK V7 - Inverted Physics Architecture
+// Bottom = Fragile/Unstable, Top = Solid/Immovable
 // ============================================================================
 
-import { memo, forwardRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { memo, forwardRef, useMemo } from 'react';
+import { motion, AnimatePresence, useAnimation } from 'motion/react';
 import { ShieldCheck, Hexagon, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { NexusStackItem } from '../types';
+import { useEffect } from 'react';
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 const WIDTH_CLASSES = ['w-48', 'w-56', 'w-64', 'w-72', 'w-80', 'w-96'] as const;
+const MAX_BLOCKS = 6;
+
+// ============================================================================
+// PHYSICS CONFIGURATION
+// Inverse relationship: Lower index = More wobble
+// ============================================================================
+function getBlockPhysics(index: number, totalBlocks: number) {
+  // Stability increases with index (0 = least stable, 5 = most stable)
+  const stabilityFactor = index / Math.max(totalBlocks - 1, 1); // 0 to 1
+  
+  return {
+    // Entry animation: Bottom blocks bounce more, top blocks thud
+    spring: {
+      stiffness: 180 + stabilityFactor * 80,  // 180 → 260 (stiffer = less bounce)
+      damping: 15 + stabilityFactor * 25,     // 15 → 40 (higher = less oscillation)
+      mass: 1.2 - stabilityFactor * 0.4,      // 1.2 → 0.8 (lighter = faster settle)
+    },
+    // Continuous wobble intensity (only for unstable blocks)
+    wobble: {
+      intensity: Math.max(0, 2 - index * 0.5), // 2, 1.5, 1, 0.5, 0, 0
+      speed: 0.8 + index * 0.2,                // Slower wobble as we go up
+    },
+    // Visual stability indicator
+    isStable: index >= 3, // Top 3 blocks are "locked"
+  };
+}
 
 // ============================================================================
 // MAIN COMPONENT
@@ -40,7 +68,13 @@ export const NexusStack = memo(function NexusStack({ data, stage }: NexusStackPr
 
         <AnimatePresence mode="popLayout">
           {activeBlocks.map((block, index) => (
-            <NexusInvertedBlock key={block.id} data={block} index={index} isNew={index === clampedStage - 1} />
+            <NexusInvertedBlock
+              key={block.id}
+              data={block}
+              index={index}
+              totalBlocks={clampedStage}
+              isNew={index === clampedStage - 1}
+            />
           ))}
         </AnimatePresence>
 
@@ -52,7 +86,7 @@ export const NexusStack = memo(function NexusStack({ data, stage }: NexusStackPr
       <div className="absolute bottom-0 w-full text-center border-t border-nexus-green/20 pt-3">
         <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green uppercase flex items-center justify-center gap-2">
           <Hexagon className="w-3 h-3" />
-          Inverted Lattice (v4.0)
+          Inverted Lattice (v7.0)
         </span>
       </div>
     </div>
@@ -60,12 +94,31 @@ export const NexusStack = memo(function NexusStack({ data, stage }: NexusStackPr
 });
 
 // ============================================================================
-// SINGULARITY POINT
+// SINGULARITY POINT (The unstable foundation)
 // ============================================================================
 const SingularityPoint = memo(function SingularityPoint({ stage }: { stage: number }) {
+  // The singularity wobbles when there are few blocks (system is fragile)
+  const isUnstable = stage > 0 && stage < 4;
+  
   return (
     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
-      <div className="w-4 h-4 bg-nexus-green rotate-45 shadow-[0_0_30px_#28E7A2]" />
+      <motion.div
+        className="w-4 h-4 bg-nexus-green rotate-45 shadow-[0_0_30px_#28E7A2]"
+        animate={isUnstable ? {
+          x: [0, 1, -1, 0],
+          rotate: [45, 46, 44, 45],
+        } : {
+          x: 0,
+          rotate: 45,
+        }}
+        transition={isUnstable ? {
+          duration: 0.3,
+          repeat: Infinity,
+          repeatType: 'mirror',
+        } : {
+          duration: 0.5,
+        }}
+      />
       <div className="w-1 h-1 bg-white absolute top-1.5 left-1.5 rounded-full" />
       <ShockwaveEffect trigger={stage} />
     </div>
@@ -98,32 +151,83 @@ const CompletionBadge = memo(
 );
 
 // ============================================================================
-// NEXUS INVERTED BLOCK (with forwardRef for AnimatePresence)
+// NEXUS INVERTED BLOCK - The Physics Engine
 // ============================================================================
 interface NexusInvertedBlockProps {
   data: NexusStackItem;
   index: number;
+  totalBlocks: number;
   isNew: boolean;
 }
 
 const NexusInvertedBlock = memo(
   forwardRef<HTMLDivElement, NexusInvertedBlockProps>(function NexusInvertedBlock(
-    { data, index, isNew },
+    { data, index, totalBlocks, isNew },
     ref
   ) {
+    const controls = useAnimation();
     const currentWidth = WIDTH_CLASSES[Math.min(index, WIDTH_CLASSES.length - 1)];
+    
+    // Memoize physics calculations
+    const physics = useMemo(() => getBlockPhysics(index, MAX_BLOCKS), [index]);
+
+    // =========================================================================
+    // THE WOBBLE ENGINE
+    // Only unstable blocks (bottom) continuously wobble
+    // =========================================================================
+    useEffect(() => {
+      // Skip wobble for new blocks (let entry animation complete first)
+      // Skip wobble for stable blocks (top of stack)
+      if (isNew || physics.isStable) {
+        controls.stop();
+        controls.set({ x: 0, rotate: 0 });
+        return;
+      }
+
+      // Start continuous micro-wobble for unstable blocks
+      if (physics.wobble.intensity > 0) {
+        controls.start({
+          x: physics.wobble.intensity,
+          rotate: physics.wobble.intensity * 0.3,
+          transition: {
+            duration: physics.wobble.speed,
+            repeat: Infinity,
+            repeatType: 'mirror',
+            ease: 'easeInOut',
+          },
+        });
+      }
+
+      return () => controls.stop();
+    }, [isNew, physics.isStable, physics.wobble.intensity, physics.wobble.speed, controls]);
 
     return (
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, y: -200 }}
-        animate={{ opacity: 1, y: 0 }}
+        // Entry animation with physics-based spring
+        initial={{ opacity: 0, y: -200, scale: 0.9 }}
+        animate={controls}
+        // Combine entry animation with controls
+        onAnimationComplete={() => {
+          // After entry, apply the wobble if unstable
+          if (!physics.isStable && physics.wobble.intensity > 0) {
+            controls.start({
+              x: physics.wobble.intensity,
+              rotate: physics.wobble.intensity * 0.3,
+              transition: {
+                duration: physics.wobble.speed,
+                repeat: Infinity,
+                repeatType: 'mirror',
+                ease: 'easeInOut',
+              },
+            });
+          }
+        }}
         exit={{ opacity: 0, y: -30 }}
         transition={{
+          // Entry uses spring physics
           type: 'spring',
-          stiffness: 200,
-          damping: 25 + index * 3,
-          mass: 0.8 + index * 0.1,
+          ...physics.spring,
         }}
         className={cn(
           'relative flex items-center justify-between px-6 overflow-hidden h-14',
@@ -132,19 +236,37 @@ const NexusInvertedBlock = memo(
           'border-t border-t-white/10 border-b border-b-black/80',
           'border-x border-x-nexus-green/30',
           'will-change-transform',
+          // Visual feedback: stable blocks have stronger border
+          physics.isStable && 'border-x-nexus-green/50',
           isNew && 'shadow-[0_-5px_20px_rgba(40,231,162,0.15)]',
         )}
-        style={{ zIndex: index }}
+        style={{ 
+          zIndex: index,
+          // Entry animation initial values
+          opacity: 1,
+          y: 0,
+          scale: 1,
+        }}
       >
         {/* CSS gradient texture */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4px_4px]" />
 
+        {/* STABILITY INDICATOR: Subtle glow for stable blocks */}
+        {physics.isStable && (
+          <div className="absolute inset-0 bg-gradient-to-r from-nexus-green/5 via-transparent to-nexus-green/5 pointer-events-none" />
+        )}
+
         <div className="relative z-10 flex items-center gap-4">
-          <div
+          <motion.div
             className={cn(
               'w-2 h-2 rotate-45 transition-colors duration-300',
               isNew ? 'bg-white shadow-[0_0_8px_white]' : 'bg-nexus-green',
             )}
+            // Stable blocks have solid indicator, unstable pulse
+            animate={!physics.isStable && !isNew ? {
+              opacity: [1, 0.6, 1],
+            } : {}}
+            transition={{ duration: 1.5, repeat: Infinity }}
           />
           <span
             className={cn(
@@ -158,7 +280,12 @@ const NexusInvertedBlock = memo(
 
         <div className="relative z-10 flex items-center gap-2">
           <span className="text-[9px] font-mono text-nexus-green/40 hidden sm:block">{data.status}</span>
-          <Lock className="w-3 h-3 text-nexus-green/60" />
+          <Lock 
+            className={cn(
+              'w-3 h-3 transition-colors duration-500',
+              physics.isStable ? 'text-nexus-green' : 'text-nexus-green/40',
+            )} 
+          />
         </div>
 
         <div className="absolute top-0 right-0 w-[1px] h-full bg-nexus-green/10 -skew-x-12 origin-top" />
