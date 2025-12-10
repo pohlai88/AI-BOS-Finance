@@ -68,14 +68,21 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
           </motion.div>
         </div>
 
-        {/* Right Col: The "Bento" Visual (Col 8-12) */}
+        {/* Right Col: Visual Element (Col 8-12) */}
         <div className="lg:col-span-5 relative hidden lg:block">
-          {/* Placeholder for high-fidelity visualization, NOT a blob */}
-          <div className="nexus-card h-full w-full min-h-[400px] flex items-center justify-center">
-            <p className="font-mono text-xs text-nexus-structure tracking-widest">
-              [ RENDERING_SIMULATION_ENGINE ]
-            </p>
-            {/* This is where StabilitySimulation will live later */}
+          <div className="nexus-card h-full w-full min-h-[400px] flex items-center justify-center overflow-hidden">
+            {/* Animated Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-30" />
+            
+            {/* Central Crystal Icon */}
+            <div className="relative z-10">
+              <svg width="120" height="120" viewBox="0 0 40 40" fill="none" className="opacity-20">
+                <path d="M20 4 L36 20 L20 36 L4 20 Z" stroke="rgba(40, 231, 162, 0.5)" strokeWidth="0.5" fill="rgba(40, 231, 162, 0.02)" />
+                <path d="M20 8 L32 20 L20 32 L8 20 Z" stroke="rgba(40, 231, 162, 0.3)" strokeWidth="0.5" fill="none" />
+                <line x1="20" y1="4" x2="20" y2="36" stroke="rgba(40, 231, 162, 0.2)" strokeWidth="0.5" />
+                <line x1="4" y1="20" x2="36" y2="20" stroke="rgba(40, 231, 162, 0.2)" strokeWidth="0.5" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
