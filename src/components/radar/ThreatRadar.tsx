@@ -164,15 +164,18 @@ export const ThreatRadar = ({
   }), [size, theme, isCritical, isWarning]);
 
   // Generate random threat points based on activeRisks
+  // Extract base color without alpha for RadarDisplay (it adds its own alpha)
+  const baseColor = theme.color.slice(0, 7); // e.g., '#F97316' without any alpha suffix
+  
   const points: RadarPoint[] = useMemo(() => {
     return Array.from({ length: Math.min(activeRisks * 2, 12) }).map((_, i) => ({
       id: `threat-${i}`,
       angle: (i * 37 + 15) % 360, // Deterministic spread
       distance: 0.25 + (i % 5) * 0.15,
-      color: i < activeRisks ? theme.color : `${theme.color}60`,
+      color: baseColor, // Use base 6-char hex, RadarDisplay adds alpha
       size: 4 + (i % 3) * 2,
     }));
-  }, [activeRisks, theme.color]);
+  }, [activeRisks, baseColor]);
 
   // Simulate log entries
   useEffect(() => {
@@ -353,6 +356,7 @@ export const ThreatRadar = ({
               <motion.circle
                 cx={center}
                 cy={center}
+                r={outerRadius}
                 fill="none"
                 stroke={theme.color}
                 strokeWidth="2"
@@ -367,6 +371,7 @@ export const ThreatRadar = ({
               <motion.circle
                 cx={center}
                 cy={center}
+                r={innerRadius + 40}
                 fill="none"
                 stroke={theme.color}
                 strokeWidth="1.5"
