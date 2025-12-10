@@ -358,7 +358,7 @@ export const TruthBar = () => {
       {/* Initial State */}
       {!verdict && !isThinking && (
         <div className="bg-nexus-matter/50 border border-dashed border-nexus-structure p-8 text-center">
-          <div className="mx-auto mb-4">
+          <div className="flex justify-center mb-4">
             <NexusIcon size="lg" animated />
           </div>
           <div className="text-nexus-signal mb-1">Select a Transaction to Analyze</div>
