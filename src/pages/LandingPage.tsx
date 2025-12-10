@@ -5,6 +5,8 @@ import { CrystallizationSphere } from '@/components/landing/CrystallizationSpher
 import { StabilitySimulation } from '@/components/simulation';
 import { LivingLens } from '@/components/landing/LivingLens';
 import { TruthBar } from '@/components/landing/TruthBar';
+import { LinearFeatureCard } from '@/components/landing/LinearFeatureCard';
+import { CrystallizationVisual, InterrogationVisual, GovernanceVisual } from '@/components/landing/FeatureVisuals';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -52,52 +54,49 @@ export const LandingPage = ({
           </div>
         </section>
 
-        {/* SECTION 2: THE TRIPLE THREAT (Bento Grid) */}
-        <section
-          id="logic"
-          className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/50"
-        >
+        {/* SECTION 2: THE TRIPLE THREAT (Linear Style) */}
+        <section id="logic" className="py-32 px-6 border-t border-nexus-structure bg-[#020403]">
           <div className="max-w-7xl mx-auto">
-            <div className="mb-16">
-              <span className="nexus-label text-nexus-green flex items-center gap-2">
+            <div className="mb-20 text-center md:text-left">
+              <span className="nexus-label text-nexus-green flex items-center justify-center md:justify-start gap-2">
                 <ShieldCheck className="w-3 h-3" />
                 Core Capabilities
               </span>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mt-2">
+              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mt-4">
                 Forensic Architecture
               </h2>
+              <p className="mt-4 text-nexus-noise max-w-xl text-lg">
+                Built on first principles of cryptographic verification. We don't just audit data; we anchor it to mathematical truth.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Feature 1 */}
-              <NexusCard title="CRYSTALLIZATION" variant="default" className="min-h-[300px]">
-                <ShieldCheck className="w-8 h-8 text-nexus-green mb-6" />
-                <h3 className="text-xl text-white mb-3">Immutable Period Control</h3>
-                <p className="text-sm text-nexus-noise leading-relaxed">
-                  Cryptographically freeze your data state. Once a period is locked, the numbers
-                  never move again without a digital signature trace.
-                </p>
-              </NexusCard>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Feature 1: Crystallization */}
+              <LinearFeatureCard
+                icon={ShieldCheck}
+                title="Immutable Period Control"
+                description="Cryptographically freeze your data state. Once a period is locked, the numbers never move again without a digital signature trace."
+              >
+                <CrystallizationVisual />
+              </LinearFeatureCard>
 
-              {/* Feature 2 */}
-              <NexusCard title="INTERROGATION" variant="default" className="min-h-[300px]">
-                <Activity className="w-8 h-8 text-nexus-green mb-6" />
-                <h3 className="text-xl text-white mb-3">Active Living Lens</h3>
-                <p className="text-sm text-nexus-noise leading-relaxed">
-                  Standard audits are passive. NexusCanon proactively dismantles transactions
-                  against IFRS and Tax Pillars in real-time.
-                </p>
-              </NexusCard>
+              {/* Feature 2: Interrogation */}
+              <LinearFeatureCard
+                icon={Activity}
+                title="Active Living Lens"
+                description="Standard audits are passive. NexusCanon proactively dismantles transactions against IFRS and Tax Pillars in real-time."
+              >
+                <InterrogationVisual />
+              </LinearFeatureCard>
 
-              {/* Feature 3 */}
-              <NexusCard title="GOVERNANCE" variant="default" className="min-h-[300px]">
-                <Terminal className="w-8 h-8 text-nexus-green mb-6" />
-                <h3 className="text-xl text-white mb-3">Schema Enforcement</h3>
-                <p className="text-sm text-nexus-noise leading-relaxed">
-                  Data cannot enter the system unless it matches the strict schema definitions. Zero
-                  tolerance for "bad data."
-                </p>
-              </NexusCard>
+              {/* Feature 3: Governance */}
+              <LinearFeatureCard
+                icon={Terminal}
+                title="Schema Enforcement"
+                description="Data cannot enter the system unless it matches the strict schema definitions. Zero tolerance for 'bad data'."
+              >
+                <GovernanceVisual />
+              </LinearFeatureCard>
             </div>
           </div>
         </section>
