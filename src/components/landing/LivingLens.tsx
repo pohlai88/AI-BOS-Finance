@@ -8,9 +8,11 @@ import {
   AlertTriangle,
   Play,
   Pause,
+  GitBranch,
 } from 'lucide-react';
-// IMPORT THE BRAIN
-import { runAudit, TRANSACTION_STREAM, type Transaction } from './GovernanceEngine';
+// IMPORT THE BRAIN (v2.0 with Logic Trace)
+import { runAudit, TRANSACTION_STREAM, type Transaction, type Verdict } from './GovernanceEngine';
+import { cn } from '@/lib/utils';
 
 export const LivingLens = () => {
   const [index, setIndex] = useState(0);
@@ -257,10 +259,43 @@ export const LivingLens = () => {
                 ))}
               </div>
 
-              {/* 3. Timestamp Footer */}
-              <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              {/* 3. Logic Trace Preview (The Glass Box) */}
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <div className="flex items-center gap-2 mb-2">
+                  <GitBranch className="w-3 h-3 text-emerald-500" />
+                  <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
+                    Logic Trace ({auditResult.logicTrace.length} steps)
+                  </span>
+                </div>
+                <div className="flex gap-1 overflow-hidden">
+                  {auditResult.logicTrace.slice(0, 8).map((step, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.8 + i * 0.05 }}
+                      className={cn(
+                        "w-2 h-2 rounded-full flex-shrink-0",
+                        step.result === 'pass' && "bg-emerald-500",
+                        step.result === 'fail' && "bg-red-500",
+                        step.result === 'skip' && "bg-zinc-600",
+                        step.result === 'apply' && "bg-yellow-500"
+                      )}
+                      title={step.description}
+                    />
+                  ))}
+                  {auditResult.logicTrace.length > 8 && (
+                    <span className="text-[10px] text-zinc-600 font-mono">
+                      +{auditResult.logicTrace.length - 8}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* 4. Timestamp Footer */}
+              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
                 <span className="text-[12px] text-zinc-600 font-mono uppercase tracking-wider">
-                  Scan Complete
+                  {auditResult.processingTimeMs.toFixed(2)}ms
                 </span>
                 <span className="text-[12px] text-zinc-700 font-mono">
                   {new Date(auditResult.timestamp).toLocaleTimeString()}
@@ -276,10 +311,12 @@ export const LivingLens = () => {
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[12px] font-mono text-zinc-500 uppercase tracking-wider">
-            Engine Status: Active
+            Truth Engine v2.0: Deterministic
           </span>
         </div>
-        <div className="text-[12px] font-mono text-zinc-600">Processing at 250ms/transaction</div>
+        <div className="text-[12px] font-mono text-zinc-600">
+          Glass Box Logic • {auditResult.processingTimeMs.toFixed(2)}ms/scan
+        </div>
       </div>
     </div>
   );
