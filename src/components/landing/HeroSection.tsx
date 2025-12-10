@@ -119,7 +119,7 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
           {/* Headline */}
           <motion.h1 
-            className="text-6xl md:text-8xl lg:text-9xl font-medium tracking-tighter leading-[0.9] text-white"
+            className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.9] text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
