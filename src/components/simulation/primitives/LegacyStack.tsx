@@ -42,7 +42,7 @@ export const LegacyStack = ({ data, stage, shakeLevel, isCollapsed }: LegacyStac
       <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10 min-h-[350px]">
         {!isCollapsed ? (
           <AnimatePresence mode="popLayout">
-            {data.slice(0, stage).map((block, i) => (
+            {data.slice(0, stage).map((block) => (
               <LegacyBlock 
                 key={block.id} 
                 data={block} 

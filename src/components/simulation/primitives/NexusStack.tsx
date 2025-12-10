@@ -2,7 +2,7 @@
 // NEXUS STACK V6 - Optimized for Performance
 // ============================================================================
 
-import { memo } from 'react';
+import { memo, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, Hexagon, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -75,27 +75,30 @@ const SingularityPoint = memo(function SingularityPoint({ stage }: { stage: numb
 // ============================================================================
 // COMPLETION BADGE
 // ============================================================================
-const CompletionBadge = memo(function CompletionBadge() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ type: 'tween', duration: 0.3 }}
-      className="absolute -top-16 left-1/2 -translate-x-1/2"
-    >
-      <div className="px-4 py-1.5 bg-[#050a07] border border-nexus-green shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
-        <ShieldCheck className="w-3 h-3 text-nexus-green fill-nexus-green" />
-        <span className="text-[10px] font-mono tracking-widest text-white uppercase">
-          Architecture Stabilized
-        </span>
-      </div>
-    </motion.div>
-  );
-});
+const CompletionBadge = memo(
+  forwardRef<HTMLDivElement>(function CompletionBadge(_, ref) {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{ type: 'tween', duration: 0.3 }}
+        className="absolute -top-16 left-1/2 -translate-x-1/2"
+      >
+        <div className="px-4 py-1.5 bg-[#050a07] border border-nexus-green shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
+          <ShieldCheck className="w-3 h-3 text-nexus-green fill-nexus-green" />
+          <span className="text-[10px] font-mono tracking-widest text-white uppercase">
+            Architecture Stabilized
+          </span>
+        </div>
+      </motion.div>
+    );
+  })
+);
 
 // ============================================================================
-// NEXUS INVERTED BLOCK (Optimized)
+// NEXUS INVERTED BLOCK (with forwardRef for AnimatePresence)
 // ============================================================================
 interface NexusInvertedBlockProps {
   data: NexusStackItem;
@@ -103,64 +106,70 @@ interface NexusInvertedBlockProps {
   isNew: boolean;
 }
 
-const NexusInvertedBlock = memo(function NexusInvertedBlock({ data, index, isNew }: NexusInvertedBlockProps) {
-  const currentWidth = WIDTH_CLASSES[Math.min(index, WIDTH_CLASSES.length - 1)];
+const NexusInvertedBlock = memo(
+  forwardRef<HTMLDivElement, NexusInvertedBlockProps>(function NexusInvertedBlock(
+    { data, index, isNew },
+    ref
+  ) {
+    const currentWidth = WIDTH_CLASSES[Math.min(index, WIDTH_CLASSES.length - 1)];
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -200 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -30 }}
-      transition={{
-        type: 'spring',
-        stiffness: 200,
-        damping: 25 + index * 3,
-        mass: 0.8 + index * 0.1,
-      }}
-      className={cn(
-        'relative flex items-center justify-between px-6 overflow-hidden h-14',
-        currentWidth,
-        'bg-[#030805]',
-        'border-t border-t-white/10 border-b border-b-black/80',
-        'border-x border-x-nexus-green/30',
-        'will-change-transform',
-        isNew && 'shadow-[0_-5px_20px_rgba(40,231,162,0.15)]',
-      )}
-      style={{ zIndex: index }}
-    >
-      {/* CSS gradient texture instead of SVG */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4px_4px]" />
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: -200 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -30 }}
+        transition={{
+          type: 'spring',
+          stiffness: 200,
+          damping: 25 + index * 3,
+          mass: 0.8 + index * 0.1,
+        }}
+        className={cn(
+          'relative flex items-center justify-between px-6 overflow-hidden h-14',
+          currentWidth,
+          'bg-[#030805]',
+          'border-t border-t-white/10 border-b border-b-black/80',
+          'border-x border-x-nexus-green/30',
+          'will-change-transform',
+          isNew && 'shadow-[0_-5px_20px_rgba(40,231,162,0.15)]',
+        )}
+        style={{ zIndex: index }}
+      >
+        {/* CSS gradient texture */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4px_4px]" />
 
-      <div className="relative z-10 flex items-center gap-4">
-        <div
-          className={cn(
-            'w-2 h-2 rotate-45 transition-colors duration-300',
-            isNew ? 'bg-white shadow-[0_0_8px_white]' : 'bg-nexus-green',
-          )}
-        />
-        <span
-          className={cn(
-            'text-[10px] font-bold tracking-wider transition-colors duration-300 truncate',
-            isNew ? 'text-white' : 'text-nexus-green/80',
-          )}
-        >
-          {data.label}
-        </span>
-      </div>
+        <div className="relative z-10 flex items-center gap-4">
+          <div
+            className={cn(
+              'w-2 h-2 rotate-45 transition-colors duration-300',
+              isNew ? 'bg-white shadow-[0_0_8px_white]' : 'bg-nexus-green',
+            )}
+          />
+          <span
+            className={cn(
+              'text-[10px] font-bold tracking-wider transition-colors duration-300 truncate',
+              isNew ? 'text-white' : 'text-nexus-green/80',
+            )}
+          >
+            {data.label}
+          </span>
+        </div>
 
-      <div className="relative z-10 flex items-center gap-2">
-        <span className="text-[9px] font-mono text-nexus-green/40 hidden sm:block">{data.status}</span>
-        <Lock className="w-3 h-3 text-nexus-green/60" />
-      </div>
+        <div className="relative z-10 flex items-center gap-2">
+          <span className="text-[9px] font-mono text-nexus-green/40 hidden sm:block">{data.status}</span>
+          <Lock className="w-3 h-3 text-nexus-green/60" />
+        </div>
 
-      <div className="absolute top-0 right-0 w-[1px] h-full bg-nexus-green/10 -skew-x-12 origin-top" />
-      <div className="absolute top-0 left-0 w-[1px] h-full bg-nexus-green/10 skew-x-12 origin-top" />
-    </motion.div>
-  );
-});
+        <div className="absolute top-0 right-0 w-[1px] h-full bg-nexus-green/10 -skew-x-12 origin-top" />
+        <div className="absolute top-0 left-0 w-[1px] h-full bg-nexus-green/10 skew-x-12 origin-top" />
+      </motion.div>
+    );
+  })
+);
 
 // ============================================================================
-// V-SHAPE EXOSKELETON (Optimized)
+// V-SHAPE EXOSKELETON
 // ============================================================================
 interface VShapeExoskeletonProps {
   progress: number;
@@ -200,7 +209,7 @@ const VShapeExoskeleton = memo(function VShapeExoskeleton({ progress }: VShapeEx
 });
 
 // ============================================================================
-// SHOCKWAVE EFFECT (Optimized)
+// SHOCKWAVE EFFECT
 // ============================================================================
 const ShockwaveEffect = memo(function ShockwaveEffect({ trigger }: { trigger: number }) {
   if (trigger === 0) return null;
