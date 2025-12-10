@@ -7,7 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Search, 
+  Search,
   Loader2, 
   CheckCircle, 
   XCircle, 
@@ -16,6 +16,7 @@ import {
   Zap,
   GitBranch
 } from 'lucide-react';
+import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { 
   runAudit, 
   TRANSACTION_STREAM, 
@@ -357,8 +358,8 @@ export const TruthBar = () => {
       {/* Initial State */}
       {!verdict && !isThinking && (
         <div className="bg-nexus-matter/50 border border-dashed border-nexus-structure p-8 text-center">
-          <div className="w-12 h-12 rounded bg-nexus-subtle flex items-center justify-center mx-auto mb-4">
-            <Search className="w-6 h-6 text-nexus-noise" />
+          <div className="mx-auto mb-4">
+            <NexusIcon size="lg" animated />
           </div>
           <div className="text-nexus-signal mb-1">Select a Transaction to Analyze</div>
           <p className="text-[11px] text-nexus-noise max-w-md mx-auto">
