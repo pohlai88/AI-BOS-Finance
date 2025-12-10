@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   NEXUSCANON DESIGN TOKENS - FORENSIC ARCHITECTURE
+   Dark-first, WCAG 2.2 AAA compliant
+   ============================================================================ */
+
+:root {
+  /* Core Palette - The Forensic Void */
+  --nexus-void: #0a0a0a;       /* Primary background - near black */
+  --nexus-matter: #111111;     /* Secondary background */
+  --nexus-structure: #1a1a1a;  /* Borders, dividers */
+  --nexus-subtle: #262626;     /* Subtle backgrounds */
+  --nexus-signal: #a3a3a3;     /* Primary text */
+  --nexus-noise: #737373;      /* Secondary text */
+  --nexus-green: #22c55e;      /* Accent - forensic green (max 5%) */
+
+  /* Typography */
+  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Shadcn/ui compatibility */
+  --background: var(--nexus-void);
+  --foreground: var(--nexus-signal);
+  --card: var(--nexus-matter);
+  --card-foreground: var(--nexus-signal);
+  --popover: var(--nexus-matter);
+  --popover-foreground: var(--nexus-signal);
+  --primary: var(--nexus-green);
+  --primary-foreground: var(--nexus-void);
+  --secondary: var(--nexus-subtle);
+  --secondary-foreground: var(--nexus-signal);
+  --muted: var(--nexus-structure);
+  --muted-foreground: var(--nexus-noise);
+  --accent: var(--nexus-subtle);
+  --accent-foreground: var(--nexus-signal);
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: var(--nexus-structure);
+  --input: var(--nexus-structure);
+  --ring: var(--nexus-green);
+  --radius: 0px; /* Sharp corners for forensic aesthetic */
+}
+
+/* Base Styles */
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--nexus-void);
+  color: var(--nexus-signal);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Classes */
+.nexus-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Card Component */
+.nexus-card {
+  background-color: var(--nexus-matter);
+  border: 1px solid var(--nexus-structure);
+  padding: 1.5rem;
+}
+
+/* Headline Tracking */
+.tracking-headline {
+  letter-spacing: -0.04em;
+}
+
+.tracking-micro {
+  letter-spacing: 0.12em;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(34, 197, 94, 0.3);
+  color: white;
+}
