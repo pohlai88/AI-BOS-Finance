@@ -38,7 +38,7 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
               r="16"
               stroke="rgba(40, 231, 162, 0.3)"
               strokeWidth="1"
-              strokeDasharray="6 3"
+              strokeDasharray="2 2"
               fill="none"
               animate={{ rotate: 360 }}
               transition={{ 
@@ -56,7 +56,7 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
             r="16" 
             stroke="rgba(40, 231, 162, 0.3)" 
             strokeWidth="1" 
-            strokeDasharray="6 3"
+            strokeDasharray="2 2"
             fill="none"
           />
         )}
