@@ -232,6 +232,60 @@ export const ThreatRadar = ({
                 </filter>
               </defs>
 
+              {/* ROTATING RING 1: Outer dashed ring - SLOW clockwise */}
+              <motion.g
+                animate={{ rotate: 360 }}
+                transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: `${center}px ${center}px` }}
+              >
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={outerRadius - 5}
+                  fill="none"
+                  stroke={theme.color}
+                  strokeWidth="1"
+                  strokeOpacity="0.2"
+                  strokeDasharray="12 6"
+                />
+              </motion.g>
+
+              {/* ROTATING RING 2: Middle ring - MEDIUM clockwise */}
+              <motion.g
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: `${center}px ${center}px` }}
+              >
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={outerRadius * 0.7}
+                  fill="none"
+                  stroke={theme.color}
+                  strokeWidth="1"
+                  strokeOpacity="0.15"
+                  strokeDasharray="8 4"
+                />
+              </motion.g>
+
+              {/* ROTATING RING 3: Inner ring - FAST counter-clockwise (contrast) */}
+              <motion.g
+                animate={{ rotate: -360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: `${center}px ${center}px` }}
+              >
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={outerRadius * 0.45}
+                  fill="none"
+                  stroke={theme.color}
+                  strokeWidth="1"
+                  strokeOpacity="0.12"
+                  strokeDasharray="4 8"
+                />
+              </motion.g>
+
               {/* FRAME INTERCHANGE: External ring */}
               <motion.circle
                 cx={center}
@@ -261,7 +315,7 @@ export const ThreatRadar = ({
                 transition={{ duration: 1.5, ease: 'easeInOut' }}
               />
 
-              {/* Middle ring (static reference) */}
+              {/* Static reference ring */}
               <circle
                 cx={center}
                 cy={center}
@@ -269,7 +323,7 @@ export const ThreatRadar = ({
                 fill="none"
                 stroke={theme.color}
                 strokeWidth="1"
-                strokeOpacity="0.15"
+                strokeOpacity="0.08"
               />
 
               {/* SCANNING WEDGE (cake slice) */}
@@ -325,25 +379,31 @@ export const ThreatRadar = ({
                 <path d={`M ${size - 15} ${size - 35} L ${size - 15} ${size - 15} L ${size - 35} ${size - 15}`} fill="none" />
               </g>
 
-              {/* Tick marks on outer edge */}
-              {Array.from({ length: 36 }).map((_, i) => {
-                const angle = (i * 10 - 90) * Math.PI / 180;
-                const isMajor = i % 3 === 0;
-                const r1 = outerRadius - (isMajor ? 10 : 5);
-                const r2 = outerRadius;
-                return (
-                  <line
-                    key={i}
-                    x1={center + r1 * Math.cos(angle)}
-                    y1={center + r1 * Math.sin(angle)}
-                    x2={center + r2 * Math.cos(angle)}
-                    y2={center + r2 * Math.sin(angle)}
-                    stroke={theme.color}
-                    strokeWidth={isMajor ? 2 : 1}
-                    strokeOpacity={isMajor ? 0.5 : 0.2}
-                  />
-                );
-              })}
+              {/* ROTATING TICK MARKS - Slow clockwise */}
+              <motion.g
+                animate={{ rotate: 360 }}
+                transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: `${center}px ${center}px` }}
+              >
+                {Array.from({ length: 36 }).map((_, i) => {
+                  const angle = (i * 10 - 90) * Math.PI / 180;
+                  const isMajor = i % 3 === 0;
+                  const r1 = outerRadius - (isMajor ? 12 : 6);
+                  const r2 = outerRadius;
+                  return (
+                    <line
+                      key={i}
+                      x1={center + r1 * Math.cos(angle)}
+                      y1={center + r1 * Math.sin(angle)}
+                      x2={center + r2 * Math.cos(angle)}
+                      y2={center + r2 * Math.sin(angle)}
+                      stroke={theme.color}
+                      strokeWidth={isMajor ? 2 : 1}
+                      strokeOpacity={isMajor ? 0.5 : 0.2}
+                    />
+                  );
+                })}
+              </motion.g>
             </svg>
 
             {/* Center HUD Overlay */}
