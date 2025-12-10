@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import { NexusButton } from '@/components/nexus/NexusButton';
 
 export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
@@ -55,21 +56,15 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap items-center gap-6 pt-4"
           >
-            {/* Primary CTA: Sharp corners, Green Accent (Max 5%) */}
-            <button
-              onClick={onGetStarted}
-              className="group relative px-8 py-4 bg-nexus-green text-nexus-void font-mono text-sm tracking-wide hover:bg-white transition-colors duration-300"
-            >
-              <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-black opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* Primary CTA: Uses NexusButton (Wireframe Protocol) */}
+            <NexusButton variant="primary" onClick={onGetStarted}>
               INITIALIZE PROTOCOL
-              <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-black opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
+            </NexusButton>
 
-            {/* Secondary CTA: Ghost button */}
-            <button className="flex items-center gap-2 px-6 py-4 border border-nexus-structure text-nexus-signal font-mono text-sm hover:border-nexus-green/50 transition-colors">
-              <span>VIEW DOCUMENTATION</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {/* Secondary CTA: Uses NexusButton */}
+            <NexusButton variant="secondary" icon={<ArrowRight className="w-4 h-4" />}>
+              VIEW DOCUMENTATION
+            </NexusButton>
           </motion.div>
         </div>
 
