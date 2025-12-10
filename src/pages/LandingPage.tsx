@@ -2,10 +2,12 @@ import { HeroSection } from '@/components/landing/HeroSection';
 import { Header } from '@/components/landing/Header';
 import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
 import StabilitySimulation from '@/components/landing/StabilitySimulation';
+import { LivingLens } from '@/components/landing/LivingLens';
+import { TruthBar } from '@/components/landing/TruthBar';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { LandingFooter } from '@/components/landing/LandingFooter';
-import { ArrowRight, ShieldCheck, Activity, Terminal } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch } from 'lucide-react';
 
 export const LandingPage = ({
   onTryIt,
@@ -93,7 +95,48 @@ export const LandingPage = ({
           </div>
         </section>
 
-        {/* SECTION 3: FINAL CTA */}
+        {/* SECTION 3: THE TRUTH ENGINE (Live Demo) */}
+        <section id="engine" className="py-32 px-6 border-t border-nexus-structure">
+          <div className="max-w-7xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+                <GitBranch className="w-3 h-3" />
+                Deterministic Logic Processor
+              </span>
+              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
+                The Truth Engine
+              </h2>
+              <p className="text-nexus-noise max-w-2xl mx-auto">
+                Watch transactions flow through our Glass Box audit system. 
+                Every decision is traced. Every rule is visible. Zero hallucinations.
+              </p>
+            </div>
+
+            {/* Living Lens Demo */}
+            <LivingLens />
+          </div>
+        </section>
+
+        {/* SECTION 4: INTERACTIVE TRUTH BAR */}
+        <section id="query" className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/30">
+          <div className="max-w-7xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <span className="nexus-label text-nexus-green">Interactive Query Interface</span>
+              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
+                Ask the System
+              </h2>
+              <p className="text-nexus-noise max-w-2xl mx-auto">
+                Select a transaction and see the full logic traversal path. 
+                Click "Show Proof" to reveal exactly how the verdict was reached.
+              </p>
+            </div>
+
+            {/* Truth Bar */}
+            <TruthBar />
+          </div>
+        </section>
+
+        {/* SECTION 5: FINAL CTA */}
         <section className="py-32 px-6 border-t border-nexus-structure relative overflow-hidden">
           <div className="absolute inset-0 bg-nexus-green/5 opacity-20" /> {/* Subtle Green tint */}
           <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
