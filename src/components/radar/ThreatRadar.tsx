@@ -199,33 +199,33 @@ export const ThreatRadar = ({
             </span>
           </motion.div>
           
-          {/* Soft Particles - Flow from badge to center when Level 4 */}
+          {/* Fire Extinguisher Particles - LOTS of small smooth particles */}
           {isWarning && (
             <>
-              {[...Array(8)].map((_, i) => (
+              {[...Array(40)].map((_, i) => (
                 <motion.div
                   key={`lynx-particle-${i}`}
                   className="absolute rounded-full pointer-events-none"
                   style={{
-                    width: 4 + (i % 3),
-                    height: 4 + (i % 3),
+                    width: 2 + (i % 2),
+                    height: 2 + (i % 2),
                     backgroundColor: LYNX_GREEN,
-                    opacity: 0.6,
-                    filter: 'blur(1px)',
-                    left: 60,
-                    top: 12,
+                    filter: 'blur(0.5px)',
+                    left: 60 + (i % 5) * 3,
+                    top: 10 + (i % 3) * 2,
                   }}
+                  initial={{ opacity: 0, x: 0, y: 0 }}
                   animate={{
-                    x: [0, size * 0.4],
-                    y: [0, size * 0.35],
-                    opacity: [0, 0.5, 0],
-                    scale: [0.5, 1, 0.3],
+                    x: [0, size * 0.35 + (i % 10) * 8],
+                    y: [0, size * 0.32 + (i % 8) * 6],
+                    opacity: [0, 0.4, 0.3, 0],
+                    scale: [0.3, 0.8, 0.5, 0.2],
                   }}
                   transition={{
-                    duration: 3 + i * 0.3,
-                    delay: i * 0.4,
+                    duration: 2.5 + (i % 5) * 0.2,
+                    delay: 2 + i * 0.08, // 2 second initial delay
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: 'easeOut',
                   }}
                 />
               ))}
