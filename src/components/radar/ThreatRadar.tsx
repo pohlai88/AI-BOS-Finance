@@ -4,17 +4,18 @@
  * Features:
  * - Uses existing canvas-based RadarDisplay
  * - 3-stage threat system (Normal/Warning/Critical)
+ * - SCANNING WEDGE overlay (cake slice animation)
+ * - BREATHING animation (enlarge/minimize pulse)
+ * - FRAME INTERCHANGE (internal/external rings swap)
  * - Center HUD with threat count
  * - BREACH DETECTED / SHIELD ACTIVE / MONITORING badges
  * - Live system log panel
- * - Dynamic color theming based on threat level
  */
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
 import RadarDisplay, { RadarConfig, RadarPoint } from './RadarDisplay';
-import RadarDecorations from './RadarDecorations';
 import { cn } from '@/lib/utils';
 
 interface LogEntry {
@@ -38,9 +39,18 @@ export const ThreatRadar = ({
   showLog = true
 }: ThreatRadarProps) => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [frameSwapped, setFrameSwapped] = useState(false);
 
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
+
+  // Frame interchange animation - swap every 8 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFrameSwapped(prev => !prev);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Theme based on threat level
   const theme = useMemo(() => {
@@ -94,10 +104,10 @@ export const ThreatRadar = ({
   const points: RadarPoint[] = useMemo(() => {
     return Array.from({ length: Math.min(activeRisks * 2, 12) }).map((_, i) => ({
       id: `threat-${i}`,
-      angle: Math.random() * 360,
-      distance: 0.2 + Math.random() * 0.7,
+      angle: (i * 37 + 15) % 360, // Deterministic spread
+      distance: 0.25 + (i % 5) * 0.15,
       color: i < activeRisks ? theme.color : `${theme.color}60`,
-      size: 4 + Math.random() * 4,
+      size: 4 + (i % 3) * 2,
     }));
   }, [activeRisks, theme.color]);
 
@@ -108,12 +118,9 @@ export const ThreatRadar = ({
       { level: 'CRITICAL' as const, text: 'CRITICAL: Shadow Ledger anomaly' },
       { level: 'LOW' as const, text: 'Canon hash verified: Block #9921' },
       { level: 'HIGH' as const, text: 'Tax jurisdiction mismatch (EU/US)' },
-      { level: 'INFO' as const, text: 'Reconciliation complete' },
-      { level: 'CRITICAL' as const, text: 'Duplicate transaction detected' },
-      { level: 'HIGH' as const, text: 'Unusual timing pattern flagged' },
     ];
 
-    const initialLogs = messages.slice(0, 4).map((msg, i) => ({
+    const initialLogs = messages.map((msg, i) => ({
       id: `log-${i}`,
       timestamp: new Date(Date.now() - i * 60000).toLocaleTimeString('en-US', { 
         hour12: false, 
@@ -137,14 +144,26 @@ export const ThreatRadar = ({
     }
   };
 
+  const center = size / 2;
+  const outerRadius = size / 2 - 20;
+  const innerRadius = outerRadius * 0.3;
+
   return (
     <div className={cn('flex flex-col gap-4', className)}>
-      {/* Radar Container */}
-      <div 
+      {/* Radar Container with BREATHING animation */}
+      <motion.div 
         className="relative rounded-xl border overflow-hidden"
         style={{ 
           backgroundColor: theme.backgroundColor,
           borderColor: `${theme.color}20`,
+        }}
+        animate={{ 
+          scale: [1, 1.02, 1],
+        }}
+        transition={{ 
+          duration: 4, 
+          repeat: Infinity, 
+          ease: 'easeInOut' 
         }}
       >
         {/* Status Badge */}
@@ -171,8 +190,8 @@ export const ThreatRadar = ({
           </motion.div>
         </div>
 
-        {/* Radar */}
-        <div className="relative flex items-center justify-center p-8">
+        {/* Radar Area */}
+        <div className="relative flex items-center justify-center p-6">
           {/* Atmospheric glow */}
           <div 
             className="absolute inset-0 pointer-events-none"
@@ -181,40 +200,180 @@ export const ThreatRadar = ({
             }}
           />
 
-          {/* Canvas Radar */}
+          {/* Canvas Radar (base layer) */}
           <div className="relative" style={{ width: size, height: size }}>
             <RadarDisplay 
               config={config} 
               points={points}
             />
-            <RadarDecorations size={size} />
+
+            {/* SVG Overlay with SCANNING WEDGE and FRAME INTERCHANGE */}
+            <svg 
+              className="absolute inset-0 pointer-events-none"
+              width={size} 
+              height={size} 
+              viewBox={`0 0 ${size} ${size}`}
+            >
+              <defs>
+                {/* Scanning wedge gradient */}
+                <linearGradient id="sweepGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="transparent" />
+                  <stop offset="60%" stopColor={theme.color} stopOpacity="0.2" />
+                  <stop offset="100%" stopColor={theme.color} stopOpacity="0.6" />
+                </linearGradient>
+                
+                {/* Glow filter */}
+                <filter id="radarGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* FRAME INTERCHANGE: External ring */}
+              <motion.circle
+                cx={center}
+                cy={center}
+                fill="none"
+                stroke={theme.color}
+                strokeWidth="2"
+                strokeOpacity="0.4"
+                animate={{ 
+                  r: frameSwapped ? innerRadius + 20 : outerRadius,
+                }}
+                transition={{ duration: 1.5, ease: 'easeInOut' }}
+              />
+
+              {/* FRAME INTERCHANGE: Internal ring */}
+              <motion.circle
+                cx={center}
+                cy={center}
+                fill="none"
+                stroke={theme.color}
+                strokeWidth="1.5"
+                strokeOpacity="0.3"
+                strokeDasharray="8 4"
+                animate={{ 
+                  r: frameSwapped ? outerRadius - 20 : innerRadius + 40,
+                }}
+                transition={{ duration: 1.5, ease: 'easeInOut' }}
+              />
+
+              {/* Middle ring (static reference) */}
+              <circle
+                cx={center}
+                cy={center}
+                r={outerRadius * 0.6}
+                fill="none"
+                stroke={theme.color}
+                strokeWidth="1"
+                strokeOpacity="0.15"
+              />
+
+              {/* SCANNING WEDGE (cake slice) */}
+              <g style={{ transformOrigin: `${center}px ${center}px` }}>
+                <motion.g
+                  animate={{ rotate: 360 }}
+                  transition={{ 
+                    duration: isCritical ? 3 : isWarning ? 5 : 8, 
+                    repeat: Infinity, 
+                    ease: 'linear' 
+                  }}
+                  style={{ transformOrigin: `${center}px ${center}px` }}
+                >
+                  {/* Scan line (leading edge) */}
+                  <line
+                    x1={center}
+                    y1={center}
+                    x2={center}
+                    y2={center - outerRadius + 5}
+                    stroke={theme.color}
+                    strokeWidth="2"
+                    filter="url(#radarGlow)"
+                  />
+                  
+                  {/* Scan wedge (45° trailing gradient) */}
+                  <path
+                    d={`M ${center} ${center} 
+                        L ${center} ${center - outerRadius + 5} 
+                        A ${outerRadius - 5} ${outerRadius - 5} 0 0 0 
+                        ${center + (outerRadius - 5) * Math.sin(Math.PI / 4)} 
+                        ${center - (outerRadius - 5) * Math.cos(Math.PI / 4)}
+                        Z`}
+                    fill="url(#sweepGradient)"
+                    opacity="0.5"
+                  />
+
+                  {/* Scan endpoint glow */}
+                  <circle
+                    cx={center}
+                    cy={center - outerRadius + 10}
+                    r="4"
+                    fill={theme.color}
+                    filter="url(#radarGlow)"
+                  />
+                </motion.g>
+              </g>
+
+              {/* Corner brackets */}
+              <g stroke={theme.color} strokeWidth="2" strokeOpacity="0.5">
+                <path d={`M 15 35 L 15 15 L 35 15`} fill="none" />
+                <path d={`M ${size - 15} 35 L ${size - 15} 15 L ${size - 35} 15`} fill="none" />
+                <path d={`M 15 ${size - 35} L 15 ${size - 15} L 35 ${size - 15}`} fill="none" />
+                <path d={`M ${size - 15} ${size - 35} L ${size - 15} ${size - 15} L ${size - 35} ${size - 15}`} fill="none" />
+              </g>
+
+              {/* Tick marks on outer edge */}
+              {Array.from({ length: 36 }).map((_, i) => {
+                const angle = (i * 10 - 90) * Math.PI / 180;
+                const isMajor = i % 3 === 0;
+                const r1 = outerRadius - (isMajor ? 10 : 5);
+                const r2 = outerRadius;
+                return (
+                  <line
+                    key={i}
+                    x1={center + r1 * Math.cos(angle)}
+                    y1={center + r1 * Math.sin(angle)}
+                    x2={center + r2 * Math.cos(angle)}
+                    y2={center + r2 * Math.sin(angle)}
+                    stroke={theme.color}
+                    strokeWidth={isMajor ? 2 : 1}
+                    strokeOpacity={isMajor ? 0.5 : 0.2}
+                  />
+                );
+              })}
+            </svg>
 
             {/* Center HUD Overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <motion.div 
                 className="flex flex-col items-center justify-center rounded-full border-2"
                 style={{ 
-                  width: 100,
-                  height: 100,
-                  backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                  width: 90,
+                  height: 90,
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
                   borderColor: theme.color,
                   boxShadow: `0 0 30px ${theme.glowColor}, inset 0 0 20px ${theme.glowColor}`
                 }}
                 animate={{ 
-                  scale: isCritical ? [1, 1.05, 1] : 1,
+                  scale: isCritical ? [1, 1.08, 1] : [1, 1.03, 1],
                 }}
-                transition={{ duration: 1, repeat: isCritical ? Infinity : 0 }}
+                transition={{ 
+                  duration: isCritical ? 0.8 : 3, 
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
               >
                 <motion.span 
                   className="text-4xl font-mono font-bold"
                   style={{ color: theme.color }}
-                  animate={{ scale: isCritical ? [1, 1.1, 1] : 1 }}
-                  transition={{ duration: 0.5, repeat: isCritical ? Infinity : 0 }}
                 >
                   {activeRisks}
                 </motion.span>
                 <span 
-                  className="text-[8px] font-mono uppercase tracking-[0.2em] mt-1"
+                  className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
                   style={{ color: `${theme.color}80` }}
                 >
                   Threats
@@ -223,7 +382,7 @@ export const ThreatRadar = ({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* System Log Panel */}
       {showLog && (
@@ -285,4 +444,3 @@ export const ThreatRadar = ({
 };
 
 export default ThreatRadar;
-
