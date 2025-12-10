@@ -16,7 +16,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
 import RadarDisplay, { RadarConfig, RadarPoint } from './RadarDisplay';
+import { LynxIcon } from '@/components/icons/LynxIcon';
 import { cn } from '@/lib/utils';
+
+// Lynx protection color - soft emerald
+const LYNX_GREEN = '#28E7A2';
 
 interface LogEntry {
   id: string;
@@ -176,24 +180,57 @@ export const ThreatRadar = ({
         <div className="absolute top-4 left-4 z-20">
           <motion.div 
             className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-black/80 backdrop-blur-md"
-            style={{ borderColor: theme.color }}
+            style={{ borderColor: isWarning ? LYNX_GREEN : theme.color }}
             animate={{ opacity: isCritical ? [1, 0.7, 1] : 1 }}
             transition={{ duration: 0.5, repeat: isCritical ? Infinity : 0 }}
           >
             {isCritical ? (
               <AlertTriangle className="w-4 h-4" style={{ color: theme.color }} />
             ) : isWarning ? (
-              <Shield className="w-4 h-4" style={{ color: '#84CC16' }} />
+              <LynxIcon size={16} className="text-[#28E7A2]" />
             ) : (
               <Activity className="w-4 h-4" style={{ color: theme.color }} />
             )}
             <span 
-              className="text-xs font-mono font-bold uppercase tracking-widest"
-              style={{ color: theme.color }}
+              className="text-xs font-mono font-bold tracking-wider"
+              style={{ color: isWarning ? LYNX_GREEN : theme.color }}
             >
-              {theme.label}
+              {isWarning ? 'Lynx .Detect.Protect.React.' : theme.label}
             </span>
           </motion.div>
+          
+          {/* Soft Particles - Flow from badge to center when Level 4 */}
+          {isWarning && (
+            <>
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={`lynx-particle-${i}`}
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    width: 4 + (i % 3),
+                    height: 4 + (i % 3),
+                    backgroundColor: LYNX_GREEN,
+                    opacity: 0.6,
+                    filter: 'blur(1px)',
+                    left: 60,
+                    top: 12,
+                  }}
+                  animate={{
+                    x: [0, size * 0.4],
+                    y: [0, size * 0.35],
+                    opacity: [0, 0.5, 0],
+                    scale: [0.5, 1, 0.3],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.3,
+                    delay: i * 0.4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
+            </>
+          )}
         </div>
 
         {/* Radar Area - zero padding for maximum size */}
