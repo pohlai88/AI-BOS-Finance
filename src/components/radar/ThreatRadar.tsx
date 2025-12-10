@@ -462,63 +462,131 @@ export const ThreatRadar = ({
 
             {/* === LYNX PROTECTION SEQUENCE === */}
             
-            {/* Phase 1: Particle Stream from Lynx (Top-Left) to Center */}
+            {/* Phase 1: Particle Stream from Lynx Header to Radar Center */}
             <AnimatePresence>
               {particlesFlowing && (
                 <>
-                  {lynxParticles.map((particle) => (
+                  {/* MORPHOLOGY LINE: Visible beam from Lynx to Radar */}
+                  <motion.div
+                    className="fixed pointer-events-none z-50"
+                    style={{
+                      // Start from Lynx Codex position (header nav, ~left side)
+                      left: 0,
+                      top: 0,
+                      width: '100vw',
+                      height: '100vh',
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {/* The Energy Beam - SVG line from nav to radar */}
+                    <svg className="absolute inset-0 w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="lynxBeamGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor={LYNX_GREEN} stopOpacity="1" />
+                          <stop offset="50%" stopColor={LYNX_GREEN} stopOpacity="0.6" />
+                          <stop offset="100%" stopColor={LYNX_GREEN} stopOpacity="0" />
+                        </linearGradient>
+                        <filter id="lynxGlow" x="-50%" y="-50%" width="200%" height="200%">
+                          <feGaussianBlur stdDeviation="4" result="blur" />
+                          <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                          </feMerge>
+                        </filter>
+                      </defs>
+                      
+                      {/* Main beam line from header (approx Lynx position) to radar center */}
+                      <motion.path
+                        d="M 580 60 Q 700 200, 750 400"
+                        fill="none"
+                        stroke="url(#lynxBeamGradient)"
+                        strokeWidth="3"
+                        filter="url(#lynxGlow)"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ 
+                          pathLength: [0, 1, 1],
+                          opacity: [0, 1, 0.5],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeOut',
+                        }}
+                      />
+                      
+                      {/* Secondary pulsing beam */}
+                      <motion.path
+                        d="M 580 60 Q 700 200, 750 400"
+                        fill="none"
+                        stroke={LYNX_GREEN}
+                        strokeWidth="1"
+                        strokeDasharray="8 4"
+                        initial={{ pathLength: 0 }}
+                        animate={{ 
+                          pathLength: 1,
+                          strokeDashoffset: [0, -24],
+                        }}
+                        transition={{
+                          pathLength: { duration: 1.5, ease: 'easeOut' },
+                          strokeDashoffset: { duration: 0.5, repeat: Infinity, ease: 'linear' },
+                        }}
+                      />
+                    </svg>
+
+                    {/* Particles traveling along the beam */}
+                    {lynxParticles.map((particle) => (
+                      <motion.div
+                        key={`lynx-particle-${particle.id}`}
+                        className="absolute w-3 h-3 rounded-full pointer-events-none"
+                        style={{
+                          backgroundColor: LYNX_GREEN,
+                          boxShadow: `0 0 15px ${LYNX_GREEN}, 0 0 30px ${LYNX_GREEN}, 0 0 45px ${LYNX_GREEN}`,
+                        }}
+                        initial={{
+                          left: 580,
+                          top: 60,
+                          scale: 0,
+                          opacity: 0,
+                        }}
+                        animate={{
+                          left: [580, 700, 750],
+                          top: [60, 200, 400],
+                          scale: [0, 1.5, 0],
+                          opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                          duration: particle.duration,
+                          delay: particle.delay,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                    ))}
+
+                    {/* Lynx source glow at header */}
                     <motion.div
-                      key={`lynx-particle-${particle.id}`}
-                      className="absolute w-2 h-2 rounded-full pointer-events-none"
+                      className="absolute rounded-full"
                       style={{
-                        backgroundColor: LYNX_GREEN,
-                        boxShadow: `0 0 10px ${LYNX_GREEN}, 0 0 20px ${LYNX_GREEN}`,
-                        left: '50%',
-                        top: '50%',
-                      }}
-                      initial={{
-                        x: particle.startX,
-                        y: particle.startY,
-                        scale: 0,
-                        opacity: 0,
+                        left: 565,
+                        top: 45,
+                        width: 30,
+                        height: 30,
+                        background: `radial-gradient(circle, ${LYNX_GREEN}80 0%, ${LYNX_GREEN}00 70%)`,
+                        boxShadow: `0 0 30px ${LYNX_GREEN}, 0 0 60px ${LYNX_GREEN}`,
                       }}
                       animate={{
-                        x: 0,
-                        y: 0,
-                        scale: [0, 1.5, 0.5],
-                        opacity: [0, 1, 0],
+                        scale: [1, 1.5, 1],
+                        opacity: [0.8, 1, 0.8],
                       }}
                       transition={{
-                        duration: particle.duration,
-                        delay: particle.delay,
+                        duration: 1,
                         repeat: Infinity,
-                        ease: 'easeOut',
+                        ease: 'easeInOut',
                       }}
                     />
-                  ))}
-                  
-                  {/* Energy Trail Effect */}
-                  <motion.div
-                    className="absolute pointer-events-none"
-                    style={{
-                      left: '50%',
-                      top: '50%',
-                      width: 300,
-                      height: 4,
-                      background: `linear-gradient(90deg, ${LYNX_GREEN}00, ${LYNX_GREEN}80, ${LYNX_GREEN})`,
-                      transformOrigin: 'right center',
-                    }}
-                    initial={{ rotate: 225, scaleX: 0, opacity: 0 }}
-                    animate={{ 
-                      scaleX: [0, 1, 0.8],
-                      opacity: [0, 0.8, 0.3],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
+                  </motion.div>
                 </>
               )}
             </AnimatePresence>
