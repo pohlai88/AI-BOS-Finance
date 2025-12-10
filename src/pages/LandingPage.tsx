@@ -42,9 +42,9 @@ export const LandingPage = ({
                 <Layers className="w-3 h-3" />
                 Structural Integrity Protocol
               </span>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
+<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 The Inevitable{' '}
-<span className="text-zinc-400">Divergence</span>
+                <span className="text-zinc-400">Divergence</span>
               </h2>
             </div>
 
@@ -63,9 +63,9 @@ export const LandingPage = ({
                 <ShieldCheck className="w-3 h-3" />
                 Core Capabilities
               </span>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mt-4">
+<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white mt-4">
                 Forensic{' '}
-<span className="text-zinc-400">Architecture</span>
+                <span className="text-zinc-400">Architecture</span>
               </h2>
               <p className="mt-4 text-nexus-noise max-w-xl text-lg">
                 Built on first principles of cryptographic verification. We don't just audit data; we anchor it to mathematical truth.
@@ -111,9 +111,9 @@ export const LandingPage = ({
                 <GitBranch className="w-3 h-3" />
                 Deterministic Logic Processor
               </span>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
+<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 The Truth{' '}
-<span className="text-zinc-400">Engine</span>
+                <span className="text-zinc-400">Engine</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Watch transactions flow through our Glass Box audit system. 
@@ -134,9 +134,9 @@ export const LandingPage = ({
                 <Search className="w-3 h-3" />
                 Interactive Query Interface
               </span>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
+<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 Ask the{' '}
-<span className="text-zinc-400">System</span>
+                <span className="text-zinc-400">System</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Select a transaction and see the full logic traversal path. 
