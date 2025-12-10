@@ -132,46 +132,53 @@ export default function StabilitySimulation() {
           </div>
         </div>
 
-        {/* === RIGHT: THE NEXUS SPINE === */}
+        {/* === RIGHT: THE CRYSTAL FORTRESS === */}
         <div className="relative flex flex-col justify-end items-center">
           
-          {/* Clean Background (No blurry noise) */}
-          <div className="absolute inset-0 bg-[#050a07] border border-white/5 overflow-hidden">
-            {/* Subtle Grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+          {/* Environment: Deep Void with floor reflection */}
+          <div className="absolute inset-0 bg-[#020403] border border-white/5 overflow-hidden">
+            {/* Floor Reflection Gradient */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nexus-green/5 to-transparent" />
           </div>
 
-          {/* The Solid Vertebrae Stack */}
+          {/* The Crystalline Stack */}
           <div className="relative w-72 pb-12 z-10 flex flex-col-reverse min-h-[400px]">
             
-            {/* The Central Spine */}
-            <div className="absolute left-1/2 bottom-12 top-0 w-[1px] bg-nexus-green/10 -translate-x-1/2 z-0" />
+            {/* The Spine: Solid rod, not a line */}
+            <div className="absolute left-1/2 bottom-12 top-0 w-1.5 bg-[#0f1f15] border-x border-nexus-green/20 -translate-x-1/2 z-0" />
 
-            <AnimatePresence mode='popLayout'>
+            <AnimatePresence mode="popLayout">
               {NEXUS_STACK.slice(0, stage).map((block, index) => (
-                <NexusVertebraBlock 
+                <NexusCrystalBlock 
                   key={block.id} 
-                  data={block} 
+                  data={block}
                   index={index}
                   isNew={index === stage - 1}
                 />
               ))}
             </AnimatePresence>
 
-            {/* Baseplate */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-48 h-1 bg-nexus-green shadow-[0_0_20px_rgba(40,231,162,0.5)] rounded-full" />
+            {/* Impact Baseplate */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+              {/* The physical base */}
+              <div className="w-56 h-2 bg-nexus-green shadow-[0_0_30px_rgba(40,231,162,0.4)] rounded-full" />
+              {/* Shockwave Emitter */}
+              <ShockwaveTrigger trigger={stage} />
+            </div>
 
-            {/* Shield Active Badge */}
+            {/* Shield Badge */}
             <AnimatePresence>
               {stage >= NEXUS_STACK.length && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-nexus-green/10 border border-nexus-green text-nexus-green text-[9px] font-mono tracking-widest uppercase flex items-center gap-2"
+                  className="absolute -top-12 left-1/2 -translate-x-1/2"
                 >
-                  <ShieldCheck className="w-3 h-3" />
-                  SHIELD ACTIVE
+                  <div className="px-4 py-1.5 bg-[#050a07] border border-nexus-green shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
+                    <ShieldCheck className="w-3 h-3 text-nexus-green fill-nexus-green" />
+                    <span className="text-[10px] font-mono tracking-widest text-white uppercase">Fortress Secured</span>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -179,8 +186,8 @@ export default function StabilitySimulation() {
 
           <div className="absolute bottom-0 w-full text-center border-t border-nexus-green/20 pt-3">
             <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green uppercase flex items-center justify-center gap-2">
-              <ShieldCheck className="w-3 h-3" />
-              Nexus Vertebrae (v2.0)
+              <Hexagon className="w-3 h-3" />
+              Crystalline Lattice (v3.0)
             </span>
           </div>
         </div>
@@ -223,8 +230,8 @@ const LegacyBlock = ({ data, shakeLevel }: { data: { id: string; label: string; 
   );
 };
 
-// --- THE NEXUS VERTEBRA BLOCK (V3 - Heavy Physics) ---
-const NexusVertebraBlock = ({ data, index, isNew }: { 
+// --- THE CRYSTAL BLOCK (V4 - Natural/Heavy Feel) ---
+const NexusCrystalBlock = ({ data, index, isNew }: { 
   data: { id: string; label: string; status: string }; 
   index: number; 
   isNew: boolean 
@@ -232,77 +239,87 @@ const NexusVertebraBlock = ({ data, index, isNew }: {
   return (
     <motion.div
       layout
-      // PHYSICS: Drop from sky (-400px) with heavy damping for "Thud" feel
-      initial={{ y: -400, opacity: 0, scale: 0.9 }}
+      // PHYSICS: Heavy Thud. No bounce. damping: 40 = stops immediately
+      initial={{ y: -400, opacity: 0, scale: 0.95 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ opacity: 0, y: -50 }}
       transition={{ 
         type: "spring", 
-        stiffness: 200, 
-        damping: 20, 
-        mass: 1.5 
+        stiffness: 300, 
+        damping: 40,
+        mass: 2
       }}
       className="relative z-10"
       style={{ zIndex: index }}
     >
-      {/* The Block Itself (Armor Plate) */}
+      {/* The Crystal Slab */}
       <div className={cn(
-        "relative h-14 w-full flex items-center justify-between px-6 transition-colors duration-500",
-        // Visual Logic: New blocks are bright, older blocks harden into dark armor
-        isNew ? "bg-[#0f1f15] border-nexus-green" : "bg-[#050a07] border-nexus-green/30",
-        "border-x border-t",
-        index === 0 && "border-b" // Only bottom block has bottom border
+        "relative h-14 w-full flex items-center justify-between px-6 overflow-hidden transition-all duration-700",
+        // Base Material: Dark Obsidian-like Green
+        "bg-[#030805]",
+        // 3D Bevels: Light top, dark bottom
+        "border-t border-t-white/10 border-b border-b-black/80",
+        // Side Definition
+        "border-x border-x-nexus-green/20",
+        // Active State: New blocks glow hot before cooling
+        isNew ? "shadow-[inset_0_0_30px_rgba(40,231,162,0.1)]" : "shadow-none"
       )}>
         
-        {/* Left Indicator */}
-        <div className="flex items-center gap-4">
-          <Hexagon className={cn(
-            "w-3 h-3 transition-colors duration-500",
-            isNew ? "text-nexus-green fill-nexus-green" : "text-nexus-green/40 fill-transparent"
+        {/* TEXTURE: Noise Overlay for "Stone/Matter" feel */}
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none" 
+          style={{ 
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+          }} 
+        />
+
+        {/* Content Layer */}
+        <div className="relative z-10 flex items-center gap-4">
+          <div className={cn(
+            "w-2 h-2 rotate-45 transition-colors duration-1000",
+            isNew ? "bg-white shadow-[0_0_10px_white]" : "bg-nexus-green"
           )} />
           <span className={cn(
-            "text-[10px] font-bold tracking-wider transition-colors duration-500",
-            isNew ? "text-white" : "text-white/60"
+            "text-[10px] font-bold tracking-wider transition-colors duration-1000",
+            isNew ? "text-white" : "text-nexus-green/80"
           )}>
             {data.label}
           </span>
         </div>
 
-        {/* Right Status */}
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] font-mono text-nexus-green/60">{data.status}</span>
-          <Lock className={cn(
-            "w-3 h-3 transition-colors duration-500",
-            isNew ? "text-nexus-green animate-pulse" : "text-nexus-green/40"
-          )} />
-        </div>
-
-        {/* The Spine Connector (Through the block) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-nexus-green/10 -translate-x-1/2">
-          {/* Active Energy Pulse */}
-          {isNew && (
-            <motion.div 
-              className="w-full bg-nexus-green"
-              initial={{ height: 0 }}
-              animate={{ height: '100%' }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            />
-          )}
-        </div>
-
-        {/* The Interlock Node (Diamond connector) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#050a07] border border-nexus-green rotate-45 z-20 flex items-center justify-center">
-          <div className={cn(
-            "w-1 h-1 bg-nexus-green rounded-full transition-all duration-500",
-            isNew ? "opacity-100 shadow-[0_0_5px_#28E7A2]" : "opacity-40"
-          )} />
+        <div className="relative z-10 flex items-center gap-2">
+          <span className="text-[9px] font-mono text-nexus-green/40">{data.status}</span>
+          <Lock className="w-3 h-3 text-nexus-green/60" />
         </div>
       </div>
       
-      {/* Side Shielding */}
-      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-nexus-green/20 to-transparent" />
-      <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-nexus-green/20 to-transparent" />
+      {/* Interlocking Teeth: Visual notch at bottom */}
+      <div className="absolute -bottom-[1px] left-1/2 -translate-x-1/2 w-32 h-[2px] bg-[#030805] z-20" />
     </motion.div>
+  );
+};
+
+// --- SHOCKWAVE EFFECT ---
+const ShockwaveTrigger = ({ trigger }: { trigger: number }) => {
+  return (
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center">
+      {/* Ripple ring */}
+      <motion.div
+        key={trigger}
+        className="w-40 h-2 rounded-full border border-nexus-green/50"
+        initial={{ scale: 0.8, opacity: 1, borderWidth: 2 }}
+        animate={{ scale: 2.5, opacity: 0, borderWidth: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      />
+      {/* Ground glow flash */}
+      <motion.div
+        key={`glow-${trigger}`}
+        className="absolute w-full h-4 bg-nexus-green/30 blur-xl"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      />
+    </div>
   );
 };
 

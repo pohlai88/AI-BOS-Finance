@@ -8,6 +8,7 @@ export {
   NexusBlock, 
   NexusSolidBlock, 
   NexusVertebraBlock,
+  NexusCrystalBlock,
   CollapsedRubble 
 } from './BlockPrimitives';
 

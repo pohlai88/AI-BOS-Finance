@@ -1,12 +1,10 @@
 // ============================================================================
-// BLOCK PRIMITIVES V3 - Heavy Physics & Vertebrae System
-// LegacyBlock: The "Rust" aesthetic (decaying, shaking)
-// NexusVertebraBlock: The "Spine" aesthetic (interlocking, solidifying)
-// CollapsedRubble: Digital fragmentation display
+// BLOCK PRIMITIVES V4 - Crystalline Fortress
+// Physical matter with texture, bevels, and heavy physics
 // ============================================================================
 
 import { motion } from 'motion/react';
-import { Terminal, AlertTriangle, Hexagon, Lock } from 'lucide-react';
+import { Terminal, AlertTriangle, Lock, Hexagon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LegacyStackItem, NexusStackItem, ShakeLevel } from '../types';
 
@@ -66,7 +64,78 @@ export const LegacyBlock = ({ data, shakeLevel }: LegacyBlockProps) => {
   );
 };
 
-// --- NEXUS VERTEBRA BLOCK (V3 - Heavy Physics) ---
+// --- NEXUS CRYSTAL BLOCK (V4 - Physical Matter) ---
+interface NexusCrystalBlockProps {
+  data: NexusStackItem;
+  index: number;
+  isNew: boolean;
+}
+
+export const NexusCrystalBlock = ({ data, index, isNew }: NexusCrystalBlockProps) => {
+  return (
+    <motion.div
+      layout
+      // PHYSICS: Heavy Thud. No bounce. damping: 40 = stops immediately
+      initial={{ y: -400, opacity: 0, scale: 0.95 }}
+      animate={{ y: 0, opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 40,
+        mass: 2
+      }}
+      className="relative z-10"
+      style={{ zIndex: index }}
+    >
+      {/* The Crystal Slab */}
+      <div className={cn(
+        "relative h-14 w-full flex items-center justify-between px-6 overflow-hidden transition-all duration-700",
+        // Base Material: Dark Obsidian-like Green
+        "bg-[#030805]",
+        // 3D Bevels: Light top, dark bottom
+        "border-t border-t-white/10 border-b border-b-black/80",
+        // Side Definition
+        "border-x border-x-nexus-green/20",
+        // Active State: New blocks glow hot before cooling
+        isNew ? "shadow-[inset_0_0_30px_rgba(40,231,162,0.1)]" : "shadow-none"
+      )}>
+        
+        {/* TEXTURE: Noise Overlay for "Stone/Matter" feel */}
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none" 
+          style={{ 
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+          }} 
+        />
+
+        {/* Content Layer */}
+        <div className="relative z-10 flex items-center gap-4">
+          <div className={cn(
+            "w-2 h-2 rotate-45 transition-colors duration-1000",
+            isNew ? "bg-white shadow-[0_0_10px_white]" : "bg-nexus-green"
+          )} />
+          <span className={cn(
+            "text-[10px] font-bold tracking-wider transition-colors duration-1000",
+            isNew ? "text-white" : "text-nexus-green/80"
+          )}>
+            {data.label}
+          </span>
+        </div>
+
+        <div className="relative z-10 flex items-center gap-2">
+          <span className="text-[9px] font-mono text-nexus-green/40">{data.status}</span>
+          <Lock className="w-3 h-3 text-nexus-green/60" />
+        </div>
+      </div>
+      
+      {/* Interlocking Teeth: Visual notch at bottom */}
+      <div className="absolute -bottom-[1px] left-1/2 -translate-x-1/2 w-32 h-[2px] bg-[#030805] z-20" />
+    </motion.div>
+  );
+};
+
+// --- LEGACY: NEXUS VERTEBRA BLOCK (V3 - kept for compatibility) ---
 interface NexusVertebraBlockProps {
   data: NexusStackItem;
   index: number;
@@ -79,29 +148,19 @@ export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockPro
   return (
     <motion.div
       layout
-      // PHYSICS: Drop from sky (-400px) with heavy damping for "Thud" feel
       initial={{ y: -400, opacity: 0, scale: 0.9 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ opacity: 0, y: -50 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 200, 
-        damping: 20, 
-        mass: 1.5 
-      }}
+      transition={{ type: "spring", stiffness: 200, damping: 20, mass: 1.5 }}
       className="relative z-10"
       style={{ zIndex: index }}
     >
-      {/* The Block Itself (Armor Plate) */}
       <div className={cn(
         "relative h-14 w-full flex items-center justify-between px-6 transition-colors duration-500",
-        // Visual Logic: New blocks are bright, older blocks harden into dark armor
         isNew ? "bg-[#0f1f15] border-nexus-green" : "bg-[#050a07] border-nexus-green/30",
         "border-x border-t",
-        isBottomBlock && "border-b" // Only bottom block has bottom border
+        isBottomBlock && "border-b"
       )}>
-        
-        {/* Left Indicator */}
         <div className="flex items-center gap-4">
           <Hexagon className={cn(
             "w-3 h-3 transition-colors duration-500",
@@ -114,8 +173,6 @@ export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockPro
             {data.label}
           </span>
         </div>
-
-        {/* Right Status */}
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-mono text-nexus-green/60">{data.status}</span>
           <Lock className={cn(
@@ -123,10 +180,7 @@ export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockPro
             isNew ? "text-nexus-green animate-pulse" : "text-nexus-green/40"
           )} />
         </div>
-
-        {/* The Spine Connector (Through the block) */}
         <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-nexus-green/10 -translate-x-1/2">
-          {/* Active Energy Pulse */}
           {isNew && (
             <motion.div 
               className="w-full bg-nexus-green"
@@ -136,8 +190,6 @@ export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockPro
             />
           )}
         </div>
-
-        {/* The Interlock Node (Diamond connector) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#050a07] border border-nexus-green rotate-45 z-20 flex items-center justify-center">
           <div className={cn(
             "w-1 h-1 bg-nexus-green rounded-full transition-all duration-500",
@@ -145,15 +197,13 @@ export const NexusVertebraBlock = ({ data, index, isNew }: NexusVertebraBlockPro
           )} />
         </div>
       </div>
-      
-      {/* Side Shielding */}
       <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-nexus-green/20 to-transparent" />
       <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-nexus-green/20 to-transparent" />
     </motion.div>
   );
 };
 
-// --- LEGACY NEXUS BLOCK (Glass style - kept for compatibility) ---
+// --- LEGACY: NEXUS BLOCK (Glass style) ---
 interface NexusBlockProps {
   data: NexusStackItem;
   index?: number;
@@ -165,11 +215,7 @@ export const NexusBlock = ({ data, index = 0 }: NexusBlockProps) => {
       initial={{ y: -50, opacity: 0, scale: 0.95 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ 
-        type: 'spring', 
-        stiffness: 200,
-        delay: index * 0.05 
-      }}
+      transition={{ type: 'spring', stiffness: 200, delay: index * 0.05 }}
       className={cn(
         'w-full h-14 flex items-center justify-between px-4',
         'bg-nexus-matter/50 border border-nexus-green/20 backdrop-blur-sm',
@@ -184,7 +230,6 @@ export const NexusBlock = ({ data, index = 0 }: NexusBlockProps) => {
         />
         <span className="text-[10px] font-mono tracking-wider text-white">{data.label}</span>
       </div>
-      
       <div className="text-[9px] font-mono text-nexus-green/60 uppercase border border-nexus-green/20 px-1.5 py-0.5">
         {data.status}
       </div>
@@ -192,7 +237,7 @@ export const NexusBlock = ({ data, index = 0 }: NexusBlockProps) => {
   );
 };
 
-// --- LEGACY SOLID BLOCK (kept for compatibility) ---
+// --- LEGACY: NEXUS SOLID BLOCK ---
 interface NexusSolidBlockProps {
   data: NexusStackItem;
   index: number;
@@ -210,8 +255,7 @@ export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
       transition={{ type: 'spring', stiffness: 200, delay: index * 0.05 }}
       className={cn(
         'relative w-full h-14 flex items-center justify-between px-6',
-        'bg-[#0a0f0d]',
-        'border-x-2 border-t-2 border-nexus-green/40',
+        'bg-[#0a0f0d] border-x-2 border-t-2 border-nexus-green/40',
         isBottomBlock && 'border-b-2',
         'shadow-[inset_0_0_20px_rgba(40,231,162,0.05)]'
       )}
@@ -220,12 +264,10 @@ export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
       <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#0a0f0d] border border-nexus-green flex items-center justify-center rotate-45 z-20">
         <div className="w-1.5 h-1.5 bg-nexus-green" />
       </div>
-
       <div className="flex items-center gap-4">
         <Hexagon className="w-4 h-4 text-nexus-green fill-nexus-green/20" />
         <span className="text-[10px] font-bold tracking-wider text-white">{data.label}</span>
       </div>
-
       <div className="flex items-center gap-2">
         <div className="h-1 w-12 bg-nexus-green/10 overflow-hidden rounded-full">
           <motion.div 
@@ -237,14 +279,13 @@ export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
         </div>
         <Lock className="w-3 h-3 text-nexus-green" />
       </div>
-      
       <div className="absolute inset-y-0 left-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
       <div className="absolute inset-y-0 right-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
     </motion.div>
   );
 };
 
-// --- COLLAPSED RUBBLE (Digital Fragmentation) ---
+// --- COLLAPSED RUBBLE ---
 export const CollapsedRubble = () => {
   return (
     <motion.div 
