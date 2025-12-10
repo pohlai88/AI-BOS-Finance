@@ -51,10 +51,7 @@ export function AppShell({ children }: AppShellProps) {
         <header className="sticky top-0 z-50 border-b border-[#1F1F1F] bg-black">
           <div className="flex items-center justify-between px-6 py-3">
             {/* LEFT: Logo (no nav links, they're in sidebar now) */}
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-3 group"
-            >
+            <button onClick={() => navigate('/')} className="flex items-center gap-3 group">
               <NexusCanonLogoCircular variant="icon" size="sm" />
               <span className="font-mono text-[#888] group-hover:text-[#28E7A2] text-[11px] tracking-widest uppercase transition-colors">
                 NexusCanon
@@ -96,10 +93,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       {/* GLOBAL COMMAND PALETTE */}
-      <CommandPalette
-        isOpen={showCommandPalette}
-        onClose={() => setShowCommandPalette(false)}
-      />
+      <CommandPalette isOpen={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
     </div>
   );
 }

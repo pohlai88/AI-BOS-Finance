@@ -18,10 +18,10 @@ export function useUrlState<T>(
   key: string,
   defaultValue: T,
   serialize: (value: T) => string = JSON.stringify,
-  deserialize: (value: string) => T = JSON.parse
+  deserialize: (value: string) => T = JSON.parse,
 ): [T, (value: T) => void] {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // Get initial value from URL or use default
   const getInitialValue = (): T => {
     const urlValue = searchParams.get(key);
@@ -40,9 +40,9 @@ export function useUrlState<T>(
   // Update URL when state changes
   const updateState = (newValue: T) => {
     setState(newValue);
-    
+
     const newSearchParams = new URLSearchParams(searchParams);
-    
+
     if (newValue === defaultValue || newValue === null || newValue === undefined) {
       // Remove from URL if default value
       newSearchParams.delete(key);
@@ -50,7 +50,7 @@ export function useUrlState<T>(
       // Add/update in URL
       newSearchParams.set(key, serialize(newValue));
     }
-    
+
     setSearchParams(newSearchParams, { replace: true });
   };
 
@@ -73,7 +73,7 @@ interface StorageOptions {
 export function useLocalStorage<T>(
   key: string,
   defaultValue: T,
-  options: StorageOptions = {}
+  options: StorageOptions = {},
 ): [T, (value: T) => void, () => void] {
   const { ttl, namespace = 'nexuscanon' } = options;
   const fullKey = `${namespace}:${key}`;
@@ -85,7 +85,7 @@ export function useLocalStorage<T>(
       if (!item) return defaultValue;
 
       const parsed = JSON.parse(item);
-      
+
       // Check expiration if TTL set
       if (ttl && parsed.expiry && Date.now() > parsed.expiry) {
         localStorage.removeItem(fullKey);
@@ -103,7 +103,7 @@ export function useLocalStorage<T>(
   // Update localStorage when state changes
   const updateState = (newValue: T) => {
     setState(newValue);
-    
+
     try {
       const item = {
         value: newValue,
@@ -146,22 +146,25 @@ export function useRecentPages() {
   const [recentPages, setRecentPages] = useLocalStorage<RecentPage[]>(
     RECENT_PAGES_KEY,
     [],
-    { ttl: 7 * 24 * 60 * 60 * 1000 } // 7 days
+    { ttl: 7 * 24 * 60 * 60 * 1000 }, // 7 days
   );
 
-  const addRecentPage = useCallback((page: Omit<RecentPage, 'timestamp'>) => {
-    const newPage: RecentPage = {
-      ...page,
-      timestamp: Date.now(),
-    };
+  const addRecentPage = useCallback(
+    (page: Omit<RecentPage, 'timestamp'>) => {
+      const newPage: RecentPage = {
+        ...page,
+        timestamp: Date.now(),
+      };
 
-    setRecentPages((prevPages) => {
-      // Remove if already exists, then add to front
-      const filtered = prevPages.filter(p => p.path !== page.path);
-      const updated = [newPage, ...filtered].slice(0, MAX_RECENT_PAGES);
-      return updated;
-    });
-  }, [setRecentPages]);
+      setRecentPages((prevPages) => {
+        // Remove if already exists, then add to front
+        const filtered = prevPages.filter((p) => p.path !== page.path);
+        const updated = [newPage, ...filtered].slice(0, MAX_RECENT_PAGES);
+        return updated;
+      });
+    },
+    [setRecentPages],
+  );
 
   const clearRecentPages = useCallback(() => {
     setRecentPages([]);
@@ -182,11 +185,11 @@ export interface UserPreferences {
   // Table preferences
   tableDensity: 'comfortable' | 'compact';
   defaultPageSize: number;
-  
+
   // UI preferences
   sideNavCollapsed: boolean;
   theme: 'dark' | 'light'; // Future-proof
-  
+
   // Feature flags
   enableKeyboardShortcuts: boolean;
   enableAnimations: boolean;
@@ -208,13 +211,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 export function useUserPreferences() {
   const [preferences, setPreferences, clearPreferences] = useLocalStorage<UserPreferences>(
     'user-preferences',
-    DEFAULT_PREFERENCES
+    DEFAULT_PREFERENCES,
   );
 
-  const updatePreference = <K extends keyof UserPreferences>(
-    key: K,
-    value: UserPreferences[K]
-  ) => {
+  const updatePreference = <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => {
     setPreferences({
       ...preferences,
       [key]: value,
@@ -250,7 +250,7 @@ export function useScrollRestoration(key: string) {
         JSON.stringify({
           x: window.scrollX,
           y: window.scrollY,
-        })
+        }),
       );
     };
 
@@ -267,7 +267,7 @@ export function useScrollRestoration(key: string) {
 
     // Save on scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -283,10 +283,7 @@ export function useScrollRestoration(key: string) {
  * Like Linear: Clicking issue -> URL updates -> shareable
  */
 export function useSelectedItem(defaultId: string | null = null) {
-  const [selectedId, setSelectedId] = useUrlState<string | null>(
-    'selected',
-    defaultId
-  );
+  const [selectedId, setSelectedId] = useUrlState<string | null>('selected', defaultId);
 
   return [selectedId, setSelectedId] as const;
 }
@@ -315,15 +312,9 @@ export function useFilterState(defaultFilters: Partial<FilterState> = {}) {
     ...defaultFilters,
   };
 
-  const [filters, setFilters] = useUrlState<FilterState>(
-    'filters',
-    defaults
-  );
+  const [filters, setFilters] = useUrlState<FilterState>('filters', defaults);
 
-  const updateFilter = <K extends keyof FilterState>(
-    key: K,
-    value: FilterState[K]
-  ) => {
+  const updateFilter = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
     setFilters({
       ...filters,
       [key]: value,
@@ -362,7 +353,7 @@ export function useFilterState(defaultFilters: Partial<FilterState> = {}) {
 export function clearAllAppState() {
   // Clear all localStorage items with nexuscanon prefix
   const keys = Object.keys(localStorage);
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key.startsWith('nexuscanon:')) {
       localStorage.removeItem(key);
     }
@@ -370,7 +361,7 @@ export function clearAllAppState() {
 
   // Clear sessionStorage scroll positions
   const sessionKeys = Object.keys(sessionStorage);
-  sessionKeys.forEach(key => {
+  sessionKeys.forEach((key) => {
     if (key.startsWith('scroll:')) {
       sessionStorage.removeItem(key);
     }

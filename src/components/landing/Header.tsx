@@ -1,26 +1,39 @@
 import { motion } from 'motion/react';
-import { Search, Database, FileText, BarChart3, LogIn, Hexagon, Layers, Shield, Users, Lock, BookOpen, Crosshair, Activity, Bot } from 'lucide-react';
+import {
+  Search,
+  Database,
+  FileText,
+  BarChart3,
+  LogIn,
+  Hexagon,
+  Layers,
+  Shield,
+  Users,
+  Lock,
+  BookOpen,
+  Crosshair,
+  Activity,
+  Bot,
+} from 'lucide-react';
 import { LynxIcon, LivingLynx } from '../icons/LynxIcon';
 import { CommandPalette } from './CommandPalette';
 import { Link } from 'react-router-dom';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => void; onCanonClick?: () => void }) => {
+export const Header = ({
+  onGetStarted,
+  onCanonClick,
+}: {
+  onGetStarted: () => void;
+  onCanonClick?: () => void;
+}) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-8 py-3">
       <div className="max-w-full mx-auto bg-black/95 backdrop-blur-md border border-white/10 rounded-2xl">
-        
         {/* 2-LAYER GRID STRUCTURE */}
         <div className="px-8 py-3">
-          
           {/* TOP LAYER - Logo + CTA */}
           <div className="grid grid-cols-3 items-center pb-2 border-b border-white/5">
-            
             {/* LEFT: LOGO */}
             <div className="flex items-center gap-2.5">
               {/* Original Animated Logo Icon */}
@@ -35,9 +48,9 @@ export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => voi
                     strokeWidth="1"
                     initial={{ pathLength: 0, rotate: 0 }}
                     animate={{ pathLength: 1, rotate: 360 }}
-                    transition={{ 
-                      pathLength: { duration: 2, ease: "easeInOut" },
-                      rotate: { duration: 20, repeat: Infinity, ease: "linear" }
+                    transition={{
+                      pathLength: { duration: 2, ease: 'easeInOut' },
+                      rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
                     }}
                   />
                   {/* Inner Crystal */}
@@ -68,19 +81,17 @@ export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => voi
                     cy="20"
                     r="3"
                     fill="rgba(40, 231, 162, 0.6)"
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.3, 1],
-                      opacity: [0.6, 0.3, 0.6]
+                      opacity: [0.6, 0.3, 0.6],
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
                 </svg>
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <h1 className="text-base tracking-tight text-white">
-                  NexusCanon
-                </h1>
+                <h1 className="text-base tracking-tight text-white">NexusCanon</h1>
                 <span className="text-[10px] font-mono text-gray-600 uppercase tracking-widest px-1.5 py-0.5 border border-white/10 rounded">
                   Gov
                 </span>
@@ -94,7 +105,7 @@ export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => voi
 
             {/* RIGHT: TERMINAL ACCESS */}
             <div className="flex items-center justify-end">
-              <Link 
+              <Link
                 to="/login"
                 className="group flex items-center gap-2.5 px-4 py-2 bg-zinc-950/80 hover:bg-zinc-900/80 border border-white/10 hover:border-emerald-500/50 rounded-lg transition-all duration-300 shadow-lg hover:shadow-emerald-500/10"
               >
@@ -106,7 +117,6 @@ export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => voi
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               </Link>
             </div>
-
           </div>
 
           {/* BOTTOM LAYER - Icon Navigation with Tooltips */}
@@ -114,67 +124,76 @@ export const Header = ({ onGetStarted, onCanonClick }: { onGetStarted: () => voi
             {/* NAVIGATION TRAY - Forensic Left-Aligned Toolbar */}
             <nav className="flex items-center justify-start pt-2 w-full gap-8">
               {/* ZONE 1: REALITY (Observe) */}
-              <NavItem 
-                label="Registry // God View" 
-                icon={<Database className="w-4 h-4" />} 
-                href="/meta-registry" 
-                isRouterLink 
+              <NavItem
+                label="Registry // God View"
+                icon={<Database className="w-4 h-4" />}
+                href="/meta-registry"
+                isRouterLink
               />
-              
+
               {/* ZONE 2: RULES (Orient) */}
-              <NavItem 
-                label="Architecture // System Map" 
-                icon={<Hexagon className="w-4 h-4" />} 
-                href="/meta-architecture" 
-                isRouterLink 
+              <NavItem
+                label="Architecture // System Map"
+                icon={<Hexagon className="w-4 h-4" />}
+                href="/meta-architecture"
+                isRouterLink
               />
-              <NavItem 
-                label="Canon // Laws & Hierarchy" 
-                icon={<BookOpen className="w-4 h-4" />} 
-                href="/meta-canon" 
-                isRouterLink 
+              <NavItem
+                label="Canon // Laws & Hierarchy"
+                icon={<BookOpen className="w-4 h-4" />}
+                href="/meta-canon"
+                isRouterLink
               />
 
               {/* ZONE 3: DIAGNOSIS (Decide) */}
-              <NavItem 
-                label="Radar // Risk Exposure" 
-                icon={<Crosshair className="w-4 h-4" />} 
-                href="/meta-risk" 
-                isRouterLink 
+              <NavItem
+                label="Radar // Risk Exposure"
+                icon={<Crosshair className="w-4 h-4" />}
+                href="/meta-risk"
+                isRouterLink
               />
-              <NavItem 
-                label="Health // Telemetry" 
-                icon={<Activity className="w-4 h-4" />} 
-                href="/meta-health" 
-                isRouterLink 
+              <NavItem
+                label="Health // Telemetry"
+                icon={<Activity className="w-4 h-4" />}
+                href="/meta-health"
+                isRouterLink
               />
 
               {/* ZONE 4: REMEDY (Act) */}
-              <NavItem 
-                label="Lynx Codex // Forensic Intelligence" 
-                icon={<LivingLynx size={16} />} 
-                href="/meta-lynx" 
-                isRouterLink 
+              <NavItem
+                label="Lynx Codex // Forensic Intelligence"
+                icon={<LivingLynx size={16} />}
+                href="/meta-lynx"
+                isRouterLink
               />
             </nav>
           </TooltipProvider>
-
         </div>
-
       </div>
     </header>
   );
 };
 
 // --- SUB-COMPONENT ---
-const NavItem = ({ label, icon, href, onClick, isRouterLink }: { label: string; icon: React.ReactNode; href?: string; onClick?: (e: React.MouseEvent) => void; isRouterLink?: boolean }) => {
+const NavItem = ({
+  label,
+  icon,
+  href,
+  onClick,
+  isRouterLink,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  href?: string;
+  onClick?: (e: React.MouseEvent) => void;
+  isRouterLink?: boolean;
+}) => {
   const content = (
-    <span className="transition-transform duration-300 group-hover:scale-110">
-      {icon}
-    </span>
+    <span className="transition-transform duration-300 group-hover:scale-110">{icon}</span>
   );
 
-  const linkClasses = "flex items-center justify-center p-2 text-zinc-500 hover:text-emerald-400 hover:bg-white/5 rounded-lg cursor-pointer transition-all duration-300 group border border-transparent hover:border-white/10";
+  const linkClasses =
+    'flex items-center justify-center p-2 text-zinc-500 hover:text-emerald-400 hover:bg-white/5 rounded-lg cursor-pointer transition-all duration-300 group border border-transparent hover:border-white/10';
 
   return (
     <Tooltip>
@@ -189,8 +208,8 @@ const NavItem = ({ label, icon, href, onClick, isRouterLink }: { label: string; 
           </a>
         )}
       </TooltipTrigger>
-      <TooltipContent 
-        side="bottom" 
+      <TooltipContent
+        side="bottom"
         className="bg-zinc-900 border-white/20 text-white font-mono text-xs tracking-widest uppercase"
       >
         {label}

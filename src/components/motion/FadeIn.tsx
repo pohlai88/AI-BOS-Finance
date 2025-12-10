@@ -14,21 +14,16 @@ interface FadeInProps {
   className?: string;
 }
 
-export const FadeIn = ({ 
-  children, 
-  duration = 0.3, 
-  delay = 0,
-  className 
-}: FadeInProps) => {
+export const FadeIn = ({ children, duration = 0.3, delay = 0, className }: FadeInProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ 
-        duration, 
+      transition={{
+        duration,
         delay,
-        ease: [0.25, 0.1, 0.25, 1] // Ease-out curve
+        ease: [0.25, 0.1, 0.25, 1], // Ease-out curve
       }}
       className={className}
     >

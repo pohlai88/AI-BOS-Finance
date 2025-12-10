@@ -7,7 +7,13 @@ export function MiniSidebar() {
 
   const navItems = [
     { icon: Home, path: '/', label: 'Home', id: 'home' },
-    { icon: Database, path: '/meta-architecture', label: 'Metadata', id: 'metadata', code: 'META_01' },
+    {
+      icon: Database,
+      path: '/meta-architecture',
+      label: 'Metadata',
+      id: 'metadata',
+      code: 'META_01',
+    },
     { icon: FileText, path: '/lineage', label: 'Lineage', id: 'lineage' },
     { icon: Activity, path: '/audit', label: 'Audit', id: 'audit' },
     { icon: Settings, path: '/settings', label: 'Settings', id: 'settings' },

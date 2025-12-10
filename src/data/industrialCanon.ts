@@ -14,7 +14,7 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'Open SME ERP',
     domain_strength: 'Integrated Accounting, DocTypes',
     access_level: 'Open Source',
-    nexus_usage: 'SME Accounting Operations Canon (Entities & State Machines)'
+    nexus_usage: 'SME Accounting Operations Canon (Entities & State Machines)',
   },
   {
     id: 'IND_02',
@@ -22,7 +22,7 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'Open SME ERP',
     domain_strength: 'Modular Apps, Multi-Company, Branch Logic',
     access_level: 'Open Source',
-    nexus_usage: 'Branch/Multi-company reference & Mid-market logic'
+    nexus_usage: 'Branch/Multi-company reference & Mid-market logic',
   },
   {
     id: 'IND_03',
@@ -30,7 +30,7 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'Enterprise ERP',
     domain_strength: 'Best Practices (R2R, P2P, O2C)',
     access_level: 'Proprietary',
-    nexus_usage: 'Enterprise Process Canon & Standard Config Objects'
+    nexus_usage: 'Enterprise Process Canon & Standard Config Objects',
   },
   {
     id: 'IND_04',
@@ -38,7 +38,7 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'Enterprise ERP',
     domain_strength: 'Financial Dimensions, Entity Model',
     access_level: 'Proprietary',
-    nexus_usage: 'Entity & Dimension Model Reference'
+    nexus_usage: 'Entity & Dimension Model Reference',
   },
   {
     id: 'IND_05',
@@ -46,7 +46,7 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'Process Framework',
     domain_strength: 'Process Taxonomy, KPIs, Benchmarks',
     access_level: 'Public Standard',
-    nexus_usage: 'Backbone Vocabulary & Standard Process IDs (L1-L3)'
+    nexus_usage: 'Backbone Vocabulary & Standard Process IDs (L1-L3)',
   },
   {
     id: 'IND_06',
@@ -54,6 +54,6 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     type: 'UX Reference',
     domain_strength: 'SME Usability, Bank Feeds, Reconciliation',
     access_level: 'Proprietary',
-    nexus_usage: 'Interaction Patterns & User Experience Benchmarks'
-  }
+    nexus_usage: 'Interaction Patterns & User Experience Benchmarks',
+  },
 ];

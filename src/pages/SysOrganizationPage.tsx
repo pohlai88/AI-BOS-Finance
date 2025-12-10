@@ -23,7 +23,7 @@ import {
   Zap,
   Edit2,
   Users,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MOCK_ENTITY_GOVERNANCE } from '../data/mockEntityGovernance';
@@ -67,7 +67,7 @@ export function SysOrganizationPage() {
     standards: { isSaving: false, saveSuccess: false, hasChanges: false },
     intercompany: { isSaving: false, saveSuccess: false, hasChanges: false },
     localization: { isSaving: false, saveSuccess: false, hasChanges: false },
-    branding: { isSaving: false, saveSuccess: false, hasChanges: false }
+    branding: { isSaving: false, saveSuccess: false, hasChanges: false },
   });
 
   const [isSavingAll, setIsSavingAll] = useState(false);
@@ -90,12 +90,39 @@ export function SysOrganizationPage() {
         currency: 'USD',
         reportingCurrency: 'USD',
         children: [
-          { id: 'nexus-my', name: 'Nexus Farming MY', code: 'MY01', type: 'Subsidiary', status: 'Active', parent: 'nexus-hq', currency: 'MYR', reportingCurrency: 'USD' },
-          { id: 'nexus-vn', name: 'Nexus Farming VN', code: 'VN01', type: 'Subsidiary', status: 'Active', parent: 'nexus-hq', currency: 'VND', reportingCurrency: 'USD' },
-          { id: 'nexus-sg', name: 'Nexus Retail SG', code: 'SG01', type: 'Subsidiary', status: 'Dormant', parent: 'nexus-hq', currency: 'SGD', reportingCurrency: 'USD' }
-        ]
-      }
-    ]
+          {
+            id: 'nexus-my',
+            name: 'Nexus Farming MY',
+            code: 'MY01',
+            type: 'Subsidiary',
+            status: 'Active',
+            parent: 'nexus-hq',
+            currency: 'MYR',
+            reportingCurrency: 'USD',
+          },
+          {
+            id: 'nexus-vn',
+            name: 'Nexus Farming VN',
+            code: 'VN01',
+            type: 'Subsidiary',
+            status: 'Active',
+            parent: 'nexus-hq',
+            currency: 'VND',
+            reportingCurrency: 'USD',
+          },
+          {
+            id: 'nexus-sg',
+            name: 'Nexus Retail SG',
+            code: 'SG01',
+            type: 'Subsidiary',
+            status: 'Dormant',
+            parent: 'nexus-hq',
+            currency: 'SGD',
+            reportingCurrency: 'USD',
+          },
+        ],
+      },
+    ],
   });
 
   const [standardsData] = useState({
@@ -104,7 +131,7 @@ export function SysOrganizationPage() {
     accountingFramework: 'IFRS',
     coaTemplate: 'GROUP_COA_V1',
     appliedEntities: 9,
-    totalEntities: 12
+    totalEntities: 12,
   });
 
   const [intercompanyData] = useState({
@@ -114,34 +141,34 @@ export function SysOrganizationPage() {
       { from: 'HQ', to: 'MY01', status: 'On' as const },
       { from: 'HQ', to: 'VN01', status: 'On' as const },
       { from: 'MY01', to: 'VN01', status: 'On' as const },
-      { from: 'HQ', to: 'SG01', status: 'Off' as const }
-    ]
+      { from: 'HQ', to: 'SG01', status: 'Off' as const },
+    ],
   });
 
   const [localizationData] = useState({
     profiles: [
       { region: 'MY', taxProfile: 'MY_SST_V1', entityCount: 4 },
       { region: 'SG', taxProfile: 'GST_V2', entityCount: 3 },
-      { region: 'VN', taxProfile: 'VN_VAT_V1', entityCount: 2 }
-    ]
+      { region: 'VN', taxProfile: 'VN_VAT_V1', entityCount: 2 },
+    ],
   });
 
   const [brandingData] = useState({
     brandMode: 'Group Brand',
     colorPack: 'Forest Green V1',
     documentTemplates: 'GROUP_STD_V1',
-    usedByEntities: 5
+    usedByEntities: 5,
   });
 
   // ============================================================================
   // COMPUTED VALUES
   // ============================================================================
 
-  const changedCardsCount = Object.values(cardStates).filter(s => s.hasChanges).length;
+  const changedCardsCount = Object.values(cardStates).filter((s) => s.hasChanges).length;
   const hasAnyChanges = changedCardsCount > 0;
-  const selectedEntity = structureData.entities[0]?.children?.find(
-    e => e.id === structureData.selectedEntityId
-  ) || structureData.entities[0];
+  const selectedEntity =
+    structureData.entities[0]?.children?.find((e) => e.id === structureData.selectedEntityId) ||
+    structureData.entities[0];
 
   // ============================================================================
   // EFFECTS
@@ -170,49 +197,49 @@ export function SysOrganizationPage() {
   // ============================================================================
 
   const handleCardSave = async (cardId: string) => {
-    setCardStates(prev => ({
+    setCardStates((prev) => ({
       ...prev,
-      [cardId]: { ...prev[cardId], isSaving: true }
+      [cardId]: { ...prev[cardId], isSaving: true },
     }));
 
-    await new Promise(resolve => setTimeout(resolve, 1200));
+    await new Promise((resolve) => setTimeout(resolve, 1200));
 
-    setCardStates(prev => ({
+    setCardStates((prev) => ({
       ...prev,
-      [cardId]: { isSaving: false, saveSuccess: true, hasChanges: false }
+      [cardId]: { isSaving: false, saveSuccess: true, hasChanges: false },
     }));
 
     setTimeout(() => {
-      setCardStates(prev => ({
+      setCardStates((prev) => ({
         ...prev,
-        [cardId]: { ...prev[cardId], saveSuccess: false }
+        [cardId]: { ...prev[cardId], saveSuccess: false },
       }));
     }, 3000);
 
-    const allSaved = Object.values(cardStates).every(state => !state.hasChanges);
+    const allSaved = Object.values(cardStates).every((state) => !state.hasChanges);
     if (allSaved) {
       markStepComplete('organization');
     }
   };
 
   const handleCardRevert = (cardId: string) => {
-    setCardStates(prev => ({
+    setCardStates((prev) => ({
       ...prev,
-      [cardId]: { isSaving: false, saveSuccess: false, hasChanges: false }
+      [cardId]: { isSaving: false, saveSuccess: false, hasChanges: false },
     }));
   };
 
   const markCardChanged = (cardId: string) => {
-    setCardStates(prev => ({
+    setCardStates((prev) => ({
       ...prev,
-      [cardId]: { ...prev[cardId], hasChanges: true, saveSuccess: false }
+      [cardId]: { ...prev[cardId], hasChanges: true, saveSuccess: false },
     }));
   };
 
   const handleSaveAll = async () => {
     setIsSavingAll(true);
-    const changedCards = Object.keys(cardStates).filter(id => cardStates[id].hasChanges);
-    await Promise.all(changedCards.map(id => handleCardSave(id)));
+    const changedCards = Object.keys(cardStates).filter((id) => cardStates[id].hasChanges);
+    await Promise.all(changedCards.map((id) => handleCardSave(id)));
     setIsSavingAll(false);
     markStepComplete('organization');
   };
@@ -243,14 +270,12 @@ export function SysOrganizationPage() {
   return (
     <MetaAppShell>
       <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-start p-6 pt-8 relative overflow-hidden">
-        
         {/* Ambient Background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,#0A0A0A_0%,#000000_60%)] -z-10" />
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
 
         {/* 12-COLUMN GRID CONTAINER */}
         <div className="w-full max-w-[1280px] z-10 space-y-6">
-          
           {/* ================================================================ */}
           {/* STICKY HEADER WITH SAVE ALL */}
           {/* ================================================================ */}
@@ -258,7 +283,7 @@ export function SysOrganizationPage() {
             <div className="flex flex-col gap-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2 flex-1">
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2"
@@ -268,10 +293,8 @@ export function SysOrganizationPage() {
                       System Configuration
                     </span>
                   </motion.div>
-                  
-                  <h1 className="text-4xl tracking-tight text-white">
-                    Group Configuration
-                  </h1>
+
+                  <h1 className="text-4xl tracking-tight text-white">Group Configuration</h1>
                   <p className="text-zinc-500 font-mono text-sm">
                     Control structure, standards, intercompany, localization and branding.
                   </p>
@@ -288,7 +311,8 @@ export function SysOrganizationPage() {
                       >
                         <AlertCircle className="w-3 h-3 text-amber-500" />
                         <span className="text-[10px] font-mono text-amber-500 tracking-wider">
-                          {changedCardsCount} {changedCardsCount === 1 ? 'section' : 'sections'} unsaved
+                          {changedCardsCount} {changedCardsCount === 1 ? 'section' : 'sections'}{' '}
+                          unsaved
                         </span>
                       </motion.div>
                     )}
@@ -302,9 +326,10 @@ export function SysOrganizationPage() {
                       border transition-all duration-200
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 
                       focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]
-                      ${hasAnyChanges && !isSavingAll
-                        ? 'bg-emerald-950/20 border-emerald-500 text-emerald-500 hover:bg-emerald-900/20' 
-                        : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
+                      ${
+                        hasAnyChanges && !isSavingAll
+                          ? 'bg-emerald-950/20 border-emerald-500 text-emerald-500 hover:bg-emerald-900/20'
+                          : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
                       }
                     `}
                   >
@@ -322,7 +347,9 @@ export function SysOrganizationPage() {
                           <Zap className="w-3 h-3" />
                           <span>Save All</span>
                           {hasAnyChanges && (
-                            <NexusBadge variant="success" size="sm">{changedCardsCount}</NexusBadge>
+                            <NexusBadge variant="success" size="sm">
+                              {changedCardsCount}
+                            </NexusBadge>
                           )}
                         </>
                       )}
@@ -363,7 +390,6 @@ export function SysOrganizationPage() {
           {/* OPTIMIZED BENTO GRID - COMPACT LAYOUT */}
           {/* ================================================================ */}
           <div className="grid grid-cols-12 gap-6">
-            
             {/* ============================================================ */}
             {/* CARD A: GROUP STRUCTURE (Full Width, Compact Height) */}
             {/* ============================================================ */}
@@ -373,7 +399,11 @@ export function SysOrganizationPage() {
               icon={Building2}
               title="Group Structure"
               subtitle="12 Entities · 3 Countries"
-              badge={<NexusBadge variant="neutral" size="sm">3 Active</NexusBadge>}
+              badge={
+                <NexusBadge variant="neutral" size="sm">
+                  3 Active
+                </NexusBadge>
+              }
               compact
               headerActions={
                 <>
@@ -400,7 +430,7 @@ export function SysOrganizationPage() {
                 <div className="w-[40%] border-r border-[#1F1F1F] p-4 overflow-y-auto">
                   <div
                     onClick={() => {
-                      setStructureData(prev => ({ ...prev, selectedEntityId: 'nexus-hq' }));
+                      setStructureData((prev) => ({ ...prev, selectedEntityId: 'nexus-hq' }));
                       markCardChanged('structure');
                     }}
                     className={`
@@ -414,15 +444,17 @@ export function SysOrganizationPage() {
                       <Building2 className="w-3 h-3 text-zinc-500" />
                       <span className="text-[11px] text-white tracking-tight">Nexus Holdings</span>
                     </div>
-                    <NexusBadge variant="success" size="sm">HQ</NexusBadge>
+                    <NexusBadge variant="success" size="sm">
+                      HQ
+                    </NexusBadge>
                   </div>
 
                   <div className="pl-4 space-y-1.5">
-                    {structureData.entities[0]?.children?.map(entity => (
+                    {structureData.entities[0]?.children?.map((entity) => (
                       <div
                         key={entity.id}
                         onClick={() => {
-                          setStructureData(prev => ({ ...prev, selectedEntityId: entity.id }));
+                          setStructureData((prev) => ({ ...prev, selectedEntityId: entity.id }));
                           markCardChanged('structure');
                         }}
                         className={`
@@ -433,7 +465,10 @@ export function SysOrganizationPage() {
                         tabIndex={0}
                       >
                         <span className="text-[11px] text-white tracking-tight">{entity.code}</span>
-                        <NexusBadge variant={entity.status === 'Active' ? 'success' : 'warning'} size="sm">
+                        <NexusBadge
+                          variant={entity.status === 'Active' ? 'success' : 'warning'}
+                          size="sm"
+                        >
                           {entity.status === 'Active' ? 'On' : 'Off'}
                         </NexusBadge>
                       </div>
@@ -446,21 +481,31 @@ export function SysOrganizationPage() {
                   {selectedEntity && (
                     <div className="space-y-2.5">
                       <div className="pb-2.5 border-b border-[#1F1F1F]">
-                        <h3 className="text-sm tracking-tight text-white mb-0.5">{selectedEntity.name}</h3>
-                        <p className="text-[9px] font-mono text-zinc-600 tracking-wider">{selectedEntity.code}</p>
+                        <h3 className="text-sm tracking-tight text-white mb-0.5">
+                          {selectedEntity.name}
+                        </h3>
+                        <p className="text-[9px] font-mono text-zinc-600 tracking-wider">
+                          {selectedEntity.code}
+                        </p>
                       </div>
 
                       <div className="space-y-1.5 text-[11px]">
                         <div className="flex justify-between py-1.5 border-b border-[#1F1F1F]">
-                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Type</span>
+                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                            Type
+                          </span>
                           <span className="text-white">{selectedEntity.type}</span>
                         </div>
                         <div className="flex justify-between py-1.5 border-b border-[#1F1F1F]">
-                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Currency</span>
+                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                            Currency
+                          </span>
                           <span className="text-white">{selectedEntity.currency}</span>
                         </div>
                         <div className="flex justify-between py-1.5">
-                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Reporting</span>
+                          <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                            Reporting
+                          </span>
                           <span className="text-white">{selectedEntity.reportingCurrency}</span>
                         </div>
                       </div>
@@ -473,19 +518,23 @@ export function SysOrganizationPage() {
             {/* ============================================================ */}
             {/* ROW 2: THREE COMPACT CARDS */}
             {/* ============================================================ */}
-            
+
             {/* CARD B: GLOBAL STANDARDS */}
             <CardSection
               className="col-span-12 md:col-span-4"
               icon={Shield}
               title="Global Standards"
               compact
-              badge={<NexusBadge variant="warning" size="sm">Mandatory</NexusBadge>}
+              badge={
+                <NexusBadge variant="warning" size="sm">
+                  Mandatory
+                </NexusBadge>
+              }
               onSave={() => handleCardSave('standards')}
               onRevert={() => handleCardRevert('standards')}
               saveState={cardStates.standards}
               footerLeft={
-                <button 
+                <button
                   onClick={() => markCardChanged('standards')}
                   className="text-[9px] font-mono uppercase tracking-wider text-emerald-500 hover:text-emerald-400 focus-visible:outline-none focus-visible:text-emerald-400 flex items-center gap-1"
                 >
@@ -496,20 +545,30 @@ export function SysOrganizationPage() {
             >
               <div className="space-y-1.5 text-[11px]">
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">FYE</span>
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                    FYE
+                  </span>
                   <span className="text-white">{standardsData.fiscalYearEnd}</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">Currency</span>
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                    Currency
+                  </span>
                   <span className="text-white">{standardsData.reportingCurrency}</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">Framework</span>
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                    Framework
+                  </span>
                   <span className="text-white">{standardsData.accountingFramework}</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">COA</span>
-                  <span className="text-white font-mono text-[10px]">{standardsData.coaTemplate}</span>
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                    COA
+                  </span>
+                  <span className="text-white font-mono text-[10px]">
+                    {standardsData.coaTemplate}
+                  </span>
                 </div>
               </div>
             </CardSection>
@@ -520,22 +579,27 @@ export function SysOrganizationPage() {
               icon={Link2}
               title="Intercompany"
               compact
-              badge={<NexusBadge variant="neutral" size="sm">{intercompanyData.pairsConfigured}/{intercompanyData.totalPairs}</NexusBadge>}
+              badge={
+                <NexusBadge variant="neutral" size="sm">
+                  {intercompanyData.pairsConfigured}/{intercompanyData.totalPairs}
+                </NexusBadge>
+              }
               onSave={() => handleCardSave('intercompany')}
               onRevert={() => handleCardRevert('intercompany')}
               saveState={cardStates.intercompany}
               footerLeft={
-                <span className="text-[9px] text-zinc-600">{intercompanyData.totalPairs - intercompanyData.pairsConfigured} not configured</span>
+                <span className="text-[9px] text-zinc-600">
+                  {intercompanyData.totalPairs - intercompanyData.pairsConfigured} not configured
+                </span>
               }
             >
               <div className="space-y-1 text-[10px]">
                 {intercompanyData.matrix.map((pair, idx) => (
                   <div key={idx} className="flex items-center justify-between py-1">
-                    <span className="text-zinc-500 font-mono">{pair.from} → {pair.to}</span>
-                    <NexusBadge 
-                      variant={pair.status === 'On' ? 'success' : 'neutral'} 
-                      size="sm"
-                    >
+                    <span className="text-zinc-500 font-mono">
+                      {pair.from} → {pair.to}
+                    </span>
+                    <NexusBadge variant={pair.status === 'On' ? 'success' : 'neutral'} size="sm">
                       {pair.status}
                     </NexusBadge>
                   </div>
@@ -549,19 +613,28 @@ export function SysOrganizationPage() {
               icon={Globe}
               title="Localization"
               compact
-              badge={<NexusBadge variant="neutral" size="sm">{localizationData.profiles.length} Regions</NexusBadge>}
+              badge={
+                <NexusBadge variant="neutral" size="sm">
+                  {localizationData.profiles.length} Regions
+                </NexusBadge>
+              }
               onSave={() => handleCardSave('localization')}
               onRevert={() => handleCardRevert('localization')}
               saveState={cardStates.localization}
             >
               <div className="space-y-1.5">
                 {localizationData.profiles.map((profile, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2 border border-[#1F1F1F] hover:bg-[#0A0A0A] transition-colors">
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-2 border border-[#1F1F1F] hover:bg-[#0A0A0A] transition-colors"
+                  >
                     <div className="text-[11px]">
                       <div className="text-white tracking-tight">{profile.region}</div>
-                      <div className="text-[9px] font-mono text-zinc-600">{profile.entityCount} entities</div>
+                      <div className="text-[9px] font-mono text-zinc-600">
+                        {profile.entityCount} entities
+                      </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => markCardChanged('localization')}
                       className="text-[9px] font-mono uppercase tracking-wider text-emerald-500 hover:text-emerald-400 focus-visible:outline-none focus-visible:text-emerald-400"
                     >
@@ -580,7 +653,11 @@ export function SysOrganizationPage() {
               icon={Palette}
               title="Branding & Document Pack"
               compact
-              badge={<NexusBadge variant="neutral" size="sm">{brandingData.usedByEntities} entities</NexusBadge>}
+              badge={
+                <NexusBadge variant="neutral" size="sm">
+                  {brandingData.usedByEntities} entities
+                </NexusBadge>
+              }
               onSave={() => handleCardSave('branding')}
               onRevert={() => handleCardRevert('branding')}
               saveState={cardStates.branding}
@@ -591,16 +668,24 @@ export function SysOrganizationPage() {
                 </div>
                 <div className="col-span-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-[11px]">
                   <div className="flex justify-between py-1">
-                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Mode</span>
+                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                      Mode
+                    </span>
                     <span className="text-white">{brandingData.brandMode}</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Color Pack</span>
+                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                      Color Pack
+                    </span>
                     <span className="text-white">{brandingData.colorPack}</span>
                   </div>
                   <div className="flex justify-between py-1 col-span-2">
-                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">Templates</span>
-                    <span className="text-white font-mono text-[10px]">{brandingData.documentTemplates}</span>
+                    <span className="text-zinc-600 font-mono uppercase tracking-wider text-[9px]">
+                      Templates
+                    </span>
+                    <span className="text-white font-mono text-[10px]">
+                      {brandingData.documentTemplates}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -617,9 +702,13 @@ export function SysOrganizationPage() {
               compact
               badge={
                 MOCK_ENTITY_GOVERNANCE['nexus-my'].validation.status === 'VERIFIED' ? (
-                  <NexusBadge variant="success" size="sm">VERIFIED</NexusBadge>
+                  <NexusBadge variant="success" size="sm">
+                    VERIFIED
+                  </NexusBadge>
                 ) : (
-                  <NexusBadge variant="warning" size="sm">PENDING</NexusBadge>
+                  <NexusBadge variant="warning" size="sm">
+                    PENDING
+                  </NexusBadge>
                 )
               }
               headerActions={
@@ -643,9 +732,14 @@ export function SysOrganizationPage() {
                       </div>
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="text-white">
-                          Method: <span className="text-emerald-500">{entity.consolidation.actualMethod}</span>
+                          Method:{' '}
+                          <span className="text-emerald-500">
+                            {entity.consolidation.actualMethod}
+                          </span>
                         </span>
-                        <span className="text-zinc-500">NCI: {entity.consolidation.nciPercent}%</span>
+                        <span className="text-zinc-500">
+                          NCI: {entity.consolidation.nciPercent}%
+                        </span>
                       </div>
                     </div>
 
@@ -655,7 +749,10 @@ export function SysOrganizationPage() {
                         Shareholders ({entity.shareholders.length})
                       </div>
                       {entity.shareholders.slice(0, 3).map((sh, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-[10px] text-zinc-500">
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between text-[10px] text-zinc-500"
+                        >
                           <span className="truncate max-w-[180px]">{sh.name}</span>
                           <span className="text-white font-mono">{sh.ownershipPercent}%</span>
                         </div>
@@ -665,7 +762,8 @@ export function SysOrganizationPage() {
                     {/* Governance Status */}
                     <div className="pt-2 border-t border-[#1F1F1F] flex items-center justify-between">
                       <span className="text-[9px] text-zinc-600">
-                        Legal Rep, Board ({entity.board.filter(b => b.isActive).length}), CFO, Bank ✓
+                        Legal Rep, Board ({entity.board.filter((b) => b.isActive).length}), CFO,
+                        Bank ✓
                       </span>
                       <NexusBadge variant="success" size="sm">
                         {entity.computed.governanceCompleteness}%
@@ -685,7 +783,11 @@ export function SysOrganizationPage() {
               title="Governance Alerts"
               subtitle="Entities requiring attention"
               compact
-              badge={<NexusBadge variant="warning" size="sm">1 Issue</NexusBadge>}
+              badge={
+                <NexusBadge variant="warning" size="sm">
+                  1 Issue
+                </NexusBadge>
+              }
             >
               {(() => {
                 const sgEntity = MOCK_ENTITY_GOVERNANCE['nexus-sg'];
@@ -737,7 +839,6 @@ export function SysOrganizationPage() {
                 );
               })()}
             </CardSection>
-
           </div>
         </div>
       </div>

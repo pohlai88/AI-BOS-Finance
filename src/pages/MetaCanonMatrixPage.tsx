@@ -43,7 +43,9 @@ export function MetaCanonMatrixPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
             <div className="flex items-center gap-2 mb-2">
               <Database className="w-4 h-4 text-[#28E7A2]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Groups</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Groups
+              </span>
             </div>
             <div className="text-2xl text-[#28E7A2] font-mono">{groupRecords.length}</div>
           </div>
@@ -51,7 +53,9 @@ export function MetaCanonMatrixPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
             <div className="flex items-center gap-2 mb-2">
               <Layers className="w-4 h-4 text-blue-400" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Transactions</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Transactions
+              </span>
             </div>
             <div className="text-2xl text-blue-400 font-mono">{transactionRecords.length}</div>
           </div>
@@ -59,7 +63,9 @@ export function MetaCanonMatrixPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
             <div className="flex items-center gap-2 mb-2">
               <FileText className="w-4 h-4 text-purple-400" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Cells</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Cells
+              </span>
             </div>
             <div className="text-2xl text-purple-400 font-mono">{cellRecords.length}</div>
           </div>
@@ -67,7 +73,9 @@ export function MetaCanonMatrixPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
             <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-[#666]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Total</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Total
+              </span>
             </div>
             <div className="text-2xl text-white font-mono">{mockCanonRecords.length}</div>
           </div>
@@ -97,7 +105,7 @@ export function MetaCanonMatrixPage() {
                         'flex items-center gap-3 p-3 rounded cursor-pointer transition-all border',
                         selectedRecord?.id === group.id
                           ? 'bg-[#28E7A2]/10 border-[#28E7A2]'
-                          : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]'
+                          : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]',
                       )}
                       onClick={() => setSelectedRecord(group)}
                     >
@@ -109,7 +117,10 @@ export function MetaCanonMatrixPage() {
                         className="p-1 hover:bg-[#111] rounded transition-colors"
                       >
                         <ChevronRight
-                          className={clsx('w-4 h-4 text-[#666] transition-transform', isExpanded && 'rotate-90')}
+                          className={clsx(
+                            'w-4 h-4 text-[#666] transition-transform',
+                            isExpanded && 'rotate-90',
+                          )}
                         />
                       </button>
 
@@ -131,8 +142,10 @@ export function MetaCanonMatrixPage() {
                       <div
                         className={clsx(
                           'px-2 py-0.5 border text-[10px] font-mono uppercase rounded',
-                          group.status === 'ACTIVE' && 'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]',
-                          group.status === 'DRAFT' && 'border-orange-500/30 bg-orange-500/10 text-orange-400'
+                          group.status === 'ACTIVE' &&
+                            'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]',
+                          group.status === 'DRAFT' &&
+                            'border-orange-500/30 bg-orange-500/10 text-orange-400',
                         )}
                       >
                         {group.status}
@@ -153,7 +166,7 @@ export function MetaCanonMatrixPage() {
                                   'flex items-center gap-3 p-3 rounded cursor-pointer transition-all border',
                                   selectedRecord?.id === transaction.id
                                     ? 'bg-blue-500/10 border-blue-500'
-                                    : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]'
+                                    : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]',
                                 )}
                                 onClick={() => setSelectedRecord(transaction)}
                               >
@@ -165,10 +178,16 @@ export function MetaCanonMatrixPage() {
 
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2">
-                                    <div className="text-white text-sm font-medium">{transaction.name}</div>
-                                    <span className="text-[10px] font-mono text-[#666]">{transaction.id}</span>
+                                    <div className="text-white text-sm font-medium">
+                                      {transaction.name}
+                                    </div>
+                                    <span className="text-[10px] font-mono text-[#666]">
+                                      {transaction.id}
+                                    </span>
                                   </div>
-                                  <div className="text-xs text-[#666]">{transaction.linkedItems}</div>
+                                  <div className="text-xs text-[#666]">
+                                    {transaction.linkedItems}
+                                  </div>
                                 </div>
                               </div>
 
@@ -182,7 +201,7 @@ export function MetaCanonMatrixPage() {
                                         'flex items-center gap-3 p-3 rounded cursor-pointer transition-all border',
                                         selectedRecord?.id === cell.id
                                           ? 'bg-purple-500/10 border-purple-500'
-                                          : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]'
+                                          : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333]',
                                       )}
                                       onClick={() => setSelectedRecord(cell)}
                                     >
@@ -194,11 +213,17 @@ export function MetaCanonMatrixPage() {
 
                                       <div className="flex-1">
                                         <div className="flex items-center gap-2">
-                                          <div className="text-white text-sm font-medium">{cell.name}</div>
-                                          <span className="text-[10px] font-mono text-[#666]">{cell.id}</span>
+                                          <div className="text-white text-sm font-medium">
+                                            {cell.name}
+                                          </div>
+                                          <span className="text-[10px] font-mono text-[#666]">
+                                            {cell.id}
+                                          </span>
                                         </div>
                                         <div className="text-xs text-[#666]">
-                                          {cell.bindable ? 'Bindable to systems' : 'Abstract definition'}
+                                          {cell.bindable
+                                            ? 'Bindable to systems'
+                                            : 'Abstract definition'}
                                         </div>
                                       </div>
                                     </div>
@@ -227,16 +252,19 @@ export function MetaCanonMatrixPage() {
           <h3 className="text-white font-medium mb-3">How the Canon Matrix Works</h3>
           <div className="space-y-2 text-sm text-[#888]">
             <p>
-              <strong className="text-[#28E7A2]">Groups</strong> define the highest-level governance policies (e.g.,
-              &quot;Revenue Recognition per IFRS 15&quot;). They are abstract and non-bindable.
+              <strong className="text-[#28E7A2]">Groups</strong> define the highest-level governance
+              policies (e.g., &quot;Revenue Recognition per IFRS 15&quot;). They are abstract and
+              non-bindable.
             </p>
             <p>
-              <strong className="text-blue-400">Transactions</strong> inherit from Groups and apply the logic to
-              specific ledgers (e.g., &quot;Annual Contract Revenue&quot;). They add transaction-specific rules.
+              <strong className="text-blue-400">Transactions</strong> inherit from Groups and apply
+              the logic to specific ledgers (e.g., &quot;Annual Contract Revenue&quot;). They add
+              transaction-specific rules.
             </p>
             <p>
-              <strong className="text-purple-400">Cells</strong> inherit from Transactions and define individual fields
-              that can be bound to real systems (e.g., &quot;Revenue Amount must be DECIMAL(18,2)&quot;).
+              <strong className="text-purple-400">Cells</strong> inherit from Transactions and
+              define individual fields that can be bound to real systems (e.g., &quot;Revenue Amount
+              must be DECIMAL(18,2)&quot;).
             </p>
           </div>
         </div>

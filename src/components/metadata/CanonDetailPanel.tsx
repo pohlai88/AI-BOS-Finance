@@ -1,6 +1,16 @@
 import React from 'react';
 import { CanonRecord } from '../../data/mockCanonMatrix';
-import { ArrowDown, Shield, Link, Layers, FileText, AlertTriangle, Anchor, Ban, GitCommit } from 'lucide-react';
+import {
+  ArrowDown,
+  Shield,
+  Link,
+  Layers,
+  FileText,
+  AlertTriangle,
+  Anchor,
+  Ban,
+  GitCommit,
+} from 'lucide-react';
 
 interface CanonDetailPanelProps {
   record: CanonRecord | null;
@@ -14,8 +24,12 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
         <div className="w-16 h-16 rounded-full bg-[#111] border border-[#333] flex items-center justify-center mb-4">
           <Layers className="w-6 h-6 text-[#666]" />
         </div>
-        <h3 className="text-[#888] font-mono text-sm uppercase tracking-wider mb-2">No Canon Selected</h3>
-        <p className="text-[#666] text-xs max-w-[200px]">Select a row from the matrix to view its governance DNA.</p>
+        <h3 className="text-[#888] font-mono text-sm uppercase tracking-wider mb-2">
+          No Canon Selected
+        </h3>
+        <p className="text-[#666] text-xs max-w-[200px]">
+          Select a row from the matrix to view its governance DNA.
+        </p>
       </div>
     );
   }
@@ -25,9 +39,13 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
       {/* Header - Fixed */}
       <div className="p-6 border-b border-[#1F1F1F] bg-[#0A0A0A]">
         <div className="flex items-center justify-between mb-4">
-          <span className="font-mono text-[10px] text-[#28E7A2] uppercase tracking-widest">{record.id}</span>
-          <div className={`px-2 py-0.5 border text-[10px] font-mono uppercase tracking-wider rounded-sm
-            ${record.status === 'ACTIVE' ? 'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]' : 'border-[#666] text-[#666]'}`}>
+          <span className="font-mono text-[10px] text-[#28E7A2] uppercase tracking-widest">
+            {record.id}
+          </span>
+          <div
+            className={`px-2 py-0.5 border text-[10px] font-mono uppercase tracking-wider rounded-sm
+            ${record.status === 'ACTIVE' ? 'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]' : 'border-[#666] text-[#666]'}`}
+          >
             {record.status}
           </div>
         </div>
@@ -49,7 +67,7 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
             <h4 className="font-mono text-[10px] text-[#666] uppercase tracking-widest mb-3 flex items-center gap-2">
               <Shield className="w-3 h-3" /> Policy Source
             </h4>
-            
+
             <div className="bg-[#0F0F0F] border border-[#1F1F1F] rounded-sm p-4 hover:border-[#333] transition-colors">
               <div className="mb-3">
                 <div className="text-[10px] text-[#666] uppercase mb-1">Primary Standard</div>
@@ -60,15 +78,20 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
               </div>
               <div className="flex flex-wrap gap-2">
                 {record.supportingFrameworks.map((fw, i) => (
-                  <span key={i} className="px-1.5 py-0.5 bg-[#1A1A1A] border border-[#333] text-[10px] text-[#BBB] rounded-sm">
+                  <span
+                    key={i}
+                    className="px-1.5 py-0.5 bg-[#1A1A1A] border border-[#333] text-[10px] text-[#BBB] rounded-sm"
+                  >
                     {fw}
                   </span>
                 ))}
               </div>
               <div className="mt-3 pt-3 border-t border-[#1F1F1F] flex items-center justify-between">
-                 <span className="text-[10px] text-[#666] uppercase">Weight</span>
-                 <span className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border 
-                  ${record.riskWeight === 'CRITICAL' ? 'border-red-900 bg-red-900/10 text-red-500' : 'border-blue-900 bg-blue-900/10 text-blue-400'}`}>
+                <span className="text-[10px] text-[#666] uppercase">Weight</span>
+                <span
+                  className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border 
+                  ${record.riskWeight === 'CRITICAL' ? 'border-red-900 bg-red-900/10 text-red-500' : 'border-blue-900 bg-blue-900/10 text-blue-400'}`}
+                >
                   {record.riskWeight}
                 </span>
               </div>
@@ -85,23 +108,41 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
             </h4>
 
             <div className="space-y-1">
-              <div className={`p-3 border-l-2 ${record.type === 'Group' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs`}>
+              <div
+                className={`p-3 border-l-2 ${record.type === 'Group' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs`}
+              >
                 <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Group</span>
-                <span className="text-[#EEE]">{record.type === 'Group' ? record.name : (record.parentId || 'Parent Group')}</span>
+                <span className="text-[#EEE]">
+                  {record.type === 'Group' ? record.name : record.parentId || 'Parent Group'}
+                </span>
               </div>
-              
+
               <div className="ml-1 pl-2 border-l border-[#333] border-dashed h-2" />
 
-              <div className={`p-3 border-l-2 ${record.type === 'Transaction' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-2`}>
-                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Transaction</span>
-                <span className="text-[#EEE]">{record.type === 'Transaction' ? record.name : (record.type === 'Cell' ? record.parentId : 'Child Ledger')}</span>
+              <div
+                className={`p-3 border-l-2 ${record.type === 'Transaction' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-2`}
+              >
+                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">
+                  Transaction
+                </span>
+                <span className="text-[#EEE]">
+                  {record.type === 'Transaction'
+                    ? record.name
+                    : record.type === 'Cell'
+                      ? record.parentId
+                      : 'Child Ledger'}
+                </span>
               </div>
 
               <div className="ml-3 pl-2 border-l border-[#333] border-dashed h-2" />
 
-              <div className={`p-3 border-l-2 ${record.type === 'Cell' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-4`}>
-                 <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Cell</span>
-                 <span className="text-[#EEE]">{record.type === 'Cell' ? record.name : 'Target Field'}</span>
+              <div
+                className={`p-3 border-l-2 ${record.type === 'Cell' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-4`}
+              >
+                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Cell</span>
+                <span className="text-[#EEE]">
+                  {record.type === 'Cell' ? record.name : 'Target Field'}
+                </span>
               </div>
             </div>
           </div>
@@ -124,18 +165,26 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <div className="text-[10px] text-[#666] uppercase mb-1">Systems</div>
-                    <div className="text-xs text-[#EEE]">{record.usage.systems.length > 0 ? record.usage.systems.join(', ') : 'None'}</div>
+                    <div className="text-xs text-[#EEE]">
+                      {record.usage.systems.length > 0 ? record.usage.systems.join(', ') : 'None'}
+                    </div>
                   </div>
                   <div>
                     <div className="text-[10px] text-[#666] uppercase mb-1">GL Accounts</div>
-                    <div className="text-xs text-[#28E7A2] font-mono">{record.usage.glAccounts.length > 0 ? record.usage.glAccounts.join(', ') : '—'}</div>
+                    <div className="text-xs text-[#28E7A2] font-mono">
+                      {record.usage.glAccounts.length > 0
+                        ? record.usage.glAccounts.join(', ')
+                        : '—'}
+                    </div>
                   </div>
                 </div>
-                
+
                 {record.usage.riskSignals > 0 && (
-                   <div className="p-2 bg-red-900/10 border border-red-900/30 flex items-center gap-3">
+                  <div className="p-2 bg-red-900/10 border border-red-900/30 flex items-center gap-3">
                     <AlertTriangle className="w-3 h-3 text-red-500" />
-                    <span className="text-[10px] text-red-400 font-mono uppercase">{record.usage.riskSignals} Risk Signals Active</span>
+                    <span className="text-[10px] text-red-400 font-mono uppercase">
+                      {record.usage.riskSignals} Risk Signals Active
+                    </span>
                   </div>
                 )}
               </div>
@@ -147,7 +196,6 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

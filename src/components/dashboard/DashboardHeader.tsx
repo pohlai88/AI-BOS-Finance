@@ -16,10 +16,13 @@ export function DashboardHeader() {
       <div className="flex items-center gap-4">
         {/* Search Input Stub */}
         <div className="relative group hidden md:block">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#666] group-focus-within:text-[#28E7A2] transition-colors" />
-          <input 
-            type="text" 
-            placeholder="SEARCH REGISTRY..." 
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#666] group-focus-within:text-[#28E7A2] transition-colors"
+          />
+          <input
+            type="text"
+            placeholder="SEARCH REGISTRY..."
             className="h-9 w-64 bg-[#0A0A0A] border border-[#1F1F1F] pl-9 pr-3 text-xs text-[#FFF] placeholder-[#444] focus:outline-none focus:border-[#333] transition-colors font-mono"
           />
         </div>

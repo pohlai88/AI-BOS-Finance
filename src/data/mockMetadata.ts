@@ -24,7 +24,8 @@ export const mockMetadataRecords: MetadataRecord[] = [
     data_owner: 'Alice Chen',
     data_steward: 'Bob Smith',
     definition_short: 'Master record of all purchase orders issued to vendors',
-    definition_full: 'Complete purchase order records including line items, pricing, delivery terms, and approval workflows. Serves as the authoritative source for all procurement transactions.',
+    definition_full:
+      'Complete purchase order records including line items, pricing, delivery terms, and approval workflows. Serves as the authoritative source for all procurement transactions.',
     calculation_logic: undefined,
     source_of_truth: 'SAP ERP',
     synonyms: ['PO', 'Purchase Requisitions', 'Vendor Orders'],
@@ -66,7 +67,8 @@ export const mockMetadataRecords: MetadataRecord[] = [
     data_owner: 'Bob Smith',
     data_steward: 'Carol Johnson',
     definition_short: 'Customer invoices for goods and services rendered',
-    definition_full: 'Detailed invoice records including line items, tax calculations, payment terms, and collection status. Critical for revenue recognition and cash flow management.',
+    definition_full:
+      'Detailed invoice records including line items, tax calculations, payment terms, and collection status. Critical for revenue recognition and cash flow management.',
     calculation_logic: 'Total = SUM(line_items.amount) + TAX(total, tax_rate)',
     source_of_truth: 'Salesforce Billing',
     synonyms: ['Bills', 'AR Invoices', 'Customer Bills'],
@@ -108,7 +110,8 @@ export const mockMetadataRecords: MetadataRecord[] = [
     data_owner: 'Carol Johnson',
     data_steward: 'Dave Martinez',
     definition_short: 'Real-time stream of all financial transactions',
-    definition_full: 'High-frequency event stream capturing all monetary movements across accounts, including debits, credits, transfers, and adjustments. Serves as the immutable audit trail for all financial activity.',
+    definition_full:
+      'High-frequency event stream capturing all monetary movements across accounts, including debits, credits, transfers, and adjustments. Serves as the immutable audit trail for all financial activity.',
     calculation_logic: undefined,
     source_of_truth: 'Payment_Gateway_API',
     synonyms: ['Payment Events', 'Ledger Entries', 'Financial Movements'],
@@ -150,7 +153,8 @@ export const mockMetadataRecords: MetadataRecord[] = [
     data_owner: 'Dave Martinez',
     data_steward: 'Alice Chen',
     definition_short: 'Master customer registry with profiles and attributes',
-    definition_full: 'Authoritative customer records including contact information, account history, preferences, and segmentation. Single source of truth for all customer-related data across systems.',
+    definition_full:
+      'Authoritative customer records including contact information, account history, preferences, and segmentation. Single source of truth for all customer-related data across systems.',
     calculation_logic: undefined,
     source_of_truth: 'Salesforce CRM',
     synonyms: ['Accounts', 'Customer Profiles', 'Client Records'],
@@ -192,7 +196,8 @@ export const mockMetadataRecords: MetadataRecord[] = [
     data_owner: 'Alice Chen',
     data_steward: 'Bob Smith',
     definition_short: 'Master product catalog with SKUs, pricing, and inventory',
-    definition_full: 'Complete product information including SKUs, descriptions, pricing tiers, inventory levels, and supplier relationships. Supports multi-channel sales and inventory management.',
+    definition_full:
+      'Complete product information including SKUs, descriptions, pricing tiers, inventory levels, and supplier relationships. Supports multi-channel sales and inventory management.',
     calculation_logic: 'Effective_Price = Base_Price * (1 - Discount_Rate) + Tax',
     source_of_truth: 'NetSuite ERP',
     synonyms: ['SKU Master', 'Product Database', 'Item Registry'],

@@ -86,12 +86,13 @@ export function MetaLynxCodexPage() {
                 <h3 className="text-white font-medium mb-2">How Lynx Works</h3>
                 <div className="text-sm text-[#888] space-y-2">
                   <p>
-                    Lynx is your AI forensic analyst. It understands your Canon governance structure, metadata
-                    registry, and audit trails.
+                    Lynx is your AI forensic analyst. It understands your Canon governance
+                    structure, metadata registry, and audit trails.
                   </p>
                   <p>
-                    Ask business questions in plain language. Lynx will investigate, trace through the Canon hierarchy,
-                    and provide evidence-backed answers citing specific governance rules and data points.
+                    Ask business questions in plain language. Lynx will investigate, trace through
+                    the Canon hierarchy, and provide evidence-backed answers citing specific
+                    governance rules and data points.
                   </p>
                 </div>
               </div>
@@ -107,7 +108,8 @@ export function MetaLynxCodexPage() {
                 <LynxIcon className="w-16 h-16 text-[#28E7A2] mb-4" />
                 <h3 className="text-white font-medium mb-2">Start a Conversation</h3>
                 <p className="text-[#666] text-sm mb-6 max-w-md">
-                  Ask Lynx about your metadata, governance rules, compliance issues, or Canon relationships.
+                  Ask Lynx about your metadata, governance rules, compliance issues, or Canon
+                  relationships.
                 </p>
 
                 {/* SUGGESTED QUESTIONS */}
@@ -191,9 +193,7 @@ export function MetaLynxCodexPage() {
                     <Info className="w-3 h-3" />
                     Press Enter to send, Shift+Enter for new line
                   </div>
-                  <div className="text-[10px] text-[#666] font-mono">
-                    {input.length} characters
-                  </div>
+                  <div className="text-[10px] text-[#666] font-mono">{input.length} characters</div>
                 </div>
               </div>
 
@@ -204,7 +204,7 @@ export function MetaLynxCodexPage() {
                   'px-6 py-3 rounded font-medium transition-all flex items-center gap-2',
                   input.trim() && !isTyping
                     ? 'bg-[#28E7A2] text-black hover:bg-[#28E7A2]/90'
-                    : 'bg-[#111] text-[#666] cursor-not-allowed'
+                    : 'bg-[#111] text-[#666] cursor-not-allowed',
                 )}
               >
                 <Send className="w-4 h-4" />
@@ -222,20 +222,20 @@ export function MetaLynxCodexPage() {
               <div className="text-sm text-white font-medium mb-1">Lynx Capabilities</div>
               <div className="text-xs text-[#888] space-y-1">
                 <p>
-                  <strong className="text-white">Canon Query:</strong> Trace governance rules from Cell → Transaction →
-                  Group
+                  <strong className="text-white">Canon Query:</strong> Trace governance rules from
+                  Cell → Transaction → Group
                 </p>
                 <p>
-                  <strong className="text-white">Evidence Retrieval:</strong> Pull audit logs, metadata changes, and
-                  system bindings
+                  <strong className="text-white">Evidence Retrieval:</strong> Pull audit logs,
+                  metadata changes, and system bindings
                 </p>
                 <p>
-                  <strong className="text-white">Risk Detection:</strong> Identify compliance violations,
-                  misclassifications, and drift
+                  <strong className="text-white">Risk Detection:</strong> Identify compliance
+                  violations, misclassifications, and drift
                 </p>
                 <p>
-                  <strong className="text-white">Natural Language:</strong> Ask in plain English, get forensic answers
-                  with citations
+                  <strong className="text-white">Natural Language:</strong> Ask in plain English,
+                  get forensic answers with citations
                 </p>
               </div>
             </div>

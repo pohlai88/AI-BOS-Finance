@@ -6,15 +6,15 @@ import { NexusButton } from '../components/nexus/NexusButton';
 import { NexusBadge } from '../components/nexus/NexusBadge';
 import { Progress } from '../components/ui/progress';
 import { useSysConfig } from '../context/SysConfigContext';
-import { 
-  Building2, 
-  Users, 
-  UserCircle, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  Building2,
+  Users,
+  UserCircle,
+  CheckCircle2,
+  AlertCircle,
   ArrowRight,
   LayoutGrid,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MOCK_ANNOUNCEMENTS, MOCK_CONFIG_GAPS, MOCK_HEALTH_METRICS } from '../data/systemMock';
@@ -36,7 +36,15 @@ interface SetupCardProps {
   sysCode?: string;
 }
 
-function SetupCard({ title, description, icon, status, onClick, colSpan = "col-span-1", sysCode }: SetupCardProps) {
+function SetupCard({
+  title,
+  description,
+  icon,
+  status,
+  onClick,
+  colSpan = 'col-span-1',
+  sysCode,
+}: SetupCardProps) {
   const isComplete = status === 'COMPLETE';
   const isLocked = status === 'LOCKED';
 
@@ -46,13 +54,15 @@ function SetupCard({ title, description, icon, status, onClick, colSpan = "col-s
       whileTap={!isLocked ? { scale: 0.99 } : {}}
       className={`${colSpan} h-full`}
     >
-      <NexusCard 
+      <NexusCard
         onClick={!isLocked ? onClick : undefined}
         className={`
           h-full p-6 relative overflow-hidden transition-all duration-300 cursor-pointer
-          ${isComplete 
-            ? 'border-emerald-900/40 hover:border-emerald-500/60' 
-            : 'hover:border-zinc-700'}
+          ${
+            isComplete
+              ? 'border-emerald-900/40 hover:border-emerald-500/60'
+              : 'hover:border-zinc-700'
+          }
           ${isLocked ? 'opacity-40 cursor-not-allowed grayscale' : ''}
         `}
       >
@@ -64,10 +74,12 @@ function SetupCard({ title, description, icon, status, onClick, colSpan = "col-s
         {/* Header Section - Fixed Height */}
         <div className="flex justify-between items-start mb-4 shrink-0">
           {/* Icon */}
-          <div className={`
+          <div
+            className={`
             p-3 border transition-colors
             ${isComplete ? 'bg-emerald-950/20 border-emerald-900/40 text-emerald-500' : 'bg-[#050505] border-[#1F1F1F] text-zinc-500'}
-          `}>
+          `}
+          >
             {icon}
           </div>
 
@@ -84,20 +96,22 @@ function SetupCard({ title, description, icon, status, onClick, colSpan = "col-s
           ) : (
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 bg-amber-500 animate-pulse" />
-              <span className="text-[10px] font-mono text-amber-500 uppercase tracking-wider">PENDING</span>
+              <span className="text-[10px] font-mono text-amber-500 uppercase tracking-wider">
+                PENDING
+              </span>
             </div>
           )}
         </div>
 
         {/* Content Section - Flexible Height with Constraints */}
         <div className="flex-1 min-h-0 flex flex-col gap-2">
-          <h3 className={`text-lg tracking-tight ${isComplete ? 'text-emerald-50' : 'text-zinc-100'}`}>
+          <h3
+            className={`text-lg tracking-tight ${isComplete ? 'text-emerald-50' : 'text-zinc-100'}`}
+          >
             {title}
           </h3>
-          <p className="text-sm text-zinc-500 leading-relaxed line-clamp-3">
-            {description}
-          </p>
-          
+          <p className="text-sm text-zinc-500 leading-relaxed line-clamp-3">{description}</p>
+
           {/* System Code */}
           {sysCode && (
             <div className="text-[10px] font-mono text-zinc-700 mt-auto uppercase tracking-wider">
@@ -148,20 +162,19 @@ export function SysBootloaderPage() {
   return (
     <MetaAppShell>
       <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-start p-4 md:p-6 pt-8 relative overflow-hidden">
-        
         {/* Ambient Background Grid */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,#0A0A0A_0%,#000000_60%)] -z-10" />
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
 
         <div className="max-w-[1100px] w-full z-10 space-y-6">
-          
           {/* STICKY HEADER */}
-          <div className="sticky top-4 z-30 bg-[#0A0A0A] pb-4 border-b border-[#1F1F1F]">{/* Changed from top-16 to top-4 to reduce gap */}
+          <div className="sticky top-4 z-30 bg-[#0A0A0A] pb-4 border-b border-[#1F1F1F]">
+            {/* Changed from top-16 to top-4 to reduce gap */}
             <div className="flex flex-col gap-4">
               {/* Top Row: Title + Launch Button */}
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2 flex-1 min-w-0">
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2"
@@ -171,13 +184,13 @@ export function SysBootloaderPage() {
                       {viewMode === 'MISSION_CONTROL' ? 'MISSION CONTROL' : 'SYSTEM INITIALIZATION'}
                     </span>
                   </motion.div>
-                  
+
                   <h1 className="text-3xl md:text-4xl tracking-tight text-white">
                     {viewMode === 'MISSION_CONTROL' ? 'System Status' : 'Welcome to NexusCanon.'}
                   </h1>
                   <p className="text-zinc-500 font-mono text-sm">
-                    {viewMode === 'MISSION_CONTROL' 
-                      ? 'Monitor system health, announcements, and configuration status.' 
+                    {viewMode === 'MISSION_CONTROL'
+                      ? 'Monitor system health, announcements, and configuration status.'
                       : 'Complete the setup steps below to activate your workspace.'}
                   </p>
                 </div>
@@ -190,9 +203,10 @@ export function SysBootloaderPage() {
                     className={`
                       relative h-10 px-4 font-mono text-[10px] uppercase tracking-[0.15em]
                       border transition-all duration-200 flex-shrink-0 whitespace-nowrap
-                      ${isSetupComplete 
-                        ? 'bg-[#0A0A0A] border-emerald-500/40 text-emerald-500 hover:bg-emerald-950/20 hover:border-emerald-500' 
-                        : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
+                      ${
+                        isSetupComplete
+                          ? 'bg-[#0A0A0A] border-emerald-500/40 text-emerald-500 hover:bg-emerald-950/20 hover:border-emerald-500'
+                          : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
                       }
                     `}
                   >
@@ -200,7 +214,7 @@ export function SysBootloaderPage() {
                     {isSetupComplete && (
                       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
                     )}
-                    
+
                     <div className="flex items-center justify-center gap-2">
                       <Zap className={`w-3 h-3 ${isSetupComplete ? '' : 'opacity-30'}`} />
                       <span>LAUNCH</span>
@@ -222,8 +236,8 @@ export function SysBootloaderPage() {
                   <button
                     onClick={() => setViewMode('SETUP')}
                     className={`px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider transition-colors ${
-                      viewMode === 'SETUP' 
-                        ? 'bg-[#1F1F1F] text-white' 
+                      viewMode === 'SETUP'
+                        ? 'bg-[#1F1F1F] text-white'
                         : 'text-zinc-600 hover:text-zinc-400'
                     }`}
                   >
@@ -233,10 +247,10 @@ export function SysBootloaderPage() {
                     onClick={() => setViewMode('MISSION_CONTROL')}
                     disabled={!isSetupComplete}
                     className={`px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider transition-colors ${
-                      viewMode === 'MISSION_CONTROL' 
-                        ? 'bg-[#1F1F1F] text-white' 
-                        : isSetupComplete 
-                          ? 'text-zinc-600 hover:text-zinc-400' 
+                      viewMode === 'MISSION_CONTROL'
+                        ? 'bg-[#1F1F1F] text-white'
+                        : isSetupComplete
+                          ? 'text-zinc-600 hover:text-zinc-400'
                           : 'text-zinc-800 cursor-not-allowed'
                     }`}
                   >
@@ -249,14 +263,14 @@ export function SysBootloaderPage() {
                   <div className="w-full md:w-[280px] space-y-2">
                     <div className="flex justify-between text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
                       <span>COMPLETION</span>
-                      <span className={isSetupComplete ? "text-emerald-500" : "text-amber-500"}>
+                      <span className={isSetupComplete ? 'text-emerald-500' : 'text-amber-500'}>
                         {Math.round(progress)}%
                       </span>
                     </div>
-                    <Progress 
-                      value={progress} 
-                      className="h-[2px] bg-[#1F1F1F]" 
-                      indicatorClassName={isSetupComplete ? "bg-emerald-500" : "bg-amber-500"} 
+                    <Progress
+                      value={progress}
+                      className="h-[2px] bg-[#1F1F1F]"
+                      indicatorClassName={isSetupComplete ? 'bg-emerald-500' : 'bg-amber-500'}
                     />
                   </div>
                 )}
@@ -277,7 +291,6 @@ export function SysBootloaderPage() {
               >
                 {/* BENTO GRID */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[260px]">
-                  
                   {/* Card 1: Profile (SYS_04) */}
                   <SetupCard
                     title="Employee Profile"
@@ -339,7 +352,6 @@ export function SysBootloaderPage() {
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
     </MetaAppShell>

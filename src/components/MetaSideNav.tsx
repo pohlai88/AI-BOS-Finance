@@ -4,8 +4,8 @@
 // ============================================================================
 
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  X, 
+import {
+  X,
   LayoutDashboard,
   Database,
   User,
@@ -17,7 +17,7 @@ import {
   Search,
   Layers,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NexusCanonLogo } from '@/components/NexusCanonLogo';
@@ -53,58 +53,58 @@ const NAVIGATION_GROUPS: NavGroup[] = [
         code: 'META_01',
         label: 'Forensic Architecture',
         route: '/meta-architecture',
-        icon: LayoutDashboard
+        icon: LayoutDashboard,
       },
       {
         id: 'registry',
         code: 'META_02',
         label: 'Registry // God View',
         route: '/meta-registry',
-        icon: Database
+        icon: Database,
       },
       {
         id: 'prism',
         code: 'META_03',
         label: 'The Prism',
         route: '/meta-registry/PRISM',
-        icon: Layers
+        icon: Layers,
       },
       {
         id: 'risk',
         code: 'META_04',
         label: 'Risk Radar',
         route: '/meta-risk',
-        icon: Shield
+        icon: Shield,
       },
       {
         id: 'canon',
         code: 'META_05',
         label: 'Canon Matrix',
         route: '/meta-canon',
-        icon: FileText
+        icon: FileText,
       },
       {
         id: 'health',
         code: 'META_06',
         label: 'Health Scan',
         route: '/meta-health',
-        icon: Activity
+        icon: Activity,
       },
       {
         id: 'lynx',
         code: 'META_07',
         label: 'Lynx Codex',
         route: '/meta-lynx',
-        icon: Search
+        icon: Search,
       },
       {
         id: 'implementation',
         code: 'META_08',
         label: 'Implementation',
         route: '/implementation-playbook',
-        icon: FileText
-      }
-    ]
+        icon: FileText,
+      },
+    ],
   },
   {
     id: 'sys',
@@ -116,31 +116,31 @@ const NAVIGATION_GROUPS: NavGroup[] = [
         code: 'SYS_01',
         label: 'Setup Companion',
         route: '/sys-bootloader',
-        icon: Wrench
+        icon: Wrench,
       },
       {
         id: 'organization',
         code: 'SYS_02',
         label: 'Organization Matrix',
         route: '/sys-organization',
-        icon: Settings
+        icon: Settings,
       },
       {
         id: 'access',
         code: 'SYS_03',
         label: 'Access Control',
         route: '/sys-access',
-        icon: Shield
+        icon: Shield,
       },
       {
         id: 'profile',
         code: 'SYS_04',
         label: 'Profile',
         route: '/sys-profile',
-        icon: User
-      }
-    ]
-  }
+        icon: User,
+      },
+    ],
+  },
 ];
 
 export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
@@ -149,10 +149,8 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['meta', 'sys']);
 
   const toggleGroup = (groupId: string) => {
-    setExpandedGroups(prev => 
-      prev.includes(groupId) 
-        ? prev.filter(id => id !== groupId)
-        : [...prev, groupId]
+    setExpandedGroups((prev) =>
+      prev.includes(groupId) ? prev.filter((id) => id !== groupId) : [...prev, groupId],
     );
   };
 
@@ -190,14 +188,10 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
   return (
     <>
       {/* Backdrop - NO overlay effect on content */}
-      <div 
-        className="fixed inset-0 z-40"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 z-40" onClick={onClose} />
 
       {/* Side Panel - Standard Figma width */}
       <div className="fixed left-0 top-0 bottom-0 w-[280px] bg-[#0A0A0A] border-r border-[#1F1F1F] z-50 flex flex-col">
-        
         {/* Custom Linear-style scrollbar */}
         <style>
           {`
@@ -216,11 +210,11 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
             }
           `}
         </style>
-        
+
         {/* Header with Logo */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-[#1F1F1F] shrink-0">
           <NexusCanonLogo variant="icon" size="sm" />
-          <button 
+          <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center hover:bg-[#1F1F1F] rounded transition-colors"
           >
@@ -232,7 +226,7 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
         <nav className="flex-1 overflow-y-auto py-4 px-3 nexus-nav-scroll">
           {NAVIGATION_GROUPS.map((group, groupIndex) => {
             const isExpanded = expandedGroups.includes(group.id);
-            
+
             return (
               <div key={group.id} className={groupIndex > 0 ? 'mt-4' : ''}>
                 {/* Group Header - Collapsible */}
@@ -269,15 +263,18 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
                           className={`
                             w-full flex items-center gap-3 px-3 py-2 rounded-md
                             transition-all group text-left ml-2
-                            ${isActive 
-                              ? 'bg-[#1F1F1F] text-white' 
-                              : 'text-[#999] hover:bg-[#151515] hover:text-white'
+                            ${
+                              isActive
+                                ? 'bg-[#1F1F1F] text-white'
+                                : 'text-[#999] hover:bg-[#151515] hover:text-white'
                             }
                           `}
                         >
-                          <Icon className={`w-[16px] h-[16px] shrink-0 ${
-                            isActive ? 'text-[#28E7A2]' : 'text-[#666] group-hover:text-[#999]'
-                          }`} />
+                          <Icon
+                            className={`w-[16px] h-[16px] shrink-0 ${
+                              isActive ? 'text-[#28E7A2]' : 'text-[#666] group-hover:text-[#999]'
+                            }`}
+                          />
                           <div className="flex-1 flex items-center gap-2">
                             <span className="font-mono text-[12px] tracking-[-0.01em]">
                               {item.label}
@@ -287,9 +284,7 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
                             </span>
                           </div>
                           {/* Active indicator */}
-                          {isActive && (
-                            <div className="w-1 h-1 rounded-full bg-[#28E7A2]" />
-                          )}
+                          {isActive && <div className="w-1 h-1 rounded-full bg-[#28E7A2]" />}
                         </button>
                       );
                     })}
@@ -308,7 +303,6 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
             </span>
           </div>
         </div>
-
       </div>
     </>
   );

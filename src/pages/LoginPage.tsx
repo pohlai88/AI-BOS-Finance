@@ -37,7 +37,7 @@ const EASING = {
 // ============================================================================
 const ParticleField = ({ engineState }: { engineState: 'idle' | 'revving' }) => {
   const particles = Array.from({ length: 40 });
-  
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {particles.map((_, i) => {
@@ -46,7 +46,7 @@ const ParticleField = ({ engineState }: { engineState: 'idle' | 'revving' }) => 
         const randomDuration = 10 + Math.random() * 20;
         const randomDelay = Math.random() * 5;
         const randomSize = 1 + Math.random() * 2;
-        
+
         return (
           <motion.div
             key={i}
@@ -82,10 +82,10 @@ const ParticleField = ({ engineState }: { engineState: 'idle' | 'revving' }) => 
 // ============================================================================
 // SUB-COMPONENT: DATA FLOW LINES (Connection Visualization)
 // ============================================================================
-const DataFlowLines = ({ 
-  activeConduit, 
-  engineState 
-}: { 
+const DataFlowLines = ({
+  activeConduit,
+  engineState,
+}: {
   activeConduit: 'none' | 'email' | 'password';
   engineState: 'idle' | 'revving';
 }) => {
@@ -103,7 +103,7 @@ const DataFlowLines = ({
           <stop offset="50%" stopColor="#00F0FF" stopOpacity="1" />
           <stop offset="100%" stopColor="#00F0FF" stopOpacity="0" />
         </linearGradient>
-        
+
         {/* Glow filter */}
         <filter id="dataGlow">
           <feGaussianBlur stdDeviation="2" result="blur" />
@@ -116,8 +116,10 @@ const DataFlowLines = ({
 
       {/* Email Input → Amber Flywheel (Left) */}
       <motion.line
-        x1="20%" y1="45%"
-        x2="2%" y2="45%"
+        x1="20%"
+        y1="45%"
+        x2="2%"
+        y2="45%"
         stroke="#FFD700"
         strokeWidth="1"
         strokeDasharray="4 4"
@@ -132,11 +134,13 @@ const DataFlowLines = ({
           ease: 'linear',
         }}
       />
-      
+
       {/* Password Input → Cyan Piston (Right) */}
       <motion.line
-        x1="80%" y1="55%"
-        x2="98%" y2="55%"
+        x1="80%"
+        y1="55%"
+        x2="98%"
+        y2="55%"
         stroke="#00F0FF"
         strokeWidth="1"
         strokeDasharray="4 4"
@@ -155,7 +159,8 @@ const DataFlowLines = ({
       {/* Connection nodes */}
       {activeConduit === 'email' && (
         <motion.circle
-          cx="20%" cy="45%"
+          cx="20%"
+          cy="45%"
           r="3"
           fill="#FFD700"
           animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
@@ -164,7 +169,8 @@ const DataFlowLines = ({
       )}
       {activeConduit === 'password' && (
         <motion.circle
-          cx="80%" cy="55%"
+          cx="80%"
+          cy="55%"
           r="3"
           fill="#00F0FF"
           animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
@@ -218,20 +224,31 @@ const CoordinateGrid = () => {
 // ============================================================================
 const StatusBar = ({ engineState }: { engineState: 'idle' | 'revving' }) => {
   const [time, setTime] = useState(new Date());
-  
+
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
   const metrics = [
-    { icon: Activity, label: 'SYS', value: engineState === 'idle' ? '24%' : '87%', color: engineState === 'idle' ? '#666' : '#28E7A2' },
+    {
+      icon: Activity,
+      label: 'SYS',
+      value: engineState === 'idle' ? '24%' : '87%',
+      color: engineState === 'idle' ? '#666' : '#28E7A2',
+    },
     { icon: Database, label: 'MEM', value: '2.4GB', color: '#666' },
-    { icon: Cpu, label: 'CPU', value: engineState === 'idle' ? '12%' : '64%', color: engineState === 'idle' ? '#666' : '#FFD700' },
+    {
+      icon: Cpu,
+      label: 'CPU',
+      value: engineState === 'idle' ? '12%' : '64%',
+      color: engineState === 'idle' ? '#666' : '#FFD700',
+    },
   ];
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-8 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-600 border-b border-white/5 backdrop-blur-sm"
+    <div
+      className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-8 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-600 border-b border-white/5 backdrop-blur-sm"
       style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)' }}
     >
       {/* Left: Metrics */}
@@ -247,7 +264,7 @@ const StatusBar = ({ engineState }: { engineState: 'idle' | 'revving' }) => {
 
       {/* Center: Status */}
       <div className="flex items-center gap-2">
-        <motion.div 
+        <motion.div
           className="w-1.5 h-1.5 rounded-full"
           style={{ backgroundColor: engineState === 'idle' ? '#666' : '#28E7A2' }}
           animate={{ opacity: engineState === 'idle' ? 0.5 : [0.5, 1, 0.5] }}
@@ -259,9 +276,7 @@ const StatusBar = ({ engineState }: { engineState: 'idle' | 'revving' }) => {
       </div>
 
       {/* Right: Time */}
-      <div className="text-white/40">
-        {time.toLocaleTimeString('en-US', { hour12: false })}
-      </div>
+      <div className="text-white/40">{time.toLocaleTimeString('en-US', { hour12: false })}</div>
     </div>
   );
 };
@@ -301,10 +316,11 @@ const ImpactRipple = ({ engineState }: { engineState: 'idle' | 'revving' }) => {
 // ============================================================================
 const ScanlineOverlay = () => (
   <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden opacity-15 mix-blend-overlay">
-    <div 
+    <div
       className="absolute inset-0"
       style={{
-        backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+        backgroundImage:
+          'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
         backgroundSize: '100% 2px, 3px 100%',
       }}
     />
@@ -320,7 +336,7 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // ENGINE STATE
   const [engineState, setEngineState] = useState<'idle' | 'revving'>('idle');
   const [activeConduit, setActiveConduit] = useState<'none' | 'email' | 'password'>('none');
@@ -338,7 +354,7 @@ export const LoginPage = () => {
   // CURSOR PARALLAX (Enhanced for dramatic movement)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   const handleMouseMove = ({ clientX, clientY, currentTarget }: React.MouseEvent) => {
     const bounds = currentTarget.getBoundingClientRect();
     const centerX = bounds.width / 2;
@@ -350,11 +366,11 @@ export const LoginPage = () => {
   // Transform mouse position to dramatic parallax offsets (ENHANCED)
   const parallaxX = useTransform(mouseX, [-1, 1], [-40, 40]);
   const parallaxY = useTransform(mouseY, [-1, 1], [-40, 40]);
-  
+
   // Deeper parallax for background elements (slower, more depth)
   const parallaxXDeep = useTransform(mouseX, [-1, 1], [-20, 20]);
   const parallaxYDeep = useTransform(mouseY, [-1, 1], [-20, 20]);
-  
+
   // Stronger parallax for foreground elements (faster, more dynamic)
   const parallaxXStrong = useTransform(mouseX, [-1, 1], [-60, 60]);
   const parallaxYStrong = useTransform(mouseY, [-1, 1], [-60, 60]);
@@ -371,7 +387,7 @@ export const LoginPage = () => {
   // INPUT RECOIL HANDLER
   const triggerRecoil = () => {
     const intensity = 1.5;
-    shakeX.set(Math.random() * intensity - intensity/2);
+    shakeX.set(Math.random() * intensity - intensity / 2);
     setTimeout(() => shakeX.set(0), 40);
   };
 
@@ -382,8 +398,8 @@ export const LoginPage = () => {
     setActiveConduit('none');
 
     // Simulate authentication sequence
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     navigate('/sys-bootloader');
     setIsSubmitting(false);
     setEngineState('idle');
@@ -391,31 +407,28 @@ export const LoginPage = () => {
 
   return (
     <EngineProvider state={engineState} setState={setEngineState} shakeX={shakeX} shakeY={shakeY}>
-      
       {/* GLOBAL CONTAINER WITH MOUSE TRACKING */}
-      <div 
+      <div
         onMouseMove={handleMouseMove}
         className="w-full h-full min-h-screen bg-black relative overflow-hidden"
       >
-        
         <ScanlineOverlay />
         <StatusBar engineState={engineState} />
 
         {/* EARTHQUAKE WRAPPER */}
         <motion.div
-          style={{ 
-            x: springX, 
-            y: springY, 
-            width: '100%', 
-            minHeight: '100vh' 
+          style={{
+            x: springX,
+            y: springY,
+            width: '100%',
+            minHeight: '100vh',
           }}
           className="flex items-center justify-center relative"
         >
-          
           {/* ========================================
               LAYER 1: BACKGROUND & ATMOSPHERE
               ======================================== */}
-          
+
           {/* Base Grid */}
           <div
             className="absolute inset-0 opacity-15"
@@ -447,14 +460,15 @@ export const LoginPage = () => {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%)',
+              background:
+                'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%)',
             }}
           />
 
           {/* ========================================
               LAYER 2: THE MECHANICS (with parallax)
               ======================================== */}
-          <motion.div 
+          <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
             style={{ x: parallaxX, y: parallaxY }}
           >
@@ -493,20 +507,20 @@ export const LoginPage = () => {
               }}
               animate={{
                 // CINEMATIC TRANSPARENCY: 90% transparent when idle, solid when hovering/interacting
-                background: (isHovering || isInteracting)
-                  ? 'linear-gradient(145deg, rgba(8, 12, 16, 0.96) 0%, rgba(4, 6, 8, 0.98) 100%)'
-                  : 'linear-gradient(145deg, rgba(8, 12, 16, 0.10) 0%, rgba(4, 6, 8, 0.12) 100%)',
-                backdropFilter: (isHovering || isInteracting)
-                  ? 'blur(24px)'
-                  : 'blur(8px)',
-                boxShadow: (isHovering || isInteracting)
-                  ? `
+                background:
+                  isHovering || isInteracting
+                    ? 'linear-gradient(145deg, rgba(8, 12, 16, 0.96) 0%, rgba(4, 6, 8, 0.98) 100%)'
+                    : 'linear-gradient(145deg, rgba(8, 12, 16, 0.10) 0%, rgba(4, 6, 8, 0.12) 100%)',
+                backdropFilter: isHovering || isInteracting ? 'blur(24px)' : 'blur(8px)',
+                boxShadow:
+                  isHovering || isInteracting
+                    ? `
                     0 0 2px rgba(40, 231, 162, 0.4),
                     0 0 120px rgba(0,0,0,0.9), 
                     inset 0 1px 0 rgba(255, 255, 255, 0.08),
                     inset 0 0 80px rgba(0, 0, 0, 0.5)
                   `
-                  : `
+                    : `
                     0 0 1px rgba(40, 231, 162, 0.2),
                     0 0 80px rgba(0,0,0,0.7), 
                     inset 0 1px 0 rgba(255, 255, 255, 0.03),
@@ -515,14 +529,14 @@ export const LoginPage = () => {
               }}
               transition={{ duration: 0.6, ease: EASING.smooth }}
             >
-              
               {/* Top Energy Beam */}
               <motion.div
                 className="absolute top-0 left-0 right-0 h-[1px]"
-                style={{ 
-                  background: 'linear-gradient(90deg, transparent, rgba(40, 231, 162, 0.6), transparent)',
+                style={{
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(40, 231, 162, 0.6), transparent)',
                 }}
-                animate={{ 
+                animate={{
                   opacity: engineState === 'revving' ? [0.5, 1, 0.5] : [0.2, 0.4, 0.2],
                   scaleX: engineState === 'revving' ? [0.8, 1.2, 0.8] : 1,
                 }}
@@ -536,19 +550,41 @@ export const LoginPage = () => {
                 { bottom: '0', left: '0', rotate: '-90deg' },
                 { bottom: '0', right: '0', rotate: '180deg' },
               ].map((pos, i) => (
-                <div
-                  key={i}
-                  className="absolute w-4 h-4 pointer-events-none"
-                  style={pos}
-                >
-                  <svg width="16" height="16" viewBox="0 0 16 16" style={{ transform: `rotate(${pos.rotate})` }}>
-                    <line x1="0" y1="0" x2="16" y2="0" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
-                    <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
+                <div key={i} className="absolute w-4 h-4 pointer-events-none" style={pos}>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    style={{ transform: `rotate(${pos.rotate})` }}
+                  >
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="16"
+                      y2="0"
+                      stroke="rgba(255, 255, 255, 0.15)"
+                      strokeWidth="1"
+                    />
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="16"
+                      stroke="rgba(255, 255, 255, 0.15)"
+                      strokeWidth="1"
+                    />
                     <motion.circle
-                      cx="2" cy="2" r="1.5"
+                      cx="2"
+                      cy="2"
+                      r="1.5"
                       fill="#28E7A2"
                       animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.5,
+                        ease: 'easeInOut',
+                      }}
                     />
                   </svg>
                 </div>
@@ -561,7 +597,7 @@ export const LoginPage = () => {
                     <NexusCanonLogo variant="icon" size="md" />
                   </Link>
                   <div className="space-y-1">
-                    <motion.div 
+                    <motion.div
                       className="text-[10px] font-mono uppercase tracking-[0.3em]"
                       style={{ color: '#28E7A2', opacity: 0.6 }}
                       animate={{ opacity: [0.4, 0.7, 0.4] }}
@@ -569,10 +605,7 @@ export const LoginPage = () => {
                     >
                       System Access
                     </motion.div>
-                    <h1 
-                      className="text-white tracking-tight"
-                      style={{ letterSpacing: '-0.02em' }}
-                    >
+                    <h1 className="text-white tracking-tight" style={{ letterSpacing: '-0.02em' }}>
                       Control Panel Authentication
                     </h1>
                   </div>
@@ -580,12 +613,11 @@ export const LoginPage = () => {
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-                  
                   {/* OPERATOR ID (Connected to Amber Flywheel) */}
                   <div className="group">
-                    <label 
+                    <label
                       className="block text-[10px] font-mono uppercase tracking-widest mb-2 transition-colors"
-                      style={{ 
+                      style={{
                         color: activeConduit === 'email' ? '#FFD700' : '#888888',
                         letterSpacing: '0.2em',
                       }}
@@ -593,42 +625,51 @@ export const LoginPage = () => {
                       Operator ID
                     </label>
                     <div className="relative">
-                      <Mail 
-                        size={14} 
-                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none" 
+                      <Mail
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none"
                         style={{ color: activeConduit === 'email' ? '#FFD700' : '#555555' }}
                       />
                       <motion.input
                         type="email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value); triggerRecoil(); }}
-                        onFocus={() => { 
-                          setEngineState('revving'); 
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          triggerRecoil();
+                        }}
+                        onFocus={() => {
+                          setEngineState('revving');
                           setActiveConduit('email');
                           setIsInteracting(true);
                         }}
-                        onBlur={() => { 
-                          setEngineState('idle'); 
+                        onBlur={() => {
+                          setEngineState('idle');
                           setActiveConduit('none');
                           setIsInteracting(false);
                         }}
                         placeholder="user@nexus.com"
                         className="w-full pl-10 pr-4 py-3 text-sm transition-all duration-300"
                         style={{
-                          backgroundColor: activeConduit === 'email' ? 'rgba(255, 215, 0, 0.05)' : 'rgba(0, 0, 0, 0.4)',
+                          backgroundColor:
+                            activeConduit === 'email'
+                              ? 'rgba(255, 215, 0, 0.05)'
+                              : 'rgba(0, 0, 0, 0.4)',
                           border: `1px solid ${activeConduit === 'email' ? 'rgba(255, 215, 0, 0.5)' : '#1F1F1F'}`,
                           color: '#FFFFFF',
                           borderRadius: '2px',
                           outline: 'none',
-                          boxShadow: activeConduit === 'email' ? '0 0 20px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 215, 0, 0.1)' : 'none',
+                          boxShadow:
+                            activeConduit === 'email'
+                              ? '0 0 20px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 215, 0, 0.1)'
+                              : 'none',
                         }}
                         whileFocus={{ scale: 1.01 }}
                         transition={{ duration: 0.2 }}
                       />
                       {/* Active Indicator */}
                       {activeConduit === 'email' && (
-                        <motion.div 
-                          layoutId="active-indicator" 
+                        <motion.div
+                          layoutId="active-indicator"
                           className="absolute right-0 top-0 bottom-0 w-[2px]"
                           style={{ backgroundColor: '#FFD700' }}
                           initial={{ opacity: 0 }}
@@ -641,9 +682,9 @@ export const LoginPage = () => {
 
                   {/* SECURITY KEY (Connected to Cyan Piston) */}
                   <div className="group">
-                    <label 
+                    <label
                       className="block text-[10px] font-mono uppercase tracking-widest mb-2 transition-colors"
-                      style={{ 
+                      style={{
                         color: activeConduit === 'password' ? '#00F0FF' : '#888888',
                         letterSpacing: '0.2em',
                       }}
@@ -651,34 +692,43 @@ export const LoginPage = () => {
                       Security Key
                     </label>
                     <div className="relative">
-                      <Lock 
-                        size={14} 
-                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none" 
+                      <Lock
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none"
                         style={{ color: activeConduit === 'password' ? '#00F0FF' : '#555555' }}
                       />
                       <motion.input
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={(e) => { setPassword(e.target.value); triggerRecoil(); }}
-                        onFocus={() => { 
-                          setEngineState('revving'); 
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          triggerRecoil();
+                        }}
+                        onFocus={() => {
+                          setEngineState('revving');
                           setActiveConduit('password');
                           setIsInteracting(true);
                         }}
-                        onBlur={() => { 
-                          setEngineState('idle'); 
+                        onBlur={() => {
+                          setEngineState('idle');
                           setActiveConduit('none');
                           setIsInteracting(false);
                         }}
                         placeholder="••••••••••••"
                         className="w-full pl-10 pr-12 py-3 text-sm transition-all duration-300"
                         style={{
-                          backgroundColor: activeConduit === 'password' ? 'rgba(0, 240, 255, 0.05)' : 'rgba(0, 0, 0, 0.4)',
+                          backgroundColor:
+                            activeConduit === 'password'
+                              ? 'rgba(0, 240, 255, 0.05)'
+                              : 'rgba(0, 0, 0, 0.4)',
                           border: `1px solid ${activeConduit === 'password' ? 'rgba(0, 240, 255, 0.5)' : '#1F1F1F'}`,
                           color: '#FFFFFF',
                           borderRadius: '2px',
                           outline: 'none',
-                          boxShadow: activeConduit === 'password' ? '0 0 20px rgba(0, 240, 255, 0.1), inset 0 1px 0 rgba(0, 240, 255, 0.1)' : 'none',
+                          boxShadow:
+                            activeConduit === 'password'
+                              ? '0 0 20px rgba(0, 240, 255, 0.1), inset 0 1px 0 rgba(0, 240, 255, 0.1)'
+                              : 'none',
                         }}
                         whileFocus={{ scale: 1.01 }}
                         transition={{ duration: 0.2 }}
@@ -688,15 +738,18 @@ export const LoginPage = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
                         style={{ color: activeConduit === 'password' ? '#00F0FF' : '#555555' }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = activeConduit === 'password' ? '#00F0FF' : '#555555'}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.color =
+                            activeConduit === 'password' ? '#00F0FF' : '#555555')
+                        }
                       >
                         {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
                       {/* Active Indicator */}
                       {activeConduit === 'password' && (
-                        <motion.div 
-                          layoutId="active-indicator" 
+                        <motion.div
+                          layoutId="active-indicator"
                           className="absolute right-0 top-0 bottom-0 w-[2px]"
                           style={{ backgroundColor: '#00F0FF' }}
                           initial={{ opacity: 0 }}
@@ -709,12 +762,12 @@ export const LoginPage = () => {
 
                   {/* FORGOT LINK */}
                   <div className="flex justify-end">
-                    <Link 
-                      to="/reset-password" 
+                    <Link
+                      to="/reset-password"
                       className="text-[10px] font-mono uppercase tracking-widest transition-colors"
                       style={{ color: '#666666', letterSpacing: '0.2em' }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = '#28E7A2'}
-                      onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#28E7A2')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#666666')}
                     >
                       Reset Credentials
                     </Link>
@@ -729,11 +782,11 @@ export const LoginPage = () => {
                     whileTap={!isSubmitting ? { scale: 0.99 } : {}}
                     transition={{ duration: 0.2, ease: EASING.snap }}
                   >
-                    <div 
+                    <div
                       className="relative z-10 w-full py-4 flex items-center justify-center gap-3 text-xs font-mono uppercase tracking-[0.2em] border transition-all duration-300"
                       style={{
-                        backgroundColor: isSubmitting 
-                          ? 'rgba(40, 231, 162, 0.15)' 
+                        backgroundColor: isSubmitting
+                          ? 'rgba(40, 231, 162, 0.15)'
                           : 'rgba(40, 231, 162, 0.08)',
                         borderColor: isSubmitting
                           ? 'rgba(40, 231, 162, 0.5)'
@@ -760,19 +813,25 @@ export const LoginPage = () => {
                         <motion.div
                           className="absolute left-0 top-0 bottom-0 w-[2px]"
                           style={{
-                            background: 'linear-gradient(to bottom, transparent, #28E7A2, transparent)',
+                            background:
+                              'linear-gradient(to bottom, transparent, #28E7A2, transparent)',
                             filter: 'blur(1px)',
                             boxShadow: '0 0 10px rgba(40, 231, 162, 0.8)',
                           }}
                           animate={{ left: ['-2px', '100%'] }}
-                          transition={{ duration: 2.5, repeat: Infinity, ease: 'linear', repeatDelay: 0.5 }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            repeatDelay: 0.5,
+                          }}
                         />
                       )}
 
                       {isSubmitting ? (
                         <>
-                          <motion.div 
-                            animate={{ rotate: 360 }} 
+                          <motion.div
+                            animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
                           >
                             <Zap size={14} />
@@ -782,14 +841,17 @@ export const LoginPage = () => {
                       ) : (
                         <>
                           <span>Ignite Engine</span>
-                          <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                          <ArrowRight
+                            size={14}
+                            className="transition-transform duration-200 group-hover:translate-x-1"
+                          />
                         </>
                       )}
                     </div>
-                    
+
                     {/* Progress Bar Background */}
                     {isSubmitting && (
-                      <motion.div 
+                      <motion.div
                         className="absolute inset-0 z-0"
                         style={{ backgroundColor: 'rgba(40, 231, 162, 0.1)' }}
                         initial={{ width: '0%' }}
@@ -798,13 +860,15 @@ export const LoginPage = () => {
                       />
                     )}
                   </motion.button>
-
                 </form>
 
                 {/* DIVIDER */}
                 <div className="flex items-center gap-4 my-8">
                   <div className="flex-1 h-[1px]" style={{ backgroundColor: '#1F1F1F' }} />
-                  <span className="text-xs font-mono uppercase tracking-widest" style={{ color: '#444444' }}>
+                  <span
+                    className="text-xs font-mono uppercase tracking-widest"
+                    style={{ color: '#444444' }}
+                  >
                     Or
                   </span>
                   <div className="flex-1 h-[1px]" style={{ backgroundColor: '#1F1F1F' }} />
@@ -819,8 +883,8 @@ export const LoginPage = () => {
                     to="/signup"
                     className="text-sm font-mono uppercase tracking-widest transition-colors inline-flex items-center gap-2"
                     style={{ color: '#888888', letterSpacing: '0.2em' }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = '#28E7A2'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = '#888888'}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#28E7A2')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#888888')}
                   >
                     <span>Request Access</span>
                     <ArrowRight size={14} />
@@ -852,9 +916,7 @@ export const LoginPage = () => {
                       Reset Access
                     </Link>
                   </div>
-                  <div style={{ color: '#444444' }}>
-                    REG-01
-                  </div>
+                  <div style={{ color: '#444444' }}>REG-01</div>
                 </div>
 
                 {/* TECHNICAL FOOTER */}
@@ -868,11 +930,9 @@ export const LoginPage = () => {
                   <div>System Version: 1.0.0</div>
                   <div className="mt-1">Auth Protocol: Ignition</div>
                 </div>
-
               </div>
             </motion.div>
           </motion.div>
-
         </motion.div>
       </div>
     </EngineProvider>

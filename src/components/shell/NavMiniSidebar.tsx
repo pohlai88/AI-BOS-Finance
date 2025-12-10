@@ -27,17 +27,13 @@ export function NavMiniSidebar() {
       {/* Navigation icons */}
       <nav className="flex-1 flex flex-col gap-4">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path || 
-                          (item.path === '/meta-registry' && location.pathname.startsWith('/meta'));
+          const isActive =
+            location.pathname === item.path ||
+            (item.path === '/meta-registry' && location.pathname.startsWith('/meta'));
           const Icon = item.icon;
-          
+
           return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="group relative"
-              aria-label={item.label}
-            >
+            <Link key={item.path} to={item.path} className="group relative" aria-label={item.label}>
               <div
                 className={`
                   w-10 h-10 rounded-lg flex items-center justify-center

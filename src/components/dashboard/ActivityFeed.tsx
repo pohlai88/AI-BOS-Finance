@@ -82,7 +82,9 @@ const ActivityRow = ({ item }: { item: ActivityItem }) => {
       <div className="w-16 font-mono text-[10px] text-nexus-noise tabular-nums shrink-0">
         {item.timestamp}
       </div>
-      <div className="shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">{getIcon()}</div>
+      <div className="shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+        {getIcon()}
+      </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 mb-0.5">
           <span className="font-mono text-[10px] text-nexus-green opacity-80">{item.code}</span>
@@ -110,7 +112,7 @@ export function ActivityFeed() {
     >
       <ScrollArea className="flex-1 h-[300px]">
         <div className="flex flex-col">
-          {mockActivity.map(item => (
+          {mockActivity.map((item) => (
             <ActivityRow key={item.id} item={item} />
           ))}
         </div>

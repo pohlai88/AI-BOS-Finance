@@ -15,33 +15,28 @@ interface RegAppShellProps {
 
 export const RegAppShell = ({ children, showOrchestra = true }: RegAppShellProps) => {
   return (
-    <div 
+    <div
       className="min-h-screen w-full flex"
-      style={{ 
+      style={{
         backgroundColor: '#000000', // The Void
-        color: 'var(--prism-signal)'
+        color: 'var(--prism-signal)',
       }}
     >
       {/* LEFT PANEL - The Control Panel */}
-      <div 
+      <div
         className="flex-1 flex items-center justify-center relative"
-        style={{ 
+        style={{
           backgroundColor: '#000000',
-          borderRight: showOrchestra ? '1px solid var(--prism-structure-primary)' : 'none'
+          borderRight: showOrchestra ? '1px solid var(--prism-structure-primary)' : 'none',
         }}
       >
         {/* Form Content (Outlet) */}
-        <div className="w-full max-w-md px-8">
-          {children}
-        </div>
+        <div className="w-full max-w-md px-8">{children}</div>
       </div>
 
       {/* RIGHT PANEL - The Mechanical Orchestra */}
       {showOrchestra && (
-        <div 
-          className="flex-1 relative overflow-hidden"
-          style={{ backgroundColor: '#000000' }}
-        >
+        <div className="flex-1 relative overflow-hidden" style={{ backgroundColor: '#000000' }}>
           {/* Orchestra Visualization */}
           <MechanicalOrchestra />
         </div>

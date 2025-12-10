@@ -22,7 +22,7 @@ export interface CanonRecord {
     metadataCount: number;
     glAccounts: string[];
     riskSignals: number;
-  }
+  };
 }
 
 export const mockCanonRecords: CanonRecord[] = [
@@ -46,8 +46,8 @@ export const mockCanonRecords: CanonRecord[] = [
       entities: ['Global'],
       metadataCount: 0,
       glAccounts: [],
-      riskSignals: 0
-    }
+      riskSignals: 0,
+    },
   },
   {
     id: 'TL-REV-ANNUAL-001',
@@ -62,7 +62,8 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '4 Cell Canons',
     status: 'ACTIVE',
     riskWeight: 'HIGH',
-    description: 'Configures how annual subscription invoices are recorded, scheduled, and recognized over time.',
+    description:
+      'Configures how annual subscription invoices are recorded, scheduled, and recognized over time.',
     parentId: 'GC-REV-001',
     childrenIds: ['CC-REV-RECOG-MONTH-001', 'CC-REV-DEF-FLAG-001'],
     usage: {
@@ -70,8 +71,8 @@ export const mockCanonRecords: CanonRecord[] = [
       entities: ['MY Holding', 'SG Subsidiary'],
       metadataCount: 8,
       glAccounts: ['4100', '4150'],
-      riskSignals: 3
-    }
+      riskSignals: 3,
+    },
   },
   {
     id: 'CC-REV-RECOG-MONTH-001',
@@ -86,15 +87,16 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '1 Field',
     status: 'ACTIVE',
     riskWeight: 'HIGH',
-    description: 'Ensures each month’s GL posting matches actual service delivered. Derived from Contract Period.',
+    description:
+      'Ensures each month’s GL posting matches actual service delivered. Derived from Contract Period.',
     parentId: 'TL-REV-ANNUAL-001',
     usage: {
       systems: ['ERP - FinanceCore', 'Data Warehouse'],
       entities: ['All'],
       metadataCount: 1,
       glAccounts: ['4100'],
-      riskSignals: 0
-    }
+      riskSignals: 0,
+    },
   },
   {
     id: 'GC-EXP-001',
@@ -116,8 +118,8 @@ export const mockCanonRecords: CanonRecord[] = [
       entities: ['Global'],
       metadataCount: 0,
       glAccounts: [],
-      riskSignals: 0
-    }
+      riskSignals: 0,
+    },
   },
   {
     id: 'TL-EXP-TRAVEL-001',
@@ -139,8 +141,8 @@ export const mockCanonRecords: CanonRecord[] = [
       entities: ['All'],
       metadataCount: 24,
       glAccounts: ['6100', '6120'],
-      riskSignals: 1
-    }
+      riskSignals: 1,
+    },
   },
   {
     id: 'CC-TAX-GST-001',
@@ -162,7 +164,7 @@ export const mockCanonRecords: CanonRecord[] = [
       entities: ['SG Subsidiary', 'MY Holding'],
       metadataCount: 1,
       glAccounts: ['2200'],
-      riskSignals: 0
-    }
-  }
+      riskSignals: 0,
+    },
+  },
 ];

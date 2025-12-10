@@ -84,7 +84,7 @@ export interface CardSectionProps {
   className?: string;
   compact?: boolean;
   height?: string; // e.g., 'h-[400px]'
-  
+
   // Dirty Indicator
   showDirtyIndicator?: boolean;
 }
@@ -111,9 +111,10 @@ function SaveButton({ onClick, disabled, isSaving, saveSuccess, hasChanges }: Sa
         border transition-all duration-200
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 
         focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]
-        ${hasChanges && !isSaving
-          ? 'bg-[#0A0A0A] border-emerald-500/40 text-emerald-500 hover:bg-emerald-950/20 hover:border-emerald-500' 
-          : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
+        ${
+          hasChanges && !isSaving
+            ? 'bg-[#0A0A0A] border-emerald-500/40 text-emerald-500 hover:bg-emerald-950/20 hover:border-emerald-500'
+            : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
         }
       `}
     >
@@ -121,7 +122,7 @@ function SaveButton({ onClick, disabled, isSaving, saveSuccess, hasChanges }: Sa
       {hasChanges && !isSaving && (
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
       )}
-      
+
       <div className="flex items-center gap-1.5">
         {isSaving ? (
           <>
@@ -167,56 +168,54 @@ export function CardSection({
   height,
   showDirtyIndicator = true,
 }: CardSectionProps) {
-  
   const tokens = compact ? CARD_TOKENS.compactMode : CARD_TOKENS;
 
   return (
-    <NexusCard 
+    <NexusCard
       className={`
         p-0 relative overflow-hidden flex flex-col
         ${height || ''}
         ${className}
       `}
     >
-      
       {/* ================================================================ */}
       {/* HEADER */}
       {/* ================================================================ */}
-      <div className={`
+      <div
+        className={`
         flex items-center justify-between flex-shrink-0
         ${tokens.header.border}
         ${tokens.header.padding}
         ${CARD_TOKENS.header.glow}
-      `}>
+      `}
+      >
         <div className="flex items-center gap-3">
           {/* Icon */}
           {Icon && (
-            <div className={`
+            <div
+              className={`
               ${tokens.header.iconPadding}
               bg-[#050505] border border-[#1F1F1F] text-zinc-500
-            `}>
+            `}
+            >
               <Icon className={tokens.header.iconSize} />
             </div>
           )}
-          
+
           {/* Title & Subtitle */}
           <div className="flex items-center gap-2">
             {/* Dirty Indicator */}
             {showDirtyIndicator && saveState.hasChanges && (
-              <div 
+              <div
                 className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"
                 aria-label="Unsaved changes"
               />
             )}
-            
+
             <div>
-              <h2 className={`tracking-tight text-white ${compact ? 'text-sm' : ''}`}>
-                {title}
-              </h2>
+              <h2 className={`tracking-tight text-white ${compact ? 'text-sm' : ''}`}>{title}</h2>
               {subtitle && (
-                <p className="text-[10px] font-mono text-zinc-600 tracking-[0.1em]">
-                  {subtitle}
-                </p>
+                <p className="text-[10px] font-mono text-zinc-600 tracking-[0.1em]">{subtitle}</p>
               )}
             </div>
           </div>
@@ -226,17 +225,13 @@ export function CardSection({
         </div>
 
         {/* Header Actions */}
-        {headerActions && (
-          <div className="flex items-center gap-2">
-            {headerActions}
-          </div>
-        )}
+        {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
       </div>
 
       {/* ================================================================ */}
       {/* BODY */}
       {/* ================================================================ */}
-      <div 
+      <div
         className={`
           flex-1
           ${scrollable ? 'overflow-y-auto' : 'overflow-hidden'}
@@ -250,16 +245,16 @@ export function CardSection({
       {/* FOOTER */}
       {/* ================================================================ */}
       {(footerLeft || footerRight || onSave) && (
-        <div className={`
+        <div
+          className={`
           flex items-center justify-between flex-shrink-0
           ${tokens.footer.border}
           ${tokens.footer.background}
           ${tokens.footer.padding}
-        `}>
+        `}
+        >
           {/* Left Actions */}
-          <div className="flex items-center gap-2">
-            {footerLeft}
-          </div>
+          <div className="flex items-center gap-2">{footerLeft}</div>
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">

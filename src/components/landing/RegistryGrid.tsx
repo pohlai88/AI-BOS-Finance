@@ -121,10 +121,10 @@ const RegistryCard = ({
       {/* The Bento Cell */}
       <div className="relative h-64 rounded-2xl border border-white/5 bg-[#0A0A0A] overflow-hidden transition-all duration-500 group-hover:border-white/10">
         {/* Noise Texture */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
           }}
         />
 
@@ -135,7 +135,8 @@ const RegistryCard = ({
         <motion.div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{
-            background: 'radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.1), transparent 70%)',
+            background:
+              'radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.1), transparent 70%)',
           }}
         />
 
@@ -143,10 +144,12 @@ const RegistryCard = ({
         <div className="relative z-10 p-6 h-full flex flex-col">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
-            <div className={`
+            <div
+              className={`
               w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center
               ${item.status === 'syncing' ? 'bg-green-500/10' : 'bg-white/5'}
-            `}>
+            `}
+            >
               {item.icon}
             </div>
 
@@ -165,41 +168,39 @@ const RegistryCard = ({
             <h3 className="font-medium mb-2 group-hover:text-green-400 transition-colors">
               {item.name}
             </h3>
-            <p className="text-xs text-gray-500 font-mono uppercase tracking-widest">
-              {item.type}
-            </p>
+            <p className="text-xs text-gray-500 font-mono uppercase tracking-widest">{item.type}</p>
           </div>
 
           {/* Footer Stats */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-600 font-mono uppercase tracking-wider">
-                Refresh
-              </span>
-              <span className="text-gray-400 font-mono">
-                {item.refreshRate}
-              </span>
+              <span className="text-gray-600 font-mono uppercase tracking-wider">Refresh</span>
+              <span className="text-gray-400 font-mono">{item.refreshRate}</span>
             </div>
-            
+
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-600 font-mono uppercase tracking-wider">
-                Status
-              </span>
+              <span className="text-gray-600 font-mono uppercase tracking-wider">Status</span>
               <div className="flex items-center gap-2">
                 <motion.div
                   animate={item.status === 'syncing' ? { rotate: 360 } : {}}
                   transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                   className={`w-2 h-2 rounded-full ${
-                    item.status === 'active' ? 'bg-green-500' :
-                    item.status === 'syncing' ? 'bg-yellow-500' :
-                    'bg-gray-600'
+                    item.status === 'active'
+                      ? 'bg-green-500'
+                      : item.status === 'syncing'
+                        ? 'bg-yellow-500'
+                        : 'bg-gray-600'
                   }`}
                 />
-                <span className={`font-mono capitalize ${
-                  item.status === 'active' ? 'text-green-400' :
-                  item.status === 'syncing' ? 'text-yellow-400' :
-                  'text-gray-400'
-                }`}>
+                <span
+                  className={`font-mono capitalize ${
+                    item.status === 'active'
+                      ? 'text-green-400'
+                      : item.status === 'syncing'
+                        ? 'text-yellow-400'
+                        : 'text-gray-400'
+                  }`}
+                >
                   {item.status}
                 </span>
               </div>

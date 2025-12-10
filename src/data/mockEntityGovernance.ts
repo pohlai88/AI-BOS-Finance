@@ -274,7 +274,8 @@ const nexusFarmingMY: EntityGovernance = {
     verifiedBy: 'compliance-officer',
     verifiedByName: 'Sarah Tan',
     verifiedAt: '2023-01-18T16:00:00Z',
-    validationNotes: 'All registration documents verified against SSM records. Tax ID confirmed with LHDN.',
+    validationNotes:
+      'All registration documents verified against SSM records. Tax ID confirmed with LHDN.',
     lastL1Check: '2023-01-17T10:00:00Z',
     lastL2Check: '2023-01-18T16:00:00Z',
   },
@@ -388,7 +389,8 @@ const nexusRetailSG: EntityGovernance = {
   validation: {
     status: 'PENDING_REVIEW',
     level: 'L1_REGEX',
-    validationNotes: 'Awaiting governance setup. Missing legal representative, board, and bank details.',
+    validationNotes:
+      'Awaiting governance setup. Missing legal representative, board, and bank details.',
     lastL1Check: '2023-11-02T10:00:00Z',
   },
 
@@ -596,7 +598,7 @@ export function getEntityGovernance(entityId: string): EntityGovernance | null {
 // Calculate computed properties for all entities
 export function computeEntityProperties(entity: EntityGovernance): EntityGovernance {
   const totalOwnership = entity.shareholders.reduce((sum, sh) => sum + sh.ownershipPercent, 0);
-  
+
   return {
     ...entity,
     computed: {
@@ -605,7 +607,8 @@ export function computeEntityProperties(entity: EntityGovernance): EntityGoverna
       isFullyOwned: entity.consolidation.totalParentOwnership >= 95,
       hasNCI: entity.consolidation.nciPercent > 0,
       isVerified: entity.validation.status === 'VERIFIED',
-      canConsolidate: entity.validation.status === 'VERIFIED' && entity.consolidation.inConsolidationScope,
+      canConsolidate:
+        entity.validation.status === 'VERIFIED' && entity.consolidation.inConsolidationScope,
       governanceCompleteness: calculateGovernanceCompleteness(entity),
       missingGovernanceItems: getMissingGovernanceItems(entity),
     },

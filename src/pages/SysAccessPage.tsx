@@ -5,8 +5,21 @@ import { PageAuditTrail, PageAuditData } from '../components/PageAuditTrail';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Shield, Mail, UserPlus, MoreHorizontal, Circle } from 'lucide-react';
 
 // ============================================================================
@@ -24,9 +37,30 @@ interface User {
 }
 
 const MOCK_USERS: User[] = [
-  { id: '1', name: 'System Admin', email: 'admin@nexuscanon.com', role: 'OWNER', status: 'ACTIVE', lastActive: 'Now' },
-  { id: '2', name: 'Sarah Chief', email: 'cfo@company.com', role: 'ADMIN', status: 'ACTIVE', lastActive: '2h ago' },
-  { id: '3', name: 'Mike Audit', email: 'mike@big4.com', role: 'AUDITOR', status: 'INVITED', lastActive: '-' },
+  {
+    id: '1',
+    name: 'System Admin',
+    email: 'admin@nexuscanon.com',
+    role: 'OWNER',
+    status: 'ACTIVE',
+    lastActive: 'Now',
+  },
+  {
+    id: '2',
+    name: 'Sarah Chief',
+    email: 'cfo@company.com',
+    role: 'ADMIN',
+    status: 'ACTIVE',
+    lastActive: '2h ago',
+  },
+  {
+    id: '3',
+    name: 'Mike Audit',
+    email: 'mike@big4.com',
+    role: 'AUDITOR',
+    status: 'INVITED',
+    lastActive: '-',
+  },
 ];
 
 export function SysAccessPage() {
@@ -41,8 +75,12 @@ export function SysAccessPage() {
     validator: 'SEC_OPS',
     classification: 'RESTRICTED',
     recentChanges: [
-      { timestamp: new Date().toISOString(), change: 'Access control matrix loaded', validator: 'SYSTEM' }
-    ]
+      {
+        timestamp: new Date().toISOString(),
+        change: 'Access control matrix loaded',
+        validator: 'SYSTEM',
+      },
+    ],
   };
 
   return (
@@ -57,16 +95,15 @@ export function SysAccessPage() {
         />
 
         <div className="mt-8 space-y-6">
-          
           {/* Quick Actions */}
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
-              <Input 
-                placeholder="Search crew..." 
+              <Input
+                placeholder="Search crew..."
                 className="bg-[#050505] border-[#1F1F1F] font-mono text-sm w-[300px] focus:border-emerald-500"
               />
             </div>
-            <Button 
+            <Button
               onClick={() => setIsInviteOpen(!isInviteOpen)}
               className="bg-zinc-100 hover:bg-white text-black font-mono text-xs tracking-wide"
             >
@@ -82,11 +119,18 @@ export function SysAccessPage() {
               </h3>
               <div className="flex gap-4 items-end">
                 <div className="flex-1 space-y-2">
-                  <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Email Address</label>
-                  <Input placeholder="officer@company.com" className="bg-black border-[#333] font-mono text-sm" />
+                  <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                    Email Address
+                  </label>
+                  <Input
+                    placeholder="officer@company.com"
+                    className="bg-black border-[#333] font-mono text-sm"
+                  />
                 </div>
                 <div className="w-[200px] space-y-2">
-                  <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Clearance Level</label>
+                  <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                    Clearance Level
+                  </label>
                   <Select defaultValue="VIEWER">
                     <SelectTrigger className="bg-black border-[#333] font-mono text-sm">
                       <SelectValue />
@@ -110,16 +154,27 @@ export function SysAccessPage() {
             <Table>
               <TableHeader className="bg-[#050505] border-b border-[#1F1F1F]">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">Identity</TableHead>
-                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">Role</TableHead>
-                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">Status</TableHead>
-                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10 text-right">Last Signal</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">
+                    Identity
+                  </TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">
+                    Role
+                  </TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10">
+                    Status
+                  </TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 h-10 text-right">
+                    Last Signal
+                  </TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.map((user) => (
-                  <TableRow key={user.id} className="border-b border-[#1F1F1F] hover:bg-[#0F0F0F] transition-colors">
+                  <TableRow
+                    key={user.id}
+                    className="border-b border-[#1F1F1F] hover:bg-[#0F0F0F] transition-colors"
+                  >
                     <TableCell>
                       <div>
                         <div className="text-sm font-medium text-white font-mono">{user.name}</div>
@@ -127,19 +182,29 @@ export function SysAccessPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className={`
+                      <span
+                        className={`
                         inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono border
-                        ${user.role === 'OWNER' ? 'border-amber-500/30 text-amber-500 bg-amber-500/10' : 
-                          user.role === 'ADMIN' ? 'border-emerald-500/30 text-emerald-500 bg-emerald-500/10' : 
-                          'border-zinc-700 text-zinc-400 bg-zinc-800'}
-                      `}>
+                        ${
+                          user.role === 'OWNER'
+                            ? 'border-amber-500/30 text-amber-500 bg-amber-500/10'
+                            : user.role === 'ADMIN'
+                              ? 'border-emerald-500/30 text-emerald-500 bg-emerald-500/10'
+                              : 'border-zinc-700 text-zinc-400 bg-zinc-800'
+                        }
+                      `}
+                      >
                         {user.role}
                       </span>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        {user.status === 'ACTIVE' && <Circle className="w-2 h-2 fill-emerald-500 text-emerald-500" />}
-                        {user.status === 'INVITED' && <Circle className="w-2 h-2 fill-transparent text-amber-500" />}
+                        {user.status === 'ACTIVE' && (
+                          <Circle className="w-2 h-2 fill-emerald-500 text-emerald-500" />
+                        )}
+                        {user.status === 'INVITED' && (
+                          <Circle className="w-2 h-2 fill-transparent text-amber-500" />
+                        )}
                         <span className="text-xs font-mono text-zinc-400">{user.status}</span>
                       </div>
                     </TableCell>
@@ -147,7 +212,11 @@ export function SysAccessPage() {
                       {user.lastActive}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-white">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-zinc-500 hover:text-white"
+                      >
                         <MoreHorizontal className="w-4 h-4" />
                       </Button>
                     </TableCell>
@@ -164,12 +233,12 @@ export function SysAccessPage() {
                 <Shield className="w-3 h-3" /> Security Policy
               </h4>
               <p className="text-xs text-zinc-600 leading-relaxed">
-                Roles are strictly enforced by the NexusCanon kernel. "Owner" role cannot be transferred without multi-signature verification. 
-                "Auditors" have read-only access to all verified ledgers.
+                Roles are strictly enforced by the NexusCanon kernel. "Owner" role cannot be
+                transferred without multi-signature verification. "Auditors" have read-only access
+                to all verified ledgers.
               </p>
             </div>
           </div>
-
         </div>
       </div>
       <PageAuditTrail data={auditData} />

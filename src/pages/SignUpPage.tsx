@@ -32,7 +32,7 @@ const ReactorParticles = ({ stability }: { stability: number }) => {
   const particles = Array.from({ length: 30 });
   const isStable = stability > 80;
   const particleColor = isStable ? '#00F0FF' : stability > 40 ? '#FFD700' : '#FF0055';
-  
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {particles.map((_, i) => {
@@ -41,7 +41,7 @@ const ReactorParticles = ({ stability }: { stability: number }) => {
         const randomDuration = 8 + Math.random() * 15;
         const randomDelay = Math.random() * 5;
         const randomSize = 1 + Math.random() * 2;
-        
+
         return (
           <motion.div
             key={i}
@@ -79,7 +79,7 @@ const ReactorParticles = ({ stability }: { stability: number }) => {
 // ============================================================================
 const StabilityGraph = ({ strength }: { strength: number }) => {
   const color = strength > 2 ? '#00F0FF' : strength > 0 ? '#FFD700' : '#FF0055';
-  
+
   return (
     <div className="h-8 w-full bg-black/40 border-t border-b border-white/5 relative overflow-hidden flex items-center mt-2">
       <div className="absolute left-2 text-[8px] font-mono text-slate-500 tracking-widest uppercase">
@@ -96,23 +96,27 @@ const StabilityGraph = ({ strength }: { strength: number }) => {
           </filter>
         </defs>
         <motion.path
-          d={`M 0 16 ${Array.from({ length: 20 }).map((_, i) => {
-            const x = i * 16;
-            const variance = (4 - strength) * 4;
-            const y = 16 + Math.sin(i * 0.5) * variance;
-            return `Q ${x + 8} ${y} ${x + 16} 16`;
-          }).join(' ')}`}
+          d={`M 0 16 ${Array.from({ length: 20 })
+            .map((_, i) => {
+              const x = i * 16;
+              const variance = (4 - strength) * 4;
+              const y = 16 + Math.sin(i * 0.5) * variance;
+              return `Q ${x + 8} ${y} ${x + 16} 16`;
+            })
+            .join(' ')}`}
           fill="none"
           stroke={color}
           strokeWidth="1.5"
           filter="url(#waveform-glow)"
           animate={{
-            d: `M 0 16 ${Array.from({ length: 20 }).map((_, i) => {
-              const x = i * 16;
-              const variance = (4 - strength) * 4;
-              const y = 16 - Math.sin(i * 0.5) * variance;
-              return `Q ${x + 8} ${y} ${x + 16} 16`;
-            }).join(' ')}`,
+            d: `M 0 16 ${Array.from({ length: 20 })
+              .map((_, i) => {
+                const x = i * 16;
+                const variance = (4 - strength) * 4;
+                const y = 16 - Math.sin(i * 0.5) * variance;
+                return `Q ${x + 8} ${y} ${x + 16} 16`;
+              })
+              .join(' ')}`,
           }}
           transition={{
             duration: strength > 2 ? 3 : 0.4,
@@ -122,12 +126,9 @@ const StabilityGraph = ({ strength }: { strength: number }) => {
           }}
         />
       </svg>
-      
+
       {/* Stability percentage */}
-      <div 
-        className="absolute right-2 text-[9px] font-mono tracking-widest"
-        style={{ color }}
-      >
+      <div className="absolute right-2 text-[9px] font-mono tracking-widest" style={{ color }}>
         {strength * 25}%
       </div>
     </div>
@@ -160,7 +161,7 @@ const CoordinateGrid = () => {
 // ============================================================================
 const StatusBar = ({ stability }: { stability: number }) => {
   const [time, setTime] = useState(new Date());
-  
+
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -168,13 +169,23 @@ const StatusBar = ({ stability }: { stability: number }) => {
 
   const isStable = stability > 80;
   const metrics = [
-    { icon: Activity, label: 'CORE', value: `${stability}%`, color: isStable ? '#00F0FF' : '#FFD700' },
+    {
+      icon: Activity,
+      label: 'CORE',
+      value: `${stability}%`,
+      color: isStable ? '#00F0FF' : '#FFD700',
+    },
     { icon: Database, label: 'MEM', value: '1.8GB', color: '#666' },
-    { icon: Cpu, label: 'TEMP', value: isStable ? '42°C' : '68°C', color: isStable ? '#666' : '#FFD700' },
+    {
+      icon: Cpu,
+      label: 'TEMP',
+      value: isStable ? '42°C' : '68°C',
+      color: isStable ? '#666' : '#FFD700',
+    },
   ];
 
   return (
-    <div 
+    <div
       className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-8 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-600 border-b border-white/5 backdrop-blur-sm"
       style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)' }}
     >
@@ -189,7 +200,7 @@ const StatusBar = ({ stability }: { stability: number }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <motion.div 
+        <motion.div
           className="w-1.5 h-1.5 rounded-full"
           style={{ backgroundColor: isStable ? '#00F0FF' : '#FFD700' }}
           animate={{ opacity: [0.5, 1, 0.5] }}
@@ -200,9 +211,7 @@ const StatusBar = ({ stability }: { stability: number }) => {
         </span>
       </div>
 
-      <div className="text-white/40">
-        {time.toLocaleTimeString('en-US', { hour12: false })}
-      </div>
+      <div className="text-white/40">{time.toLocaleTimeString('en-US', { hour12: false })}</div>
     </div>
   );
 };
@@ -212,10 +221,11 @@ const StatusBar = ({ stability }: { stability: number }) => {
 // ============================================================================
 const ScanlineOverlay = () => (
   <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden opacity-12 mix-blend-overlay">
-    <div 
+    <div
       className="absolute inset-0"
       style={{
-        backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+        backgroundImage:
+          'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
         backgroundSize: '100% 2px, 3px 100%',
       }}
     />
@@ -227,12 +237,12 @@ const ScanlineOverlay = () => (
 // ============================================================================
 export const SignUpPage = () => {
   const navigate = useNavigate();
-  
+
   // FORM STATE
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [passwordStrength, setPasswordStrength] = useState(0); // 0-4 scale
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // INTERFACE STATE
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -246,7 +256,7 @@ export const SignUpPage = () => {
   // CURSOR PARALLAX
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   const handleMouseMove = ({ clientX, clientY, currentTarget }: React.MouseEvent) => {
     const bounds = currentTarget.getBoundingClientRect();
     const centerX = bounds.width / 2;
@@ -279,17 +289,17 @@ export const SignUpPage = () => {
   // Input recoil
   const triggerRecoil = () => {
     const intensity = 1;
-    shakeX.set(Math.random() * intensity - intensity/2);
+    shakeX.set(Math.random() * intensity - intensity / 2);
     setTimeout(() => shakeX.set(0), 40);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Fusion sequence
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+
     navigate('/');
   };
 
@@ -298,34 +308,28 @@ export const SignUpPage = () => {
   const isInteracting = focusedField !== null;
 
   return (
-    <EngineProvider 
-      state={isSubmitting ? 'revving' : 'idle'} 
-      shakeX={shakeX} 
-      shakeY={shakeY}
-    >
-      <div 
+    <EngineProvider state={isSubmitting ? 'revving' : 'idle'} shakeX={shakeX} shakeY={shakeY}>
+      <div
         onMouseMove={handleMouseMove}
         className="min-h-screen w-full bg-black relative overflow-hidden flex items-center justify-center"
       >
-        
         <ScanlineOverlay />
         <StatusBar stability={reactorStability} />
 
         {/* SCREEN SHAKE WRAPPER */}
         <motion.div
-          style={{ 
-            x: springX, 
-            y: springY, 
-            width: '100%', 
-            minHeight: '100vh' 
+          style={{
+            x: springX,
+            y: springY,
+            width: '100%',
+            minHeight: '100vh',
           }}
           className="flex items-center justify-center relative"
         >
-          
           {/* ========================================
               LAYER 1: BACKGROUND & ATMOSPHERE
               ======================================== */}
-          
+
           {/* Base Grid */}
           <div
             className="absolute inset-0 opacity-12"
@@ -354,14 +358,15 @@ export const SignUpPage = () => {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%)',
+              background:
+                'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%)',
             }}
           />
 
           {/* ========================================
               LAYER 2: THE REACTOR MACHINERY
               ======================================== */}
-          
+
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
             style={{ x: parallaxX, y: parallaxY }}
@@ -378,8 +383,8 @@ export const SignUpPage = () => {
           {/* ========================================
               LAYER 3: THE FORM CONSOLE
               ======================================== */}
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: EASING.smooth }}
@@ -394,32 +399,34 @@ export const SignUpPage = () => {
                 borderRadius: '4px',
               }}
               animate={{
-                background: (isHovering || isInteracting)
-                  ? 'linear-gradient(145deg, rgba(8, 12, 16, 0.96) 0%, rgba(4, 6, 8, 0.98) 100%)'
-                  : 'linear-gradient(145deg, rgba(8, 12, 16, 0.10) 0%, rgba(4, 6, 8, 0.12) 100%)',
-                backdropFilter: (isHovering || isInteracting) ? 'blur(24px)' : 'blur(8px)',
-                boxShadow: (isHovering || isInteracting)
-                  ? '0 0 2px rgba(0, 240, 255, 0.4), 0 0 120px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
-                  : '0 0 1px rgba(0, 240, 255, 0.2), 0 0 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                background:
+                  isHovering || isInteracting
+                    ? 'linear-gradient(145deg, rgba(8, 12, 16, 0.96) 0%, rgba(4, 6, 8, 0.98) 100%)'
+                    : 'linear-gradient(145deg, rgba(8, 12, 16, 0.10) 0%, rgba(4, 6, 8, 0.12) 100%)',
+                backdropFilter: isHovering || isInteracting ? 'blur(24px)' : 'blur(8px)',
+                boxShadow:
+                  isHovering || isInteracting
+                    ? '0 0 2px rgba(0, 240, 255, 0.4), 0 0 120px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+                    : '0 0 1px rgba(0, 240, 255, 0.2), 0 0 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
               }}
               transition={{ duration: 0.6, ease: EASING.smooth }}
             >
-              
               {/* Holographic Edge Highlight */}
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 pointer-events-none opacity-15"
                 style={{
-                  background: useMotionTemplate`radial-gradient(400px circle at ${useTransform(mouseX, [-1, 1], [0, 100])}% ${useTransform(mouseY, [-1, 1], [0, 100])}%, rgba(0, 240, 255, 0.2), transparent 80%)`
+                  background: useMotionTemplate`radial-gradient(400px circle at ${useTransform(mouseX, [-1, 1], [0, 100])}% ${useTransform(mouseY, [-1, 1], [0, 100])}%, rgba(0, 240, 255, 0.2), transparent 80%)`,
                 }}
               />
 
               {/* Top Energy Beam */}
               <motion.div
                 className="absolute top-0 left-0 right-0 h-[1px]"
-                style={{ 
-                  background: 'linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent)',
+                style={{
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent)',
                 }}
-                animate={{ 
+                animate={{
                   opacity: reactorStability > 80 ? [0.5, 1, 0.5] : [0.2, 0.4, 0.2],
                   scaleX: reactorStability > 80 ? [0.8, 1.2, 0.8] : 1,
                 }}
@@ -434,14 +441,40 @@ export const SignUpPage = () => {
                 { bottom: '0', right: '0', rotate: '180deg' },
               ].map((pos, i) => (
                 <div key={i} className="absolute w-4 h-4 pointer-events-none" style={pos}>
-                  <svg width="16" height="16" viewBox="0 0 16 16" style={{ transform: `rotate(${pos.rotate})` }}>
-                    <line x1="0" y1="0" x2="16" y2="0" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
-                    <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    style={{ transform: `rotate(${pos.rotate})` }}
+                  >
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="16"
+                      y2="0"
+                      stroke="rgba(255, 255, 255, 0.15)"
+                      strokeWidth="1"
+                    />
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="16"
+                      stroke="rgba(255, 255, 255, 0.15)"
+                      strokeWidth="1"
+                    />
                     <motion.circle
-                      cx="2" cy="2" r="1.5"
+                      cx="2"
+                      cy="2"
+                      r="1.5"
                       fill="#00F0FF"
                       animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.5,
+                        ease: 'easeInOut',
+                      }}
                     />
                   </svg>
                 </div>
@@ -454,7 +487,7 @@ export const SignUpPage = () => {
                     <NexusCanonLogo variant="icon" size="md" />
                   </Link>
                   <div className="space-y-1">
-                    <motion.div 
+                    <motion.div
                       className="text-[10px] font-mono uppercase tracking-[0.3em]"
                       style={{ color: '#00F0FF', opacity: 0.6 }}
                       animate={{ opacity: [0.4, 0.7, 0.4] }}
@@ -462,10 +495,7 @@ export const SignUpPage = () => {
                     >
                       Protocol: Fabrication
                     </motion.div>
-                    <h1 
-                      className="text-white tracking-tight"
-                      style={{ letterSpacing: '-0.02em' }}
-                    >
+                    <h1 className="text-white tracking-tight" style={{ letterSpacing: '-0.02em' }}>
                       Initialize User Node
                     </h1>
                   </div>
@@ -473,12 +503,11 @@ export const SignUpPage = () => {
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  
                   {/* FIELD: FULL NAME */}
                   <div className="group relative">
-                    <label 
+                    <label
                       className="block text-[10px] font-mono uppercase tracking-widest mb-2 transition-colors"
-                      style={{ 
+                      style={{
                         color: focusedField === 'name' ? '#FFD700' : '#888888',
                         letterSpacing: '0.2em',
                       }}
@@ -486,31 +515,38 @@ export const SignUpPage = () => {
                       Identity Calibration
                     </label>
                     <div className="relative">
-                      <User 
-                        size={14} 
-                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none" 
+                      <User
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none"
                         style={{ color: focusedField === 'name' ? '#FFD700' : '#555555' }}
                       />
-                      <motion.input 
-                        type="text" 
+                      <motion.input
+                        type="text"
                         placeholder="FULL DESIGNATION"
                         className="w-full pl-10 pr-4 py-3 text-sm transition-all duration-300"
                         style={{
-                          backgroundColor: focusedField === 'name' ? 'rgba(255, 215, 0, 0.05)' : 'rgba(0, 0, 0, 0.4)',
+                          backgroundColor:
+                            focusedField === 'name'
+                              ? 'rgba(255, 215, 0, 0.05)'
+                              : 'rgba(0, 0, 0, 0.4)',
                           border: `1px solid ${focusedField === 'name' ? 'rgba(255, 215, 0, 0.5)' : '#1F1F1F'}`,
                           color: '#FFFFFF',
                           borderRadius: '2px',
                           outline: 'none',
-                          boxShadow: focusedField === 'name' ? '0 0 20px rgba(255, 215, 0, 0.1)' : 'none',
+                          boxShadow:
+                            focusedField === 'name' ? '0 0 20px rgba(255, 215, 0, 0.1)' : 'none',
                         }}
                         onFocus={() => setFocusedField('name')}
                         onBlur={() => setFocusedField(null)}
-                        onChange={(e) => { setFormData({...formData, name: e.target.value}); triggerRecoil(); }}
+                        onChange={(e) => {
+                          setFormData({ ...formData, name: e.target.value });
+                          triggerRecoil();
+                        }}
                         whileFocus={{ scale: 1.01 }}
                         transition={{ duration: 0.2 }}
                       />
                       {focusedField === 'name' && (
-                        <motion.div 
+                        <motion.div
                           className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent"
                           initial={{ scaleX: 0 }}
                           animate={{ scaleX: 1 }}
@@ -522,9 +558,9 @@ export const SignUpPage = () => {
 
                   {/* FIELD: EMAIL */}
                   <div className="group relative">
-                    <label 
+                    <label
                       className="block text-[10px] font-mono uppercase tracking-widest mb-2 transition-colors"
-                      style={{ 
+                      style={{
                         color: focusedField === 'email' ? '#00F0FF' : '#888888',
                         letterSpacing: '0.2em',
                       }}
@@ -532,31 +568,38 @@ export const SignUpPage = () => {
                       Comm Link
                     </label>
                     <div className="relative">
-                      <Mail 
-                        size={14} 
-                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none" 
+                      <Mail
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none"
                         style={{ color: focusedField === 'email' ? '#00F0FF' : '#555555' }}
                       />
-                      <motion.input 
-                        type="email" 
+                      <motion.input
+                        type="email"
                         placeholder="USER@NEXUS.COM"
                         className="w-full pl-10 pr-4 py-3 text-sm transition-all duration-300"
                         style={{
-                          backgroundColor: focusedField === 'email' ? 'rgba(0, 240, 255, 0.05)' : 'rgba(0, 0, 0, 0.4)',
+                          backgroundColor:
+                            focusedField === 'email'
+                              ? 'rgba(0, 240, 255, 0.05)'
+                              : 'rgba(0, 0, 0, 0.4)',
                           border: `1px solid ${focusedField === 'email' ? 'rgba(0, 240, 255, 0.5)' : '#1F1F1F'}`,
                           color: '#FFFFFF',
                           borderRadius: '2px',
                           outline: 'none',
-                          boxShadow: focusedField === 'email' ? '0 0 20px rgba(0, 240, 255, 0.1)' : 'none',
+                          boxShadow:
+                            focusedField === 'email' ? '0 0 20px rgba(0, 240, 255, 0.1)' : 'none',
                         }}
                         onFocus={() => setFocusedField('email')}
                         onBlur={() => setFocusedField(null)}
-                        onChange={(e) => { setFormData({...formData, email: e.target.value}); triggerRecoil(); }}
+                        onChange={(e) => {
+                          setFormData({ ...formData, email: e.target.value });
+                          triggerRecoil();
+                        }}
                         whileFocus={{ scale: 1.01 }}
                         transition={{ duration: 0.2 }}
                       />
                       {focusedField === 'email' && (
-                        <motion.div 
+                        <motion.div
                           className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
                           initial={{ scaleX: 0 }}
                           animate={{ scaleX: 1 }}
@@ -569,59 +612,82 @@ export const SignUpPage = () => {
                   {/* FIELD: PASSWORD */}
                   <div className="group relative">
                     <div className="flex justify-between items-baseline mb-2">
-                      <label 
+                      <label
                         className="text-[10px] font-mono uppercase tracking-widest transition-colors"
-                        style={{ 
-                          color: focusedField === 'password' ? (passwordStrength > 2 ? '#00F0FF' : '#FFD700') : '#888888',
+                        style={{
+                          color:
+                            focusedField === 'password'
+                              ? passwordStrength > 2
+                                ? '#00F0FF'
+                                : '#FFD700'
+                              : '#888888',
                           letterSpacing: '0.2em',
                         }}
                       >
                         Core Encryption
                       </label>
-                      <span 
+                      <span
                         className="text-[10px] font-mono uppercase tracking-widest"
                         style={{
-                          color: passwordStrength === 0 ? '#FF0055' : passwordStrength < 3 ? '#FFD700' : '#00F0FF',
+                          color:
+                            passwordStrength === 0
+                              ? '#FF0055'
+                              : passwordStrength < 3
+                                ? '#FFD700'
+                                : '#00F0FF',
                         }}
                       >
-                        {passwordStrength === 0 ? 'CRITICAL' : passwordStrength < 3 ? 'UNSTABLE' : 'OPTIMAL'}
+                        {passwordStrength === 0
+                          ? 'CRITICAL'
+                          : passwordStrength < 3
+                            ? 'UNSTABLE'
+                            : 'OPTIMAL'}
                       </span>
                     </div>
-                    
+
                     <div className="relative">
-                      <Shield 
-                        size={14} 
-                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none" 
-                        style={{ 
-                          color: focusedField === 'password' 
-                            ? (passwordStrength > 2 ? '#00F0FF' : '#FFD700') 
-                            : '#555555' 
+                      <Shield
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors pointer-events-none"
+                        style={{
+                          color:
+                            focusedField === 'password'
+                              ? passwordStrength > 2
+                                ? '#00F0FF'
+                                : '#FFD700'
+                              : '#555555',
                         }}
                       />
-                      <motion.input 
-                        type="password" 
+                      <motion.input
+                        type="password"
                         placeholder="••••••••••••"
                         className="w-full pl-10 pr-4 py-3 text-sm transition-all duration-300"
                         style={{
-                          backgroundColor: focusedField === 'password' 
-                            ? (passwordStrength > 2 ? 'rgba(0, 240, 255, 0.05)' : 'rgba(255, 215, 0, 0.05)')
-                            : 'rgba(0, 0, 0, 0.4)',
+                          backgroundColor:
+                            focusedField === 'password'
+                              ? passwordStrength > 2
+                                ? 'rgba(0, 240, 255, 0.05)'
+                                : 'rgba(255, 215, 0, 0.05)'
+                              : 'rgba(0, 0, 0, 0.4)',
                           border: `1px solid ${
-                            focusedField === 'password' 
-                              ? (passwordStrength > 2 ? 'rgba(0, 240, 255, 0.5)' : 'rgba(255, 215, 0, 0.5)') 
+                            focusedField === 'password'
+                              ? passwordStrength > 2
+                                ? 'rgba(0, 240, 255, 0.5)'
+                                : 'rgba(255, 215, 0, 0.5)'
                               : '#1F1F1F'
                           }`,
                           color: '#FFFFFF',
                           borderRadius: '2px',
                           outline: 'none',
-                          boxShadow: focusedField === 'password' 
-                            ? `0 0 20px ${passwordStrength > 2 ? 'rgba(0, 240, 255, 0.1)' : 'rgba(255, 215, 0, 0.1)'}`
-                            : 'none',
+                          boxShadow:
+                            focusedField === 'password'
+                              ? `0 0 20px ${passwordStrength > 2 ? 'rgba(0, 240, 255, 0.1)' : 'rgba(255, 215, 0, 0.1)'}`
+                              : 'none',
                         }}
                         onFocus={() => setFocusedField('password')}
                         onBlur={() => setFocusedField(null)}
                         onChange={(e) => {
-                          setFormData({...formData, password: e.target.value});
+                          setFormData({ ...formData, password: e.target.value });
                           checkStrength(e.target.value);
                           triggerRecoil();
                         }}
@@ -629,7 +695,7 @@ export const SignUpPage = () => {
                         transition={{ duration: 0.2 }}
                       />
                     </div>
-                    
+
                     {/* Stability Waveform */}
                     {formData.password && <StabilityGraph strength={passwordStrength} />}
                   </div>
@@ -643,11 +709,11 @@ export const SignUpPage = () => {
                     whileTap={!isSubmitting ? { scale: 0.99 } : {}}
                     transition={{ duration: 0.2, ease: EASING.snap }}
                   >
-                    <div 
+                    <div
                       className="relative z-10 w-full py-4 flex items-center justify-center gap-3 text-xs font-mono uppercase tracking-[0.2em] border transition-all duration-300"
                       style={{
-                        backgroundColor: isSubmitting 
-                          ? 'rgba(0, 240, 255, 0.15)' 
+                        backgroundColor: isSubmitting
+                          ? 'rgba(0, 240, 255, 0.15)'
                           : 'rgba(0, 240, 255, 0.08)',
                         borderColor: isSubmitting
                           ? 'rgba(0, 240, 255, 0.5)'
@@ -671,8 +737,8 @@ export const SignUpPage = () => {
                     >
                       {isSubmitting ? (
                         <>
-                          <motion.div 
-                            animate={{ rotate: 360 }} 
+                          <motion.div
+                            animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
                           >
                             <Zap size={14} />
@@ -682,14 +748,17 @@ export const SignUpPage = () => {
                       ) : (
                         <>
                           <span>Initiate Fusion</span>
-                          <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                          <ArrowRight
+                            size={14}
+                            className="transition-transform duration-200 group-hover:translate-x-1"
+                          />
                         </>
                       )}
                     </div>
-                    
+
                     {/* Progress Bar */}
                     {isSubmitting && (
-                      <motion.div 
+                      <motion.div
                         className="absolute inset-0 z-0"
                         style={{ backgroundColor: 'rgba(0, 240, 255, 0.1)' }}
                         initial={{ width: '0%' }}
@@ -698,42 +767,40 @@ export const SignUpPage = () => {
                       />
                     )}
                   </motion.button>
-
                 </form>
 
                 {/* FOOTER */}
                 <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between text-xs font-mono uppercase tracking-widest">
                   <div className="flex items-center gap-4">
-                    <Link 
-                      to="/login" 
+                    <Link
+                      to="/login"
                       className="transition-colors hover:text-cyan-400"
                       style={{ color: '#666666', letterSpacing: '0.2em' }}
                     >
                       Have Account?
                     </Link>
                     <span style={{ color: '#333333' }}>|</span>
-                    <Link 
-                      to="/reset-password" 
+                    <Link
+                      to="/reset-password"
                       className="transition-colors hover:text-orange-400"
                       style={{ color: '#666666', letterSpacing: '0.2em' }}
                     >
                       Reset Access
                     </Link>
                   </div>
-                  <div style={{ color: '#444444' }}>
-                    REG-02
-                  </div>
+                  <div style={{ color: '#444444' }}>REG-02</div>
                 </div>
 
                 {/* TECHNICAL FOOTER */}
-                <div className="mt-4 text-center text-xs font-mono uppercase tracking-widest" style={{ color: '#333333', letterSpacing: '0.2em' }}>
+                <div
+                  className="mt-4 text-center text-xs font-mono uppercase tracking-widest"
+                  style={{ color: '#333333', letterSpacing: '0.2em' }}
+                >
                   <div>Auth Protocol: Fabrication</div>
                 </div>
-
               </div>
             </motion.div>
           </motion.div>
-
         </motion.div>
       </div>
     </EngineProvider>

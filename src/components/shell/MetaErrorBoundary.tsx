@@ -25,10 +25,10 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    return { 
-      hasError: true, 
+    return {
+      hasError: true,
       error,
-      errorInfo: null 
+      errorInfo: null,
     };
   }
 
@@ -54,24 +54,22 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-screen bg-[#000000] flex items-center justify-center p-8">
-          
           {/* HUD Grid Background */}
-          <div 
-            className="absolute inset-0 opacity-[0.02] pointer-events-none" 
-            style={{ 
-              backgroundImage: 'linear-gradient(#28E7A2 1px, transparent 1px), linear-gradient(90deg, #28E7A2 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }} 
+          <div
+            className="absolute inset-0 opacity-[0.02] pointer-events-none"
+            style={{
+              backgroundImage:
+                'linear-gradient(#28E7A2 1px, transparent 1px), linear-gradient(90deg, #28E7A2 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }}
           />
 
           {/* Error Card */}
           <div className="relative z-10 max-w-2xl w-full">
-            
             {/* Top Border Highlight */}
             <div className="h-[2px] bg-gradient-to-r from-transparent via-[#EF4444] to-transparent mb-8" />
 
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-12">
-              
               {/* Inner Top Glow */}
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#EF4444]/50 to-transparent" />
 
@@ -100,7 +98,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <div className="font-mono text-sm text-[#CCC] leading-relaxed">
                   {this.state.error?.message || 'Unknown error occurred'}
                 </div>
-                
+
                 {/* Stack Trace (Collapsed) */}
                 {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
                   <details className="mt-4">
@@ -123,7 +121,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   <RefreshCw className="w-4 h-4" />
                   Reload Application
                 </button>
-                
+
                 <button
                   onClick={this.handleGoHome}
                   className="flex-1 border border-[#333] text-[#CCC] hover:border-[#28E7A2] hover:text-white font-mono text-sm tracking-wide px-6 py-3 transition-colors flex items-center justify-center gap-2 uppercase"
@@ -142,16 +140,13 @@ export class ErrorBoundary extends Component<Props, State> {
                   NexusCanon Error Handler
                 </span>
               </div>
-
             </div>
 
             {/* Bottom Coordinate */}
             <div className="mt-4 font-mono text-[8px] text-[#333] text-center uppercase tracking-wider">
               If error persists, contact system administrator
             </div>
-
           </div>
-
         </div>
       );
     }

@@ -12,7 +12,7 @@ interface MetaPageHeaderProps {
   subtitle: string;
   description?: string;
   actions?: ReactNode;
-  stats?: Array<{ label: string; value: string; }>;
+  stats?: Array<{ label: string; value: string }>;
 }
 
 export function MetaPageHeader({
@@ -24,7 +24,6 @@ export function MetaPageHeader({
   actions,
   stats,
 }: MetaPageHeaderProps) {
-
   // VARIANT: DOCUMENT (Default - Used in META_01, META_02, META_05)
   if (variant === 'document') {
     return (
@@ -36,17 +35,9 @@ export function MetaPageHeader({
           <h1 className="text-white text-5xl md:text-6xl tracking-[-0.04em] mb-4 leading-tight">
             {title}
           </h1>
-          {description && (
-            <p className="text-[#888] text-lg md:text-xl max-w-2xl">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-[#888] text-lg md:text-xl max-w-2xl">{description}</p>}
         </div>
-        {actions && (
-          <div className="shrink-0">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="shrink-0">{actions}</div>}
       </div>
     );
   }
@@ -56,7 +47,6 @@ export function MetaPageHeader({
     return (
       <div className="mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end border-b border-[#1F1F1F] pb-8">
-          
           {/* Left: Text */}
           <div>
             <div className="text-[#28E7A2] font-mono text-xs tracking-[0.2em] mb-4 uppercase">
@@ -65,11 +55,7 @@ export function MetaPageHeader({
             <h1 className="text-white text-5xl md:text-6xl tracking-[-0.04em] mb-4 leading-tight">
               {title}
             </h1>
-            {description && (
-              <p className="text-[#888] text-lg max-w-xl">
-                {description}
-              </p>
-            )}
+            {description && <p className="text-[#888] text-lg max-w-xl">{description}</p>}
           </div>
 
           {/* Right: Stats or Actions */}
@@ -82,20 +68,13 @@ export function MetaPageHeader({
                     <div className="font-mono text-xs text-[#666] uppercase tracking-wider mb-2">
                       {stat.label}
                     </div>
-                    <div className="text-2xl text-white tracking-tight">
-                      {stat.value}
-                    </div>
+                    <div className="text-2xl text-white tracking-tight">{stat.value}</div>
                   </div>
                 ))}
               </div>
             )}
-            {actions && (
-              <div className="flex gap-3 justify-end">
-                {actions}
-              </div>
-            )}
+            {actions && <div className="flex gap-3 justify-end">{actions}</div>}
           </div>
-
         </div>
       </div>
     );
@@ -105,16 +84,11 @@ export function MetaPageHeader({
   if (variant === 'compact') {
     return (
       <div className="h-14 border-b border-[#1F1F1F] flex items-center justify-between px-6 shrink-0">
-        
         {/* Left: Breadcrumb */}
         <div className="flex items-center gap-3">
-          <div className="font-mono text-xs text-[#28E7A2] uppercase tracking-[0.15em]">
-            {code}
-          </div>
+          <div className="font-mono text-xs text-[#28E7A2] uppercase tracking-[0.15em]">{code}</div>
           <div className="w-[1px] h-4 bg-[#333]" />
-          <h1 className="text-white text-sm tracking-wide">
-            {title}
-          </h1>
+          <h1 className="text-white text-sm tracking-wide">{title}</h1>
           {subtitle && (
             <>
               <div className="w-[1px] h-4 bg-[#333]" />
@@ -126,12 +100,7 @@ export function MetaPageHeader({
         </div>
 
         {/* Right: Actions */}
-        {actions && (
-          <div className="flex items-center gap-3">
-            {actions}
-          </div>
-        )}
-
+        {actions && <div className="flex items-center gap-3">{actions}</div>}
       </div>
     );
   }

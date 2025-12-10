@@ -1,7 +1,17 @@
 import { useState } from 'react';
 import { MetaAppShell } from '../components/shell/MetaAppShell';
 import { MetaPageHeader } from '../components/MetaPageHeader';
-import { AlertTriangle, Shield, FileText, Scale, TrendingDown, TrendingUp, X, AlertCircle, Info } from 'lucide-react';
+import {
+  AlertTriangle,
+  Shield,
+  FileText,
+  Scale,
+  TrendingDown,
+  TrendingUp,
+  X,
+  AlertCircle,
+  Info,
+} from 'lucide-react';
 import clsx from 'clsx';
 
 // Risk categories with examples
@@ -95,7 +105,7 @@ export function MetaRiskRadarPage() {
   const totalIssues = riskCategories.reduce((sum, cat) => sum + cat.issues.length, 0);
   const activeIssues = riskCategories.reduce(
     (sum, cat) => sum + cat.issues.filter((i) => i.status === 'ACTIVE').length,
-    0
+    0,
   );
   const criticalIssues = riskCategories.filter((cat) => cat.severity === 'CRITICAL').length;
 
@@ -116,7 +126,9 @@ export function MetaRiskRadarPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-[#666]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Total Issues</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Total Issues
+              </span>
             </div>
             <div className="text-3xl text-white font-mono">{totalIssues}</div>
             <div className="text-xs text-[#666] mt-1">Across all categories</div>
@@ -125,7 +137,9 @@ export function MetaRiskRadarPage() {
           <div className="bg-[#0A0A0A] border border-red-500/30 rounded p-5">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-4 h-4 text-red-500" />
-              <span className="text-[10px] uppercase tracking-wider text-red-400 font-mono">Active</span>
+              <span className="text-[10px] uppercase tracking-wider text-red-400 font-mono">
+                Active
+              </span>
             </div>
             <div className="text-3xl text-red-500 font-mono">{activeIssues}</div>
             <div className="text-xs text-[#666] mt-1">Require immediate action</div>
@@ -134,7 +148,9 @@ export function MetaRiskRadarPage() {
           <div className="bg-[#0A0A0A] border border-orange-500/30 rounded p-5">
             <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-orange-500" />
-              <span className="text-[10px] uppercase tracking-wider text-orange-400 font-mono">Critical</span>
+              <span className="text-[10px] uppercase tracking-wider text-orange-400 font-mono">
+                Critical
+              </span>
             </div>
             <div className="text-3xl text-orange-500 font-mono">{criticalIssues}</div>
             <div className="text-xs text-[#666] mt-1">Severity level</div>
@@ -143,7 +159,9 @@ export function MetaRiskRadarPage() {
           <div className="bg-[#0A0A0A] border border-[#28E7A2]/30 rounded p-5">
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-4 h-4 text-[#28E7A2]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#28E7A2] font-mono">Trend</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#28E7A2] font-mono">
+                Trend
+              </span>
             </div>
             <div className="text-3xl text-[#28E7A2] font-mono">-23%</div>
             <div className="text-xs text-[#666] mt-1">vs last quarter</div>
@@ -164,7 +182,7 @@ export function MetaRiskRadarPage() {
                   'bg-[#0A0A0A] border rounded p-6 text-left transition-all',
                   isSelected
                     ? `border-${category.color}-500 bg-${category.color}-500/5`
-                    : 'border-[#1F1F1F] hover:border-[#333]'
+                    : 'border-[#1F1F1F] hover:border-[#333]',
                 )}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -175,7 +193,7 @@ export function MetaRiskRadarPage() {
                         category.color === 'red' && 'bg-red-500/10 border-red-500/30',
                         category.color === 'orange' && 'bg-orange-500/10 border-orange-500/30',
                         category.color === 'yellow' && 'bg-yellow-500/10 border-yellow-500/30',
-                        category.color === 'blue' && 'bg-blue-500/10 border-blue-500/30'
+                        category.color === 'blue' && 'bg-blue-500/10 border-blue-500/30',
                       )}
                     >
                       <Icon
@@ -184,22 +202,27 @@ export function MetaRiskRadarPage() {
                           category.color === 'red' && 'text-red-500',
                           category.color === 'orange' && 'text-orange-500',
                           category.color === 'yellow' && 'text-yellow-500',
-                          category.color === 'blue' && 'text-blue-500'
+                          category.color === 'blue' && 'text-blue-500',
                         )}
                       />
                     </div>
                     <div>
                       <h3 className="text-white font-medium">{category.title}</h3>
-                      <div className="text-xs text-[#666] mt-1">{category.issues.length} issues detected</div>
+                      <div className="text-xs text-[#666] mt-1">
+                        {category.issues.length} issues detected
+                      </div>
                     </div>
                   </div>
 
                   <span
                     className={clsx(
                       'px-2 py-1 border text-[10px] font-mono uppercase tracking-wider rounded',
-                      category.severity === 'CRITICAL' && 'border-red-500/30 bg-red-500/10 text-red-400',
-                      category.severity === 'HIGH' && 'border-orange-500/30 bg-orange-500/10 text-orange-400',
-                      category.severity === 'MEDIUM' && 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
+                      category.severity === 'CRITICAL' &&
+                        'border-red-500/30 bg-red-500/10 text-red-400',
+                      category.severity === 'HIGH' &&
+                        'border-orange-500/30 bg-orange-500/10 text-orange-400',
+                      category.severity === 'MEDIUM' &&
+                        'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
                     )}
                   >
                     {category.severity}
@@ -217,7 +240,7 @@ export function MetaRiskRadarPage() {
                             'px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded',
                             issue.status === 'ACTIVE' && 'bg-red-500/20 text-red-400',
                             issue.status === 'MONITORING' && 'bg-orange-500/20 text-orange-400',
-                            issue.status === 'REMEDIATED' && 'bg-[#28E7A2]/20 text-[#28E7A2]'
+                            issue.status === 'REMEDIATED' && 'bg-[#28E7A2]/20 text-[#28E7A2]',
                           )}
                         >
                           {issue.status}
@@ -267,7 +290,10 @@ export function MetaRiskRadarPage() {
                   {riskCategories
                     .find((c) => c.id === selectedCategory)
                     ?.issues.map((issue) => (
-                      <div key={issue.id} className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5">
+                      <div
+                        key={issue.id}
+                        className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5"
+                      >
                         <div className="flex items-start justify-between mb-4">
                           <div>
                             <div className="flex items-center gap-2 mb-2">
@@ -276,8 +302,9 @@ export function MetaRiskRadarPage() {
                                 className={clsx(
                                   'px-2 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded',
                                   issue.status === 'ACTIVE' && 'bg-red-500/20 text-red-400',
-                                  issue.status === 'MONITORING' && 'bg-orange-500/20 text-orange-400',
-                                  issue.status === 'REMEDIATED' && 'bg-[#28E7A2]/20 text-[#28E7A2]'
+                                  issue.status === 'MONITORING' &&
+                                    'bg-orange-500/20 text-orange-400',
+                                  issue.status === 'REMEDIATED' && 'bg-[#28E7A2]/20 text-[#28E7A2]',
                                 )}
                               >
                                 {issue.status}
@@ -325,8 +352,9 @@ export function MetaRiskRadarPage() {
             <div>
               <div className="text-sm text-white font-medium mb-1">Continuous Monitoring</div>
               <div className="text-sm text-[#888]">
-                Risk Radar runs automated scans every 15 minutes against 200+ compliance rules. Issues are surfaced in
-                real-time with actionable remediation steps tied to your Canon governance hierarchy.
+                Risk Radar runs automated scans every 15 minutes against 200+ compliance rules.
+                Issues are surfaced in real-time with actionable remediation steps tied to your
+                Canon governance hierarchy.
               </div>
             </div>
           </div>

@@ -12,10 +12,10 @@ const sizeMap = {
   lg: { wrapper: 'w-12 h-12', svg: 48 },
 } as const;
 
-export const NexusCanonLogo = ({ 
-  variant = 'icon', 
+export const NexusCanonLogo = ({
+  variant = 'icon',
   size = 'md',
-  className 
+  className,
 }: NexusCanonLogoProps) => {
   const { wrapper, svg } = sizeMap[size];
 
@@ -53,11 +53,8 @@ export const NexusCanonLogo = ({
         <circle cx="16" cy="18" r="2" fill="currentColor" className="text-nexus-signal" />
       </svg>
       {variant === 'full' && (
-        <span className="ml-2 font-mono text-sm tracking-tight text-white">
-          NEXUSCANON
-        </span>
+        <span className="ml-2 font-mono text-sm tracking-tight text-white">NEXUSCANON</span>
       )}
     </div>
   );
 };
-

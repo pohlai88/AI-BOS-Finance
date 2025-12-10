@@ -24,12 +24,13 @@ export const NexusInput = forwardRef<HTMLInputElement, NexusInputProps>(
             disabled={disabled}
             readOnly={readOnly}
             className={cn(
-              "w-full bg-[#050505] border border-[#27272a] text-zinc-100 text-sm font-mono px-3 py-2.5 rounded-[2px]",
-              "focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20",
-              "placeholder:text-zinc-700 transition-colors",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-              readOnly && "bg-transparent border-transparent border-b-[#27272a] px-0 rounded-none focus:ring-0 cursor-default",
-              className
+              'w-full bg-[#050505] border border-[#27272a] text-zinc-100 text-sm font-mono px-3 py-2.5 rounded-[2px]',
+              'focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20',
+              'placeholder:text-zinc-700 transition-colors',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              readOnly &&
+                'bg-transparent border-transparent border-b-[#27272a] px-0 rounded-none focus:ring-0 cursor-default',
+              className,
             )}
             {...props}
           />
@@ -39,11 +40,9 @@ export const NexusInput = forwardRef<HTMLInputElement, NexusInputProps>(
             </div>
           )}
         </div>
-        {error && (
-          <p className="text-[10px] text-red-500 font-mono mt-1">{error}</p>
-        )}
+        {error && <p className="text-[10px] text-red-500 font-mono mt-1">{error}</p>}
       </div>
     );
-  }
+  },
 );
-NexusInput.displayName = "NexusInput";
+NexusInput.displayName = 'NexusInput';

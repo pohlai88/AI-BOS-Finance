@@ -11,14 +11,7 @@ interface StatusCardProps {
   code: string;
 }
 
-const StatusCard = ({
-  label,
-  value,
-  trend,
-  trendDirection,
-  icon: Icon,
-  code,
-}: StatusCardProps) => (
+const StatusCard = ({ label, value, trend, trendDirection, icon: Icon, code }: StatusCardProps) => (
   <NexusCard className="h-full p-0">
     <div className="p-5 flex flex-col h-full justify-between">
       {/* Header: Icon + Code */}
@@ -37,7 +30,7 @@ const StatusCard = ({
               'flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 border',
               trendDirection === 'up'
                 ? 'text-nexus-green border-nexus-green/20 bg-nexus-green/5'
-                : 'text-nexus-noise border-nexus-structure bg-nexus-void'
+                : 'text-nexus-noise border-nexus-structure bg-nexus-void',
             )}
           >
             {trend}

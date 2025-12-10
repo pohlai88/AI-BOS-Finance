@@ -13,7 +13,7 @@ export function MetaHealthScanPage() {
 
   // Calculate overall health
   const overallScore = Math.round(
-    mockHealthModules.reduce((sum, mod) => sum + mod.score, 0) / mockHealthModules.length
+    mockHealthModules.reduce((sum, mod) => sum + mod.score, 0) / mockHealthModules.length,
   );
 
   const governedCount = mockHealthModules.filter((m) => m.status === 'Governed').length;
@@ -22,7 +22,7 @@ export function MetaHealthScanPage() {
 
   const criticalIssues = mockHealthModules.reduce(
     (sum, mod) => sum + mod.issues.filter((i) => i.severity === 'Critical').length,
-    0
+    0,
   );
 
   return (
@@ -42,13 +42,21 @@ export function MetaHealthScanPage() {
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5">
             <div className="flex items-center gap-2 mb-3">
               <Activity className="w-4 h-4 text-[#666]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">Overall Health</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                Overall Health
+              </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <div className={clsx(
-                'text-3xl font-mono',
-                overallScore >= 75 ? 'text-[#28E7A2]' : overallScore >= 60 ? 'text-orange-400' : 'text-red-500'
-              )}>
+              <div
+                className={clsx(
+                  'text-3xl font-mono',
+                  overallScore >= 75
+                    ? 'text-[#28E7A2]'
+                    : overallScore >= 60
+                      ? 'text-orange-400'
+                      : 'text-red-500',
+                )}
+              >
                 {overallScore}
               </div>
               <div className="text-sm text-[#666]">/ 100</div>
@@ -62,7 +70,9 @@ export function MetaHealthScanPage() {
           <div className="bg-[#0A0A0A] border border-[#28E7A2]/30 rounded p-5">
             <div className="flex items-center gap-2 mb-3">
               <CheckCircle className="w-4 h-4 text-[#28E7A2]" />
-              <span className="text-[10px] uppercase tracking-wider text-[#28E7A2] font-mono">Governed</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#28E7A2] font-mono">
+                Governed
+              </span>
             </div>
             <div className="text-3xl text-[#28E7A2] font-mono">{governedCount}</div>
             <div className="text-xs text-[#666] mt-1">Modules at target</div>
@@ -71,7 +81,9 @@ export function MetaHealthScanPage() {
           <div className="bg-[#0A0A0A] border border-orange-500/30 rounded p-5">
             <div className="flex items-center gap-2 mb-3">
               <Info className="w-4 h-4 text-orange-400" />
-              <span className="text-[10px] uppercase tracking-wider text-orange-400 font-mono">Watch</span>
+              <span className="text-[10px] uppercase tracking-wider text-orange-400 font-mono">
+                Watch
+              </span>
             </div>
             <div className="text-3xl text-orange-400 font-mono">{watchCount}</div>
             <div className="text-xs text-[#666] mt-1">Needs attention</div>
@@ -80,7 +92,9 @@ export function MetaHealthScanPage() {
           <div className="bg-[#0A0A0A] border border-red-500/30 rounded p-5">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="w-4 h-4 text-red-500" />
-              <span className="text-[10px] uppercase tracking-wider text-red-400 font-mono">Exposed</span>
+              <span className="text-[10px] uppercase tracking-wider text-red-400 font-mono">
+                Exposed
+              </span>
             </div>
             <div className="text-3xl text-red-500 font-mono">{exposedCount}</div>
             <div className="text-xs text-[#666] mt-1">Critical gaps</div>
@@ -121,7 +135,8 @@ export function MetaHealthScanPage() {
                         {criticalIssues} Critical Issues
                       </div>
                       <div className="text-xs text-[#888]">
-                        Requires immediate attention to prevent compliance failures or financial misstatement.
+                        Requires immediate attention to prevent compliance failures or financial
+                        misstatement.
                       </div>
                     </div>
                   </div>
@@ -160,17 +175,26 @@ export function MetaHealthScanPage() {
               <div className="text-sm text-white font-medium mb-1">How Health Scan Works</div>
               <div className="text-sm text-[#888] space-y-1">
                 <p>
-                  NexusCanon performs automated daily scans against your own compliance frameworks (IFRS, Tax, SOC2,
-                  etc.). Each module is scored across three dimensions:
+                  NexusCanon performs automated daily scans against your own compliance frameworks
+                  (IFRS, Tax, SOC2, etc.). Each module is scored across three dimensions:
                 </p>
                 <ul className="list-disc list-inside space-y-1 mt-2">
-                  <li><strong className="text-white">IFRS Compliance:</strong> Revenue recognition, asset classification, disclosure completeness</li>
-                  <li><strong className="text-white">Tax Alignment:</strong> WHT flags, transfer pricing markers, deferred tax logic</li>
-                  <li><strong className="text-white">Control Strength:</strong> Approval workflows, segregation of duties, audit trails</li>
+                  <li>
+                    <strong className="text-white">IFRS Compliance:</strong> Revenue recognition,
+                    asset classification, disclosure completeness
+                  </li>
+                  <li>
+                    <strong className="text-white">Tax Alignment:</strong> WHT flags, transfer
+                    pricing markers, deferred tax logic
+                  </li>
+                  <li>
+                    <strong className="text-white">Control Strength:</strong> Approval workflows,
+                    segregation of duties, audit trails
+                  </li>
                 </ul>
                 <p className="mt-2">
-                  Issues are automatically linked to Canon records, enabling one-click remediation and propagation
-                  across all affected systems.
+                  Issues are automatically linked to Canon records, enabling one-click remediation
+                  and propagation across all affected systems.
                 </p>
               </div>
             </div>

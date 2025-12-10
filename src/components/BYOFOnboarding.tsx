@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Lock, Eye, CheckCircle2, ArrowRight, ArrowLeft, Database, Cloud, Server } from 'lucide-react';
+import {
+  Shield,
+  Lock,
+  Eye,
+  CheckCircle2,
+  ArrowRight,
+  ArrowLeft,
+  Database,
+  Cloud,
+  Server,
+} from 'lucide-react';
 
 interface BYOFOnboardingProps {
   onComplete: () => void;
@@ -33,15 +43,15 @@ export const BYOFOnboarding = ({ onComplete, onBack }: BYOFOnboardingProps) => {
             <TrustStep key="trust" onNext={() => setCurrentStep('storage')} />
           )}
           {currentStep === 'storage' && (
-            <StorageStep 
-              key="storage" 
+            <StorageStep
+              key="storage"
               onNext={() => setCurrentStep('connect')}
               onBack={() => setCurrentStep('trust')}
             />
           )}
           {currentStep === 'connect' && (
-            <ConnectStep 
-              key="connect" 
+            <ConnectStep
+              key="connect"
               onNext={() => setCurrentStep('processing')}
               onBack={() => setCurrentStep('storage')}
             />
@@ -63,7 +73,7 @@ const ProgressBar = ({ currentStep }: { currentStep: Step }) => {
     { id: 'processing', label: 'Health Check' },
   ];
 
-  const currentIndex = steps.findIndex(s => s.id === currentStep);
+  const currentIndex = steps.findIndex((s) => s.id === currentStep);
 
   return (
     <div className="mb-16">
@@ -71,30 +81,37 @@ const ProgressBar = ({ currentStep }: { currentStep: Step }) => {
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center flex-1">
             <div className="flex flex-col items-center flex-1">
-              <div className={`
+              <div
+                className={`
                 w-10 h-10 rounded-full border-2 flex items-center justify-center mb-2 transition-all duration-300
-                ${currentIndex === index
-                  ? 'border-green-500 bg-green-500/20 text-green-400' 
-                  : currentIndex > index
-                    ? 'border-green-500 bg-green-500 text-white'
-                    : 'border-white/20 text-gray-600'
+                ${
+                  currentIndex === index
+                    ? 'border-green-500 bg-green-500/20 text-green-400'
+                    : currentIndex > index
+                      ? 'border-green-500 bg-green-500 text-white'
+                      : 'border-white/20 text-gray-600'
                 }
-              `}>
+              `}
+              >
                 {currentIndex > index ? (
                   <CheckCircle2 className="w-5 h-5" />
                 ) : (
                   <span>{index + 1}</span>
                 )}
               </div>
-              <span className={`text-sm ${currentIndex === index ? 'text-white' : 'text-gray-600'}`}>
+              <span
+                className={`text-sm ${currentIndex === index ? 'text-white' : 'text-gray-600'}`}
+              >
                 {step.label}
               </span>
             </div>
             {index < steps.length - 1 && (
-              <div className={`
+              <div
+                className={`
                 h-0.5 flex-1 mx-4 transition-all duration-300
                 ${currentIndex > index ? 'bg-green-500' : 'bg-white/10'}
-              `} />
+              `}
+              />
             )}
           </div>
         ))}
@@ -126,9 +143,11 @@ const TrustStep = ({ onNext }: { onNext: () => void }) => {
 
       {/* Description */}
       <p className="text-xl text-gray-400 mb-12 leading-relaxed">
-        Just like your doctor analyzes your blood work but doesn&apos;t keep your blood, 
-        we analyze your financial health but <span className="text-green-400 font-medium">never store your data</span>.
-        <br /><br />
+        Just like your doctor analyzes your blood work but doesn&apos;t keep your blood, we analyze
+        your financial health but{' '}
+        <span className="text-green-400 font-medium">never store your data</span>.
+        <br />
+        <br />
         You bring your own storage. We just read it, analyze it, and give you the diagnosis.
       </p>
 
@@ -178,9 +197,7 @@ const TrustCard = ({
   description: string;
 }) => (
   <div className="p-6 rounded-xl border border-white/10 bg-[#0A0A0A]">
-    <div className="inline-flex p-3 rounded-lg bg-green-500/10 text-green-400 mb-4">
-      {icon}
-    </div>
+    <div className="inline-flex p-3 rounded-lg bg-green-500/10 text-green-400 mb-4">{icon}</div>
     <h3 className="font-medium mb-2">{title}</h3>
     <p className="text-sm text-gray-500">{description}</p>
   </div>
@@ -242,8 +259,14 @@ const StorageStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => voi
             <div>
               <h4 className="font-medium text-green-400 mb-2">Read-Only Access Required</h4>
               <p className="text-sm text-gray-400">
-                We&apos;ll ask for temporary, read-only credentials. We cannot write, modify, or delete your data.
-                You can revoke access anytime from your {selectedStorage === 's3' ? 'AWS' : selectedStorage === 'azure' ? 'Azure' : 'Google Cloud'} console.
+                We&apos;ll ask for temporary, read-only credentials. We cannot write, modify, or
+                delete your data. You can revoke access anytime from your{' '}
+                {selectedStorage === 's3'
+                  ? 'AWS'
+                  : selectedStorage === 'azure'
+                    ? 'Azure'
+                    : 'Google Cloud'}{' '}
+                console.
               </p>
             </div>
           </div>
@@ -288,27 +311,26 @@ const StorageOption = ({
     onClick={onClick}
     className={`
       relative p-8 rounded-2xl border-2 text-center transition-all duration-300 group
-      ${isSelected 
-        ? 'border-green-500 bg-green-500/10' 
-        : 'border-white/10 bg-[#0A0A0A] hover:border-white/20 hover:bg-white/5'
+      ${
+        isSelected
+          ? 'border-green-500 bg-green-500/10'
+          : 'border-white/10 bg-[#0A0A0A] hover:border-white/20 hover:bg-white/5'
       }
     `}
   >
-    <div className={`
+    <div
+      className={`
       inline-flex p-4 rounded-xl mb-4 transition-colors
       ${isSelected ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-gray-400 group-hover:text-white'}
-    `}>
+    `}
+    >
       {icon}
     </div>
     <h3 className="text-xl font-medium mb-2">{name}</h3>
     <p className="text-gray-500">{description}</p>
 
     {isSelected && (
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        className="absolute top-4 right-4"
-      >
+      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-4 right-4">
         <CheckCircle2 className="w-6 h-6 text-green-500" />
       </motion.div>
     )}
@@ -340,9 +362,7 @@ const ConnectStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => voi
         <h2 className="text-4xl font-medium tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-4">
           Connect to Your Storage
         </h2>
-        <p className="text-gray-400 text-lg">
-          Provide temporary read-only credentials
-        </p>
+        <p className="text-gray-400 text-lg">Provide temporary read-only credentials</p>
       </div>
 
       {/* Credentials Form */}
@@ -428,7 +448,7 @@ const ProcessingStep = ({ onComplete }: { onComplete: () => void }) => {
 
   useState(() => {
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setTimeout(onComplete, 1000);

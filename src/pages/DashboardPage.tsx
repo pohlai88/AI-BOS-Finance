@@ -57,7 +57,9 @@ export const DashboardPage = () => {
             <div className="w-2 h-2 bg-nexus-green animate-pulse" />
             <span className="nexus-label text-nexus-green">LIVE ENVIRONMENT</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-medium tracking-tighter text-white">Command Deck</h1>
+          <h1 className="text-3xl md:text-4xl font-medium tracking-tighter text-white">
+            Command Deck
+          </h1>
         </div>
 
         <div className="flex items-center gap-3">

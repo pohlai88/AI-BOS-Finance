@@ -29,23 +29,24 @@ const SHORTCUTS: Shortcut[] = [
   { keys: ['Cmd', '6'], description: 'Jump to META_06', category: 'navigation' },
   { keys: ['Cmd', '7'], description: 'Jump to META_07', category: 'navigation' },
   { keys: ['Cmd', '8'], description: 'Jump to META_08', category: 'navigation' },
-  
+
   // Actions (META_03 specific)
   { keys: ['Cmd', 'D'], description: 'Toggle table density', category: 'actions' },
   { keys: ['Cmd', 'F'], description: 'Focus search/filter', category: 'actions' },
-  
+
   // General
   { keys: ['Cmd', '/'], description: 'Show keyboard shortcuts', category: 'general' },
   { keys: ['Esc'], description: 'Close overlay/dialog', category: 'general' },
 ];
 
 export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProps) {
-  const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const isMac =
+    typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
   const renderKey = (key: string) => {
     // Replace Cmd with Ctrl on Windows
     const displayKey = !isMac && key === 'Cmd' ? 'Ctrl' : key;
-    
+
     return (
       <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 bg-[#0A0A0A] border border-[#333] text-[#CCC] font-mono text-xs">
         {displayKey === 'Cmd' ? <Command className="w-3 h-3" /> : displayKey}
@@ -54,9 +55,9 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
   };
 
   const groupedShortcuts = {
-    navigation: SHORTCUTS.filter(s => s.category === 'navigation'),
-    actions: SHORTCUTS.filter(s => s.category === 'actions'),
-    general: SHORTCUTS.filter(s => s.category === 'general'),
+    navigation: SHORTCUTS.filter((s) => s.category === 'navigation'),
+    actions: SHORTCUTS.filter((s) => s.category === 'actions'),
+    general: SHORTCUTS.filter((s) => s.category === 'general'),
   };
 
   if (!isOpen) return null;
@@ -64,7 +65,6 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-8">
-        
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -74,7 +74,8 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
           className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           onClick={onClose}
           style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(40, 231, 162, 0.01) 2px, rgba(40, 231, 162, 0.01) 4px)'
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(40, 231, 162, 0.01) 2px, rgba(40, 231, 162, 0.01) 4px)',
           }}
         />
 
@@ -86,7 +87,6 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 w-full max-w-3xl bg-[#000000] border-2 border-[#28E7A2]"
         >
-          
           {/* Top Glow */}
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#28E7A2] to-transparent" />
 
@@ -94,9 +94,7 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
           <div className="border-b border-[#1F1F1F] px-6 py-5">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-white text-lg tracking-wide mb-1">
-                  Keyboard Shortcuts
-                </h2>
+                <h2 className="text-white text-lg tracking-wide mb-1">Keyboard Shortcuts</h2>
                 <p className="font-mono text-xs text-[#666] uppercase tracking-wider">
                   Meta Navigation System
                 </p>
@@ -112,7 +110,6 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
 
           {/* Content */}
           <div className="p-6 max-h-[600px] overflow-y-auto">
-            
             {/* Navigation Shortcuts */}
             <div className="mb-8">
               <h3 className="font-mono text-xs text-[#28E7A2] uppercase tracking-wider mb-4">
@@ -120,7 +117,10 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
               </h3>
               <div className="space-y-3">
                 {groupedShortcuts.navigation.map((shortcut, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b border-[#1F1F1F]">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-2 border-b border-[#1F1F1F]"
+                  >
                     <span className="text-[#CCC] text-sm">{shortcut.description}</span>
                     <div className="flex items-center gap-1.5">
                       {shortcut.keys.map((key, i) => (
@@ -144,7 +144,10 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
               </h3>
               <div className="space-y-3">
                 {groupedShortcuts.actions.map((shortcut, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b border-[#1F1F1F]">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-2 border-b border-[#1F1F1F]"
+                  >
                     <span className="text-[#CCC] text-sm">{shortcut.description}</span>
                     <div className="flex items-center gap-1.5">
                       {shortcut.keys.map((key, i) => (
@@ -168,7 +171,10 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
               </h3>
               <div className="space-y-3">
                 {groupedShortcuts.general.map((shortcut, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b border-[#1F1F1F]">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-2 border-b border-[#1F1F1F]"
+                  >
                     <span className="text-[#CCC] text-sm">{shortcut.description}</span>
                     <div className="flex items-center gap-1.5">
                       {shortcut.keys.map((key, i) => (
@@ -184,7 +190,6 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
                 ))}
               </div>
             </div>
-
           </div>
 
           {/* Footer */}
@@ -194,13 +199,15 @@ export function MetaKeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProp
                 {isMac ? 'macOS' : 'Windows/Linux'} Shortcuts
               </div>
               <div className="font-mono text-[9px] text-[#444] uppercase tracking-wider">
-                Press <kbd className="px-1.5 py-0.5 bg-[#1F1F1F] border border-[#333] text-[#666]">Esc</kbd> to close
+                Press{' '}
+                <kbd className="px-1.5 py-0.5 bg-[#1F1F1F] border border-[#333] text-[#666]">
+                  Esc
+                </kbd>{' '}
+                to close
               </div>
             </div>
           </div>
-
         </motion.div>
-
       </div>
     </AnimatePresence>
   );

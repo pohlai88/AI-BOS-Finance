@@ -10,12 +10,18 @@ import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { NexusCanonLogo } from '@/components/NexusCanonLogo';
 
-export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; onCanonClick: () => void }) => {
+export const LandingPage = ({
+  onTryIt,
+  onCanonClick,
+}: {
+  onTryIt: () => void;
+  onCanonClick: () => void;
+}) => {
   return (
     <div className="relative">
       {/* App Shell Header - Fixed on top, floats above everything */}
       <Header onGetStarted={onTryIt} onCanonClick={onCanonClick} />
-      
+
       {/* Page Content - Padding to account for fixed header */}
       <div className="pt-20">
         {/* Hero Section */}
@@ -49,11 +55,13 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                   // IMMUTABLE PERIOD CONTROL
                 </p>
                 <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-6">
-                   Eliminate retroactive data drift.
+                  Eliminate retroactive data drift.
                 </p>
                 {/* UPDATED: Description focused on Trust/Audit */}
                 <p className="text-sm text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-                  Standard ledgers are fluid; numbers change silently. NexusCanon <span className="text-gray-400">cryptographically freezes</span> your data state. Once a period is crystallized, the numbers never move again without a trace.
+                  Standard ledgers are fluid; numbers change silently. NexusCanon{' '}
+                  <span className="text-gray-400">cryptographically freezes</span> your data state.
+                  Once a period is crystallized, the numbers never move again without a trace.
                 </p>
               </div>
               <div className="flex justify-center">
@@ -69,16 +77,20 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                 <h2 className="text-5xl font-medium tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-4">
                   The Living Lens
                 </h2>
-                
+
                 {/* The 12px Tech Subtitle */}
                 <p className="text-emerald-500/80 font-mono tracking-widest mb-4 uppercase text-xs font-bold">
                   // Active Interrogation Protocol
                 </p>
-                
+
                 <p className="text-sm text-zinc-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-                  Standard audits are passive; NexusCanon is active. We dismantle every transaction against <span className="text-zinc-200">IFRS</span>, <span className="text-zinc-200">Tax Pillars</span>, and <span className="text-zinc-200">Vendor Contracts</span>. 
+                  Standard audits are passive; NexusCanon is active. We dismantle every transaction
+                  against <span className="text-zinc-200">IFRS</span>,{' '}
+                  <span className="text-zinc-200">Tax Pillars</span>, and{' '}
+                  <span className="text-zinc-200">Vendor Contracts</span>.
                   <br className="hidden md:block" />
-                  Don&apos;t just see the expense. <span className="text-emerald-400 font-medium">See the reality behind it.</span>
+                  Don&apos;t just see the expense.{' '}
+                  <span className="text-emerald-400 font-medium">See the reality behind it.</span>
                 </p>
               </div>
               <LivingLens />
@@ -91,7 +103,6 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
           {/* Footer */}
           <footer className="py-6 px-8 border-t border-white/5 relative">
             <div className="max-w-full mx-auto">
-              
               {/* Coordinate Markers */}
               <div className="absolute top-0 left-8 text-[10px] font-mono text-[rgb(82,82,92)] tracking-widest">
                 00 // FOOTER
@@ -102,7 +113,6 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
 
               {/* Main Grid - 3 Columns */}
               <div className="grid grid-cols-3 gap-8 pb-4 border-b border-white/5">
-                
                 {/* LEFT: Brand */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
@@ -118,9 +128,9 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                           strokeWidth="1"
                           initial={{ pathLength: 0, rotate: 0 }}
                           animate={{ pathLength: 1, rotate: 360 }}
-                          transition={{ 
-                            pathLength: { duration: 2, ease: "easeInOut" },
-                            rotate: { duration: 20, repeat: Infinity, ease: "linear" }
+                          transition={{
+                            pathLength: { duration: 2, ease: 'easeInOut' },
+                            rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
                           }}
                         />
                         {/* Inner Crystal */}
@@ -151,18 +161,16 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                           cy="20"
                           r="3"
                           fill="rgba(40, 231, 162, 0.6)"
-                          animate={{ 
+                          animate={{
                             scale: [1, 1.3, 1],
-                            opacity: [0.6, 0.3, 0.6]
+                            opacity: [0.6, 0.3, 0.6],
                           }}
                           transition={{ duration: 2, repeat: Infinity }}
                         />
                       </svg>
                     </div>
-                    
-                    <h1 className="text-sm tracking-tight text-white">
-                      NexusCanon
-                    </h1>
+
+                    <h1 className="text-sm tracking-tight text-white">NexusCanon</h1>
                   </div>
                   <p className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
                     Forensic Architecture
@@ -175,16 +183,28 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                     Resources
                   </p>
                   <div className="grid grid-cols-2 gap-2 text-[10px]">
-                    <a href="/privacy" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider">
+                    <a
+                      href="/privacy"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider"
+                    >
                       Privacy
                     </a>
-                    <a href="/terms" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider">
+                    <a
+                      href="/terms"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider"
+                    >
                       Terms
                     </a>
-                    <a href="/security" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider">
+                    <a
+                      href="/security"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider"
+                    >
                       Security
                     </a>
-                    <a href="/docs" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider">
+                    <a
+                      href="/docs"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono uppercase tracking-wider"
+                    >
                       Docs
                     </a>
                   </div>
@@ -196,21 +216,29 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                     Contact Us
                   </p>
                   <div className="space-y-2 text-[10px]">
-                    <a href="mailto:contact@nexuscanon.com" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group">
+                    <a
+                      href="mailto:contact@nexuscanon.com"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group"
+                    >
                       <span className="w-1 h-1 bg-zinc-700 rounded-full group-hover:bg-emerald-400 transition-colors" />
                       contact@nexuscanon.com
                     </a>
-                    <a href="https://github.com/nexuscanon" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group">
+                    <a
+                      href="https://github.com/nexuscanon"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group"
+                    >
                       <span className="w-1 h-1 bg-zinc-700 rounded-full group-hover:bg-emerald-400 transition-colors" />
                       GitHub
                     </a>
-                    <a href="https://discord.gg/nexuscanon" className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group">
+                    <a
+                      href="https://discord.gg/nexuscanon"
+                      className="text-zinc-500 hover:text-emerald-400 transition-colors font-mono flex items-center gap-2 group"
+                    >
                       <span className="w-1 h-1 bg-zinc-700 rounded-full group-hover:bg-emerald-400 transition-colors" />
                       Discord
                     </a>
                   </div>
                 </div>
-
               </div>
 
               {/* Technical Metadata Row */}
@@ -228,7 +256,6 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                   <span className="text-emerald-500">Online</span>
                 </div>
               </div>
-
             </div>
           </footer>
         </main>

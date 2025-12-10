@@ -55,14 +55,16 @@ const FilterPill = ({
   // Calculate unique values dynamically
   const uniqueValues = Array.from(
     new Set(
-      data.map((item) => {
-        const value = item[dimension.field.key];
-        if (Array.isArray(value)) {
-          return value.join(', ');
-        }
-        return String(value);
-      }).filter(Boolean)
-    )
+      data
+        .map((item) => {
+          const value = item[dimension.field.key];
+          if (Array.isArray(value)) {
+            return value.join(', ');
+          }
+          return String(value);
+        })
+        .filter(Boolean),
+    ),
   ).sort();
 
   // Close dropdown on click outside
@@ -78,9 +80,7 @@ const FilterPill = ({
 
   const toggleValue = (val: string) => {
     const current = dimension.selectedValues;
-    const next = current.includes(val)
-      ? current.filter((v) => v !== val)
-      : [...current, val];
+    const next = current.includes(val) ? current.filter((v) => v !== val) : [...current, val];
     onUpdate(next);
   };
 
@@ -101,8 +101,8 @@ const FilterPill = ({
             {dimension.selectedValues.length === 0
               ? 'Any'
               : dimension.selectedValues.length === 1
-              ? dimension.selectedValues[0]
-              : `${dimension.selectedValues.length} selected`}
+                ? dimension.selectedValues[0]
+                : `${dimension.selectedValues.length} selected`}
           </span>
           <ChevronDown className="w-3 h-3 text-[#666] flex-shrink-0 ml-auto" />
         </button>
@@ -133,7 +133,7 @@ const FilterPill = ({
                     onClick={() => toggleValue(val)}
                     className={clsx(
                       'flex items-center justify-between px-3 py-2 cursor-pointer rounded hover:bg-[#1A1A1A] transition-colors text-[12px]',
-                      isSelected ? 'text-[#28E7A2]' : 'text-[#888]'
+                      isSelected ? 'text-[#28E7A2]' : 'text-[#888]',
                     )}
                   >
                     <span className="truncate">{val}</span>
@@ -193,23 +193,19 @@ export function FlexibleFilterBar({
 
   const handleUpdateDimension = (id: string, newValues: string[]) => {
     onDimensionsChange(
-      activeDimensions.map((d) =>
-        d.id === id ? { ...d, selectedValues: newValues } : d
-      )
+      activeDimensions.map((d) => (d.id === id ? { ...d, selectedValues: newValues } : d)),
     );
   };
 
   // Get available options (exclude already active ones)
   const availableOptions = FILTER_OPTIONS.filter(
-    (opt) => !activeDimensions.some((dim) => dim.field.key === opt.key)
+    (opt) => !activeDimensions.some((dim) => dim.field.key === opt.key),
   );
 
   return (
     <div className="border border-[#1F1F1F] rounded-lg bg-[#050505]/50 h-full flex flex-col">
-      
       {/* UNIFIED HEADER ROW */}
       <div className="px-4 py-3 flex items-center justify-between gap-4 border-b border-[#1F1F1F]">
-        
         {/* LEFT: Label */}
         <span className="text-[#444] tracking-wider uppercase text-[11px] font-medium">
           Multi-dimensional Filters
@@ -225,7 +221,7 @@ export function FlexibleFilterBar({
               Clear all
             </button>
           )}
-          
+
           {/* Add Filter Button */}
           <div className="relative" ref={menuRef}>
             <button

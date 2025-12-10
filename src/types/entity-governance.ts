@@ -163,28 +163,28 @@ export interface EntityProfile {
   tradingName?: string;
   entityCode: string; // Short code (e.g., "MY01", "SG02")
   entityType: EntityType;
-  
+
   // Geography
   countryOfIncorporation: string;
   countryOfOperations: string;
   jurisdiction?: string; // e.g., "Labuan", "Delaware"
-  
+
   // Registry
   registrationNumber: string; // CR/UEN/Company No
   taxId: string; // Tax/VAT ID
   incorporationDate: string; // ISO date
   businessLicense?: string;
   licenseExpiryDate?: string;
-  
+
   // Status
   status: EntityStatus;
-  
+
   // Currency & Accounting
   baseCurrency: string;
   reportingCurrency: string; // Group currency
   accountingFramework: 'IFRS' | 'MFRS' | 'US GAAP' | 'Local GAAP';
   fiscalYearEnd: string; // e.g., "31 Dec"
-  
+
   // Operational
   primaryBusinessActivity?: string;
   industryCode?: string; // NAICS/SIC
@@ -192,7 +192,7 @@ export interface EntityProfile {
   website?: string;
   registeredAddress?: string;
   operatingAddress?: string;
-  
+
   // Metadata
   createdAt: string;
   createdBy: string;
@@ -207,22 +207,22 @@ export interface EntityProfile {
 export interface EntityGovernance {
   // Tab A: Profile
   profile: EntityProfile;
-  
+
   // Tab B: Ownership & Capital
   shareholders: Shareholder[];
   consolidation: ConsolidationProfile;
   capital: CapitalStructure;
-  
+
   // Tab C: Officers & Board
   legalRepresentatives: LegalRepresentative[];
   board: BoardMember[];
   keyOfficers: KeyOfficer[];
   principalBanks: PrincipalBank[];
-  
+
   // Tab D: Documents & Validation
   documents: EntityDocument[];
   validation: ValidationRecord;
-  
+
   // Computed Properties (for UI)
   computed: {
     totalOwnership: number; // Sum of all shareholders
@@ -263,14 +263,48 @@ export interface ValidationRule {
 // Validation rules per country/entity type (can be extended)
 export const ENTITY_VALIDATION_RULES: Record<string, ValidationRule[]> = {
   MY: [
-    { field: 'registrationNumber', level: 'L1_REGEX', rule: 'regex', pattern: '^[0-9]{6}-[A-Z]{1}$', message: 'Malaysian CR format: 123456-A' },
-    { field: 'taxId', level: 'L1_REGEX', rule: 'regex', pattern: '^C [0-9]{10}$', message: 'Malaysian tax ID format: C 1234567890' },
-    { field: 'businessRegistrationCert', level: 'L2_DOC_VERIFIED', rule: 'document_required', message: 'SSM registration certificate required' },
+    {
+      field: 'registrationNumber',
+      level: 'L1_REGEX',
+      rule: 'regex',
+      pattern: '^[0-9]{6}-[A-Z]{1}$',
+      message: 'Malaysian CR format: 123456-A',
+    },
+    {
+      field: 'taxId',
+      level: 'L1_REGEX',
+      rule: 'regex',
+      pattern: '^C [0-9]{10}$',
+      message: 'Malaysian tax ID format: C 1234567890',
+    },
+    {
+      field: 'businessRegistrationCert',
+      level: 'L2_DOC_VERIFIED',
+      rule: 'document_required',
+      message: 'SSM registration certificate required',
+    },
   ],
   SG: [
-    { field: 'registrationNumber', level: 'L1_REGEX', rule: 'regex', pattern: '^[0-9]{9}[A-Z]{1}$', message: 'Singapore UEN format: 123456789A' },
-    { field: 'taxId', level: 'L1_REGEX', rule: 'regex', pattern: '^[0-9]{9}[A-Z]{1}$', message: 'Singapore GST format matches UEN' },
-    { field: 'acra', level: 'L3_API_VERIFIED', rule: 'api_check', message: 'ACRA verification required' },
+    {
+      field: 'registrationNumber',
+      level: 'L1_REGEX',
+      rule: 'regex',
+      pattern: '^[0-9]{9}[A-Z]{1}$',
+      message: 'Singapore UEN format: 123456789A',
+    },
+    {
+      field: 'taxId',
+      level: 'L1_REGEX',
+      rule: 'regex',
+      pattern: '^[0-9]{9}[A-Z]{1}$',
+      message: 'Singapore GST format matches UEN',
+    },
+    {
+      field: 'acra',
+      level: 'L3_API_VERIFIED',
+      rule: 'api_check',
+      message: 'ACRA verification required',
+    },
   ],
 };
 
@@ -305,14 +339,14 @@ export function calculateGovernanceCompleteness(entity: EntityGovernance): numbe
     entity.profile.taxId.length > 0,
     entity.shareholders.length > 0,
     entity.capital.authorizedCapital > 0,
-    entity.legalRepresentatives.filter(r => r.isActive).length > 0,
-    entity.board.filter(b => b.isActive).length > 0,
-    entity.principalBanks.filter(b => b.isPrimaryBank).length > 0,
-    entity.documents.filter(d => d.documentType === 'Business Registration').length > 0,
+    entity.legalRepresentatives.filter((r) => r.isActive).length > 0,
+    entity.board.filter((b) => b.isActive).length > 0,
+    entity.principalBanks.filter((b) => b.isPrimaryBank).length > 0,
+    entity.documents.filter((d) => d.documentType === 'Business Registration').length > 0,
     entity.validation.status === 'VERIFIED',
   ];
-  
-  const completed = requiredChecks.filter(check => check).length;
+
+  const completed = requiredChecks.filter((check) => check).length;
   return Math.round((completed / requiredChecks.length) * 100);
 }
 
@@ -321,17 +355,20 @@ export function calculateGovernanceCompleteness(entity: EntityGovernance): numbe
  */
 export function getMissingGovernanceItems(entity: EntityGovernance): string[] {
   const missing: string[] = [];
-  
+
   if (!entity.profile.legalEntityName) missing.push('Legal Entity Name');
   if (!entity.profile.registrationNumber) missing.push('Registration Number');
   if (!entity.profile.taxId) missing.push('Tax ID');
   if (entity.shareholders.length === 0) missing.push('Shareholders');
   if (entity.capital.authorizedCapital === 0) missing.push('Authorized Capital');
-  if (entity.legalRepresentatives.filter(r => r.isActive).length === 0) missing.push('Legal Representative');
-  if (entity.board.filter(b => b.isActive).length === 0) missing.push('Board Members');
-  if (entity.principalBanks.filter(b => b.isPrimaryBank).length === 0) missing.push('Primary Bank');
-  if (entity.documents.filter(d => d.documentType === 'Business Registration').length === 0) missing.push('Registration Certificate');
+  if (entity.legalRepresentatives.filter((r) => r.isActive).length === 0)
+    missing.push('Legal Representative');
+  if (entity.board.filter((b) => b.isActive).length === 0) missing.push('Board Members');
+  if (entity.principalBanks.filter((b) => b.isPrimaryBank).length === 0)
+    missing.push('Primary Bank');
+  if (entity.documents.filter((d) => d.documentType === 'Business Registration').length === 0)
+    missing.push('Registration Certificate');
   if (entity.validation.status !== 'VERIFIED') missing.push('Entity Verification');
-  
+
   return missing;
 }

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { NexusCard } from '../nexus/NexusCard';
 import { NexusButton } from '../nexus/NexusButton';
 import { NexusBadge } from '../nexus/NexusBadge';
-import { 
+import {
   Bell,
   TrendingUp,
   TrendingDown,
@@ -24,7 +24,7 @@ import {
   Users,
   Building2,
   UserCircle,
-  Shield
+  Shield,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { SystemAnnouncement, ConfigurationGap, SystemHealthMetric } from '../../types/system';
@@ -42,50 +42,62 @@ export function MissionControl({
   configGaps,
   healthMetrics,
   systemVersion,
-  lastConfigUpdate
+  lastConfigUpdate,
 }: MissionControlProps) {
   const navigate = useNavigate();
   const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>([]);
 
-  const visibleAnnouncements = announcements.filter(
-    a => !dismissedAnnouncements.includes(a.id)
-  );
+  const visibleAnnouncements = announcements.filter((a) => !dismissedAnnouncements.includes(a.id));
 
   const dismissAnnouncement = (id: string) => {
-    setDismissedAnnouncements(prev => [...prev, id]);
+    setDismissedAnnouncements((prev) => [...prev, id]);
   };
 
   const getPriorityColor = (priority: SystemAnnouncement['priority']) => {
     switch (priority) {
-      case 'CRITICAL': return 'text-red-500 border-red-900/40';
-      case 'HIGH': return 'text-amber-500 border-amber-900/40';
-      case 'NORMAL': return 'text-blue-500 border-blue-900/40';
-      case 'LOW': return 'text-zinc-500 border-zinc-800/40';
+      case 'CRITICAL':
+        return 'text-red-500 border-red-900/40';
+      case 'HIGH':
+        return 'text-amber-500 border-amber-900/40';
+      case 'NORMAL':
+        return 'text-blue-500 border-blue-900/40';
+      case 'LOW':
+        return 'text-zinc-500 border-zinc-800/40';
     }
   };
 
   const getSeverityIcon = (severity: ConfigurationGap['severity']) => {
     switch (severity) {
-      case 'ERROR': return <AlertCircle className="w-4 h-4 text-red-500" />;
-      case 'WARNING': return <AlertTriangle className="w-4 h-4 text-amber-500" />;
-      case 'SUGGESTION': return <Info className="w-4 h-4 text-blue-500" />;
+      case 'ERROR':
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
+      case 'WARNING':
+        return <AlertTriangle className="w-4 h-4 text-amber-500" />;
+      case 'SUGGESTION':
+        return <Info className="w-4 h-4 text-blue-500" />;
     }
   };
 
   const getHealthIcon = (status: SystemHealthMetric['status']) => {
     switch (status) {
-      case 'HEALTHY': return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
-      case 'WARNING': return <AlertTriangle className="w-4 h-4 text-amber-500" />;
-      case 'CRITICAL': return <AlertCircle className="w-4 h-4 text-red-500" />;
+      case 'HEALTHY':
+        return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
+      case 'WARNING':
+        return <AlertTriangle className="w-4 h-4 text-amber-500" />;
+      case 'CRITICAL':
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
   };
 
   const getTrendIcon = (trend?: SystemHealthMetric['trend']) => {
     switch (trend) {
-      case 'UP': return <TrendingUp className="w-3 h-3 text-emerald-500" />;
-      case 'DOWN': return <TrendingDown className="w-3 h-3 text-red-500" />;
-      case 'STABLE': return <Minus className="w-3 h-3 text-zinc-500" />;
-      default: return null;
+      case 'UP':
+        return <TrendingUp className="w-3 h-3 text-emerald-500" />;
+      case 'DOWN':
+        return <TrendingDown className="w-3 h-3 text-red-500" />;
+      case 'STABLE':
+        return <Minus className="w-3 h-3 text-zinc-500" />;
+      default:
+        return null;
     }
   };
 
@@ -94,30 +106,29 @@ export function MissionControl({
       label: 'Company Configuration',
       sysCode: 'SYS_02',
       icon: <Building2 className="w-4 h-4" />,
-      route: '/sys-organization'
+      route: '/sys-organization',
     },
     {
       label: 'Access Management',
       sysCode: 'SYS_03',
       icon: <Users className="w-4 h-4" />,
-      route: '/sys-access'
+      route: '/sys-access',
     },
     {
       label: 'Employee Profile',
       sysCode: 'SYS_04',
       icon: <UserCircle className="w-4 h-4" />,
-      route: '/sys-profile'
-    }
+      route: '/sys-profile',
+    },
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 auto-rows-[200px]">
-      
       {/* PANEL 1: System Status - Large Hero (col-span-4, row-span-2) */}
       <NexusCard className="md:col-span-4 md:row-span-2 p-6 relative overflow-hidden">
         {/* Subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/5 via-transparent to-transparent pointer-events-none" />
-        
+
         <div className="relative h-full flex flex-col">
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
@@ -126,9 +137,7 @@ export function MissionControl({
                 <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
                 <h3 className="text-xl tracking-tight text-white">System Operational</h3>
               </div>
-              <p className="text-sm text-zinc-500 font-mono">
-                All services running nominally
-              </p>
+              <p className="text-sm text-zinc-500 font-mono">All services running nominally</p>
             </div>
             <div className="text-right">
               <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">
@@ -143,31 +152,30 @@ export function MissionControl({
           {/* Health Metrics Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-auto">
             {healthMetrics.map((metric) => (
-              <div 
+              <div
                 key={metric.id}
                 className="p-3 bg-[#050505] border border-[#1F1F1F] relative group hover:border-zinc-700 transition-colors"
               >
                 {/* Top highlight */}
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#333] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                
+
                 <div className="flex items-center justify-between mb-2">
                   {getHealthIcon(metric.status)}
                   {getTrendIcon(metric.trend)}
                 </div>
-                
+
                 <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider mb-1">
                   {metric.label}
                 </div>
-                <div className="text-xl tracking-tight text-white font-mono">
-                  {metric.value}
-                </div>
+                <div className="text-xl tracking-tight text-white font-mono">{metric.value}</div>
               </div>
             ))}
           </div>
 
           {/* Footer timestamp */}
           <div className="mt-4 pt-4 border-t border-[#1F1F1F] text-[10px] font-mono text-zinc-700 uppercase tracking-[0.2em]">
-            Last Config Update: {new Date(lastConfigUpdate).toLocaleDateString()} {new Date(lastConfigUpdate).toLocaleTimeString()}
+            Last Config Update: {new Date(lastConfigUpdate).toLocaleDateString()}{' '}
+            {new Date(lastConfigUpdate).toLocaleTimeString()}
           </div>
         </div>
       </NexusCard>
@@ -244,11 +252,11 @@ export function MissionControl({
                     </button>
                   )}
                 </div>
-                
+
                 <h4 className="text-sm tracking-tight text-white mb-2 line-clamp-1">
                   {announcement.title}
                 </h4>
-                
+
                 <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2">
                   {announcement.message}
                 </p>
@@ -299,7 +307,7 @@ export function MissionControl({
                     {gap.title}
                   </h4>
                 </div>
-                
+
                 <p className="text-[10px] text-zinc-600 leading-relaxed line-clamp-2 mb-2">
                   {gap.description}
                 </p>
@@ -312,7 +320,6 @@ export function MissionControl({
           </div>
         )}
       </NexusCard>
-
     </div>
   );
 }

@@ -24,9 +24,13 @@ import {
   Download,
   Shield,
   Edit2,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
-import { MOCK_ENTITY_GOVERNANCE, getEntityGovernance, computeEntityProperties } from '../data/mockEntityGovernance';
+import {
+  MOCK_ENTITY_GOVERNANCE,
+  getEntityGovernance,
+  computeEntityProperties,
+} from '../data/mockEntityGovernance';
 import type { EntityGovernance } from '../types/entity-governance';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -57,7 +61,7 @@ export function EntityMasterPage() {
   const [activeTab, setActiveTab] = useState<TabId>('profile');
   const [entity, setEntity] = useState<EntityGovernance | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
-  
+
   const [tabStates, setTabStates] = useState<Record<TabId, TabState>>({
     profile: { isDirty: false, isSaving: false, saveSuccess: false },
     ownership: { isDirty: false, isSaving: false, saveSuccess: false },
@@ -84,54 +88,54 @@ export function EntityMasterPage() {
   // ============================================================================
 
   const markTabDirty = (tabId: TabId) => {
-    setTabStates(prev => ({
+    setTabStates((prev) => ({
       ...prev,
-      [tabId]: { ...prev[tabId], isDirty: true, saveSuccess: false }
+      [tabId]: { ...prev[tabId], isDirty: true, saveSuccess: false },
     }));
   };
 
   const handleTabSave = async (tabId: TabId) => {
-    setTabStates(prev => ({
+    setTabStates((prev) => ({
       ...prev,
-      [tabId]: { ...prev[tabId], isSaving: true }
+      [tabId]: { ...prev[tabId], isSaving: true },
     }));
 
-    await new Promise(resolve => setTimeout(resolve, 1200));
+    await new Promise((resolve) => setTimeout(resolve, 1200));
 
-    setTabStates(prev => ({
+    setTabStates((prev) => ({
       ...prev,
-      [tabId]: { isDirty: false, isSaving: false, saveSuccess: true }
+      [tabId]: { isDirty: false, isSaving: false, saveSuccess: true },
     }));
 
     setTimeout(() => {
-      setTabStates(prev => ({
+      setTabStates((prev) => ({
         ...prev,
-        [tabId]: { ...prev[tabId], saveSuccess: false }
+        [tabId]: { ...prev[tabId], saveSuccess: false },
       }));
     }, 3000);
   };
 
   const handleTabRevert = (tabId: TabId) => {
-    setTabStates(prev => ({
+    setTabStates((prev) => ({
       ...prev,
-      [tabId]: { isDirty: false, isSaving: false, saveSuccess: false }
+      [tabId]: { isDirty: false, isSaving: false, saveSuccess: false },
     }));
   };
 
   const handleSaveAll = async () => {
     const dirtyTabs = Object.keys(tabStates).filter(
-      (key) => tabStates[key as TabId].isDirty
+      (key) => tabStates[key as TabId].isDirty,
     ) as TabId[];
-    
-    await Promise.all(dirtyTabs.map(tab => handleTabSave(tab)));
+
+    await Promise.all(dirtyTabs.map((tab) => handleTabSave(tab)));
   };
 
   // ============================================================================
   // COMPUTED VALUES
   // ============================================================================
 
-  const hasAnyChanges = Object.values(tabStates).some(state => state.isDirty);
-  const changedTabsCount = Object.values(tabStates).filter(state => state.isDirty).length;
+  const hasAnyChanges = Object.values(tabStates).some((state) => state.isDirty);
+  const changedTabsCount = Object.values(tabStates).filter((state) => state.isDirty).length;
 
   // ============================================================================
   // LOADING SKELETON
@@ -159,14 +163,12 @@ export function EntityMasterPage() {
   return (
     <MetaAppShell>
       <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-start p-6 pt-8 relative overflow-hidden">
-        
         {/* Ambient Background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,#0A0A0A_0%,#000000_60%)] -z-10" />
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
 
         {/* CONTAINER */}
         <div className="w-full max-w-[1280px] z-10 space-y-6">
-          
           {/* ================================================================ */}
           {/* HEADER WITH BREADCRUMB */}
           {/* ================================================================ */}
@@ -188,20 +190,21 @@ export function EntityMasterPage() {
                     <span>/</span>
                     <span className="text-white">{entity.profile.entityCode}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-3">
                     <h1 className="text-4xl tracking-tight text-white">
                       {entity.profile.legalEntityName}
                     </h1>
-                    <NexusBadge 
+                    <NexusBadge
                       variant={entity.validation.status === 'VERIFIED' ? 'success' : 'warning'}
                     >
                       {entity.validation.status}
                     </NexusBadge>
                   </div>
-                  
+
                   <p className="text-zinc-500 font-mono text-sm">
-                    {entity.profile.entityCode} · {entity.profile.countryOfIncorporation} · {entity.profile.status}
+                    {entity.profile.entityCode} · {entity.profile.countryOfIncorporation} ·{' '}
+                    {entity.profile.status}
                   </p>
                 </div>
 
@@ -229,9 +232,10 @@ export function EntityMasterPage() {
                       relative h-10 px-4 font-mono text-[10px] uppercase tracking-[0.15em]
                       border transition-all duration-200
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40
-                      ${hasAnyChanges
-                        ? 'bg-emerald-950/20 border-emerald-500 text-emerald-500 hover:bg-emerald-900/20' 
-                        : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
+                      ${
+                        hasAnyChanges
+                          ? 'bg-emerald-950/20 border-emerald-500 text-emerald-500 hover:bg-emerald-900/20'
+                          : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
                       }
                     `}
                   >
@@ -290,10 +294,7 @@ export function EntityMasterPage() {
                 className={`
                   relative px-4 py-3 font-mono text-[10px] uppercase tracking-wider
                   transition-colors focus-visible:outline-none
-                  ${activeTab === tab.id
-                    ? 'text-emerald-500' 
-                    : 'text-zinc-500 hover:text-white'
-                  }
+                  ${activeTab === tab.id ? 'text-emerald-500' : 'text-zinc-500 hover:text-white'}
                 `}
               >
                 <div className="flex items-center gap-2">
@@ -328,7 +329,7 @@ export function EntityMasterPage() {
                   tabState={tabStates.profile}
                 />
               )}
-              
+
               {activeTab === 'ownership' && (
                 <OwnershipTab
                   key="ownership"
@@ -339,7 +340,7 @@ export function EntityMasterPage() {
                   tabState={tabStates.ownership}
                 />
               )}
-              
+
               {activeTab === 'officers' && (
                 <OfficersTab
                   key="officers"
@@ -350,7 +351,7 @@ export function EntityMasterPage() {
                   tabState={tabStates.officers}
                 />
               )}
-              
+
               {activeTab === 'documents' && (
                 <DocumentsTab
                   key="documents"
@@ -370,9 +371,10 @@ export function EntityMasterPage() {
           <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A] border-t border-[#1F1F1F] z-40">
             <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
               <div className="text-[9px] text-zinc-600 font-mono">
-                Last modified: {new Date(entity.profile.lastModifiedAt).toLocaleString()} by {entity.profile.lastModifiedBy}
+                Last modified: {new Date(entity.profile.lastModifiedAt).toLocaleString()} by{' '}
+                {entity.profile.lastModifiedBy}
               </div>
-              
+
               {hasAnyChanges && (
                 <div className="flex items-center gap-2">
                   <button
@@ -418,7 +420,7 @@ function ProfileTab({
   onDirty,
   onSave,
   onRevert,
-  tabState
+  tabState,
 }: {
   entity: EntityGovernance;
   onDirty: () => void;
@@ -658,7 +660,7 @@ function OwnershipTab({
   onDirty,
   onSave,
   onRevert,
-  tabState
+  tabState,
 }: {
   entity: EntityGovernance;
   onDirty: () => void;
@@ -697,13 +699,27 @@ function OwnershipTab({
           <table className="w-full text-[10px]">
             <thead>
               <tr className="border-b border-[#1F1F1F]">
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Shareholder</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Type</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Country</th>
-                <th className="text-right py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Ownership %</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Share Class</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Related Party</th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Actions</th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Shareholder
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Type
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Country
+                </th>
+                <th className="text-right py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Ownership %
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Share Class
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Related Party
+                </th>
+                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -712,7 +728,9 @@ function OwnershipTab({
                   <td className="py-2 px-3 text-white">{sh.name}</td>
                   <td className="py-2 px-3 text-zinc-500">{sh.type}</td>
                   <td className="py-2 px-3 text-zinc-500 font-mono">{sh.country}</td>
-                  <td className="py-2 px-3 text-right text-white font-mono">{sh.ownershipPercent}%</td>
+                  <td className="py-2 px-3 text-right text-white font-mono">
+                    {sh.ownershipPercent}%
+                  </td>
                   <td className="py-2 px-3 text-zinc-500">{sh.shareClass}</td>
                   <td className="py-2 px-3">
                     <NexusBadge variant={sh.isRelatedParty ? 'warning' : 'neutral'} size="sm">
@@ -732,7 +750,10 @@ function OwnershipTab({
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-[#1F1F1F]">
-                <td colSpan={3} className="py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <td
+                  colSpan={3}
+                  className="py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600"
+                >
                   Total
                 </td>
                 <td className="py-2 px-3 text-right text-white font-mono">
@@ -777,7 +798,8 @@ function OwnershipTab({
               <option>None</option>
             </select>
             <div className="text-[9px] text-zinc-600 mt-1">
-              Suggested: {entity.consolidation.suggestedMethod} (based on {entity.consolidation.totalParentOwnership}% ownership)
+              Suggested: {entity.consolidation.suggestedMethod} (based on{' '}
+              {entity.consolidation.totalParentOwnership}% ownership)
             </div>
           </div>
           <div>
@@ -907,7 +929,7 @@ function OfficersTab({
   onDirty,
   onSave,
   onRevert,
-  tabState
+  tabState,
 }: {
   entity: EntityGovernance;
   onDirty: () => void;
@@ -927,7 +949,7 @@ function OfficersTab({
         className="col-span-12 md:col-span-6"
         icon={Shield}
         title="Legal Representatives"
-        subtitle={`${entity.legalRepresentatives.filter(r => r.isActive).length} active`}
+        subtitle={`${entity.legalRepresentatives.filter((r) => r.isActive).length} active`}
         compact
         headerActions={
           <button
@@ -943,16 +965,25 @@ function OfficersTab({
         onRevert={onRevert}
       >
         <div className="space-y-2">
-          {entity.legalRepresentatives.filter(r => r.isActive).map((rep, idx) => (
-            <div key={idx} className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-white">{rep.personName}</span>
-                <NexusBadge variant="success" size="sm">Active</NexusBadge>
+          {entity.legalRepresentatives
+            .filter((r) => r.isActive)
+            .map((rep, idx) => (
+              <div
+                key={idx}
+                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] text-white">{rep.personName}</span>
+                  <NexusBadge variant="success" size="sm">
+                    Active
+                  </NexusBadge>
+                </div>
+                <div className="text-[9px] text-zinc-600">{rep.roleTitle}</div>
+                <div className="text-[9px] text-zinc-600 font-mono">
+                  Since: {rep.appointmentDate}
+                </div>
               </div>
-              <div className="text-[9px] text-zinc-600">{rep.roleTitle}</div>
-              <div className="text-[9px] text-zinc-600 font-mono">Since: {rep.appointmentDate}</div>
-            </div>
-          ))}
+            ))}
         </div>
       </CardSection>
 
@@ -961,7 +992,7 @@ function OfficersTab({
         className="col-span-12 md:col-span-6"
         icon={Users}
         title="Board of Directors"
-        subtitle={`${entity.board.filter(b => b.isActive).length} active directors`}
+        subtitle={`${entity.board.filter((b) => b.isActive).length} active directors`}
         compact
         headerActions={
           <button
@@ -977,24 +1008,33 @@ function OfficersTab({
         onRevert={onRevert}
       >
         <div className="space-y-2">
-          {entity.board.filter(b => b.isActive).map((director, idx) => (
-            <div key={idx} className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-white">{director.personName}</span>
-                <div className="flex items-center gap-1">
-                  <NexusBadge variant="neutral" size="sm">{director.role}</NexusBadge>
-                  {director.isIndependent && (
-                    <NexusBadge variant="success" size="sm">Ind.</NexusBadge>
-                  )}
+          {entity.board
+            .filter((b) => b.isActive)
+            .map((director, idx) => (
+              <div
+                key={idx}
+                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] text-white">{director.personName}</span>
+                  <div className="flex items-center gap-1">
+                    <NexusBadge variant="neutral" size="sm">
+                      {director.role}
+                    </NexusBadge>
+                    {director.isIndependent && (
+                      <NexusBadge variant="success" size="sm">
+                        Ind.
+                      </NexusBadge>
+                    )}
+                  </div>
                 </div>
+                {director.committeeRoles.length > 0 && (
+                  <div className="text-[9px] text-zinc-600">
+                    Committees: {director.committeeRoles.join(', ')}
+                  </div>
+                )}
               </div>
-              {director.committeeRoles.length > 0 && (
-                <div className="text-[9px] text-zinc-600">
-                  Committees: {director.committeeRoles.join(', ')}
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
         </div>
       </CardSection>
 
@@ -1003,7 +1043,7 @@ function OfficersTab({
         className="col-span-12 md:col-span-6"
         icon={Users}
         title="Key Officers"
-        subtitle={`${entity.keyOfficers.filter(o => o.isActive).length} active`}
+        subtitle={`${entity.keyOfficers.filter((o) => o.isActive).length} active`}
         compact
         headerActions={
           <button
@@ -1019,15 +1059,24 @@ function OfficersTab({
         onRevert={onRevert}
       >
         <div className="space-y-2">
-          {entity.keyOfficers.filter(o => o.isActive).map((officer, idx) => (
-            <div key={idx} className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-white">{officer.personName}</span>
-                <NexusBadge variant="neutral" size="sm">{officer.role}</NexusBadge>
+          {entity.keyOfficers
+            .filter((o) => o.isActive)
+            .map((officer, idx) => (
+              <div
+                key={idx}
+                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] text-white">{officer.personName}</span>
+                  <NexusBadge variant="neutral" size="sm">
+                    {officer.role}
+                  </NexusBadge>
+                </div>
+                <div className="text-[9px] text-zinc-600 font-mono">
+                  Since: {officer.appointmentDate}
+                </div>
               </div>
-              <div className="text-[9px] text-zinc-600 font-mono">Since: {officer.appointmentDate}</div>
-            </div>
-          ))}
+            ))}
         </div>
       </CardSection>
 
@@ -1053,17 +1102,26 @@ function OfficersTab({
       >
         <div className="space-y-2">
           {entity.principalBanks.map((bank, idx) => (
-            <div key={idx} className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors">
+            <div
+              key={idx}
+              className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+            >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] text-white">{bank.bankName}</span>
                 <div className="flex items-center gap-1">
-                  <NexusBadge variant="neutral" size="sm">{bank.relationshipType}</NexusBadge>
+                  <NexusBadge variant="neutral" size="sm">
+                    {bank.relationshipType}
+                  </NexusBadge>
                   {bank.isPrimaryBank && (
-                    <NexusBadge variant="success" size="sm">Primary</NexusBadge>
+                    <NexusBadge variant="success" size="sm">
+                      Primary
+                    </NexusBadge>
                   )}
                 </div>
               </div>
-              <div className="text-[9px] text-zinc-600">{bank.branch} · {bank.country}</div>
+              <div className="text-[9px] text-zinc-600">
+                {bank.branch} · {bank.country}
+              </div>
               {bank.accountNumber && (
                 <div className="text-[9px] text-zinc-600 font-mono">A/C: {bank.accountNumber}</div>
               )}
@@ -1084,7 +1142,7 @@ function DocumentsTab({
   onDirty,
   onSave,
   onRevert,
-  tabState
+  tabState,
 }: {
   entity: EntityGovernance;
   onDirty: () => void;
@@ -1123,11 +1181,21 @@ function DocumentsTab({
           <table className="w-full text-[10px]">
             <thead>
               <tr className="border-b border-[#1F1F1F]">
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Document Type</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Name</th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Uploaded</th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Verified</th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">Actions</th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Document Type
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Name
+                </th>
+                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Uploaded
+                </th>
+                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Verified
+                </th>
+                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -1144,9 +1212,7 @@ function DocumentsTab({
                     </NexusBadge>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <button
-                      className="text-emerald-500 hover:text-emerald-400 p-1 focus-visible:outline-none focus-visible:text-emerald-400"
-                    >
+                    <button className="text-emerald-500 hover:text-emerald-400 p-1 focus-visible:outline-none focus-visible:text-emerald-400">
                       <Download className="w-3 h-3" />
                     </button>
                   </td>
@@ -1164,9 +1230,7 @@ function DocumentsTab({
         title="Validation Status"
         compact
         badge={
-          <NexusBadge 
-            variant={entity.validation.status === 'VERIFIED' ? 'success' : 'warning'}
-          >
+          <NexusBadge variant={entity.validation.status === 'VERIFIED' ? 'success' : 'warning'}>
             {entity.validation.status}
           </NexusBadge>
         }
@@ -1182,9 +1246,11 @@ function DocumentsTab({
             <div className="space-y-1.5">
               <div className="flex justify-between text-[10px]">
                 <span className="text-zinc-600">Status</span>
-                <span className={`font-mono ${
-                  entity.validation.status === 'VERIFIED' ? 'text-emerald-500' : 'text-amber-500'
-                }`}>
+                <span
+                  className={`font-mono ${
+                    entity.validation.status === 'VERIFIED' ? 'text-emerald-500' : 'text-amber-500'
+                  }`}
+                >
                   {entity.validation.status}
                 </span>
               </div>
@@ -1201,7 +1267,8 @@ function DocumentsTab({
                   <div className="flex justify-between text-[10px]">
                     <span className="text-zinc-600">Verified At</span>
                     <span className="text-white font-mono text-[9px]">
-                      {entity.validation.verifiedAt && new Date(entity.validation.verifiedAt).toLocaleDateString()}
+                      {entity.validation.verifiedAt &&
+                        new Date(entity.validation.verifiedAt).toLocaleDateString()}
                     </span>
                   </div>
                 </>
@@ -1230,9 +1297,7 @@ function DocumentsTab({
           {entity.validation.status === 'VERIFIED' && (
             <div className="p-3 border border-emerald-500/40 bg-emerald-950/10">
               <div className="text-[10px] text-emerald-500 mb-1">✓ Entity Verified</div>
-              <div className="text-[9px] text-zinc-600">
-                Can be included in consolidation scope
-              </div>
+              <div className="text-[9px] text-zinc-600">Can be included in consolidation scope</div>
             </div>
           )}
         </div>

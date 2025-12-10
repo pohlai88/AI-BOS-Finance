@@ -8,7 +8,6 @@ interface MetaPageSkeletonProps {
 }
 
 export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps) {
-  
   // Shared skeleton block component
   const Block = ({ className = '', height = 'h-4' }: { className?: string; height?: string }) => (
     <div className={`bg-[#0A0A0A] border border-[#1F1F1F] ${height} ${className} animate-pulse`}>
@@ -20,7 +19,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
     return (
       <div className="px-12 py-[80px]">
         <div className="max-w-[1600px] mx-auto">
-          
           {/* Header Skeleton */}
           <div className="mb-24 border-b border-[#1F1F1F] pb-8">
             <Block height="h-3" className="w-48 mb-4" />
@@ -51,7 +49,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
             <Block height="h-48" />
             <Block height="h-48" />
           </div>
-
         </div>
       </div>
     );
@@ -61,7 +58,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
     return (
       <div className="px-12 py-[80px]">
         <div className="max-w-[1600px] mx-auto">
-          
           {/* Header */}
           <div className="mb-16">
             <Block height="h-3" className="w-48 mb-4" />
@@ -84,7 +80,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
               <Block key={i} height="h-48" />
             ))}
           </div>
-
         </div>
       </div>
     );
@@ -93,7 +88,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
   if (variant === 'table') {
     return (
       <div className="h-screen flex flex-col">
-        
         {/* Toolbar */}
         <div className="h-14 border-b border-[#1F1F1F] flex items-center px-6 gap-4 shrink-0">
           <Block height="h-8" className="w-48" />
@@ -124,7 +118,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
             </div>
           ))}
         </div>
-
       </div>
     );
   }
@@ -132,7 +125,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
   if (variant === 'interactive') {
     return (
       <div className="h-screen flex flex-col p-8">
-        
         {/* Header */}
         <div className="mb-8">
           <Block height="h-3" className="w-48 mb-4" />
@@ -141,7 +133,6 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
 
         {/* Interactive Area */}
         <div className="flex-1 flex gap-8">
-          
           {/* Left Panel */}
           <div className="w-80 space-y-4">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -153,9 +144,7 @@ export function MetaPageSkeleton({ variant = 'document' }: MetaPageSkeletonProps
           <div className="flex-1">
             <Block height="h-full" />
           </div>
-
         </div>
-
       </div>
     );
   }

@@ -25,11 +25,13 @@ export function SysConfigProvider({ children }: { children: ReactNode }) {
   // Initialize from localStorage if available, otherwise default
   const [steps, setSteps] = useState(() => {
     const saved = localStorage.getItem('nexus_sys_config');
-    return saved ? JSON.parse(saved) : {
-      profile: false,
-      organization: false,
-      team: false
-    };
+    return saved
+      ? JSON.parse(saved)
+      : {
+          profile: false,
+          organization: false,
+          team: false,
+        };
   });
 
   // Persist to localStorage on change
@@ -38,7 +40,7 @@ export function SysConfigProvider({ children }: { children: ReactNode }) {
   }, [steps]);
 
   const markComplete = (step: ConfigStep) => {
-    setSteps(prev => {
+    setSteps((prev) => {
       if (prev[step]) return prev; // No change
       return { ...prev, [step]: true };
     });
@@ -48,9 +50,9 @@ export function SysConfigProvider({ children }: { children: ReactNode }) {
     setSteps({
       profile: true, // Assuming defaults fills profile too for demo
       organization: true,
-      team: false // Team is usually manual
+      team: false, // Team is usually manual
     });
-    toast.success("System defaults applied successfully.");
+    toast.success('System defaults applied successfully.');
   };
 
   const isFullyConfigured = steps.profile && steps.organization;

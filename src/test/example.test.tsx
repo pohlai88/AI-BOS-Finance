@@ -24,4 +24,3 @@ describe('React rendering', () => {
     expect(screen.getByTestId('test')).toHaveTextContent('NexusCanon');
   });
 });
-

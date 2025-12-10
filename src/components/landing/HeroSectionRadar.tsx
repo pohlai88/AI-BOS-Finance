@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from 'motion/react';
 
 export const BlackboxRadar = () => {
   return (
@@ -7,10 +7,7 @@ export const BlackboxRadar = () => {
       <div className="w-full">
         <div className="relative w-full aspect-square mx-auto rounded-2xl border border-white/10 bg-[#0A0A0A] p-8 lg:p-12 overflow-hidden">
           {/* Radar SVG - CRYPTOGRAPHIC CLARITY */}
-          <svg
-            viewBox="0 0 400 400"
-            className="w-full h-full relative z-10"
-          >
+          <svg viewBox="0 0 400 400" className="w-full h-full relative z-10">
             {/* SHARP GRID LAYER - No blur, 1px crisp vectors */}
             <g>
               {/* Concentric Circles - The Web Structure (SHARP) */}
@@ -25,21 +22,14 @@ export const BlackboxRadar = () => {
                   strokeWidth="1"
                   strokeDasharray="8,4"
                   animate={{
-                    r: [
-                      radius,
-                      radius,
-                      radius,
-                      radius + 4,
-                      radius - 3,
-                      radius,
-                    ],
+                    r: [radius, radius, radius, radius + 4, radius - 3, radius],
                     strokeWidth: [1, 1, 1, 2, 1, 1],
                   }}
                   transition={{
                     duration: 4,
                     times: [0, 0.49, 0.5, 0.505, 0.515, 0.53],
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: 'linear',
                   }}
                 />
               ))}
@@ -49,23 +39,23 @@ export const BlackboxRadar = () => {
             {[
               {
                 angle: 0,
-                label: "IFRS",
-                color: "rgba(74, 222, 128, 0.5)",
+                label: 'IFRS',
+                color: 'rgba(74, 222, 128, 0.5)',
               },
               {
                 angle: 90,
-                label: "SOX",
-                color: "rgba(74, 222, 128, 0.5)",
+                label: 'SOX',
+                color: 'rgba(74, 222, 128, 0.5)',
               },
               {
                 angle: 180,
-                label: "COSO",
-                color: "rgba(74, 222, 128, 0.5)",
+                label: 'COSO',
+                color: 'rgba(74, 222, 128, 0.5)',
               },
               {
                 angle: 270,
-                label: "TAX",
-                color: "rgba(74, 222, 128, 0.5)",
+                label: 'TAX',
+                color: 'rgba(74, 222, 128, 0.5)',
               },
             ].map((pillar, i) => {
               const rad = (pillar.angle * Math.PI) / 180;
@@ -137,7 +127,7 @@ export const BlackboxRadar = () => {
                 duration: 4,
                 times: [0, 0.51, 0.7, 1],
                 repeat: Infinity,
-                ease: "easeOut",
+                ease: 'easeOut',
               }}
             />
 
@@ -162,15 +152,14 @@ export const BlackboxRadar = () => {
 
             {/* THE REACTOR CORE - Center Hub */}
             <g transform="translate(200, 200)">
-              
               {/* 1. THE BLACKOUT PLATE (The Fix) */}
               {/* This solid circle hides the grid lines behind the number, preventing the "messy" look */}
               <circle
                 cx="0"
                 cy="0"
-                r="50" 
-                fill="#0A0A0A" 
-                stroke="rgba(74, 222, 128, 0.3)" 
+                r="50"
+                fill="#0A0A0A"
+                stroke="rgba(74, 222, 128, 0.3)"
                 strokeWidth="1.5"
               />
 
@@ -182,13 +171,13 @@ export const BlackboxRadar = () => {
                 fill="none"
                 stroke="rgba(74, 222, 128, 0.1)"
                 strokeWidth="1.5"
-                strokeDasharray="3, 3" 
+                strokeDasharray="3, 3"
               />
 
               {/* 3. THE NUMBER (Balanced proportions) */}
               <text
                 x="0"
-                y="8" 
+                y="8"
                 textAnchor="middle"
                 fill="white"
                 fontSize="42"
@@ -231,19 +220,18 @@ export const BlackboxRadar = () => {
             {/* DUAL-SCAN MECHANICS: Gradients */}
             <defs>
               <radialGradient id="scanBeamInner">
-                <stop
-                  offset="0%"
-                  stopColor="rgba(74, 222, 128, 0.5)"
-                />
-                <stop
-                  offset="100%"
-                  stopColor="rgba(74, 222, 128, 0)"
-                />
+                <stop offset="0%" stopColor="rgba(74, 222, 128, 0.5)" />
+                <stop offset="100%" stopColor="rgba(74, 222, 128, 0)" />
               </radialGradient>
-              
+
               {/* REFINEMENT 3: OPTICAL LENS ARTIFACTS */}
               <filter id="noiseFilter">
-                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.65"
+                  numOctaves="3"
+                  stitchTiles="stitch"
+                />
               </filter>
               <radialGradient id="vignette">
                 <stop offset="70%" stopColor="transparent" />
@@ -262,15 +250,15 @@ export const BlackboxRadar = () => {
                 stroke="rgba(59, 130, 246, 0.3)"
                 strokeWidth="2"
                 strokeDasharray="2, 8, 15, 8, 2, 30"
-                style={{ transformOrigin: "200px 200px" }}
+                style={{ transformOrigin: '200px 200px' }}
                 animate={{ rotate: -360 }}
                 transition={{
                   duration: 20,
                   repeat: Infinity,
-                  ease: "linear",
+                  ease: 'linear',
                 }}
               />
-              
+
               {/* Inner Decoder Ring */}
               <motion.circle
                 cx="200"
@@ -280,12 +268,12 @@ export const BlackboxRadar = () => {
                 stroke="rgba(59, 130, 246, 0.15)"
                 strokeWidth="4"
                 strokeDasharray="40, 40"
-                style={{ transformOrigin: "200px 200px" }}
+                style={{ transformOrigin: '200px 200px' }}
                 animate={{ rotate: 360 }}
                 transition={{
                   duration: 15,
                   repeat: Infinity,
-                  ease: "linear",
+                  ease: 'linear',
                 }}
               />
             </g>
@@ -295,12 +283,12 @@ export const BlackboxRadar = () => {
               d="M200,200 L200,0 A200,200 0 0,1 341.4,58.6 Z"
               fill="url(#scanBeamInner)"
               opacity="0.7"
-              style={{ transformOrigin: "200px 200px" }}
+              style={{ transformOrigin: '200px 200px' }}
               animate={{ rotate: 360 }}
               transition={{
                 duration: 4,
                 repeat: Infinity,
-                ease: "linear",
+                ease: 'linear',
               }}
             />
 
@@ -309,29 +297,29 @@ export const BlackboxRadar = () => {
               {
                 angle: 45,
                 radius: 140,
-                severity: "low",
-                label: "Rev Timing",
+                severity: 'low',
+                label: 'Rev Timing',
                 delay: 0,
               },
               {
                 angle: 120,
                 radius: 100,
-                severity: "medium",
-                label: "COGS Drift",
+                severity: 'medium',
+                label: 'COGS Drift',
                 delay: 0.5,
               },
               {
                 angle: 200,
                 radius: 170,
-                severity: "critical",
-                label: "SOX Gap",
+                severity: 'critical',
+                label: 'SOX Gap',
                 delay: 1,
               },
               {
                 angle: 310,
                 radius: 130,
-                severity: "high",
-                label: "Tax Mismatch",
+                severity: 'high',
+                label: 'Tax Mismatch',
                 delay: 1.5,
               },
             ].map((blip, i) => {
@@ -341,27 +329,24 @@ export const BlackboxRadar = () => {
 
               const severityColors = {
                 low: {
-                  fill: "rgba(74, 222, 128, 1)",
-                  stroke: "rgba(74, 222, 128, 1)",
+                  fill: 'rgba(74, 222, 128, 1)',
+                  stroke: 'rgba(74, 222, 128, 1)',
                 },
                 medium: {
-                  fill: "rgba(251, 191, 36, 1)",
-                  stroke: "rgba(251, 191, 36, 1)",
+                  fill: 'rgba(251, 191, 36, 1)',
+                  stroke: 'rgba(251, 191, 36, 1)',
                 },
                 high: {
-                  fill: "rgba(249, 115, 22, 1)",
-                  stroke: "rgba(249, 115, 22, 1)",
+                  fill: 'rgba(249, 115, 22, 1)',
+                  stroke: 'rgba(249, 115, 22, 1)',
                 },
                 critical: {
-                  fill: "rgba(239, 68, 68, 1)",
-                  stroke: "rgba(239, 68, 68, 1)",
+                  fill: 'rgba(239, 68, 68, 1)',
+                  stroke: 'rgba(239, 68, 68, 1)',
                 },
               };
 
-              const color =
-                severityColors[
-                  blip.severity as keyof typeof severityColors
-                ];
+              const color = severityColors[blip.severity as keyof typeof severityColors];
 
               return (
                 <g key={`blip-${i}`}>
@@ -407,7 +392,7 @@ export const BlackboxRadar = () => {
                   />
 
                   {/* GLITCH EFFECT - SHARP DISTORTION for Critical */}
-                  {blip.severity === "critical" && (
+                  {blip.severity === 'critical' && (
                     <>
                       {/* Glitch Line 1 */}
                       <motion.rect
@@ -422,12 +407,9 @@ export const BlackboxRadar = () => {
                         }}
                         transition={{
                           duration: 4,
-                          times: [
-                            0, 0.48, 0.49, 0.5, 0.51, 0.52,
-                            0.53, 1,
-                          ],
+                          times: [0, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 1],
                           repeat: Infinity,
-                          ease: "linear",
+                          ease: 'linear',
                         }}
                       />
                       {/* Glitch Line 2 */}
@@ -443,12 +425,9 @@ export const BlackboxRadar = () => {
                         }}
                         transition={{
                           duration: 4,
-                          times: [
-                            0, 0.49, 0.5, 0.505, 0.515, 0.525,
-                            0.53, 1,
-                          ],
+                          times: [0, 0.49, 0.5, 0.505, 0.515, 0.525, 0.53, 1],
                           repeat: Infinity,
-                          ease: "linear",
+                          ease: 'linear',
                         }}
                       />
 
@@ -469,7 +448,7 @@ export const BlackboxRadar = () => {
                           duration: 4,
                           times: [0, 0.49, 0.5, 0.51, 0.53],
                           repeat: Infinity,
-                          ease: "easeOut",
+                          ease: 'easeOut',
                         }}
                       />
                     </>
@@ -517,82 +496,86 @@ export const BlackboxRadar = () => {
           </div>
 
           {/* Event Feed - Rolling Log */}
-          <div className="space-y-4 font-mono flex-1">{[
+          <div className="space-y-4 font-mono flex-1">
+            {[
               {
-                time: "14:32:01",
-                severity: "INFO",
-                msg: "Scan initiated on IFRS quadrant",
+                time: '14:32:01',
+                severity: 'INFO',
+                msg: 'Scan initiated on IFRS quadrant',
                 delay: 0,
               },
               {
-                time: "14:32:03",
-                severity: "WARN",
-                msg: "Revenue timing variance detected",
+                time: '14:32:03',
+                severity: 'WARN',
+                msg: 'Revenue timing variance detected',
                 delay: 0.5,
               },
               {
-                time: "14:32:05",
-                severity: "WARN",
-                msg: "COGS metadata drift +2.3%",
+                time: '14:32:05',
+                severity: 'WARN',
+                msg: 'COGS metadata drift +2.3%',
                 delay: 1,
               },
               {
-                time: "14:32:08",
-                severity: "CRITICAL",
-                msg: "SOX 404 control gap identified",
+                time: '14:32:08',
+                severity: 'CRITICAL',
+                msg: 'SOX 404 control gap identified',
                 delay: 1.5,
               },
               {
-                time: "14:32:11",
-                severity: "ERROR",
-                msg: "Tax jurisdiction mismatch",
+                time: '14:32:11',
+                severity: 'ERROR',
+                msg: 'Tax jurisdiction mismatch',
                 delay: 2,
               },
               {
-                time: "14:32:14",
-                severity: "RESOLVING",
-                msg: "MCP Agent analyzing SOX gap...",
+                time: '14:32:14',
+                severity: 'RESOLVING',
+                msg: 'MCP Agent analyzing SOX gap...',
                 delay: 2.5,
               },
               {
-                time: "14:32:16",
-                severity: "SUCCESS",
-                msg: "Canon lock applied to revenue stream",
+                time: '14:32:16',
+                severity: 'SUCCESS',
+                msg: 'Canon lock applied to revenue stream',
                 delay: 3,
               },
               {
-                time: "14:32:19",
-                severity: "INFO",
-                msg: "Cross-reference check complete",
+                time: '14:32:19',
+                severity: 'INFO',
+                msg: 'Cross-reference check complete',
                 delay: 3.5,
               },
             ].map((event, i) => {
               const severityColors = {
-                INFO: "text-gray-400",
-                WARN: "text-yellow-400",
-                ERROR: "text-orange-400",
-                CRITICAL: "text-red-400",
-                RESOLVING: "text-blue-400",
-                SUCCESS: "text-green-400",
+                INFO: 'text-gray-400',
+                WARN: 'text-yellow-400',
+                ERROR: 'text-orange-400',
+                CRITICAL: 'text-red-400',
+                RESOLVING: 'text-blue-400',
+                SUCCESS: 'text-green-400',
               };
 
               const severityBorders = {
-                INFO: "border-gray-400",
-                WARN: "border-yellow-400",
-                ERROR: "border-orange-400",
-                CRITICAL: "border-red-400",
-                RESOLVING: "border-blue-400",
-                SUCCESS: "border-green-400",
+                INFO: 'border-gray-400',
+                WARN: 'border-yellow-400',
+                ERROR: 'border-orange-400',
+                CRITICAL: 'border-red-400',
+                RESOLVING: 'border-blue-400',
+                SUCCESS: 'border-green-400',
               };
 
               return (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: event.severity === "CRITICAL" ? [1, 0.7, 1] : 1, x: 0 }}
-                  transition={{ 
+                  animate={{ opacity: event.severity === 'CRITICAL' ? [1, 0.7, 1] : 1, x: 0 }}
+                  transition={{
                     delay: i * 0.1,
-                    opacity: { duration: event.severity === "CRITICAL" ? 0.6 : 0, repeat: event.severity === "CRITICAL" ? Infinity : 0 }
+                    opacity: {
+                      duration: event.severity === 'CRITICAL' ? 0.6 : 0,
+                      repeat: event.severity === 'CRITICAL' ? Infinity : 0,
+                    },
                   }}
                   className={`
                     p-3 border-l-2 ${severityBorders[event.severity as keyof typeof severityBorders]}
@@ -600,9 +583,7 @@ export const BlackboxRadar = () => {
                   `}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-white/60 min-w-[72px] font-semibold">
-                      {event.time}
-                    </span>
+                    <span className="text-white/60 min-w-[72px] font-semibold">{event.time}</span>
                     <span
                       className={`${severityColors[event.severity as keyof typeof severityColors]} font-bold min-w-[90px]`}
                     >

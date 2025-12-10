@@ -84,9 +84,10 @@ export function ImplementationPlaybookPage() {
             <div>
               <h3 className="text-white font-medium mb-2">The Dragon Boat Principle</h3>
               <p className="text-[#888] text-sm leading-relaxed">
-                Implementing NexusCanon is like getting a misaligned crew to row in sync. At first, teams pull in
-                different directions (Finance wants IFRS, Tax wants local GAAP, IT wants &quot;whatever works&quot;). Through the 4
-                phases below, we achieve synchronized commitment—everyone rowing to the same beat, toward the same
+                Implementing NexusCanon is like getting a misaligned crew to row in sync. At first,
+                teams pull in different directions (Finance wants IFRS, Tax wants local GAAP, IT
+                wants &quot;whatever works&quot;). Through the 4 phases below, we achieve
+                synchronized commitment—everyone rowing to the same beat, toward the same
                 destination.
               </p>
             </div>
@@ -98,8 +99,8 @@ export function ImplementationPlaybookPage() {
           </div>
 
           <div className="mt-4 text-xs text-[#666] text-center">
-            Watch the journey from discord (red) → recalibration (circular drift) → synchronization (green) → victory
-            (sunrise)
+            Watch the journey from discord (red) → recalibration (circular drift) → synchronization
+            (green) → victory (sunrise)
           </div>
         </div>
 
@@ -107,7 +108,9 @@ export function ImplementationPlaybookPage() {
         <div className="mt-12">
           <h2 className="text-white font-medium mb-6 flex items-center gap-2">
             The 4-Phase Journey
-            <span className="text-[10px] font-mono text-[#666] uppercase tracking-wider">12-18 Week Timeline</span>
+            <span className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+              12-18 Week Timeline
+            </span>
           </h2>
 
           <div className="space-y-6">
@@ -199,14 +202,16 @@ export function ImplementationPlaybookPage() {
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5">
               <div className="text-2xl text-[#28E7A2] font-mono mb-2">{'<'}5 Min</div>
               <div className="text-sm text-[#888]">
-                Time to answer &quot;What does this field mean?&quot; with full audit trail and evidence.
+                Time to answer &quot;What does this field mean?&quot; with full audit trail and
+                evidence.
               </div>
             </div>
 
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-5">
               <div className="text-2xl text-[#28E7A2] font-mono mb-2">100%</div>
               <div className="text-sm text-[#888]">
-                Confidence that reports, dashboards, and analytics reference the same canonical truth.
+                Confidence that reports, dashboards, and analytics reference the same canonical
+                truth.
               </div>
             </div>
           </div>
@@ -219,9 +224,12 @@ export function ImplementationPlaybookPage() {
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 mt-1.5" />
               <div>
-                <div className="text-sm text-white font-medium mb-1">Skipping Stakeholder Alignment</div>
+                <div className="text-sm text-white font-medium mb-1">
+                  Skipping Stakeholder Alignment
+                </div>
                 <div className="text-sm text-[#888]">
-                  Canon only works if Finance, Tax, and IT agree on definitions. Start with workshops, not tech.
+                  Canon only works if Finance, Tax, and IT agree on definitions. Start with
+                  workshops, not tech.
                 </div>
               </div>
             </div>
@@ -231,8 +239,8 @@ export function ImplementationPlaybookPage() {
               <div>
                 <div className="text-sm text-white font-medium mb-1">Trying to Boil the Ocean</div>
                 <div className="text-sm text-[#888]">
-                  Don&apos;t migrate 10,000 metadata records on day one. Start with 10 critical fields (e.g., Revenue,
-                  COGS), prove value, then scale.
+                  Don&apos;t migrate 10,000 metadata records on day one. Start with 10 critical
+                  fields (e.g., Revenue, COGS), prove value, then scale.
                 </div>
               </div>
             </div>
@@ -240,9 +248,12 @@ export function ImplementationPlaybookPage() {
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 mt-1.5" />
               <div>
-                <div className="text-sm text-white font-medium mb-1">Ignoring Governance Ownership</div>
+                <div className="text-sm text-white font-medium mb-1">
+                  Ignoring Governance Ownership
+                </div>
                 <div className="text-sm text-[#888]">
-                  Every Canon record needs an owner. Without clear accountability, definitions drift back to chaos.
+                  Every Canon record needs an owner. Without clear accountability, definitions drift
+                  back to chaos.
                 </div>
               </div>
             </div>
@@ -253,8 +264,8 @@ export function ImplementationPlaybookPage() {
         <div className="mt-12 bg-[#28E7A2]/5 border border-[#28E7A2]/20 rounded p-6 text-center">
           <h3 className="text-white font-medium text-lg mb-2">Ready to Start?</h3>
           <p className="text-[#888] text-sm mb-6 max-w-2xl mx-auto">
-            The playbook above is the proven path. Most organizations achieve Phase 4 (Synchronized Commitment) in 12-18
-            weeks. Book a discovery workshop to map your Canon hierarchy.
+            The playbook above is the proven path. Most organizations achieve Phase 4 (Synchronized
+            Commitment) in 12-18 weeks. Book a discovery workshop to map your Canon hierarchy.
           </p>
           <button className="px-6 py-3 bg-[#28E7A2] text-black font-medium rounded hover:bg-[#28E7A2]/90 transition-colors">
             Schedule Discovery Workshop

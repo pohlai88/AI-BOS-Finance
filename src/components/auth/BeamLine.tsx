@@ -18,7 +18,7 @@ export const BeamLine = ({ isActive = false, className = '' }: BeamLineProps) =>
 
   // Reset animation when isActive changes
   useEffect(() => {
-    setPulseKey(prev => prev + 1);
+    setPulseKey((prev) => prev + 1);
   }, [isActive]);
 
   // Colors
@@ -28,7 +28,7 @@ export const BeamLine = ({ isActive = false, className = '' }: BeamLineProps) =>
   return (
     <div className={`relative h-[2px] w-full overflow-hidden ${className}`}>
       {/* Base line (structure) */}
-      <div 
+      <div
         className="absolute inset-0"
         style={{ backgroundColor: 'var(--prism-structure-primary)' }}
       />

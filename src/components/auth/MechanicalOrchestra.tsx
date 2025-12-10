@@ -11,12 +11,12 @@ import { useMemo } from 'react';
 // --- UTILITY: POLAR TO CARTESIAN CONVERSION ---
 // Aerospace-grade coordinate mathematics
 const polarToCartesian = (
-  centerX: number, 
-  centerY: number, 
-  radius: number, 
-  angleInDegrees: number
+  centerX: number,
+  centerY: number,
+  radius: number,
+  angleInDegrees: number,
 ) => {
-  const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
   return {
     x: centerX + radius * Math.cos(angleInRadians),
     y: centerY + radius * Math.sin(angleInRadians),
@@ -30,125 +30,133 @@ const describeArc = (
   y: number,
   radius: number,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
 ) => {
   const start = polarToCartesian(x, y, radius, endAngle);
   const end = polarToCartesian(x, y, radius, startAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-  return [
-    'M', start.x, start.y,
-    'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y,
-  ].join(' ');
+  return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(' ');
 };
 
 export const MechanicalOrchestra = () => {
   // --- COLOR PALETTE ---
   // Lynx Codex canonical colors
   const COLORS = {
-    amber: '#FFBF00',    // Construction/Manufacturing
-    cyan: '#00D9FF',     // Operations/Logistics
-    magenta: '#FF00AA',  // Innovation/R&D
-    nexus: '#28E7A2',    // Central Convergence
-    void: '#000000',     // The Void
+    amber: '#FFBF00', // Construction/Manufacturing
+    cyan: '#00D9FF', // Operations/Logistics
+    magenta: '#FF00AA', // Innovation/R&D
+    nexus: '#28E7A2', // Central Convergence
+    void: '#000000', // The Void
     structure: '#1F1F1F', // Dark Matter
-    grid: '#0F0F0F',     // Sub-grid
+    grid: '#0F0F0F', // Sub-grid
   };
 
   // --- HARMONIC RATIOS ---
   // Mathematical relationships for synchronized motion
   // All speeds are related by perfect ratios (Golden Ratio, Fibonacci)
   const MOTION = {
-    masterClock: 60,      // Base rotation (seconds)
-    amber: 60,            // 1:1 ratio
-    amberInner: 40,       // 1.5:1 ratio
-    cyan: 4,              // Piston cycle
-    magenta: 50,          // Orbital outer
-    magentaInner: 35,     // Orbital inner  
-    nexus: 30,            // Central core
-    conductor: 12,        // Scanning beam
+    masterClock: 60, // Base rotation (seconds)
+    amber: 60, // 1:1 ratio
+    amberInner: 40, // 1.5:1 ratio
+    cyan: 4, // Piston cycle
+    magenta: 50, // Orbital outer
+    magentaInner: 35, // Orbital inner
+    nexus: 30, // Central core
+    conductor: 12, // Scanning beam
   };
 
   // --- MEMOIZED GEOMETRY ---
   // Pre-calculate all tick marks, scales, and coordinate systems
-  
+
   // AMBER ENGINE: 60 precision tick marks (like a watch bezel)
-  const amberTicks = useMemo(() => 
-    Array.from({ length: 60 }).map((_, i) => {
-      const angle = (i / 60) * 360;
-      const isMajor = i % 5 === 0;
-      const r1 = 120;
-      const r2 = isMajor ? 108 : 113;
-      const start = polarToCartesian(140, 140, r1, angle);
-      const end = polarToCartesian(140, 140, r2, angle);
-      return { 
-        x1: start.x, y1: start.y, 
-        x2: end.x, y2: end.y, 
-        isMajor,
-        label: isMajor ? (i * 6).toString() : null, // 0, 30, 60...330
-      };
-    }), []
+  const amberTicks = useMemo(
+    () =>
+      Array.from({ length: 60 }).map((_, i) => {
+        const angle = (i / 60) * 360;
+        const isMajor = i % 5 === 0;
+        const r1 = 120;
+        const r2 = isMajor ? 108 : 113;
+        const start = polarToCartesian(140, 140, r1, angle);
+        const end = polarToCartesian(140, 140, r2, angle);
+        return {
+          x1: start.x,
+          y1: start.y,
+          x2: end.x,
+          y2: end.y,
+          isMajor,
+          label: isMajor ? (i * 6).toString() : null, // 0, 30, 60...330
+        };
+      }),
+    [],
   );
 
   // AMBER ENGINE: 8 radial spokes (inner mechanism)
-  const amberSpokes = useMemo(() =>
-    Array.from({ length: 8 }).map((_, i) => {
-      const angle = (i / 8) * 360;
-      const inner = polarToCartesian(140, 140, 45, angle);
-      const outer = polarToCartesian(140, 140, 90, angle);
-      return { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y };
-    }), []
+  const amberSpokes = useMemo(
+    () =>
+      Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i / 8) * 360;
+        const inner = polarToCartesian(140, 140, 45, angle);
+        const outer = polarToCartesian(140, 140, 90, angle);
+        return { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y };
+      }),
+    [],
   );
 
   // CYAN PISTON: Measurement scale markings (0-300mm)
-  const pistonScale = useMemo(() =>
-    Array.from({ length: 16 }).map((_, i) => ({
-      y: i * 20,
-      isMajor: i % 5 === 0,
-      label: i % 5 === 0 ? `${i * 20}` : null,
-    })), []
+  const pistonScale = useMemo(
+    () =>
+      Array.from({ length: 16 }).map((_, i) => ({
+        y: i * 20,
+        isMajor: i % 5 === 0,
+        label: i % 5 === 0 ? `${i * 20}` : null,
+      })),
+    [],
   );
 
   // MAGENTA ORBITAL: Node positions on outer ring
-  const orbitalNodes = useMemo(() =>
-    Array.from({ length: 12 }).map((_, i) => {
-      const angle = (i / 12) * 360;
-      const pos = polarToCartesian(120, 120, 100, angle);
-      return { cx: pos.x, cy: pos.y };
-    }), []
+  const orbitalNodes = useMemo(
+    () =>
+      Array.from({ length: 12 }).map((_, i) => {
+        const angle = (i / 12) * 360;
+        const pos = polarToCartesian(120, 120, 100, angle);
+        return { cx: pos.x, cy: pos.y };
+      }),
+    [],
   );
 
   // MAGENTA ORBITAL: Inner connecting spokes
-  const orbitalSpokes = useMemo(() =>
-    Array.from({ length: 6 }).map((_, i) => {
-      const angle = (i / 6) * 360;
-      const outer = polarToCartesian(120, 120, 70, angle);
-      return { x2: outer.x, y2: outer.y };
-    }), []
+  const orbitalSpokes = useMemo(
+    () =>
+      Array.from({ length: 6 }).map((_, i) => {
+        const angle = (i / 6) * 360;
+        const outer = polarToCartesian(120, 120, 70, angle);
+        return { x2: outer.x, y2: outer.y };
+      }),
+    [],
   );
 
   return (
-    <div 
+    <div
       className="absolute inset-0 overflow-hidden select-none pointer-events-none"
       style={{ backgroundColor: COLORS.void }}
     >
-      
       {/* ========================================
           LAYER 1: ATMOSPHERIC BASE
           Technical grid with depth fog
           ======================================== */}
-      <div 
+      <div
         className="absolute inset-0 opacity-15"
-        style={{ 
+        style={{
           backgroundImage: `
             linear-gradient(${COLORS.grid} 0.5px, transparent 0.5px),
             linear-gradient(90deg, ${COLORS.grid} 0.5px, transparent 0.5px)
           `,
           backgroundSize: '50px 50px',
-        }} 
+        }}
       />
-      
+
       {/* Depth vignette */}
-      <div 
+      <div
         className="absolute inset-0"
         style={{
           background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%)',
@@ -160,7 +168,6 @@ export const MechanicalOrchestra = () => {
           All machinery rendered here
           ======================================== */}
       <svg className="absolute inset-0 w-full h-full" style={{ overflow: 'visible' }}>
-        
         {/* --- GLOBAL FILTER DEFINITIONS --- */}
         {/* The "Neo-Glow" Engine: Multi-stage blur for photorealistic bloom */}
         <defs>
@@ -257,83 +264,93 @@ export const MechanicalOrchestra = () => {
           {/* Outer rotating bezel (slow clockwise) */}
           <motion.g
             animate={{ rotate: 360 }}
-            transition={{ 
-              duration: MOTION.amber, 
-              repeat: Infinity, 
-              ease: 'linear' 
+            transition={{
+              duration: MOTION.amber,
+              repeat: Infinity,
+              ease: 'linear',
             }}
             style={{ transformOrigin: '140px 140px' }}
           >
             {/* Main bezel ring */}
-            <circle 
-              cx="140" cy="140" r="120" 
-              stroke={COLORS.amber} 
-              strokeWidth="0.5" 
-              fill="none" 
-              opacity="0.6" 
+            <circle
+              cx="140"
+              cy="140"
+              r="120"
+              stroke={COLORS.amber}
+              strokeWidth="0.5"
+              fill="none"
+              opacity="0.6"
             />
-            
+
             {/* Precision tick marks (generated via trigonometry) */}
             {amberTicks.map((tick, i) => (
-              <line 
+              <line
                 key={`tick-${i}`}
-                x1={tick.x1} y1={tick.y1} 
-                x2={tick.x2} y2={tick.y2} 
-                stroke={COLORS.amber} 
-                strokeWidth={tick.isMajor ? '1.2' : '0.5'} 
-                opacity={tick.isMajor ? '0.8' : '0.4'} 
+                x1={tick.x1}
+                y1={tick.y1}
+                x2={tick.x2}
+                y2={tick.y2}
+                stroke={COLORS.amber}
+                strokeWidth={tick.isMajor ? '1.2' : '0.5'}
+                opacity={tick.isMajor ? '0.8' : '0.4'}
               />
             ))}
 
             {/* Degree labels on major ticks */}
-            {amberTicks.filter(t => t.label).map((tick, i) => {
-              const labelPos = polarToCartesian(140, 140, 95, parseInt(tick.label || '0'));
-              return (
-                <text
-                  key={`label-${i}`}
-                  x={labelPos.x}
-                  y={labelPos.y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill={COLORS.amber}
-                  opacity="0.6"
-                  style={{
-                    fontSize: '7px',
-                    fontFamily: 'monospace',
-                    fontWeight: '500',
-                  }}
-                >
-                  {tick.label}
-                </text>
-              );
-            })}
+            {amberTicks
+              .filter((t) => t.label)
+              .map((tick, i) => {
+                const labelPos = polarToCartesian(140, 140, 95, parseInt(tick.label || '0'));
+                return (
+                  <text
+                    key={`label-${i}`}
+                    x={labelPos.x}
+                    y={labelPos.y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill={COLORS.amber}
+                    opacity="0.6"
+                    style={{
+                      fontSize: '7px',
+                      fontFamily: 'monospace',
+                      fontWeight: '500',
+                    }}
+                  >
+                    {tick.label}
+                  </text>
+                );
+              })}
           </motion.g>
 
           {/* Inner counter-rotating mechanism (fast CCW) */}
           <motion.g
             animate={{ rotate: -360 }}
-            transition={{ 
-              duration: MOTION.amberInner, 
-              repeat: Infinity, 
-              ease: 'linear' 
+            transition={{
+              duration: MOTION.amberInner,
+              repeat: Infinity,
+              ease: 'linear',
             }}
             style={{ transformOrigin: '140px 140px' }}
           >
-            <circle 
-              cx="140" cy="140" r="90" 
-              stroke={COLORS.amber} 
-              strokeWidth="0.5" 
+            <circle
+              cx="140"
+              cy="140"
+              r="90"
+              stroke={COLORS.amber}
+              strokeWidth="0.5"
               strokeDasharray="3 2"
-              fill="none" 
-              opacity="0.5" 
+              fill="none"
+              opacity="0.5"
             />
-            
+
             {/* Radial spokes */}
             {amberSpokes.map((spoke, i) => (
               <line
                 key={`spoke-${i}`}
-                x1="140" y1="140"
-                x2={spoke.x2} y2={spoke.y2}
+                x1="140"
+                y1="140"
+                x2={spoke.x2}
+                y2={spoke.y2}
                 stroke={COLORS.amber}
                 strokeWidth="0.5"
                 opacity="0.3"
@@ -342,28 +359,50 @@ export const MechanicalOrchestra = () => {
           </motion.g>
 
           {/* Central hub assembly */}
-          <circle 
-            cx="140" cy="140" r="35" 
-            stroke={COLORS.amber} 
-            strokeWidth="1" 
-            fill="none" 
-            opacity="0.7" 
+          <circle
+            cx="140"
+            cy="140"
+            r="35"
+            stroke={COLORS.amber}
+            strokeWidth="1"
+            fill="none"
+            opacity="0.7"
           />
-          <circle 
-            cx="140" cy="140" r="28" 
-            stroke={COLORS.amber} 
-            strokeWidth="0.5" 
+          <circle
+            cx="140"
+            cy="140"
+            r="28"
+            stroke={COLORS.amber}
+            strokeWidth="0.5"
             fill={`${COLORS.amber}08`}
-            opacity="0.6" 
+            opacity="0.6"
           />
-          
+
           {/* Cross reticle */}
-          <line x1="140" y1="112" x2="140" y2="168" stroke={COLORS.amber} strokeWidth="0.5" opacity="0.5" />
-          <line x1="112" y1="140" x2="168" y2="140" stroke={COLORS.amber} strokeWidth="0.5" opacity="0.5" />
-          
+          <line
+            x1="140"
+            y1="112"
+            x2="140"
+            y2="168"
+            stroke={COLORS.amber}
+            strokeWidth="0.5"
+            opacity="0.5"
+          />
+          <line
+            x1="112"
+            y1="140"
+            x2="168"
+            y2="140"
+            stroke={COLORS.amber}
+            strokeWidth="0.5"
+            opacity="0.5"
+          />
+
           {/* Pulsing center core */}
           <motion.circle
-            cx="140" cy="140" r="4"
+            cx="140"
+            cy="140"
+            r="4"
             fill={COLORS.amber}
             animate={{
               r: [4, 6, 4],
@@ -392,25 +431,45 @@ export const MechanicalOrchestra = () => {
           <ellipse cx="30" cy="150" rx="80" ry="200" fill="url(#cyan-radial)" opacity="0.5" />
 
           {/* Cylinder housing (static frame) */}
-          <line x1="0" y1="0" x2="0" y2="300" stroke={COLORS.cyan} strokeWidth="0.5" opacity="0.5" />
-          <line x1="60" y1="0" x2="60" y2="300" stroke={COLORS.cyan} strokeWidth="0.5" opacity="0.5" />
-          
+          <line
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="300"
+            stroke={COLORS.cyan}
+            strokeWidth="0.5"
+            opacity="0.5"
+          />
+          <line
+            x1="60"
+            y1="0"
+            x2="60"
+            y2="300"
+            stroke={COLORS.cyan}
+            strokeWidth="0.5"
+            opacity="0.5"
+          />
+
           {/* Measurement scale (0-300mm in 20mm increments) */}
           {pistonScale.map((mark, i) => (
             <g key={`scale-${i}`}>
-              <line 
-                x1="-8" y1={mark.y} 
-                x2="0" y2={mark.y} 
-                stroke={COLORS.cyan} 
-                strokeWidth={mark.isMajor ? '1' : '0.5'} 
-                opacity={mark.isMajor ? '0.7' : '0.4'} 
+              <line
+                x1="-8"
+                y1={mark.y}
+                x2="0"
+                y2={mark.y}
+                stroke={COLORS.cyan}
+                strokeWidth={mark.isMajor ? '1' : '0.5'}
+                opacity={mark.isMajor ? '0.7' : '0.4'}
               />
-              <line 
-                x1="60" y1={mark.y} 
-                x2="68" y2={mark.y} 
-                stroke={COLORS.cyan} 
-                strokeWidth={mark.isMajor ? '1' : '0.5'} 
-                opacity={mark.isMajor ? '0.7' : '0.4'} 
+              <line
+                x1="60"
+                y1={mark.y}
+                x2="68"
+                y2={mark.y}
+                stroke={COLORS.cyan}
+                strokeWidth={mark.isMajor ? '1' : '0.5'}
+                opacity={mark.isMajor ? '0.7' : '0.4'}
               />
               {mark.label && (
                 <text
@@ -432,10 +491,28 @@ export const MechanicalOrchestra = () => {
           ))}
 
           {/* Top mounting bracket */}
-          <rect x="10" y="-10" width="40" height="8" stroke={COLORS.cyan} strokeWidth="0.5" fill="none" opacity="0.5" />
-          
+          <rect
+            x="10"
+            y="-10"
+            width="40"
+            height="8"
+            stroke={COLORS.cyan}
+            strokeWidth="0.5"
+            fill="none"
+            opacity="0.5"
+          />
+
           {/* Bottom mounting bracket */}
-          <rect x="10" y="302" width="40" height="8" stroke={COLORS.cyan} strokeWidth="0.5" fill="none" opacity="0.5" />
+          <rect
+            x="10"
+            y="302"
+            width="40"
+            height="8"
+            stroke={COLORS.cyan}
+            strokeWidth="0.5"
+            fill="none"
+            opacity="0.5"
+          />
 
           {/* Animated piston assembly */}
           <motion.g
@@ -449,29 +526,60 @@ export const MechanicalOrchestra = () => {
             }}
           >
             {/* Piston head */}
-            <rect 
-              x="4" y="20" width="52" height="50" 
-              stroke={COLORS.cyan} 
-              strokeWidth="1.5" 
+            <rect
+              x="4"
+              y="20"
+              width="52"
+              height="50"
+              stroke={COLORS.cyan}
+              strokeWidth="1.5"
               fill={`${COLORS.cyan}15`}
               opacity="0.9"
             />
-            
+
             {/* Piston rings (seal grooves) */}
-            <line x1="8" y1="32" x2="52" y2="32" stroke={COLORS.cyan} strokeWidth="0.5" opacity="0.8" />
-            <line x1="8" y1="45" x2="52" y2="45" stroke={COLORS.cyan} strokeWidth="0.5" opacity="0.8" />
-            <line x1="8" y1="58" x2="52" y2="58" stroke={COLORS.cyan} strokeWidth="0.5" opacity="0.8" />
-            
+            <line
+              x1="8"
+              y1="32"
+              x2="52"
+              y2="32"
+              stroke={COLORS.cyan}
+              strokeWidth="0.5"
+              opacity="0.8"
+            />
+            <line
+              x1="8"
+              y1="45"
+              x2="52"
+              y2="45"
+              stroke={COLORS.cyan}
+              strokeWidth="0.5"
+              opacity="0.8"
+            />
+            <line
+              x1="8"
+              y1="58"
+              x2="52"
+              y2="58"
+              stroke={COLORS.cyan}
+              strokeWidth="0.5"
+              opacity="0.8"
+            />
+
             {/* Central mounting point */}
-            <circle cx="30" cy="45" r="6" stroke={COLORS.cyan} strokeWidth="1" fill="none" opacity="0.9" />
+            <circle
+              cx="30"
+              cy="45"
+              r="6"
+              stroke={COLORS.cyan}
+              strokeWidth="1"
+              fill="none"
+              opacity="0.9"
+            />
             <circle cx="30" cy="45" r="2" fill={COLORS.cyan} opacity="0.8" />
 
             {/* Motion trail (afterimage effect) */}
-            <rect 
-              x="4" y="75" width="52" height="8" 
-              fill={`${COLORS.cyan}08`}
-              opacity="0.3"
-            />
+            <rect x="4" y="75" width="52" height="8" fill={`${COLORS.cyan}08`} opacity="0.3" />
           </motion.g>
 
           {/* Apply bloom to entire piston system */}
@@ -500,15 +608,17 @@ export const MechanicalOrchestra = () => {
             }}
             style={{ transformOrigin: '120px 120px' }}
           >
-            <circle 
-              cx="120" cy="120" r="100" 
-              stroke={COLORS.magenta} 
-              strokeWidth="0.5" 
+            <circle
+              cx="120"
+              cy="120"
+              r="100"
+              stroke={COLORS.magenta}
+              strokeWidth="0.5"
               strokeDasharray="8 4"
-              fill="none" 
-              opacity="0.6" 
+              fill="none"
+              opacity="0.6"
             />
-            
+
             {/* Orbital nodes (satellites) */}
             {orbitalNodes.map((node, i) => (
               <circle
@@ -532,14 +642,16 @@ export const MechanicalOrchestra = () => {
             }}
             style={{ transformOrigin: '120px 120px' }}
           >
-            <circle 
-              cx="120" cy="120" r="70" 
-              stroke={COLORS.magenta} 
-              strokeWidth="0.5" 
-              fill="none" 
-              opacity="0.7" 
+            <circle
+              cx="120"
+              cy="120"
+              r="70"
+              stroke={COLORS.magenta}
+              strokeWidth="0.5"
+              fill="none"
+              opacity="0.7"
             />
-            
+
             {/* Connecting spokes to center */}
             {orbitalSpokes.map((spoke, i) => (
               <line
@@ -556,19 +668,23 @@ export const MechanicalOrchestra = () => {
           </motion.g>
 
           {/* Inner core ring (static) */}
-          <circle 
-            cx="120" cy="120" r="40" 
-            stroke={COLORS.magenta} 
-            strokeWidth="1" 
-            fill="none" 
-            opacity="0.8" 
+          <circle
+            cx="120"
+            cy="120"
+            r="40"
+            stroke={COLORS.magenta}
+            strokeWidth="1"
+            fill="none"
+            opacity="0.8"
           />
-          <circle 
-            cx="120" cy="120" r="34" 
-            stroke={COLORS.magenta} 
-            strokeWidth="0.5" 
+          <circle
+            cx="120"
+            cy="120"
+            r="34"
+            stroke={COLORS.magenta}
+            strokeWidth="0.5"
             fill={`${COLORS.magenta}10`}
-            opacity="0.7" 
+            opacity="0.7"
           />
 
           {/* Central diamond (rotating) */}
@@ -606,7 +722,14 @@ export const MechanicalOrchestra = () => {
 
           {/* Apply bloom */}
           <g filter="url(#bloom-magenta)" opacity="0.7">
-            <circle cx="120" cy="120" r="100" stroke={COLORS.magenta} strokeWidth="0.5" fill="none" />
+            <circle
+              cx="120"
+              cy="120"
+              r="100"
+              stroke={COLORS.magenta}
+              strokeWidth="0.5"
+              fill="none"
+            />
           </g>
         </g>
 
@@ -625,19 +748,25 @@ export const MechanicalOrchestra = () => {
             }}
             style={{ transformOrigin: '70px 70px' }}
           >
-            <rect 
-              x="20" y="20" width="100" height="100" 
-              stroke={COLORS.nexus} 
-              strokeWidth="0.5" 
-              fill="none" 
-              opacity="0.7" 
+            <rect
+              x="20"
+              y="20"
+              width="100"
+              height="100"
+              stroke={COLORS.nexus}
+              strokeWidth="0.5"
+              fill="none"
+              opacity="0.7"
             />
-            <rect 
-              x="26" y="26" width="88" height="88" 
-              stroke={COLORS.nexus} 
-              strokeWidth="0.5" 
+            <rect
+              x="26"
+              y="26"
+              width="88"
+              height="88"
+              stroke={COLORS.nexus}
+              strokeWidth="0.5"
               fill={`${COLORS.nexus}05`}
-              opacity="0.6" 
+              opacity="0.6"
             />
           </motion.g>
 
@@ -658,8 +787,24 @@ export const MechanicalOrchestra = () => {
           />
 
           {/* Cross reticle */}
-          <line x1="70" y1="0" x2="70" y2="140" stroke={COLORS.nexus} strokeWidth="0.5" opacity="0.3" />
-          <line x1="0" y1="70" x2="140" y2="70" stroke={COLORS.nexus} strokeWidth="0.5" opacity="0.3" />
+          <line
+            x1="70"
+            y1="0"
+            x2="70"
+            y2="140"
+            stroke={COLORS.nexus}
+            strokeWidth="0.5"
+            opacity="0.3"
+          />
+          <line
+            x1="0"
+            y1="70"
+            x2="140"
+            y2="70"
+            stroke={COLORS.nexus}
+            strokeWidth="0.5"
+            opacity="0.3"
+          />
 
           {/* Pulsing center */}
           <motion.circle
@@ -680,7 +825,15 @@ export const MechanicalOrchestra = () => {
 
           {/* Apply bloom */}
           <g filter="url(#bloom-nexus)" opacity="0.8">
-            <rect x="20" y="20" width="100" height="100" stroke={COLORS.nexus} strokeWidth="0.5" fill="none" />
+            <rect
+              x="20"
+              y="20"
+              width="100"
+              height="100"
+              stroke={COLORS.nexus}
+              strokeWidth="0.5"
+              fill="none"
+            />
           </g>
         </g>
 
@@ -689,8 +842,10 @@ export const MechanicalOrchestra = () => {
             Vertical scanning line that synchronizes all systems
            ========================================================= */}
         <motion.line
-          x1="0" y1="0"
-          x2="100%" y2="0"
+          x1="0"
+          y1="0"
+          x2="100%"
+          y2="0"
           stroke="url(#beam-gradient)"
           strokeWidth="2"
           opacity="0.6"
@@ -712,8 +867,10 @@ export const MechanicalOrchestra = () => {
         {[0, 1, 2].map((i) => (
           <motion.line
             key={`trail-${i}`}
-            x1="0" y1="0"
-            x2="100%" y2="0"
+            x1="0"
+            y1="0"
+            x2="100%"
+            y2="0"
             stroke="url(#beam-gradient)"
             strokeWidth="1"
             opacity="0.2"
@@ -738,11 +895,11 @@ export const MechanicalOrchestra = () => {
           LAYER 3: TECHNICAL ANNOTATIONS
           HUD overlays and readouts
           ======================================== */}
-      
+
       {/* Status Panel - Top Right */}
-      <div 
+      <div
         className="absolute top-8 right-8 font-mono uppercase tracking-widest"
-        style={{ 
+        style={{
           fontSize: '8px',
           color: '#555555',
           letterSpacing: '0.2em',
@@ -772,9 +929,9 @@ export const MechanicalOrchestra = () => {
       </div>
 
       {/* Coordinate System - Bottom Left */}
-      <div 
+      <div
         className="absolute bottom-8 left-8 font-mono uppercase tracking-widest"
-        style={{ 
+        style={{
           fontSize: '7px',
           color: '#444444',
           letterSpacing: '0.2em',

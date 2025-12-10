@@ -89,4 +89,3 @@ describe('StabilitySimulation (Forensic Logic)', () => {
     expect(screen.getByText(/LEGACY: DEGRADING/i)).toBeInTheDocument();
   });
 });
-

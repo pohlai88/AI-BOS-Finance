@@ -6,19 +6,23 @@ import { NexusButton } from '@/components/nexus/NexusButton';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ArrowRight, ShieldCheck, Activity, Terminal } from 'lucide-react';
 
-export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; onCanonClick: () => void }) => {
+export const LandingPage = ({
+  onTryIt,
+  onCanonClick,
+}: {
+  onTryIt: () => void;
+  onCanonClick: () => void;
+}) => {
   return (
     <div className="relative min-h-screen bg-nexus-void selection:bg-nexus-green/30">
-      
       {/* 1. Header (Fixed Z-Layer 50) */}
       <Header onGetStarted={onTryIt} onCanonClick={onCanonClick} />
-      
+
       {/* 2. Main Scrollable Content */}
       <main className="relative z-10">
-        
         {/* HERO SECTION */}
-        <div className="pt-20"> 
-           <HeroSection onGetStarted={onTryIt} />
+        <div className="pt-20">
+          <HeroSection onGetStarted={onTryIt} />
         </div>
 
         {/* SECTION 1: STABILITY (The Hook) */}
@@ -30,20 +34,25 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                 The Inevitable Divergence
               </h2>
             </div>
-            
+
             {/* The Simulation Component (Now framed in a NexusCard) */}
             <NexusCard variant="glass" className="p-0 border-nexus-subtle/50">
-               <StabilitySimulation />
+              <StabilitySimulation />
             </NexusCard>
           </div>
         </section>
 
         {/* SECTION 2: THE TRIPLE THREAT (Bento Grid) */}
-        <section id="logic" className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/50">
+        <section
+          id="logic"
+          className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/50"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="mb-16">
               <span className="nexus-label">Core Capabilities</span>
-              <h2 className="text-4xl font-medium tracking-tighter text-white mt-2">Forensic Architecture</h2>
+              <h2 className="text-4xl font-medium tracking-tighter text-white mt-2">
+                Forensic Architecture
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -52,7 +61,8 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                 <ShieldCheck className="w-8 h-8 text-nexus-green mb-6" />
                 <h3 className="text-xl text-white mb-3">Immutable Period Control</h3>
                 <p className="text-sm text-nexus-noise leading-relaxed">
-                  Cryptographically freeze your data state. Once a period is locked, the numbers never move again without a digital signature trace.
+                  Cryptographically freeze your data state. Once a period is locked, the numbers
+                  never move again without a digital signature trace.
                 </p>
               </NexusCard>
 
@@ -61,7 +71,8 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                 <Activity className="w-8 h-8 text-nexus-green mb-6" />
                 <h3 className="text-xl text-white mb-3">Active Living Lens</h3>
                 <p className="text-sm text-nexus-noise leading-relaxed">
-                  Standard audits are passive. NexusCanon proactively dismantles transactions against IFRS and Tax Pillars in real-time.
+                  Standard audits are passive. NexusCanon proactively dismantles transactions
+                  against IFRS and Tax Pillars in real-time.
                 </p>
               </NexusCard>
 
@@ -70,7 +81,8 @@ export const LandingPage = ({ onTryIt, onCanonClick }: { onTryIt: () => void; on
                 <Terminal className="w-8 h-8 text-nexus-green mb-6" />
                 <h3 className="text-xl text-white mb-3">Schema Enforcement</h3>
                 <p className="text-sm text-nexus-noise leading-relaxed">
-                  Data cannot enter the system unless it matches the strict schema definitions. Zero tolerance for "bad data."
+                  Data cannot enter the system unless it matches the strict schema definitions. Zero
+                  tolerance for "bad data."
                 </p>
               </NexusCard>
             </div>

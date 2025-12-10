@@ -15,22 +15,22 @@ interface SlideUpProps {
   className?: string;
 }
 
-export const SlideUp = ({ 
-  children, 
-  duration = 0.4, 
+export const SlideUp = ({
+  children,
+  duration = 0.4,
   delay = 0,
   distance = 20, // Default: slide from 20px below
-  className 
+  className,
 }: SlideUpProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: distance }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: distance }}
-      transition={{ 
-        duration, 
+      transition={{
+        duration,
         delay,
-        ease: [0.25, 0.1, 0.25, 1] // Ease-out curve (matches FadeIn)
+        ease: [0.25, 0.1, 0.25, 1], // Ease-out curve (matches FadeIn)
       }}
       className={className}
     >
