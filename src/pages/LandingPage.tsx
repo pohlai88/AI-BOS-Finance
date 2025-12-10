@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/landing/HeroSection';
-import { Header } from '@/components/landing/Header'; // Fixed: Landing Header, not Nexus
+import { Header } from '@/components/landing/Header';
+import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
 import StabilitySimulation from '@/components/landing/StabilitySimulation';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
@@ -15,6 +16,9 @@ export const LandingPage = ({
 }) => {
   return (
     <div className="relative min-h-screen bg-nexus-void selection:bg-nexus-green/30">
+      {/* 0. LIVING BACKGROUND (Z-Layer 0) */}
+      <BackgroundGrid />
+
       {/* 1. Header (Fixed Z-Layer 50) */}
       <Header onGetStarted={onTryIt} onCanonClick={onCanonClick} />
 
