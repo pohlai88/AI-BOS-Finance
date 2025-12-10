@@ -1,5 +1,5 @@
 import { HeroSection } from '@/components/landing/HeroSection';
-import { Header } from '@/components/nexus/Header';
+import { Header } from '@/components/landing/Header'; // Fixed: Landing Header, not Nexus
 import StabilitySimulation from '@/components/landing/StabilitySimulation';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
