@@ -50,6 +50,24 @@ export const ThreatRadar = ({
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
 
+  // Lynx protection: 10 second timer when Level 4
+  const [lynxActive, setLynxActive] = useState(false);
+  
+  useEffect(() => {
+    if (isWarning && !lynxActive) {
+      // Level 4 detected - start 10 second protection
+      setLynxActive(true);
+      
+      const timer = setTimeout(() => {
+        setLynxActive(false);
+      }, 10000); // 10 seconds total
+      
+      return () => clearTimeout(timer);
+    } else if (!isWarning) {
+      // No longer level 4 - reset
+      setLynxActive(false);
+    }
+  }, [isWarning, lynxActive]);
 
   // Frame interchange animation - swap every 8 seconds
   useEffect(() => {
@@ -180,27 +198,27 @@ export const ThreatRadar = ({
         <div className="absolute top-4 left-4 z-20">
           <motion.div 
             className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-black/80 backdrop-blur-md"
-            style={{ borderColor: isWarning ? LYNX_GREEN : theme.color }}
+            style={{ borderColor: lynxActive ? LYNX_GREEN : theme.color }}
             animate={{ opacity: isCritical ? [1, 0.7, 1] : 1 }}
             transition={{ duration: 0.5, repeat: isCritical ? Infinity : 0 }}
           >
             {isCritical ? (
               <AlertTriangle className="w-4 h-4" style={{ color: theme.color }} />
-            ) : isWarning ? (
+            ) : lynxActive ? (
               <LynxIcon size={16} className="text-[#28E7A2]" />
             ) : (
               <Activity className="w-4 h-4" style={{ color: theme.color }} />
             )}
             <span 
               className="text-xs font-mono font-bold tracking-wider"
-              style={{ color: isWarning ? LYNX_GREEN : theme.color }}
+              style={{ color: lynxActive ? LYNX_GREEN : theme.color }}
             >
-              {isWarning ? 'Lynx .Detect.Protect.React.' : theme.label}
+              {lynxActive ? 'Lynx .Detect.Protect.React.' : theme.label}
             </span>
           </motion.div>
           
-          {/* Fire Extinguisher Particles - LOTS of small smooth particles */}
-          {isWarning && (
+          {/* Fire Extinguisher Particles - LOTS of small smooth particles (10s timer) */}
+          {lynxActive && (
             <>
               {[...Array(40)].map((_, i) => (
                 <motion.div
