@@ -70,28 +70,37 @@ export const ThreatRadar = ({
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
 
-  // Lynx Protection Sequence: Triggers at Level 4
+  // Lynx Protection Sequence: Triggers at Level 4 or higher (Warning/Critical)
+  // Once triggered, completes full sequence regardless of level changes
   useEffect(() => {
-    if (activeRisks === 4 && !lynxProtectionActive) {
+    // Trigger at level 4+ (Warning or Critical state)
+    if (activeRisks >= 4 && !lynxProtectionActive) {
+      console.log('[LYNX] 🐱 Protection sequence ACTIVATED at level:', activeRisks);
+      
       // Phase 1: Start particle emission
       setLynxProtectionActive(true);
       setParticlesFlowing(true);
       
       // Phase 2: After 3s, particles reach center - start morphology
       const morphTimer = setTimeout(() => {
+        console.log('[LYNX] 🐱 Phase 2: Particles reached center');
         setParticlesFlowing(false);
+        
         // Phase 3: After 6s total, Lynx materializes
         setTimeout(() => {
+          console.log('[LYNX] 🐱 Phase 3: Lynx MATERIALIZED');
           setLynxMaterialized(true);
+          
+          // Reset after 10s to allow re-trigger
+          setTimeout(() => {
+            console.log('[LYNX] 🐱 Sequence complete, resetting...');
+            setLynxProtectionActive(false);
+            setLynxMaterialized(false);
+          }, 10000);
         }, 3000);
       }, 3000);
       
       return () => clearTimeout(morphTimer);
-    } else if (activeRisks !== 4) {
-      // Reset when leaving level 4
-      setLynxProtectionActive(false);
-      setLynxMaterialized(false);
-      setParticlesFlowing(false);
     }
   }, [activeRisks, lynxProtectionActive]);
 
