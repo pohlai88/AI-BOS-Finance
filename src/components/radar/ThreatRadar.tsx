@@ -36,11 +36,11 @@ interface ThreatRadarProps {
 // Emerald green color for Lynx protection
 const LYNX_GREEN = '#28E7A2';
 
-// Lynx position relative to radar center (calculated from nav column)
-// Lynx is approximately: 220px from left, 60px from top
-// Radar center is approximately: 800px from left, 400px from top
-// Offset from radar center: x = -580, y = -340
-const LYNX_OFFSET = { x: -400, y: -280 };
+// Lynx position relative to radar center
+// Lynx icon is in top-left header (~100px left, ~50px top)
+// Radar center is right side (~800px left, ~350px top)  
+// Offset from radar center to Lynx: x = -700, y = -300
+const LYNX_OFFSET = { x: -650, y: -280 };
 
 // Generate particles that flow from Lynx to radar center
 const generateLynxParticles = (count: number) => {
