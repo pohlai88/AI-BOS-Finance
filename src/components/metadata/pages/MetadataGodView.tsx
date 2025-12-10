@@ -1,50 +1,65 @@
-import { useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { SuperTable } from '@/components/metadata/SuperTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { cn } from '@/lib/utils';
 
-// 1. Define the Schema (Forensic Record)
-type ForensicRecord = {
-  id: string;
-  entity: string;
-  type: 'TRANSACTION' | 'ADJUSTMENT' | 'VALUATION';
-  value: number;
+// 1. Define the Shape of the Backend Data
+type LedgerRecord = {
+  ID: string;
+  entity_code: string;
+  class: string;
+  amount: number;
+  currency: string;
   status: 'LOCKED' | 'PENDING' | 'FLAGGED';
-  hash: string;
+  block_hash: string;
 };
 
-// 2. Generate Mock Data
-const DATA: ForensicRecord[] = Array.from({ length: 20 }).map((_, i) => ({
-  id: `REC-${1000 + i}`,
-  entity: i % 3 === 0 ? 'US_HOLDING_CORP' : 'EU_SUBSIDIARY_LTD',
-  type: i % 4 === 0 ? 'VALUATION' : 'TRANSACTION',
-  value: Math.floor(Math.random() * 10000000),
-  status: i % 5 === 0 ? 'FLAGGED' : i % 2 === 0 ? 'LOCKED' : 'PENDING',
-  hash: Math.random().toString(36).substring(7).toUpperCase(),
-}));
-
 export const MetadataGodView = () => {
-  const columnHelper = createColumnHelper<ForensicRecord>();
+  const [data, setData] = useState<LedgerRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // 3. Define Columns (Schema-First)
+  // 2. The Synapse: Fetch from the Proxy
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/odata/v4/forensic/MasterLedger');
+        const json = await response.json();
+        setData(json.value); // OData returns records in 'value' array
+      } catch (error) {
+        console.error('Neural Link Failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const columnHelper = createColumnHelper<LedgerRecord>();
+
+  // 3. Define Columns (Mapped to Real DB Fields)
   const columns = useMemo(
     () => [
-      columnHelper.accessor('id', {
+      columnHelper.accessor('ID', {
         header: 'RECORD_ID',
         cell: (info) => <span className="text-nexus-signal font-bold">{info.getValue()}</span>,
       }),
-      columnHelper.accessor('entity', {
+      columnHelper.accessor('entity_code', {
         header: 'LEGAL_ENTITY',
       }),
-      columnHelper.accessor('type', {
+      columnHelper.accessor('class', {
         header: 'CLASS',
       }),
-      columnHelper.accessor('value', {
+      columnHelper.accessor('amount', {
         header: 'NOTIONAL_VALUE',
-        cell: (info) => (
-          <span className="text-nexus-signal">${info.getValue().toLocaleString()}</span>
-        ),
+        cell: (info) => {
+          const row = info.row.original;
+          return (
+            <span className="text-nexus-signal">
+              {row.currency} {info.getValue().toLocaleString()}
+            </span>
+          );
+        },
       }),
       columnHelper.accessor('status', {
         header: 'STATE',
@@ -72,17 +87,27 @@ export const MetadataGodView = () => {
           );
         },
       }),
-      columnHelper.accessor('hash', {
+      columnHelper.accessor('block_hash', {
         header: 'BLOCK_HASH',
-        cell: (info) => <span className="text-[10px] opacity-50">{info.getValue()}</span>,
+        cell: (info) => (
+          <span className="text-[10px] opacity-50 font-mono">{info.getValue().substring(0, 10)}...</span>
+        ),
       }),
     ],
     [],
   );
 
+  if (loading)
+    return (
+      <div className="min-h-screen bg-nexus-void flex items-center justify-center">
+        <div className="text-nexus-green animate-pulse font-mono text-xs tracking-widest">
+          ESTABLISHING NEURAL LINK...
+        </div>
+      </div>
+    );
+
   return (
     <div className="min-h-screen bg-nexus-void p-8 space-y-8">
-      {/* Page Header */}
       <div className="flex items-end justify-between border-b border-nexus-structure pb-6">
         <div>
           <span className="nexus-label text-nexus-green">System Registry</span>
@@ -93,13 +118,8 @@ export const MetadataGodView = () => {
         <NexusButton variant="primary">EXPORT AUDIT LOG</NexusButton>
       </div>
 
-      {/* The Forensic Table */}
-      <SuperTable
-        data={DATA}
-        columns={columns}
-        title="MASTER_LEDGER_V1"
-        mobileKey="id"
-      />
+      {/* Live Data Injection */}
+      <SuperTable data={data} columns={columns} title="LIVE_LEDGER_FEED" mobileKey="entity_code" />
     </div>
   );
 };
