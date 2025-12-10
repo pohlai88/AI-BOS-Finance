@@ -251,7 +251,7 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
             fontFamily="monospace"
             fill={isCritical ? theme.primary : "white"}
             animate={{
-              scale: isWarning ? 1.3 : isCritical ? 1.2 : 1,
+              scale: isWarning ? 1.4 : isCritical ? 1.2 : 1,
             }}
             transition={{ type: "spring", bounce: 0.5 }}
             style={{ fontSize: "28px" }}
