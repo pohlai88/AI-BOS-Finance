@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { NexusIcon } from '../nexus/NexusIcon';
 
 export const LandingFooter = () => {
   return (
@@ -10,28 +10,10 @@ export const LandingFooter = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-white/5">
-          {/* BRAND COLUMN */}
+          {/* BRAND COLUMN - Uses NexusIcon (Single Source of Truth) */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              {/* Encapsulated Logo SVG */}
-              <div className="relative w-8 h-8">
-                <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-                  <motion.circle
-                    cx="20"
-                    cy="20"
-                    r="16"
-                    stroke="rgba(40, 231, 162, 0.3)"
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                  />
-                  <path
-                    d="M20 8 L28 20 L20 32 L12 20 Z"
-                    stroke="rgba(40, 231, 162, 0.6)"
-                    fill="rgba(40, 231, 162, 0.05)"
-                  />
-                </svg>
-              </div>
+              <NexusIcon size="lg" animated />
               <div>
                 <h1 className="text-sm tracking-tight text-white font-medium">NexusCanon</h1>
                 <p className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
