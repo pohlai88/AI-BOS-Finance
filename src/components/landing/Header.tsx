@@ -90,12 +90,7 @@ export const Header = ({
                 </svg>
               </div>
 
-              <div className="flex items-center gap-2">
-                <h1 className="text-base tracking-tight text-white">NexusCanon</h1>
-                <span className="text-[10px] font-mono text-gray-600 uppercase tracking-widest px-1.5 py-0.5 border border-white/10 rounded">
-                  Gov
-                </span>
-              </div>
+              <h1 className="text-base tracking-tight text-white">NexusCanon</h1>
             </div>
 
             {/* CENTER: COMMAND PALETTE */}
