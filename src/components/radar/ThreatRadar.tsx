@@ -489,12 +489,12 @@ export const ThreatRadar = ({
                   ease: 'easeInOut'
                 }}
               >
-                {/* Threat Count Display */}
+                {/* Threat Count Display - Frozen at 4 during Lynx protection */}
                 <motion.span 
                   className="text-4xl font-mono font-bold"
-                  style={{ color: theme.color }}
+                  style={{ color: lynxActive ? LYNX_GREEN : theme.color }}
                 >
-                  {activeRisks}
+                  {lynxActive ? 4 : activeRisks}
                 </motion.span>
                 <span 
                   className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
