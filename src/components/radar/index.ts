@@ -24,6 +24,9 @@ export { default as PointManager } from './PointManager';
 export { default as PresetManager } from './PresetManager';
 export { default as RadarDecorations } from './RadarDecorations';
 
+// ThreatRadar: RadarDisplay + threat logic + system log (matches screenshot)
+export { ThreatRadar } from './ThreatRadar';
+
 // SVG-based radar components
 export { TacticalRadar } from './TacticalRadar';
 
