@@ -1,7 +1,7 @@
 import { HeroSection } from '@/components/landing/HeroSection';
 import { Header } from '@/components/landing/Header';
 import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
-import { CrystallizationBackground } from '@/components/landing/CrystallizationBackground';
+import { CanonMapping } from '@/components/landing/CanonMapping';
 import { StabilitySimulation } from '@/components/simulation';
 import { LivingLens } from '@/components/landing/LivingLens';
 import { TruthBar } from '@/components/landing/TruthBar';
@@ -137,24 +137,30 @@ export const LandingPage = ({
           </div>
         </section>
 
-        {/* SECTION 5: FINAL CTA - Crystallization */}
-        <section className="py-32 px-6 border-t border-nexus-structure relative overflow-hidden">
-          <CrystallizationBackground />
-          <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tighter text-white">
-              Ready to <span className="text-nexus-noise">Initialize?</span>
+        {/* SECTION 5: FINAL CTA - Interactive Crystallization */}
+        <section className="py-16 px-6 border-t border-nexus-structure relative overflow-hidden">
+          {/* Header */}
+          <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 mb-8">
+            <span className="nexus-label text-nexus-green">Experience the Crystallization</span>
+            <h2 className="text-4xl md:text-6xl font-medium tracking-tighter text-white">
+              Watch Your Ledger <span className="text-nexus-noise">Freeze.</span>
             </h2>
-            <p className="text-nexus-noise max-w-xl mx-auto text-lg">
-              Deploy the forensic architecture today. Stop guessing. Start verifying.
+            <p className="text-nexus-noise max-w-xl mx-auto text-base">
+              Click the center to crystallize. Once locked, your documents become immutable — forever linked, forever verified.
             </p>
-            <div className="flex justify-center gap-4 pt-8">
-              <NexusButton variant="primary" onClick={onTryIt}>
-                LAUNCH SYSTEM
-              </NexusButton>
-              <NexusButton variant="secondary" onClick={onCanonClick} icon={<ArrowRight />}>
-                VIEW DOCUMENTATION
-              </NexusButton>
-            </div>
+          </div>
+
+          {/* Interactive Canon Mapping */}
+          <CanonMapping />
+
+          {/* CTA Buttons */}
+          <div className="flex justify-center gap-4 pt-8 relative z-10">
+            <NexusButton variant="primary" onClick={onTryIt}>
+              LAUNCH SYSTEM
+            </NexusButton>
+            <NexusButton variant="secondary" onClick={onCanonClick} icon={<ArrowRight />}>
+              VIEW DOCUMENTATION
+            </NexusButton>
           </div>
         </section>
 
