@@ -9,7 +9,7 @@ import { ArrowRight, Shield, Lock, Database, Terminal } from 'lucide-react';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { useRiskTelemetry, type TelemetryEvent, type Severity } from '@/hooks/useRiskTelemetry';
 import { APP_CONFIG } from '@/constants/app';
-import { RiskRadar } from './RiskRadar';
+import { ThreatRadar } from '@/components/radar';
 
 // --- SEVERITY COLOR MAP ---
 const severityColors: Record<Severity, { text: string; bg: string; border: string }> = {
@@ -19,7 +19,7 @@ const severityColors: Record<Severity, { text: string; bg: string; border: strin
   critical: { text: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500' },
 };
 
-// RiskRadar is now imported from ./RiskRadar.tsx
+// ThreatRadar uses canvas-based RadarDisplay with threat logic
 
 // --- SUB-COMPONENT: THE TERMINAL ---
 const RiskTerminal = ({ events }: { events: TelemetryEvent[] }) => (
@@ -186,7 +186,7 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
         >
           {/* THE STACK: Radar + Terminal */}
           <div className="flex flex-col shadow-2xl shadow-nexus-green/5">
-            <RiskRadar activeRisks={activeRisks} systemStatus={systemStatus} />
+            <ThreatRadar activeRisks={activeRisks} showLog={false} size={380} />
             <RiskTerminal events={events} />
           </div>
           
