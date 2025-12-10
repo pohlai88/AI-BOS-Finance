@@ -16,7 +16,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
 import RadarDisplay, { RadarConfig, RadarPoint } from './RadarDisplay';
-import { LynxIcon } from '@/components/icons/LynxIcon';
 import { cn } from '@/lib/utils';
 
 interface LogEntry {
@@ -60,47 +59,22 @@ export const ThreatRadar = ({
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [frameSwapped, setFrameSwapped] = useState(false);
   
-  // Lynx Protection Sequence State
-  const [lynxProtectionActive, setLynxProtectionActive] = useState(false);
-  const [lynxMaterialized, setLynxMaterialized] = useState(false);
+  // Lynx particle emission state (level 4 only)
   const [particlesFlowing, setParticlesFlowing] = useState(false);
 
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
 
-  // Lynx Protection Sequence: Triggers at Level 4 or higher (Warning/Critical)
-  // Once triggered, completes full sequence regardless of level changes
+  // Lynx Protection: Simple particle emission at Level 4 only
   useEffect(() => {
-    // Trigger at level 4+ (Warning or Critical state)
-    if (activeRisks >= 4 && !lynxProtectionActive) {
-      console.log('[LYNX] 🐱 Protection sequence ACTIVATED at level:', activeRisks);
-      
-      // Phase 1: Start particle emission
-      setLynxProtectionActive(true);
+    if (activeRisks === 4) {
+      // Level 4: Start particles
       setParticlesFlowing(true);
-      
-      // Phase 2: After 3s, particles reach center - start morphology
-      const morphTimer = setTimeout(() => {
-        console.log('[LYNX] 🐱 Phase 2: Particles reached center');
-        setParticlesFlowing(false);
-        
-        // Phase 3: After 6s total, Lynx materializes
-        setTimeout(() => {
-          console.log('[LYNX] 🐱 Phase 3: Lynx MATERIALIZED');
-          setLynxMaterialized(true);
-          
-          // Reset after 10s to allow re-trigger
-          setTimeout(() => {
-            console.log('[LYNX] 🐱 Sequence complete, resetting...');
-            setLynxProtectionActive(false);
-            setLynxMaterialized(false);
-          }, 10000);
-        }, 3000);
-      }, 3000);
-      
-      return () => clearTimeout(morphTimer);
+    } else {
+      // Not level 4: Stop particles
+      setParticlesFlowing(false);
     }
-  }, [activeRisks, lynxProtectionActive]);
+  }, [activeRisks]);
 
   // Lynx particles for the protection sequence
   const lynxParticles = useMemo(() => generateLynxParticles(20), []);
@@ -568,35 +542,6 @@ export const ThreatRadar = ({
               )}
             </AnimatePresence>
 
-            {/* Phase 2: Green Overlay Morphology (when particles reach center) */}
-            <AnimatePresence>
-              {lynxProtectionActive && !particlesFlowing && !lynxMaterialized && (
-                <motion.div
-                  className="absolute rounded-full pointer-events-none"
-                  style={{
-                    left: '50%',
-                    top: '50%',
-                    width: 100,
-                    height: 100,
-                    marginLeft: -50,
-                    marginTop: -50,
-                    border: `3px solid ${LYNX_GREEN}`,
-                    boxShadow: `0 0 40px ${LYNX_GREEN}80, inset 0 0 30px ${LYNX_GREEN}40`,
-                  }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 1, 0.8],
-                  }}
-                  exit={{ scale: 1.5, opacity: 0 }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                />
-              )}
-            </AnimatePresence>
 
             {/* Center HUD Overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -606,10 +551,8 @@ export const ThreatRadar = ({
                   width: 90,
                   height: 90,
                   backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                  borderColor: lynxMaterialized ? LYNX_GREEN : theme.color,
-                  boxShadow: lynxMaterialized 
-                    ? `0 0 40px ${LYNX_GREEN}80, inset 0 0 25px ${LYNX_GREEN}40`
-                    : `0 0 30px ${theme.glowColor}, inset 0 0 20px ${theme.glowColor}`
+                  borderColor: theme.color,
+                  boxShadow: `0 0 30px ${theme.glowColor}, inset 0 0 20px ${theme.glowColor}`
                 }}
                 animate={{ 
                   scale: isCritical ? [1, 1.08, 1] : [1, 1.03, 1],
@@ -620,85 +563,20 @@ export const ThreatRadar = ({
                   ease: 'easeInOut'
                 }}
               >
-                {/* Phase 3: Lynx Materialization */}
-                <AnimatePresence mode="wait">
-                  {lynxMaterialized ? (
-                    <motion.div
-                      key="lynx-guardian"
-                      className="flex flex-col items-center justify-center"
-                      initial={{ scale: 0, opacity: 0, rotate: -180 }}
-                      animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                      transition={{ 
-                        type: 'spring',
-                        stiffness: 200,
-                        damping: 15,
-                      }}
-                    >
-                      {/* Lynx Icon */}
-                      <motion.div
-                        animate={{
-                          filter: [
-                            `drop-shadow(0 0 8px ${LYNX_GREEN})`,
-                            `drop-shadow(0 0 16px ${LYNX_GREEN})`,
-                            `drop-shadow(0 0 8px ${LYNX_GREEN})`,
-                          ],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      >
-                        <LynxIcon size={36} className="text-[#28E7A2]" />
-                      </motion.div>
-                      <span 
-                        className="text-[7px] font-mono uppercase tracking-widest mt-1"
-                        style={{ color: LYNX_GREEN }}
-                      >
-                        GUARDED
-                      </span>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="threat-count"
-                      className="flex flex-col items-center justify-center"
-                      exit={{ scale: 0, opacity: 0 }}
-                    >
-                      <motion.span 
-                        className="text-4xl font-mono font-bold"
-                        style={{ color: theme.color }}
-                      >
-                        {activeRisks}
-                      </motion.span>
-                      <span 
-                        className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
-                        style={{ color: `${theme.color}80` }}
-                      >
-                        Threats
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Threat Count Display */}
+                <motion.span 
+                  className="text-4xl font-mono font-bold"
+                  style={{ color: theme.color }}
+                >
+                  {activeRisks}
+                </motion.span>
+                <span 
+                  className="text-[8px] font-mono uppercase tracking-[0.15em] mt-0.5"
+                  style={{ color: `${theme.color}80` }}
+                >
+                  Threats
+                </span>
 
-                {/* Green particle overlay during morphology */}
-                <AnimatePresence>
-                  {lynxProtectionActive && !lynxMaterialized && (
-                    <motion.div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: `radial-gradient(circle, ${LYNX_GREEN}40 0%, transparent 70%)`,
-                      }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0.3, 0.8, 0.3] }}
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                    />
-                  )}
-                </AnimatePresence>
               </motion.div>
             </div>
           </div>
