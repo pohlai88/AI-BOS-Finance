@@ -16,7 +16,7 @@ const sizeMap = {
 /**
  * NexusIcon - The Official NexusCanon Logo
  *
- * A crystal diamond with rotating ring and pulsing center.
+ * A crystal diamond with rotating ring (orbiting halo) and pulsing center.
  * This is the SINGLE SOURCE OF TRUTH for the brand icon.
  *
  * @example
@@ -28,26 +28,40 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
   return (
     <div className={cn(wrapper, 'relative flex-shrink-0', className)}>
       <svg width={svg} height={svg} viewBox="0 0 40 40" fill="none">
-        {/* Outer Ring */}
+        
+        {/* OUTER RING - Orbiting around the diamond */}
         {animated ? (
-          <motion.circle
-            cx="20"
-            cy="20"
-            r="16"
-            stroke="rgba(40, 231, 162, 0.3)"
-            strokeWidth="1"
-            initial={{ pathLength: 0, rotate: 0 }}
-            animate={{ pathLength: 1, rotate: 360 }}
-            transition={{
-              pathLength: { duration: 2, ease: 'easeInOut' },
-              rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
-            }}
-          />
+          <g style={{ transformOrigin: 'center', transformBox: 'fill-box' }}>
+            <motion.circle
+              cx="20"
+              cy="20"
+              r="16"
+              stroke="rgba(40, 231, 162, 0.3)"
+              strokeWidth="1"
+              strokeDasharray="6 3"
+              fill="none"
+              animate={{ rotate: 360 }}
+              transition={{ 
+                duration: 15, 
+                repeat: Infinity, 
+                ease: 'linear' 
+              }}
+              style={{ transformOrigin: '20px 20px' }}
+            />
+          </g>
         ) : (
-          <circle cx="20" cy="20" r="16" stroke="rgba(40, 231, 162, 0.3)" strokeWidth="1" />
+          <circle 
+            cx="20" 
+            cy="20" 
+            r="16" 
+            stroke="rgba(40, 231, 162, 0.3)" 
+            strokeWidth="1" 
+            strokeDasharray="6 3"
+            fill="none"
+          />
         )}
 
-        {/* Inner Crystal (Diamond) */}
+        {/* Inner Crystal (Diamond) - Static */}
         {animated ? (
           <motion.path
             d="M20 8 L28 20 L20 32 L12 20 Z"
@@ -96,6 +110,7 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
               opacity: [0.6, 0.3, 0.6],
             }}
             transition={{ duration: 2, repeat: Infinity }}
+            style={{ transformOrigin: '20px 20px' }}
           />
         ) : (
           <circle cx="20" cy="20" r="3" fill="rgba(40, 231, 162, 0.6)" />
@@ -104,4 +119,3 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
     </div>
   );
 };
-
