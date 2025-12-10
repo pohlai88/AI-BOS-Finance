@@ -270,9 +270,7 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
             transition={{ delay: 0.1 }}
           >
             Trust is <br />
-            <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-              Mathematical.
-            </span>
+            <span className="text-zinc-400">Mathematical.</span>
           </motion.h1>
 
           {/* Subhead */}

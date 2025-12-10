@@ -44,9 +44,7 @@ export const LandingPage = ({
               </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 The Inevitable{' '}
-                <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-                  Divergence
-                </span>
+<span className="text-zinc-400">Divergence</span>
               </h2>
             </div>
 
@@ -67,9 +65,7 @@ export const LandingPage = ({
               </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mt-4">
                 Forensic{' '}
-                <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-                  Architecture
-                </span>
+<span className="text-zinc-400">Architecture</span>
               </h2>
               <p className="mt-4 text-nexus-noise max-w-xl text-lg">
                 Built on first principles of cryptographic verification. We don't just audit data; we anchor it to mathematical truth.
@@ -117,9 +113,7 @@ export const LandingPage = ({
               </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 The Truth{' '}
-                <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-                  Engine
-                </span>
+<span className="text-zinc-400">Engine</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Watch transactions flow through our Glass Box audit system. 
@@ -142,9 +136,7 @@ export const LandingPage = ({
               </span>
               <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">
                 Ask the{' '}
-                <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-                  System
-                </span>
+<span className="text-zinc-400">System</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
                 Select a transaction and see the full logic traversal path. 
@@ -170,9 +162,7 @@ export const LandingPage = ({
             </span>
             <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
               Freeze Your <br/>
-              <span className="text-transparent bg-gradient-to-b from-white to-white/50 bg-clip-text">
-                Financial Truth.
-              </span>
+<span className="text-zinc-400">Financial Truth.</span>
             </h2>
             <p className="text-nexus-noise max-w-xl mx-auto text-lg leading-relaxed">
               Drifting data is a liability. NexusCanon locks your ledger into an 
