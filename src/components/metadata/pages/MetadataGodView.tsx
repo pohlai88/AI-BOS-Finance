@@ -94,7 +94,12 @@ export const MetadataGodView = () => {
       </div>
 
       {/* The Forensic Table */}
-      <SuperTable data={DATA} columns={columns} title="MASTER_LEDGER_V1" />
+      <SuperTable
+        data={DATA}
+        columns={columns}
+        title="MASTER_LEDGER_V1"
+        mobileKey="id"
+      />
     </div>
   );
 };
