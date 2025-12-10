@@ -1,12 +1,13 @@
 // ============================================================================
 // BLOCK PRIMITIVES - Individual block designs for stacks
 // LegacyBlock: The "Rust" aesthetic (decaying, shaking)
-// NexusBlock: The "Crystal" aesthetic (stable, glowing)
+// NexusBlock: The "Crystal" aesthetic (stable, glowing) - LEGACY
+// NexusSolidBlock: The "Shield Wall" aesthetic (interlocking, solid)
 // CollapsedRubble: Digital fragmentation display
 // ============================================================================
 
 import { motion } from 'motion/react';
-import { Terminal, AlertTriangle } from 'lucide-react';
+import { Terminal, AlertTriangle, Hexagon, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LegacyStackItem, NexusStackItem, ShakeLevel } from '../types';
 
@@ -101,6 +102,67 @@ export const NexusBlock = ({ data, index = 0 }: NexusBlockProps) => {
       <div className="text-[9px] font-mono text-nexus-green/60 uppercase border border-nexus-green/20 px-1.5 py-0.5">
         {data.status}
       </div>
+    </motion.div>
+  );
+};
+
+// --- NEXUS SOLID BLOCK (The Shield Wall) ---
+interface NexusSolidBlockProps {
+  data: NexusStackItem;
+  index: number;
+}
+
+export const NexusSolidBlock = ({ data, index }: NexusSolidBlockProps) => {
+  const isBottomBlock = index === 0;
+  
+  return (
+    <motion.div
+      layout
+      initial={{ y: -50, opacity: 0, scale: 0.8 }}
+      animate={{ y: 0, opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: 'spring', stiffness: 200, delay: index * 0.05 }}
+      className={cn(
+        'relative w-full h-14 flex items-center justify-between px-6',
+        // Solid background instead of glass
+        'bg-[#0a0f0d]',
+        // Border logic: interlock by removing bottom border except for base
+        'border-x-2 border-t-2 border-nexus-green/40',
+        isBottomBlock && 'border-b-2',
+        'shadow-[inset_0_0_20px_rgba(40,231,162,0.05)]'
+      )}
+      style={{ zIndex: 10 - index }}
+    >
+      {/* Hex Connection Node (The String Node) */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#0a0f0d] border border-nexus-green flex items-center justify-center rotate-45 z-20">
+        <div className="w-1.5 h-1.5 bg-nexus-green" />
+      </div>
+
+      {/* Left Content */}
+      <div className="flex items-center gap-4">
+        <Hexagon className="w-4 h-4 text-nexus-green fill-nexus-green/20" />
+        <span className="text-[10px] font-bold tracking-wider text-white">
+          {data.label}
+        </span>
+      </div>
+
+      {/* Right Content */}
+      <div className="flex items-center gap-2">
+        {/* Progress bar */}
+        <div className="h-1 w-12 bg-nexus-green/10 overflow-hidden rounded-full">
+          <motion.div 
+            className="h-full bg-nexus-green"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
+          />
+        </div>
+        <Lock className="w-3 h-3 text-nexus-green" />
+      </div>
+      
+      {/* Side Glow Bars - Force Field effect */}
+      <div className="absolute inset-y-0 left-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
+      <div className="absolute inset-y-0 right-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
     </motion.div>
   );
 };

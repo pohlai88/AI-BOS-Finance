@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AlertTriangle, Activity, Terminal } from 'lucide-react';
-import { cn } from '@/lib/utils'; // Ensure you have a class merger
+import { AlertTriangle, Activity, Terminal, Hexagon, Lock } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // --- SCHEMA-DRIVEN DATA (Narrative, not random) ---
 const LEGACY_STACK = [
@@ -81,7 +81,7 @@ export default function StabilitySimulation() {
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-xs font-mono text-red-400">LEGACY: DEGRADING</span>
+              <span className="text-xs font-mono text-red-400">LEGACY: {isCollapsed ? 'FAILED' : shakeLevel !== 'none' ? 'DEGRADING' : 'ACTIVE'}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-nexus-green" />
@@ -92,7 +92,7 @@ export default function StabilitySimulation() {
       </div>
 
       {/* 2. THE SIMULATION GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 w-full relative min-h-[500px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 w-full relative min-h-[500px]">
         {/* === LEFT: THE DECAY (Monolith) === */}
         <div className="relative flex flex-col justify-end items-center group">
           {/* Background Grid for "Blueprint" feel */}
@@ -102,23 +102,23 @@ export default function StabilitySimulation() {
           <AnimatePresence>
             {shakeLevel !== 'none' && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 className="absolute top-0 left-0 right-0 p-4 border-b border-red-500/20 bg-red-900/10 backdrop-blur-sm z-20 flex justify-between items-center"
               >
                 <span className="text-[10px] font-mono text-red-500 animate-pulse">
                   ⚠ WARNING: STRUCTURAL FAILURE IMMINENT
                 </span>
-                <span className="text-[10px] font-mono text-red-500">ERR_CODE_0x{stage}F</span>
+                <span className="text-[10px] font-mono text-red-500">ERR_CODE_0x{stage.toString(16).toUpperCase()}F</span>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* The Stack */}
-          <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10">
+          <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10 min-h-[350px]">
             {!isCollapsed ? (
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {LEGACY_STACK.slice(0, stage).map((block) => (
                   <LegacyBlock key={block.id} data={block} shakeLevel={shakeLevel} />
                 ))}
@@ -136,31 +136,68 @@ export default function StabilitySimulation() {
           </div>
         </div>
 
-        {/* === RIGHT: THE CRYSTAL (Nexus) === */}
+        {/* === RIGHT: THE SOLID SHIELD (Nexus) === */}
         <div className="relative flex flex-col justify-end items-center">
-          {/* Background Grid */}
-          <div className="absolute inset-0 border border-nexus-structure/30 bg-[linear-gradient(45deg,transparent_25%,rgba(40,231,162,0.02)_50%,transparent_75%,transparent_100%)] bg-[length:4px_4px]" />
+          {/* 1. Hexagonal Force Field Background */}
+          <div 
+            className="absolute inset-0 border border-nexus-structure/30 overflow-hidden transition-all duration-1000"
+            style={{
+              background: `radial-gradient(circle at bottom center, rgba(40, 231, 162, ${stage * 0.05}) 0%, transparent 70%)`
+            }}
+          >
+            <HexGridBackground stage={stage} />
+          </div>
 
-          {/* The Stack */}
-          <div className="relative w-64 flex flex-col-reverse gap-1 pb-12 z-10">
-            <AnimatePresence>
-              {NEXUS_STACK.slice(0, stage).map((block) => (
-                <NexusBlock key={block.id} data={block} />
+          {/* 2. The Solid Protection Stack */}
+          <motion.div 
+            className="relative w-72 pb-12 z-10 flex flex-col-reverse min-h-[350px]"
+            animate={{
+              filter: `drop-shadow(0 0 ${stage * 4}px rgba(40, 231, 162, ${stage * 0.1}))`
+            }}
+          >
+            {/* The Vertical Spine */}
+            <motion.div 
+              className="absolute left-1/2 bottom-12 w-[2px] bg-gradient-to-t from-nexus-green/50 to-transparent -translate-x-1/2 z-0"
+              initial={{ height: 0 }}
+              animate={{ height: `${Math.min(stage * 16.6, 100)}%` }} 
+            />
+
+            <AnimatePresence mode="popLayout">
+              {NEXUS_STACK.slice(0, stage).map((block, index) => (
+                <NexusSolidBlock 
+                  key={block.id} 
+                  data={block} 
+                  index={index}
+                />
               ))}
             </AnimatePresence>
 
-            {/* Scan Beam */}
-            <motion.div
-              className="absolute top-0 left-[-20%] right-[-20%] h-[1px] bg-gradient-to-r from-transparent via-nexus-green/50 to-transparent"
-              animate={{ top: ['100%', '0%'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            {/* The Base Foundation */}
+            <motion.div 
+              className="absolute bottom-10 left-0 right-0 h-1 bg-nexus-green/50 blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: stage > 0 ? 1 : 0 }}
             />
-          </div>
+
+            {/* Shield Active Indicator */}
+            <AnimatePresence>
+              {stage >= NEXUS_STACK.length && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-nexus-green/10 border border-nexus-green/50 text-nexus-green text-[9px] font-mono tracking-widest uppercase"
+                >
+                  SHIELD ACTIVE
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
           {/* Floor Label */}
           <div className="absolute bottom-0 w-full text-center border-t border-nexus-structure pt-3">
             <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green/70 uppercase">
-              Hexagonal Architecture (v2.0)
+              Hexagonal Shield (v2.0)
             </span>
           </div>
         </div>
@@ -171,8 +208,7 @@ export default function StabilitySimulation() {
 
 // === SUB COMPONENTS ===
 
-const LegacyBlock = ({ data, shakeLevel }: { data: any; shakeLevel: string }) => {
-  // Brutal physics for the shake
+const LegacyBlock = ({ data, shakeLevel }: { data: { id: string; label: string; risk: string }; shakeLevel: string }) => {
   const isShaking = shakeLevel !== 'none';
   const shakeIntensity = shakeLevel === 'critical' ? 15 : shakeLevel === 'moderate' ? 5 : 2;
 
@@ -185,13 +221,13 @@ const LegacyBlock = ({ data, shakeLevel }: { data: any; shakeLevel: string }) =>
         x: isShaking ? [-shakeIntensity, shakeIntensity, -shakeIntensity] : 0,
         rotate: isShaking ? [-1, 1, -1] : 0,
       }}
+      exit={{ opacity: 0, scale: 0.8 }}
       transition={{
         y: { type: 'spring', stiffness: 200 },
         x: { repeat: isShaking ? Infinity : 0, duration: 0.1 },
       }}
       className={cn(
         'w-full h-14 flex items-center justify-between px-4 border',
-        // The "Rust" aesthetic
         'bg-[#111] border-[#333] text-nexus-noise',
         isShaking && 'border-red-500/50 text-red-400 bg-red-950/10',
       )}
@@ -205,33 +241,74 @@ const LegacyBlock = ({ data, shakeLevel }: { data: any; shakeLevel: string }) =>
   );
 };
 
-const NexusBlock = ({ data }: { data: any }) => {
+const NexusSolidBlock = ({ data, index }: { data: { id: string; label: string; status: string }; index: number }) => {
+  const isBottomBlock = index === 0;
+  
   return (
     <motion.div
-      initial={{ y: -50, opacity: 0, scale: 0.95 }}
+      layout
+      initial={{ y: -50, opacity: 0, scale: 0.8 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: 'spring', stiffness: 200, delay: index * 0.05 }}
       className={cn(
-        'w-full h-14 flex items-center justify-between px-4',
-        // The "Glass/Crystal" aesthetic
-        'bg-nexus-matter/50 border border-nexus-green/20 backdrop-blur-sm',
-        'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]',
+        'relative w-full h-14 flex items-center justify-between px-6',
+        'bg-[#0a0f0d]',
+        'border-x-2 border-t-2 border-nexus-green/40',
+        isBottomBlock && 'border-b-2',
+        'shadow-[inset_0_0_20px_rgba(40,231,162,0.05)]'
       )}
+      style={{ zIndex: 10 - index }}
     >
-      <div className="flex items-center gap-3">
-        <div className="w-1.5 h-1.5 bg-nexus-green rounded-full shadow-[0_0_8px_rgba(40,231,162,0.8)]" />
-        <span className="text-[10px] font-mono tracking-wider text-white">{data.label}</span>
+      {/* Hex Connection Node */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#0a0f0d] border border-nexus-green flex items-center justify-center rotate-45 z-20">
+        <div className="w-1.5 h-1.5 bg-nexus-green" />
       </div>
-      <div className="text-[9px] font-mono text-nexus-green/60 uppercase border border-nexus-green/20 px-1.5 py-0.5 rounded-sm">
-        {data.status}
+
+      <div className="flex items-center gap-4">
+        <Hexagon className="w-4 h-4 text-nexus-green fill-nexus-green/20" />
+        <span className="text-[10px] font-bold tracking-wider text-white">{data.label}</span>
       </div>
+
+      <div className="flex items-center gap-2">
+        <div className="h-1 w-12 bg-nexus-green/10 overflow-hidden rounded-full">
+          <motion.div 
+            className="h-full bg-nexus-green"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
+          />
+        </div>
+        <Lock className="w-3 h-3 text-nexus-green" />
+      </div>
+      
+      {/* Side Glow Bars */}
+      <div className="absolute inset-y-0 left-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
+      <div className="absolute inset-y-0 right-0 w-[2px] bg-nexus-green/50 shadow-[0_0_10px_rgba(40,231,162,0.5)]" />
     </motion.div>
   );
 };
 
-const CollapsedRubble = () => {
-  // "Digital Fragmentation" instead of cartoony blocks
+const HexGridBackground = ({ stage }: { stage: number }) => {
   return (
-    <div className="relative w-full h-32 flex items-center justify-center">
+    <div 
+      className="w-full h-full opacity-30 pointer-events-none" 
+      style={{ 
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='24' height='40' viewBox='0 0 24 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40c5.523 0 10-4.477 10-10V10c0-5.523-4.477-10-10-10s-10 4.477-10 10v20c0 5.523 4.477 10 10 10z' fill='none' stroke='%2328E7A2' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E")`,
+        maskImage: `linear-gradient(to top, rgba(0,0,0,1) ${stage * 15}%, transparent 100%)`,
+        WebkitMaskImage: `linear-gradient(to top, rgba(0,0,0,1) ${stage * 15}%, transparent 100%)`,
+      }} 
+    />
+  );
+};
+
+const CollapsedRubble = () => {
+  return (
+    <motion.div 
+      className="relative w-full h-32 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 1.5 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -242,6 +319,6 @@ const CollapsedRubble = () => {
         </div>
         <p className="text-[10px] text-nexus-noise font-mono">Rebooting legacy kernel...</p>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
