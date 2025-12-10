@@ -1,7 +1,7 @@
 import { HeroSection } from '@/components/landing/HeroSection';
 import { Header } from '@/components/landing/Header';
 import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
-import StabilitySimulation from '@/components/landing/StabilitySimulation';
+import { StabilitySimulation } from '@/components/simulation';
 import { LivingLens } from '@/components/landing/LivingLens';
 import { TruthBar } from '@/components/landing/TruthBar';
 import { NexusCard } from '@/components/nexus/NexusCard';
