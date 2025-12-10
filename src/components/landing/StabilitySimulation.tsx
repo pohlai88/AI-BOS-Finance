@@ -29,6 +29,11 @@ export default function StabilitySimulation() {
   const [shakeLevel, setShakeLevel] = useState<'none' | 'light' | 'moderate' | 'critical'>('none');
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // Calculate reactor progress
+  const clampedStage = Math.max(0, Math.min(stage, NEXUS_STACK.length));
+  const progress = NEXUS_STACK.length === 0 ? 0 : clampedStage / NEXUS_STACK.length;
+  const isComplete = progress >= 1;
+
   useEffect(() => {
     const interval = setInterval(() => {
       setStage((prev) => {
@@ -132,43 +137,43 @@ export default function StabilitySimulation() {
           </div>
         </div>
 
-        {/* === RIGHT: THE CRYSTAL FORTRESS === */}
+        {/* === RIGHT: THE CRYSTALLINE REACTOR === */}
         <div className="relative flex flex-col justify-end items-center">
           
           {/* Environment: Deep Void with floor reflection */}
           <div className="absolute inset-0 bg-[#020403] border border-white/5 overflow-hidden">
-            {/* Floor Reflection Gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nexus-green/5 to-transparent" />
           </div>
+
+          {/* The Exoskeleton (Hexagonal Shield Layer) */}
+          <HexShield progress={progress} />
 
           {/* The Crystalline Stack */}
           <div className="relative w-72 pb-12 z-10 flex flex-col-reverse min-h-[400px]">
             
-            {/* The Spine: Solid rod, not a line */}
+            {/* The Spine: Solid rod */}
             <div className="absolute left-1/2 bottom-12 top-0 w-1.5 bg-[#0f1f15] border-x border-nexus-green/20 -translate-x-1/2 z-0" />
 
             <AnimatePresence mode="popLayout">
-              {NEXUS_STACK.slice(0, stage).map((block, index) => (
+              {NEXUS_STACK.slice(0, clampedStage).map((block, index) => (
                 <NexusCrystalBlock 
                   key={block.id} 
                   data={block}
                   index={index}
-                  isNew={index === stage - 1}
+                  isNew={index === clampedStage - 1}
                 />
               ))}
             </AnimatePresence>
 
             {/* Impact Baseplate */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-              {/* The physical base */}
               <div className="w-56 h-2 bg-nexus-green shadow-[0_0_30px_rgba(40,231,162,0.4)] rounded-full" />
-              {/* Shockwave Emitter */}
-              <ShockwaveTrigger trigger={stage} />
+              <ShockwaveTrigger trigger={clampedStage} />
             </div>
 
             {/* Shield Badge */}
             <AnimatePresence>
-              {stage >= NEXUS_STACK.length && (
+              {isComplete && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -187,7 +192,7 @@ export default function StabilitySimulation() {
           <div className="absolute bottom-0 w-full text-center border-t border-nexus-green/20 pt-3">
             <span className="text-[10px] font-mono tracking-[0.2em] text-nexus-green uppercase flex items-center justify-center gap-2">
               <Hexagon className="w-3 h-3" />
-              Crystalline Lattice (v3.0)
+              Crystalline Reactor (v4.0)
             </span>
           </div>
         </div>
@@ -230,7 +235,7 @@ const LegacyBlock = ({ data, shakeLevel }: { data: { id: string; label: string; 
   );
 };
 
-// --- THE CRYSTAL BLOCK (V4 - Natural/Heavy Feel) ---
+// --- THE CRYSTAL BLOCK (V4 - Physical Matter) ---
 const NexusCrystalBlock = ({ data, index, isNew }: { 
   data: { id: string; label: string; status: string }; 
   index: number; 
@@ -239,7 +244,6 @@ const NexusCrystalBlock = ({ data, index, isNew }: {
   return (
     <motion.div
       layout
-      // PHYSICS: Heavy Thud. No bounce. damping: 40 = stops immediately
       initial={{ y: -400, opacity: 0, scale: 0.95 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ opacity: 0, y: -50 }}
@@ -252,20 +256,15 @@ const NexusCrystalBlock = ({ data, index, isNew }: {
       className="relative z-10"
       style={{ zIndex: index }}
     >
-      {/* The Crystal Slab */}
       <div className={cn(
         "relative h-14 w-full flex items-center justify-between px-6 overflow-hidden transition-all duration-700",
-        // Base Material: Dark Obsidian-like Green
         "bg-[#030805]",
-        // 3D Bevels: Light top, dark bottom
         "border-t border-t-white/10 border-b border-b-black/80",
-        // Side Definition
         "border-x border-x-nexus-green/20",
-        // Active State: New blocks glow hot before cooling
         isNew ? "shadow-[inset_0_0_30px_rgba(40,231,162,0.1)]" : "shadow-none"
       )}>
         
-        {/* TEXTURE: Noise Overlay for "Stone/Matter" feel */}
+        {/* TEXTURE: Noise Overlay */}
         <div 
           className="absolute inset-0 opacity-20 pointer-events-none" 
           style={{ 
@@ -273,7 +272,6 @@ const NexusCrystalBlock = ({ data, index, isNew }: {
           }} 
         />
 
-        {/* Content Layer */}
         <div className="relative z-10 flex items-center gap-4">
           <div className={cn(
             "w-2 h-2 rotate-45 transition-colors duration-1000",
@@ -293,7 +291,6 @@ const NexusCrystalBlock = ({ data, index, isNew }: {
         </div>
       </div>
       
-      {/* Interlocking Teeth: Visual notch at bottom */}
       <div className="absolute -bottom-[1px] left-1/2 -translate-x-1/2 w-32 h-[2px] bg-[#030805] z-20" />
     </motion.div>
   );
@@ -303,7 +300,6 @@ const NexusCrystalBlock = ({ data, index, isNew }: {
 const ShockwaveTrigger = ({ trigger }: { trigger: number }) => {
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center">
-      {/* Ripple ring */}
       <motion.div
         key={trigger}
         className="w-40 h-2 rounded-full border border-nexus-green/50"
@@ -311,7 +307,6 @@ const ShockwaveTrigger = ({ trigger }: { trigger: number }) => {
         animate={{ scale: 2.5, opacity: 0, borderWidth: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
-      {/* Ground glow flash */}
       <motion.div
         key={`glow-${trigger}`}
         className="absolute w-full h-4 bg-nexus-green/30 blur-xl"
@@ -320,6 +315,110 @@ const ShockwaveTrigger = ({ trigger }: { trigger: number }) => {
         transition={{ duration: 0.5 }}
       />
     </div>
+  );
+};
+
+// --- THE HEXAGONAL SHIELD (Exoskeleton) ---
+const HexShield = ({ progress }: { progress: number }) => {
+  const clamped = Math.max(0, Math.min(progress, 1));
+
+  return (
+    <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-5">
+      <motion.div 
+        className="relative w-96 h-96"
+        initial={false}
+        animate={{ 
+          scale: 0.9 + (clamped * 0.1),
+          opacity: clamped > 0 ? 1 : 0 
+        }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        {/* 1. The Hexagon Frame */}
+        <div 
+          className="absolute inset-0 border border-nexus-green/20"
+          style={{ 
+            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)"
+          }} 
+        />
+        
+        {/* 2. The Inner Pulse Field (Breathing) */}
+        <motion.div 
+          className="absolute inset-4 border border-nexus-green/30 bg-nexus-green/5"
+          style={{ 
+            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)"
+          }}
+          animate={{
+            opacity: clamped > 0 ? [0.1, 0.3, 0.1] : 0
+          }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* 3. The Tension Cables */}
+        <TensionLines progress={clamped} />
+
+        {/* 4. Corner Nodes */}
+        <HexNodes progress={clamped} />
+      </motion.div>
+    </div>
+  );
+};
+
+// --- TENSION LINES ---
+const TensionLines = ({ progress }: { progress: number }) => {
+  const strength = progress === 0 ? 0 : 0.2 + (progress * 0.8);
+
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute left-1/2 top-1/2 w-[1px] h-[50%] bg-gradient-to-b from-transparent via-nexus-green to-transparent origin-bottom"
+          style={{
+            transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-50%)`,
+          }}
+          initial={{ scaleY: 0.5, opacity: 0 }}
+          animate={{ 
+            scaleY: 0.8 + (progress * 0.2),
+            opacity: strength 
+          }}
+          transition={{ duration: 0.6, delay: i * 0.05 }}
+        />
+      ))}
+    </>
+  );
+};
+
+// --- HEX NODES ---
+const HexNodes = ({ progress }: { progress: number }) => {
+  const nodeOpacity = progress === 0 ? 0 : 0.3 + (progress * 0.7);
+  
+  const nodePositions = [
+    { x: '50%', y: '0%' },
+    { x: '100%', y: '25%' },
+    { x: '100%', y: '75%' },
+    { x: '50%', y: '100%' },
+    { x: '0%', y: '75%' },
+    { x: '0%', y: '25%' },
+  ];
+
+  return (
+    <>
+      {nodePositions.map((pos, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 -translate-x-1/2 -translate-y-1/2"
+          style={{ left: pos.x, top: pos.y }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ 
+            opacity: nodeOpacity,
+            scale: 1 
+          }}
+          transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
+        >
+          <div className="w-full h-full rotate-45 bg-nexus-green shadow-[0_0_8px_rgba(40,231,162,0.6)]" />
+        </motion.div>
+      ))}
+    </>
   );
 };
 
