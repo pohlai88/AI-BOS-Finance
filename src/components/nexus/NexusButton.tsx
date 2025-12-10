@@ -16,37 +16,52 @@ export const NexusButton = ({
   return (
     <button
       className={cn(
-        'group relative h-10 px-6 flex items-center gap-2 justify-center',
-        'font-mono text-xs uppercase tracking-widest transition-all duration-200',
+        'group relative h-12 px-8 flex items-center gap-3 justify-center overflow-hidden',
+        'font-mono text-xs uppercase tracking-[0.15em] transition-all duration-300',
         'disabled:opacity-50 disabled:cursor-not-allowed',
 
-        // Primary: The "Green Flash"
-        variant === 'primary' && 'bg-nexus-green text-nexus-void hover:bg-white',
+        // === PRIMARY: THE WIREFRAME PROTOCOL ===
+        // Default: Transparent Black + Green Border + Green Text
+        // Hover: Fills with Green + Black Text (System Activation)
+        variant === 'primary' && [
+          'bg-nexus-void border border-nexus-green text-nexus-green',
+          'hover:bg-nexus-green hover:text-nexus-void hover:shadow-[0_0_20px_rgba(40,231,162,0.4)]',
+        ],
 
-        // Secondary: The "Wireframe"
-        variant === 'secondary' &&
-          'border border-nexus-structure text-nexus-noise hover:border-nexus-green hover:text-nexus-green',
+        // === SECONDARY: THE GHOST DATA ===
+        variant === 'secondary' && [
+          'border border-nexus-structure text-nexus-noise bg-transparent',
+          'hover:text-nexus-signal hover:border-nexus-subtle',
+        ],
 
-        // Danger: The "Red Alert"
-        variant === 'danger' &&
-          'border border-red-900/50 text-red-500 bg-red-950/10 hover:bg-red-900/20',
+        // === DANGER: THE CRITICAL ERROR ===
+        variant === 'danger' && [
+          'border border-red-900/50 text-red-500 bg-red-950/10',
+          'hover:bg-red-900/20 hover:border-red-500',
+        ],
 
-        className,
+        className
       )}
       {...props}
     >
-      {/* Icon Handling */}
-      {icon && <span className="w-4 h-4">{icon}</span>}
-
-      {children}
-
-      {/* Hover Micro-Interaction (Corners) */}
-      {variant === 'secondary' && (
+      {/* === FORENSIC DECORATION (Only for Primary) === */}
+      {variant === 'primary' && (
         <>
-          <span className="absolute top-0 left-0 w-[1px] h-2 bg-nexus-green opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="absolute bottom-0 right-0 w-[1px] h-2 bg-nexus-green opacity-0 group-hover:opacity-100 transition-opacity" />
+          {/* Top Left Corner */}
+          <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-nexus-green transition-all duration-300 group-hover:w-full group-hover:h-full" />
+          {/* Bottom Right Corner */}
+          <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-nexus-green transition-all duration-300 group-hover:w-full group-hover:h-full" />
+
+          {/* The "Scanline" pass-through effect on hover */}
+          <span className="absolute inset-0 bg-nexus-green/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
         </>
       )}
+
+      {/* Icon Handling */}
+      {icon && <span className="w-4 h-4 relative z-10">{icon}</span>}
+
+      {/* Text Label (Z-Index ensures it stays above the hover fill) */}
+      <span className="relative z-10 font-bold">{children}</span>
     </button>
   );
 };
