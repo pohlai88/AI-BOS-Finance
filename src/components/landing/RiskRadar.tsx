@@ -43,7 +43,10 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
   const theme = isCritical ? THEMES.critical : isWarning ? THEMES.warning : THEMES.normal;
 
   return (
-    <div className="relative w-full aspect-square max-h-[380px] mx-auto border border-nexus-structure bg-nexus-void p-4 overflow-hidden transition-colors duration-1000">
+    <div className={cn(
+      "relative w-full aspect-square max-h-[380px] mx-auto border border-nexus-structure bg-nexus-void p-4 transition-colors duration-1000",
+      isCritical ? "overflow-visible" : "overflow-hidden" // Waves extend beyond box at critical
+    )}>
       
       {/* --- UI HEADER: Live Status Badge --- */}
       <div className="absolute top-3 left-3 z-20 flex items-center gap-3">
@@ -69,30 +72,37 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
         </div>
       </div>
 
-      <svg viewBox="0 0 400 400" className="w-full h-full relative z-10">
+      <svg 
+        viewBox="0 0 400 400" 
+        className={cn(
+          "w-full h-full relative z-10",
+          isCritical && "overflow-visible" // Allow SVG elements to extend beyond viewBox
+        )}
+        style={isCritical ? { overflow: 'visible' } : undefined}
+      >
         <defs>
-          {/* Scan beam gradient - updates with theme */}
-          <radialGradient id="radar-scan-gradient">
-            <stop offset="0%" stopColor={theme.primary} stopOpacity="0.5" />
-            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-          </radialGradient>
+          {/* Scan beam gradient - sweeps from center outward */}
+          <linearGradient id="radar-scan-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={theme.primary} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={theme.primary} stopOpacity="0" />
+          </linearGradient>
         </defs>
 
         {/* --- LAYER 1: EXPANDING RAGE WAVES (Critical Only) --- */}
+        {/* These waves EXTEND BEYOND the radar box - overflow visible */}
         <AnimatePresence>
           {isCritical && (
             <g>
-              {[0, 1, 2].map((i) => (
+              {[0, 1, 2, 3].map((i) => (
                 <motion.circle
                   key={`rage-wave-${i}`}
                   cx="200" cy="200"
                   fill="none"
                   stroke={theme.primary}
-                  strokeWidth="2"
-                  initial={{ r: 50, opacity: 1, strokeWidth: 4 }}
-                  animate={{ r: 350, opacity: 0, strokeWidth: 0 }}
+                  initial={{ r: 40, opacity: 0.8, strokeWidth: 3 }}
+                  animate={{ r: 500, opacity: 0, strokeWidth: 1 }} // r: 500 extends way beyond the 400x400 viewBox
                   transition={{
-                    duration: 3,
+                    duration: 4,
                     repeat: Infinity,
                     delay: i * 1,
                     ease: "easeOut"
@@ -138,48 +148,40 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
           style={{ transformOrigin: '200px 200px' }}
         />
 
-        {/* --- LAYER 4: CLOCK-POINTER SCANNER (Warning & Critical) --- */}
-        <AnimatePresence>
-          {(isWarning || isCritical) && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, rotate: 360 }}
-              exit={{ opacity: 0 }}
-              transition={{ 
-                duration: isCritical ? 2 : 4, 
-                repeat: Infinity, 
-                ease: "linear" 
-              }}
-              style={{ transformOrigin: '200px 200px' }}
-            >
-              {/* The "Clock Hand" */}
-              <line 
-                x1="200" y1="200" x2="200" y2="50" 
-                stroke={theme.primary} 
-                strokeWidth="2" 
-              />
-              
-              {/* The "Wave" behind the hand */}
-              <path 
-                d="M200,200 L200,50 A150,150 0 0,1 350,200 Z" 
-                fill="url(#radar-scan-gradient)" 
-                opacity="0.3" 
-              />
-            </motion.g>
-          )}
-        </AnimatePresence>
-
-        {/* --- LAYER 5: STANDARD SCANNING BEAM (Normal Only) --- */}
-        {!isWarning && !isCritical && (
-          <motion.path
-            d="M200,200 L200,20 A180,180 0 0,1 327,73 Z"
-            fill="url(#radar-scan-gradient)"
-            opacity="0.6"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            style={{ transformOrigin: '200px 200px' }}
+        {/* --- LAYER 4: CLOCK-POINTER SCANNER (All States) --- */}
+        {/* This is the disciplined clock hand - ALWAYS anchored at center MCP Core */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ 
+            duration: isCritical ? 1.5 : isWarning ? 3 : 5, 
+            repeat: Infinity, 
+            ease: "linear" 
+          }}
+          style={{ transformOrigin: '200px 200px' }}
+        >
+          {/* The Clock Hand Line - from center to edge */}
+          <line 
+            x1="200" y1="200" x2="200" y2="25" 
+            stroke={theme.primary} 
+            strokeWidth="2"
+            strokeLinecap="round"
           />
-        )}
+          
+          {/* The Sweep Trail - pie slice from center */}
+          {/* Path: Move to center, Line to top, Arc 45 degrees clockwise, close to center */}
+          <path 
+            d="M 200,200 L 200,25 A 175,175 0 0,1 323.74,76.26 Z" 
+            fill={theme.primary}
+            opacity={isCritical ? 0.4 : isWarning ? 0.3 : 0.2}
+          />
+          
+          {/* Pointer tip glow */}
+          <circle 
+            cx="200" cy="30" r="4" 
+            fill={theme.primary}
+            opacity="0.8"
+          />
+        </motion.g>
 
         {/* --- LAYER 6: QUADRANT LABELS --- */}
         {[
