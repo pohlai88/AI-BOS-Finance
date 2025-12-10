@@ -25,6 +25,47 @@ interface LogEntry {
   message: string;
 }
 
+/**
+ * Generate organic blob path using sine wave deformation
+ * @param center - center point (x,y same)
+ * @param radius - base radius
+ * @param points - number of points on the blob
+ * @param seed - seed for variation (0, 1, 2 for different shapes)
+ */
+const generateBlobPath = (center: number, radius: number, points: number, seed: number): string => {
+  const deformations = [
+    [0.15, 0.08, 0.12, 0.05, 0.1, 0.07, 0.11, 0.06],
+    [0.08, 0.14, 0.06, 0.11, 0.09, 0.13, 0.07, 0.1],
+    [0.12, 0.06, 0.1, 0.14, 0.07, 0.09, 0.13, 0.08],
+  ];
+  const deform = deformations[seed % 3];
+  
+  const pathPoints: string[] = [];
+  
+  for (let i = 0; i <= points; i++) {
+    const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
+    const deformAmount = deform[i % deform.length];
+    const r = radius * (1 + deformAmount * Math.sin(angle * 3 + seed));
+    const x = center + r * Math.cos(angle);
+    const y = center + r * Math.sin(angle);
+    
+    if (i === 0) {
+      pathPoints.push(`M ${x.toFixed(2)} ${y.toFixed(2)}`);
+    } else {
+      // Use quadratic curves for smooth organic feel
+      const prevAngle = ((i - 1) / points) * Math.PI * 2 - Math.PI / 2;
+      const midAngle = (angle + prevAngle) / 2;
+      const midR = radius * (1 + deform[(i - 1) % deform.length] * 0.5);
+      const cpX = center + midR * 1.1 * Math.cos(midAngle);
+      const cpY = center + midR * 1.1 * Math.sin(midAngle);
+      pathPoints.push(`Q ${cpX.toFixed(2)} ${cpY.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`);
+    }
+  }
+  
+  pathPoints.push('Z');
+  return pathPoints.join(' ');
+};
+
 interface ThreatRadarProps {
   activeRisks?: number;
   className?: string;
@@ -325,6 +366,104 @@ export const ThreatRadar = ({
                 strokeWidth="1"
                 strokeOpacity="0.08"
               />
+
+              {/* === MORPHOLOGY LAYER === */}
+              
+              {/* Organic blob ring - morphing shape */}
+              <motion.path
+                d={generateBlobPath(center, outerRadius * 0.85, 8, 0)}
+                fill="none"
+                stroke={theme.color}
+                strokeWidth="1.5"
+                strokeOpacity="0.25"
+                animate={{
+                  d: [
+                    generateBlobPath(center, outerRadius * 0.85, 8, 0),
+                    generateBlobPath(center, outerRadius * 0.85, 8, 1),
+                    generateBlobPath(center, outerRadius * 0.85, 8, 2),
+                    generateBlobPath(center, outerRadius * 0.85, 8, 0),
+                  ],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+              />
+
+              {/* Inner organic blob - faster morph */}
+              <motion.path
+                d={generateBlobPath(center, outerRadius * 0.5, 6, 0)}
+                fill={`${theme.color}08`}
+                stroke={theme.color}
+                strokeWidth="1"
+                strokeOpacity="0.15"
+                animate={{
+                  d: [
+                    generateBlobPath(center, outerRadius * 0.5, 6, 0),
+                    generateBlobPath(center, outerRadius * 0.5, 6, 2),
+                    generateBlobPath(center, outerRadius * 0.5, 6, 1),
+                    generateBlobPath(center, outerRadius * 0.5, 6, 0),
+                  ],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              />
+
+              {/* Neural tendrils connecting center to edge */}
+              {[0, 72, 144, 216, 288].map((baseAngle, i) => {
+                const angle = (baseAngle - 90) * Math.PI / 180;
+                const endX = center + outerRadius * 0.9 * Math.cos(angle);
+                const endY = center + outerRadius * 0.9 * Math.sin(angle);
+                const ctrlOffset = 30 + i * 10;
+                
+                return (
+                  <motion.path
+                    key={`tendril-${i}`}
+                    d={`M ${center} ${center} 
+                        Q ${center + ctrlOffset * Math.cos(angle + 0.3)} ${center + ctrlOffset * Math.sin(angle + 0.3)}
+                        ${endX} ${endY}`}
+                    fill="none"
+                    stroke={theme.color}
+                    strokeWidth="1"
+                    strokeOpacity="0.1"
+                    animate={{
+                      strokeOpacity: [0.05, 0.2, 0.05],
+                      strokeWidth: [0.5, 1.5, 0.5],
+                    }}
+                    transition={{
+                      duration: 3,
+                      delay: i * 0.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                );
+              })}
+
+              {/* Cellular pulse nodes on rings */}
+              {[0.4, 0.6, 0.8].map((ringDist, ringIdx) =>
+                [0, 60, 120, 180, 240, 300].map((angleDeg, nodeIdx) => {
+                  const angle = (angleDeg - 90) * Math.PI / 180;
+                  const x = center + outerRadius * ringDist * Math.cos(angle);
+                  const y = center + outerRadius * ringDist * Math.sin(angle);
+                  
+                  return (
+                    <motion.circle
+                      key={`cell-${ringIdx}-${nodeIdx}`}
+                      cx={x}
+                      cy={y}
+                      r="2"
+                      fill={theme.color}
+                      animate={{
+                        r: [1.5, 3, 1.5],
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 2 + ringIdx * 0.5,
+                        delay: nodeIdx * 0.2 + ringIdx * 0.3,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                  );
+                })
+              )}
 
               {/* SCANNING WEDGE (cake slice) */}
               <g style={{ transformOrigin: `${center}px ${center}px` }}>
