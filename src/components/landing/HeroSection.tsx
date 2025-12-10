@@ -5,9 +5,11 @@
 // ============================================================================
 
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Shield, Lock, Database, Terminal, Activity } from 'lucide-react';
+import { ArrowRight, Shield, Lock, Database, Terminal } from 'lucide-react';
 import { NexusButton } from '@/components/nexus/NexusButton';
 import { useRiskTelemetry, type TelemetryEvent, type Severity } from '@/hooks/useRiskTelemetry';
+import { APP_CONFIG } from '@/constants/app';
+import { RiskRadar } from './RiskRadar';
 
 // --- SEVERITY COLOR MAP ---
 const severityColors: Record<Severity, { text: string; bg: string; border: string }> = {
@@ -17,154 +19,7 @@ const severityColors: Record<Severity, { text: string; bg: string; border: strin
   critical: { text: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500' },
 };
 
-// --- SUB-COMPONENT: THE RADAR ---
-const RiskRadar = ({ activeRisks, systemStatus }: { activeRisks: number; systemStatus: string }) => (
-  <div className="relative w-full aspect-square max-h-[380px] mx-auto border border-nexus-structure bg-nexus-void p-4 overflow-hidden">
-    {/* Header */}
-    <div className="absolute top-3 left-3 z-20 flex items-center gap-2">
-      <motion.div
-        className="w-2 h-2 rounded-full bg-nexus-green"
-        animate={{ opacity: systemStatus === 'ALERT' ? [1, 0.3, 1] : [1, 0.5, 1] }}
-        transition={{ duration: systemStatus === 'ALERT' ? 0.3 : 2, repeat: Infinity }}
-      />
-      <span className="text-[9px] font-mono text-nexus-green uppercase tracking-widest">
-        {systemStatus === 'ALERT' ? 'THREAT DETECTED' : 'SCANNING'}
-      </span>
-    </div>
-
-    <svg viewBox="0 0 400 400" className="w-full h-full relative z-10">
-      {/* GRID RINGS */}
-      <g>
-        {[60, 100, 140, 180].map((radius, i) => (
-          <motion.circle
-            key={`ring-${i}`}
-            cx="200" cy="200" r={radius}
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.08)"
-            strokeWidth="1"
-            strokeDasharray="4,4"
-          />
-        ))}
-        {/* Crosshairs */}
-        <line x1="200" y1="20" x2="200" y2="380" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-        <line x1="20" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-        {/* Diagonal lines */}
-        <line x1="60" y1="60" x2="340" y2="340" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-        <line x1="340" y1="60" x2="60" y2="340" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-      </g>
-
-      {/* OUTER DECODER RING */}
-      <motion.circle
-        cx="200" cy="200" r="190"
-        fill="none"
-        stroke="rgba(40, 231, 162, 0.2)"
-        strokeWidth="2"
-        strokeDasharray="2, 8, 15, 8"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        style={{ transformOrigin: '200px 200px' }}
-      />
-
-      {/* SCANNING BEAM */}
-      <motion.path
-        d="M200,200 L200,20 A180,180 0 0,1 327,73 Z"
-        fill="url(#scanBeamGradient)"
-        opacity="0.6"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        style={{ transformOrigin: '200px 200px' }}
-      />
-      
-      <defs>
-        <radialGradient id="scanBeamGradient">
-          <stop offset="0%" stopColor="rgba(40, 231, 162, 0.4)" />
-          <stop offset="100%" stopColor="rgba(40, 231, 162, 0)" />
-        </radialGradient>
-      </defs>
-
-      {/* QUADRANT LABELS */}
-      {[
-        { angle: 0, label: 'IFRS', x: 360, y: 200 },
-        { angle: 90, label: 'SOX', x: 200, y: 380 },
-        { angle: 180, label: 'COSO', x: 40, y: 200 },
-        { angle: 270, label: 'TAX', x: 200, y: 30 },
-      ].map((q, i) => (
-        <text
-          key={i}
-          x={q.x}
-          y={q.y}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="rgba(40, 231, 162, 0.6)"
-          fontSize="11"
-          fontWeight="600"
-          letterSpacing="2"
-          fontFamily="monospace"
-        >
-          {q.label}
-        </text>
-      ))}
-
-      {/* STATIC RISK BLIPS */}
-      {[
-        { angle: 35, radius: 120, sev: 'medium' as Severity },
-        { angle: 110, radius: 90, sev: 'high' as Severity },
-        { angle: 200, radius: 150, sev: 'low' as Severity },
-        { angle: 290, radius: 100, sev: 'critical' as Severity },
-      ].map((blip, i) => {
-        const rad = (blip.angle * Math.PI) / 180;
-        const x = 200 + Math.cos(rad) * blip.radius;
-        const y = 200 + Math.sin(rad) * blip.radius;
-        const color = severityColors[blip.sev];
-        
-        return (
-          <g key={i}>
-            <motion.circle
-              cx={x} cy={y} r="6"
-              className={color.bg}
-              initial={{ scale: 0 }}
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-            />
-            {blip.sev === 'critical' && (
-              <motion.circle
-                cx={x} cy={y} r="6"
-                fill="none"
-                stroke="rgba(239, 68, 68, 0.8)"
-                strokeWidth="2"
-                animate={{ r: [6, 18], opacity: [1, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-            )}
-          </g>
-        );
-      })}
-
-      {/* CENTER CORE */}
-      <g transform="translate(200, 200)">
-        <circle r="45" fill="#0a0a0a" stroke="rgba(40, 231, 162, 0.4)" strokeWidth="1.5" />
-        <circle r="38" fill="none" stroke="rgba(40, 231, 162, 0.15)" strokeWidth="1" strokeDasharray="3,3" />
-        
-        <text y="-8" textAnchor="middle" fill="rgba(40, 231, 162, 0.7)" fontSize="8" letterSpacing="2" fontFamily="monospace">
-          MCP CORE
-        </text>
-        <text y="10" textAnchor="middle" fill="white" fontSize="28" fontWeight="700" fontFamily="monospace">
-          {activeRisks}
-        </text>
-        <text y="26" textAnchor="middle" fill="rgba(40, 231, 162, 0.8)" fontSize="8" letterSpacing="1" fontFamily="monospace">
-          THREATS
-        </text>
-      </g>
-    </svg>
-
-    {/* Bottom Label */}
-    <div className="absolute bottom-2 left-0 right-0 text-center">
-      <span className="text-[8px] font-mono text-nexus-noise uppercase tracking-widest">
-        NexusCanon Risk Telemetry Grid
-      </span>
-    </div>
-  </div>
-);
+// RiskRadar is now imported from ./RiskRadar.tsx
 
 // --- SUB-COMPONENT: THE TERMINAL ---
 const RiskTerminal = ({ events }: { events: TelemetryEvent[] }) => (
@@ -241,7 +96,7 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          SYS_INIT // v2.4.1
+          SYS_INIT // {APP_CONFIG.versionDisplay}
         </motion.p>
       </div>
 

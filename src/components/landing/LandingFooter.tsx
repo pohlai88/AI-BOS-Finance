@@ -1,5 +1,6 @@
 import { NexusIcon } from '../nexus/NexusIcon';
 import { Github, Linkedin, Twitter } from 'lucide-react';
+import { APP_CONFIG } from '@/constants/app';
 
 const footerLinks = {
   product: [
@@ -156,7 +157,7 @@ export const LandingFooter = () => {
               <span>All systems operational</span>
             </div>
             <span className="hidden md:inline text-zinc-700">•</span>
-            <span className="hidden md:inline font-mono">v2.4.1</span>
+            <span className="hidden md:inline font-mono">{APP_CONFIG.versionDisplay}</span>
           </div>
         </div>
       </div>
