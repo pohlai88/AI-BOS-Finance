@@ -293,11 +293,11 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <NexusButton variant="primary" onClick={onGetStarted}>
-              INITIALIZE PROTOCOL
+            <NexusButton variant="primary" size="lg" onClick={onGetStarted}>
+              Start Free Trial
             </NexusButton>
-            <NexusButton variant="secondary" icon={<ArrowRight className="w-4 h-4" />}>
-              VIEW DOCUMENTATION
+            <NexusButton variant="secondary" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
+              View Documentation
             </NexusButton>
           </motion.div>
           

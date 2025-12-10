@@ -186,12 +186,12 @@ export const LandingPage = ({
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-12 relative z-10">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-16 relative z-10">
             <NexusButton variant="primary" size="lg" onClick={onTryIt}>
-              Get Started
+              Start Free Trial
             </NexusButton>
             <NexusButton variant="secondary" size="lg" onClick={onCanonClick} icon={<ArrowRight className="w-4 h-4" />}>
-              Read the Canon
+              View Documentation
             </NexusButton>
           </div>
         </section>
