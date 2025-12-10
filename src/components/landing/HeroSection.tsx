@@ -177,16 +177,16 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN: THE BRAIN VISUALIZATION - Push to right edge */}
+        {/* RIGHT COLUMN: THE BRAIN VISUALIZATION - MAXIMUM SIZE */}
         <motion.div 
           className="lg:col-span-5 relative flex items-center justify-end"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          {/* THE STACK: Radar + Terminal - Full width of column */}
-          <div className="flex flex-col shadow-2xl shadow-nexus-green/5 w-full max-w-[520px]">
-            <ThreatRadar activeRisks={activeRisks} showLog={false} size={500} />
+          {/* THE STACK: Radar + Terminal - Full width, no constraints */}
+          <div className="flex flex-col shadow-2xl shadow-nexus-green/5 w-full">
+            <ThreatRadar activeRisks={activeRisks} showLog={false} size={560} className="w-full" />
             <RiskTerminal events={events} />
           </div>
           

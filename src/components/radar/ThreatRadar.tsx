@@ -190,8 +190,8 @@ export const ThreatRadar = ({
           </motion.div>
         </div>
 
-        {/* Radar Area - minimal padding to maximize size */}
-        <div className="relative flex items-center justify-center p-4">
+        {/* Radar Area - zero padding for maximum size */}
+        <div className="relative flex items-center justify-center p-2">
           {/* Atmospheric glow */}
           <div 
             className="absolute inset-0 pointer-events-none"
