@@ -66,6 +66,7 @@ export const Header = ({
             {/* NAVIGATION TRAY - Forensic Left-Aligned Toolbar */}
             <nav className="flex items-center justify-start pt-2 w-full gap-8">
               {/* ZONE 1: REALITY (Observe) */}
+              {/* META_02 - Meta Registry (God View) */}
               <NavItem
                 label="Registry // God View"
                 icon={<Database className="w-4 h-4" />}

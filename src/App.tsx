@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { LandingPage } from '@/pages/LandingPage';
-import { MetadataGodView } from '@/components/metadata/pages/MetadataGodView';
+import { MetadataGodView } from '@/pages/META_02_MetadataGodView';
+import { INV01Dashboard } from '@/modules/inventory';
+import { SYS01Bootloader } from '@/modules/system';
 import { SysConfigProvider } from '@/context/SysConfigContext';
 import { Toaster } from 'sonner';
 
@@ -19,6 +21,16 @@ const AppRoutes = () => {
 
       {/* SECURE ROUTE: The God View */}
       <Route path="/dashboard" element={<MetadataGodView />} />
+
+      {/* META_02 - Meta Registry (God View) */}
+      <Route path="/meta-registry" element={<MetadataGodView />} />
+
+      {/* INV_01 - Inventory Dashboard */}
+      <Route path="/inventory" element={<INV01Dashboard />} />
+
+      {/* SYS_01 - System Bootloader */}
+      <Route path="/system" element={<SYS01Bootloader />} />
+      <Route path="/settings" element={<SYS01Bootloader />} />
 
       {/* FALLBACK: Redirect unknown paths to Home */}
       <Route path="*" element={<LandingPage onTryIt={handleTryIt} onCanonClick={handleTryIt} />} />
