@@ -1,0 +1,104 @@
+---
+description: Security Requirements and Patterns (ADR_002)
+globs: ["**/*.ts", "**/*.tsx", "**/api/**", "**/actions/**"]
+alwaysApply: true
+---
+
+> **🟢 [ACTIVE]** — Cursor Rule Enforcer  
+> **Derives From:** ADR_002 (Canon Security)  
+> **Purpose:** IDE enforcement of security patterns  
+> **Scope:** API routes, Server Actions  
+> **Always Apply:** Yes
+
+---
+
+# Security Rules
+
+## ADR Reference
+- **Decision:** ADR_002 (Server-Side Canon Context Verification)
+- **Location:** `canon/contracts/adrs/ADR_002_CanonSecurity.md`
+
+## Core Security Principle
+
+> **🔴 Never trust CanonContext from the client.**  
+> **Always derive & verify from server-side registry.**
+
+## Server-Side Verification Pattern
+
+```typescript
+// ✅ REQUIRED in all Route Handlers and Server Actions
+export async function POST(request: NextRequest) {
+  const { canon, payload } = await request.json();
+  
+  // 1. Authenticate user
+  const session = await getSession(request);
+  if (!session) return unauthorized();
+  
+  // 2. Derive from server registry (don't trust client)
+  const serverConfig = await getCellConfig(canon.pageCode, canon.tabCode);
+  if (!serverConfig) return badRequest('Invalid cell');
+  
+  // 3. Verify schema matches
+  if (canon.schemaCode !== serverConfig.schemaCode) {
+    logSecurityWarning('Schema mismatch', { 
+      client: canon.schemaCode, 
+      expected: serverConfig.schemaCode 
+    });
+    return badRequest('Invalid schema');
+  }
+  
+  // 4. Check permissions
+  const hasPermission = await checkPolicyPermission(session.user, serverConfig.policyCodes[0]);
+  if (!hasPermission) return forbidden();
+  
+  // 5. Use server-derived config
+  const result = await process(serverConfig, payload);
+  return NextResponse.json(result);
+}
+```
+
+## Forbidden Patterns
+
+### ❌ Trusting Client Data
+```typescript
+// ❌ NEVER do this
+const schema = await loadSchema(canon.schemaCode); // Client-provided!
+```
+
+### ❌ Missing Authentication
+```typescript
+// ❌ NEVER do this
+export async function POST(request: NextRequest) {
+  const data = await request.json();
+  await saveToDatabase(data); // No auth check!
+}
+```
+
+### ❌ Exposing Internal Errors
+```typescript
+// ❌ NEVER do this
+catch (error) {
+  return NextResponse.json({ error: error.message }); // Leaks internals!
+}
+
+// ✅ Do this instead
+catch (error) {
+  logError('Operation failed', { error, canonContext });
+  return NextResponse.json({ error: 'Operation failed' }, { status: 500 });
+}
+```
+
+## Required Security Checks
+
+1. **Authentication:** Every protected endpoint must verify session
+2. **Authorization:** Check user permissions against policy
+3. **Input Validation:** Use server-derived Zod schemas
+4. **Logging:** Log security events with Canon context
+5. **Rate Limiting:** Apply to public endpoints
+
+## Sensitive Data Handling
+
+- Never log passwords, tokens, or PII
+- Use environment variables for secrets
+- Validate file uploads (type, size, content)
+- Sanitize user input before database operations

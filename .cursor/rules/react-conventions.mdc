@@ -1,0 +1,83 @@
+---
+description: React & TypeScript Coding Conventions
+globs: ["**/*.tsx", "**/*.ts", "**/*.jsx", "**/*.js"]
+alwaysApply: false
+---
+
+> **🟢 [ACTIVE]** — Cursor Rule Enforcer  
+> **Derives From:** CONT_01 v2.2.0 (Section 7)  
+> **Purpose:** IDE enforcement of React/TypeScript patterns  
+> **Scope:** TypeScript and JavaScript files  
+> **Always Apply:** No (context-based)
+
+---
+
+# React & TypeScript Conventions
+
+## Tech Stack
+- **Framework:** React 18.3+ with TypeScript 5.6+
+- **Build:** Vite 6.x (migrating to Next.js 14+ App Router)
+- **Styling:** Tailwind CSS 3.4+
+- **Routing:** React Router DOM 7.x (current), Next.js App Router (target)
+- **UI Primitives:** Radix UI
+
+## File Naming
+- Pages: `<PageCode>_<ShortName>.tsx` (e.g., `META_02_GodView.tsx`)
+- Components: `<CompCode>_<ShortName>.tsx` (e.g., `TBLM01_MonetizeTable.tsx`)
+- Actions: `<PageCode>.actions.ts` (Server Actions)
+- Utilities: `camelCase.ts` (no Canon ID needed)
+
+## Import Conventions
+```typescript
+// ✅ Preferred - path aliases
+import { Button } from '@/components/ui/Button';
+import type { PageMeta } from '@aibos/canon';
+
+// ❌ Avoid - relative paths beyond 2 levels
+import { Button } from '../../../components/Button';
+```
+
+## Component Patterns
+
+### Server Components (Default in Next.js)
+```typescript
+// No 'use client' directive
+export default async function Page() {
+  const data = await fetchData();
+  return <Component data={data} />;
+}
+```
+
+### Client Components
+```typescript
+'use client';
+
+import { useState } from 'react';
+
+export function InteractiveComponent() {
+  const [state, setState] = useState(null);
+  // ...
+}
+```
+
+## TypeScript Patterns
+- Use `satisfies` for type validation with inference
+- Use `as const` for literal types
+- Prefer `interface` for object shapes, `type` for unions
+- Always type function parameters and returns
+
+## Tailwind Conventions
+- Use design system tokens from `tailwind.config.js`
+- Prefer utility classes over custom CSS
+- Use `cn()` utility for conditional classes
+- Dark theme: use `dark:` prefix variants
+
+## State Management
+- React Query for server state
+- Zustand for client state
+- Context for component-scoped state
+
+## Error Handling
+- Use Error Boundaries for UI errors
+- Use try/catch in async functions
+- Log errors with Canon context (pageCode, cellId)

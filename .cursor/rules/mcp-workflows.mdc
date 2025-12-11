@@ -1,0 +1,75 @@
+---
+description: MCP Server Usage and Workflows
+globs: ["**/*"]
+alwaysApply: false
+---
+
+> **🟢 [ACTIVE]** — Cursor Rule Enforcer  
+> **Derives From:** CONT_01 v2.2.0 (MCP Integration)  
+> **Purpose:** IDE guidance for MCP server usage  
+> **Scope:** All files  
+> **Always Apply:** No (context-based)
+
+---
+
+# MCP (Model Context Protocol) Workflows
+
+## Active MCP Servers
+
+| Server | Status | Purpose |
+|--------|--------|---------|
+| Figma MCP | ✅ Active | Design-to-code validation |
+| GitHub MCP | ✅ Active | Repository management |
+| React Aria MCP | ✅ Active | Accessibility documentation |
+| Supabase MCP | ✅ Active | Database operations |
+| Browser Automation | ✅ Active | Visual testing |
+| Next.js DevTools | ⚠️ Future | Next.js development |
+
+## Quick Reference Commands
+
+### Figma MCP
+- `mcp_Figma_get_design_context` - Get design specs and code
+- `mcp_Figma_get_screenshot` - Capture frame screenshots
+- `mcp_Figma_whoami` - Check authentication
+
+### GitHub MCP
+- `mcp_github_search_repositories` - Search repos
+- `mcp_github_get_file_contents` - Read files
+- `mcp_github_create_pull_request` - Create PRs
+
+### React Aria MCP
+- `mcp_react-aria_get_react_aria_page` - Get component docs
+
+### Browser Automation
+- `mcp_cursor-ide-browser_browser_navigate` - Navigate to URL
+- `mcp_cursor-ide-browser_browser_snapshot` - Accessibility snapshot
+- `mcp_cursor-ide-browser_browser_click` - Click elements
+
+### Supabase MCP
+- `mcp_supabase_execute_sql` - Run SQL queries
+- `mcp_supabase_list_tables` - List database tables
+- `mcp_supabase_apply_migration` - Apply migrations
+
+## Recommended Workflows
+
+### Design Validation
+1. Get Figma specs: `mcp_Figma_get_design_context`
+2. Implement changes
+3. Screenshot: `mcp_cursor-ide-browser_browser_snapshot`
+4. Compare and iterate
+
+### Accessibility Check
+1. Navigate to page
+2. Get snapshot: `mcp_cursor-ide-browser_browser_snapshot`
+3. Check React Aria docs: `mcp_react-aria_get_react_aria_page`
+4. Apply ARIA patterns
+
+### Database Operations
+1. Check schema: `mcp_supabase_list_tables`
+2. Create migration: `mcp_supabase_apply_migration`
+3. Verify: `mcp_supabase_execute_sql`
+
+## Development Server
+- **Port:** 5173 (Vite default)
+- **URL:** `http://localhost:5173`
+- **Command:** `npm run dev`

@@ -1,0 +1,18 @@
+{
+  "fileKey": "w0bI6UKGtkTUwzhMGMhs93",
+  "nodeId": "0:1",
+  "outputDir": "src/data/figma",
+  "outputFormat": "both",
+  "includeImages": false,
+  "includeMetadata": true,
+  "syncSchedule": {
+    "enabled": true,
+    "frequency": "daily",
+    "time": "09:00"
+  },
+  "webhook": {
+    "enabled": false,
+    "endpoint": "/api/figma/webhook"
+  }
+}
+

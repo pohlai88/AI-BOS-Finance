@@ -1,0 +1,158 @@
+> **🟢 [ACTIVE]** — Cursor IDE Configuration  
+> **Derives From:** CONT_01 v2.2.0  
+> **Purpose:** AI-BOS/NexusCanon IDE governance rules  
+> **Version:** 1.0.0  
+> **Last Updated:** 2025-12-11
+
+---
+
+# AI-BOS / NexusCanon — Cursor IDE Rules
+# ═══════════════════════════════════════════════════════════════
+# Modular rules: .cursor/rules/*.mdc
+# Validation: npx tsx scripts/TOOL_04_ValidateCursorRules.ts
+# ═══════════════════════════════════════════════════════════════
+
+## 🏛️ Governance (SSOT)
+
+**Contract:** CONT_01 v2.2.0  
+**Location:** `canon/contracts/CONT_01_CanonIdentity.md`  
+**Security:** ADR_002 (Never trust client CanonContext)
+
+### Canon Prefixes
+| Plane | Prefixes | Purpose |
+|-------|----------|---------|
+| A | `CONT`, `ADR` | Governance |
+| B | `PAGE`, `COMP`, `CELL` | Functional |
+| C | `ENT`, `SCH`, `POLY`, `CONST` | Data & Logic |
+| D | `TOOL`, `MIG`, `INFRA` | Operations |
+| E | `SPEC`, `REF` | Knowledge |
+
+### Required Exports
+```typescript
+// Pages (canon-pages/)
+export const PAGE_META = { code: 'META_02', ... } as const satisfies PageMeta;
+
+// Components (packages/ui/canon/)
+export const COMPONENT_META = { code: 'TBLM01', ... } as const satisfies ComponentMeta;
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Version |
+|-------|------------|---------|
+| Framework | React | 18.3+ |
+| Language | TypeScript | 5.6+ |
+| Build | Vite → Next.js | 6.x → 14+ |
+| Styling | Tailwind CSS | 3.4+ |
+| UI | Radix primitives | Latest |
+| DB | Supabase | Latest |
+
+---
+
+## 📁 Directory Structure
+
+```
+canon/contracts/       # CONT_*, ADR_*
+canon/registry/        # YAML manifests (pages, components, cells)
+apps/web/canon-pages/  # PAGE_* implementations
+packages/ui/canon/     # COMP_* implementations
+packages/schemas/      # SCH_* (Zod)
+packages/policies/     # POLY_*
+scripts/               # TOOL_*
+knowledge/             # SPEC_*, REF_*
+```
+
+---
+
+## 🚫 Forbidden Patterns
+
+1. ❌ Trust client `CanonContext` — always verify server-side
+2. ❌ Import raw `@tanstack/react-table` — use `TBLM01` or `TBLL01`
+3. ❌ Create pages without `PAGE_META` in `canon-pages/`
+4. ❌ Assign Canon IDs to framework configs (`package.json`, etc.)
+5. ❌ Use inline styles — use Tailwind classes
+6. ❌ Skip authentication in API routes
+
+---
+
+## ✅ Preferred Patterns
+
+1. ✅ Use path aliases: `@/`, `@aibos/canon`
+2. ✅ Server Components by default (Next.js)
+3. ✅ `'use client'` only for interactive components
+4. ✅ Server Actions in `*.actions.ts` files
+5. ✅ `cn()` utility for conditional Tailwind classes
+6. ✅ Error boundaries for UI error handling
+
+---
+
+## 🔍 Verification Commands
+
+```bash
+# Governance stamps
+npx tsx scripts/TOOL_03_CheckGovernanceStamps.ts
+
+# Cursor rules
+npx tsx scripts/TOOL_04_ValidateCursorRules.ts
+
+# Canon sync
+npm run canon:sync
+```
+
+---
+
+## 🔌 MCP Servers
+
+| Server | Command Prefix | Purpose |
+|--------|----------------|---------|
+| Figma | `mcp_Figma_*` | Design-to-code |
+| GitHub | `mcp_github_*` | Repository ops |
+| React Aria | `mcp_react-aria_*` | A11y docs |
+| Supabase | `mcp_supabase_*` | Database |
+| Browser | `mcp_cursor-ide-browser_*` | Visual testing |
+
+---
+
+## 📚 Detailed Rules (Modular)
+
+| File | Scope | Always Apply |
+|------|-------|--------------|
+| `rules/canon-governance.mdc` | TS/TSX/YAML/MD | ✅ Yes |
+| `rules/security-rules.mdc` | API/Actions | ✅ Yes |
+| `rules/react-conventions.mdc` | TS/TSX/JS/JSX | ❌ No |
+| `rules/mcp-workflows.mdc` | All | ❌ No |
+
+---
+
+## 🎯 Quick Reference
+
+### File Naming
+- **Pages:** `<PageCode>_<Name>.tsx` → `META_02_GodView.tsx`
+- **Components:** `<CompCode>_<Name>.tsx` → `TBLM01_MonetizeTable.tsx`
+- **Actions:** `<PageCode>.actions.ts` → `META_02.actions.ts`
+
+### Cell ID Format
+```
+CELL_<PAGE>_<SCHEMA>_<TAB>_<POLICY>
+Example: CELL_META_09_101_10_25
+```
+
+### Import Order
+```typescript
+// 1. React/Next.js
+import { useState } from 'react';
+// 2. External packages
+import { z } from 'zod';
+// 3. Internal aliases
+import { Button } from '@/components/ui';
+// 4. Relative imports
+import { helper } from './utils';
+// 5. Types (last)
+import type { PageMeta } from '@aibos/canon';
+```
+
+---
+
+**📖 For full specifications, see:** `canon/contracts/CONT_01_CanonIdentity.md`

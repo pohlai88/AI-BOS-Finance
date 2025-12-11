@@ -1,0 +1,87 @@
+---
+description: Canon Identity & Governance Rules (CONT_01)
+globs: ["**/*.tsx", "**/*.ts", "**/*.yaml", "**/*.md"]
+alwaysApply: true
+---
+
+> **🟢 [ACTIVE]** — Cursor Rule Enforcer  
+> **Derives From:** CONT_01 v2.2.0  
+> **Purpose:** IDE enforcement of Canon Identity rules  
+> **Scope:** All TS/TSX/YAML/MD files  
+> **Always Apply:** Yes
+
+---
+
+# Canon Governance Rules
+
+## SSOT Reference
+- **Contract:** CONT_01 v2.2.0
+- **Location:** `canon/contracts/CONT_01_CanonIdentity.md`
+- **Verification:** `npx tsx scripts/TOOL_03_CheckGovernanceStamps.ts`
+
+## Canon Identity Codes
+
+### Plane A — Governance
+- `CONT_XX` - Contracts (immutable law)
+- `ADR_XXX` - Architecture Decision Records
+
+### Plane B — Functional
+- `PAGE_<Code>` or `<Code>` - Routable screens (e.g., `META_02`, `PAY_01`)
+- `COMP_<Code>` - UI Components (e.g., `TBLM01`, `TBLL01`)
+- `CELL_<PAGE>_<SCH>_<TAB>_<POLY>` - Atomic governed units
+
+### Plane C — Data & Logic
+- `ENT_XXX` - Database entities
+- `SCH_XXX` - Validation schemas (Zod)
+- `POLY_XX` - Business policies
+- `CONST_XX` - Static constants
+
+### Plane D — Operations
+- `TOOL_XX` - Scripts and CLI tools
+- `MIG_YYYYMMDD_Slug` - Database migrations
+- `INFRA_XX` - Infrastructure as Code
+
+### Plane E — Knowledge
+- `SPEC_XXX` - Feature specifications
+- `REF_XXX` - External references
+
+## Required Exports
+
+### Pages (in `canon-pages/`)
+```typescript
+export const PAGE_META = {
+  code: 'META_02',
+  version: '1.0.0',
+  name: 'Page Name',
+  route: '/route',
+  domain: 'METADATA',
+  status: 'active',
+} as const satisfies PageMeta;
+```
+
+### Components (in `packages/ui/canon/`)
+```typescript
+export const COMPONENT_META = {
+  code: 'TBLM01',
+  version: '1.0.0',
+  family: 'TABLE',
+  purpose: 'MONETIZE',
+  status: 'active',
+} as const satisfies ComponentMeta;
+```
+
+## Forbidden Patterns
+- ❌ Never trust client-side `CanonContext` - always verify server-side
+- ❌ Never import raw `@tanstack/react-table` - use `TBLM01` or `TBLL01`
+- ❌ Never create pages in `canon-pages/` without `PAGE_META`
+- ❌ Never assign Canon IDs to framework configs (`package.json`, etc.)
+
+## Directory Structure
+```
+canon/contracts/      # CONT_*, ADR_*
+canon/registry/       # YAML manifests
+apps/web/canon-pages/ # PAGE_* implementations
+packages/ui/canon/    # COMP_* implementations
+scripts/              # TOOL_* scripts
+knowledge/            # SPEC_*, REF_*
+```

@@ -35,7 +35,9 @@
     "canon:generate-readme-headers": "tsx canon/D-Operations/D-TOOL/TOOL_13_GenerateReadmeHeaders.ts",
     "canon:validate-seal": "tsx canon/D-Operations/D-TOOL/TOOL_14_ValidateSEALFormat.ts",
     "canon:generate-subdirectory-readmes": "tsx canon/D-Operations/D-TOOL/TOOL_15_GenerateSubdirectoryReadmes.ts",
-    "canon:cleanup-and-regenerate": "tsx canon/D-Operations/D-TOOL/TOOL_16_ComprehensiveCanonCleanup.ts"
+    "canon:cleanup-and-regenerate": "tsx canon/D-Operations/D-TOOL/TOOL_16_ComprehensiveCanonCleanup.ts",
+    "canon:validate-dtool": "tsx canon/D-Operations/D-TOOL/TOOL_17_ValidateDTOOLFiles.ts",
+    "canon:validate-compliance": "tsx canon/D-Operations/D-TOOL/TOOL_18_ValidateCanonCompliance.ts"
   },
   "dependencies": {
     "@cap-js/sqlite": "^2.1.0",

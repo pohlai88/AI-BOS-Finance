@@ -1,0 +1,89 @@
+name: Figma Sync
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      file_key:
+        description: 'Figma file key to sync'
+        required: false
+        default: 'w0bI6UKGtkTUwzhMGMhs93'
+  push:
+    branches:
+      - main
+    paths:
+      - 'figma-sync.config.json'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Figma sync
+        env:
+          FIGMA_API_TOKEN: ${{ secrets.FIGMA_API_TOKEN }}
+          FIGMA_FILE_KEY: ${{ github.event.inputs.file_key || 'w0bI6UKGtkTUwzhMGMhs93' }}
+        run: npm run figma:sync
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/data/figma/
+          git commit -m "chore: sync Figma design data [skip ci]" || exit 0
+          git push
+
+      - name: Create PR on changes
+        if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'schedule'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync Figma design data"
+          title: "🔄 Figma Design Sync - $(date +'%Y-%m-%d')"
+          body: |
+            ## 🔄 Automatic Figma Sync
+            
+            This PR contains the latest design data synchronized from Figma.
+            
+            **Sync Details:**
+            - File Key: `${{ github.event.inputs.file_key || 'w0bI6UKGtkTUwzhMGMhs93' }}`
+            - Sync Time: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+            - Triggered by: ${{ github.event_name }}
+            
+            **Review Changes:**
+            - Check `src/data/figma/` for updated design data
+            - Verify architecture mappings are correct
+            - Ensure no breaking changes to existing components
+            
+            ---
+            *This PR was automatically created by the Figma sync workflow.*
+
