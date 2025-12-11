@@ -11,6 +11,134 @@
  */
 
 import { ComponentType } from 'react'
+import { 
+  Database, 
+  CreditCard, 
+  Settings, 
+  CheckCircle, 
+  Clock, 
+  AlertTriangle, 
+  Archive,
+  type LucideIcon 
+} from 'lucide-react'
+
+// =============================================================================
+// SSOT: SECTION CONFIGURATION
+// =============================================================================
+
+export interface CanonSection {
+  id: string
+  label: string
+  icon: LucideIcon
+  description: string
+  color: string
+}
+
+/**
+ * SSOT for all Canon sections/domains
+ * Used by both page.tsx and layout.tsx
+ */
+export const CANON_SECTIONS: CanonSection[] = [
+  { 
+    id: 'meta', 
+    label: 'Metadata', 
+    icon: Database, 
+    description: 'Data architecture and governance', 
+    color: 'text-blue-400' 
+  },
+  { 
+    id: 'payment', 
+    label: 'Payment', 
+    icon: CreditCard, 
+    description: 'Payment processing', 
+    color: 'text-emerald-400' 
+  },
+  { 
+    id: 'system', 
+    label: 'System', 
+    icon: Settings, 
+    description: 'Configuration', 
+    color: 'text-purple-400' 
+  },
+]
+
+// =============================================================================
+// SSOT: STATUS CONFIGURATION
+// =============================================================================
+
+export type CanonStatus = 'ACTIVE' | 'DRAFT' | 'DEPRECATED' | 'ARCHIVED'
+
+export interface StatusConfig {
+  icon: LucideIcon
+  label: string
+  color: string
+  bg: string
+  border: string
+}
+
+/**
+ * SSOT for status styling and icons
+ * Used by StatusBadge and dashboard cards
+ */
+export const STATUS_CONFIG: Record<CanonStatus, StatusConfig> = {
+  ACTIVE: { 
+    icon: CheckCircle, 
+    label: 'Active', 
+    color: 'text-nexus-green', 
+    bg: 'bg-nexus-green/10', 
+    border: 'border-nexus-green/30' 
+  },
+  DRAFT: { 
+    icon: Clock, 
+    label: 'Draft', 
+    color: 'text-yellow-400', 
+    bg: 'bg-yellow-400/10', 
+    border: 'border-yellow-400/30' 
+  },
+  DEPRECATED: { 
+    icon: AlertTriangle, 
+    label: 'Deprecated', 
+    color: 'text-orange-400', 
+    bg: 'bg-orange-400/10', 
+    border: 'border-orange-400/30' 
+  },
+  ARCHIVED: { 
+    icon: Archive, 
+    label: 'Archived', 
+    color: 'text-gray-400', 
+    bg: 'bg-gray-400/10', 
+    border: 'border-gray-400/30' 
+  },
+}
+
+// =============================================================================
+// SSOT: HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Get status counts from registry
+ */
+export function getStatusCounts(): Record<CanonStatus, number> {
+  const counts: Record<CanonStatus, number> = { ACTIVE: 0, DRAFT: 0, DEPRECATED: 0, ARCHIVED: 0 }
+  Object.values(CANON_REGISTRY).forEach((entry) => {
+    counts[entry.meta.status]++
+  })
+  return counts
+}
+
+/**
+ * Calculate health score (percentage of ACTIVE pages)
+ */
+export function getHealthScore(): number {
+  const totalPages = Object.keys(CANON_REGISTRY).length
+  if (totalPages === 0) return 0
+  const statusCounts = getStatusCounts()
+  return Math.round((statusCounts.ACTIVE / totalPages) * 100)
+}
+
+// =============================================================================
+// PAGE METADATA TYPES
+// =============================================================================
 
 export interface CanonPageMeta {
   /** Canon ID (e.g., META_01, PAY_01) */

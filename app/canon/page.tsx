@@ -1,68 +1,51 @@
-import Link from 'next/link'
-import { 
-  BookOpen, 
-  FileText, 
-  Database, 
-  Settings, 
-  CreditCard, 
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  Archive,
-  Activity,
-  BarChart3,
-  Shield
-} from 'lucide-react'
-import { CANON_REGISTRY, getCanonPagesBySection, type CanonPageMeta } from '@/canon-pages/registry'
-
 /**
  * Canon Health Dashboard
  * 
  * Visual "God View" of the entire Canon documentation system.
  * Shows health metrics, status distribution, and quick access to all pages.
  * 
+ * @page CANON_01
+ * @version 1.0.0
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-const SECTIONS = [
-  { id: 'meta', label: 'Metadata', icon: Database, description: 'Data architecture and governance', color: 'text-blue-400' },
-  { id: 'payment', label: 'Payment', icon: CreditCard, description: 'Payment processing', color: 'text-emerald-400' },
-  { id: 'system', label: 'System', icon: Settings, description: 'Configuration', color: 'text-purple-400' },
-]
+import Link from 'next/link'
+import { BookOpen, FileText, ArrowRight, BarChart3, Activity, Shield } from 'lucide-react'
 
-const STATUS_CONFIG = {
-  ACTIVE: { icon: CheckCircle, label: 'Active', color: 'text-nexus-green', bg: 'bg-nexus-green/10', border: 'border-nexus-green/30' },
-  DRAFT: { icon: Clock, label: 'Draft', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/30' },
-  DEPRECATED: { icon: AlertTriangle, label: 'Deprecated', color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/30' },
-  ARCHIVED: { icon: Archive, label: 'Archived', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30' },
-}
+// SSOT imports from registry
+import { 
+  CANON_REGISTRY, 
+  CANON_SECTIONS,
+  getCanonPagesBySection, 
+  getStatusCounts,
+  getHealthScore,
+  type CanonStatus
+} from '@/canon-pages/registry'
 
-function getStatusCounts(): Record<string, number> {
-  const counts = { ACTIVE: 0, DRAFT: 0, DEPRECATED: 0, ARCHIVED: 0 }
-  Object.values(CANON_REGISTRY).forEach((entry) => {
-    counts[entry.meta.status]++
-  })
-  return counts
-}
+// Canon Components (DRY!)
+import { StatusBadge, StatusCard, StatCard, HealthScoreRing } from '@/components/canon'
 
-function StatusBadge({ status }: { status: CanonPageMeta['status'] }) {
-  const config = STATUS_CONFIG[status]
-  const Icon = config.icon
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${config.bg} ${config.color} ${config.border} border`}>
-      <Icon className="w-3 h-3" />
-      {config.label}
-    </span>
-  )
-}
+// =============================================================================
+// PAGE METADATA (Canon Governance)
+// =============================================================================
+
+export const PAGE_META = {
+  code: 'CANON_01',
+  version: '1.0.0',
+  name: 'Canon Health Dashboard',
+  route: '/canon',
+  domain: 'SYSTEM',
+  status: 'active',
+} as const
+
+// =============================================================================
+// PAGE COMPONENT
+// =============================================================================
 
 export default function CanonHealthDashboard() {
   const totalPages = Object.keys(CANON_REGISTRY).length
   const statusCounts = getStatusCounts()
-  const healthScore = totalPages > 0 
-    ? Math.round(((statusCounts.ACTIVE) / totalPages) * 100) 
-    : 0
+  const healthScore = getHealthScore()
 
   return (
     <div className="space-y-10">
@@ -77,7 +60,7 @@ export default function CanonHealthDashboard() {
                 <BookOpen className="w-6 h-6 text-nexus-green" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-nexus-signal">Canon Health Dashboard</h1>
+                <h1 className="text-2xl font-bold text-nexus-signal">{PAGE_META.name}</h1>
                 <p className="text-sm text-nexus-signal/50">Governance Status Overview</p>
               </div>
             </div>
@@ -87,84 +70,51 @@ export default function CanonHealthDashboard() {
             </p>
           </div>
 
-          {/* Health Score Ring */}
-          <div className="flex flex-col items-center">
-            <div className="relative w-24 h-24">
-              <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50" cy="50" r="40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  className="text-nexus-surface/50"
-                />
-                <circle
-                  cx="50" cy="50" r="40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  strokeDasharray={`${healthScore * 2.51} 251`}
-                  strokeLinecap="round"
-                  className="text-nexus-green transition-all duration-1000"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-nexus-signal">{healthScore}%</span>
-              </div>
-            </div>
-            <span className="text-xs text-nexus-signal/50 mt-2">Health Score</span>
-          </div>
+          {/* Health Score Ring - Now a Canon Component! */}
+          <HealthScoreRing score={healthScore} />
         </div>
       </header>
 
-      {/* Status Cards */}
+      {/* Status Cards - Using Canon StatusCard Component */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {Object.entries(STATUS_CONFIG).map(([status, config]) => {
-          const Icon = config.icon
-          const count = statusCounts[status as keyof typeof statusCounts]
-          return (
-            <div
-              key={status}
-              className={`rounded-lg border ${config.border} ${config.bg} p-4 transition-all hover:scale-[1.02]`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <Icon className={`w-5 h-5 ${config.color}`} />
-                <span className={`text-2xl font-bold ${config.color}`}>{count}</span>
-              </div>
-              <span className="text-xs text-nexus-signal/60">{config.label} Pages</span>
-            </div>
-          )
-        })}
+        {(Object.keys(statusCounts) as CanonStatus[]).map((status) => (
+          <StatusCard 
+            key={status} 
+            status={status} 
+            count={statusCounts[status]} 
+          />
+        ))}
       </div>
 
-      {/* Quick Stats */}
+      {/* Quick Stats - Using Canon StatCard Component */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-nexus-border/30 bg-nexus-surface/10 p-4 text-center">
-          <BarChart3 className="w-5 h-5 text-nexus-signal/40 mx-auto mb-2" />
-          <div className="text-xl font-bold text-nexus-signal">{totalPages}</div>
-          <div className="text-xs text-nexus-signal/50">Total Pages</div>
-        </div>
-        <div className="rounded-lg border border-nexus-border/30 bg-nexus-surface/10 p-4 text-center">
-          <Activity className="w-5 h-5 text-nexus-signal/40 mx-auto mb-2" />
-          <div className="text-xl font-bold text-nexus-signal">{SECTIONS.length}</div>
-          <div className="text-xs text-nexus-signal/50">Domains</div>
-        </div>
-        <div className="rounded-lg border border-nexus-border/30 bg-nexus-surface/10 p-4 text-center">
-          <Shield className="w-5 h-5 text-nexus-signal/40 mx-auto mb-2" />
-          <div className="text-xl font-bold text-nexus-green">{statusCounts.ACTIVE}</div>
-          <div className="text-xs text-nexus-signal/50">Production Ready</div>
-        </div>
+        <StatCard 
+          icon={BarChart3} 
+          value={totalPages} 
+          label="Total Pages" 
+        />
+        <StatCard 
+          icon={Activity} 
+          value={CANON_SECTIONS.length} 
+          label="Domains" 
+        />
+        <StatCard 
+          icon={Shield} 
+          value={statusCounts.ACTIVE} 
+          label="Production Ready"
+          valueClassName="text-nexus-green" 
+        />
       </div>
 
-      {/* Domain Breakdown */}
+      {/* Domain Breakdown - Using SSOT CANON_SECTIONS */}
       <section>
         <h2 className="text-lg font-semibold text-nexus-signal mb-4 flex items-center gap-2">
-          <Database className="w-5 h-5 text-nexus-signal/40" />
+          <FileText className="w-5 h-5 text-nexus-signal/40" />
           Domain Registry
         </h2>
         
         <div className="space-y-4">
-          {SECTIONS.map((section) => {
+          {CANON_SECTIONS.map((section) => {
             const Icon = section.icon
             const pages = getCanonPagesBySection(section.id)
 
@@ -207,6 +157,7 @@ export default function CanonHealthDashboard() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-xs text-nexus-signal/40 font-mono">{page.meta.id}</span>
+                          {/* StatusBadge - Now a Canon Component! */}
                           <StatusBadge status={page.meta.status} />
                           <ArrowRight className="w-4 h-4 text-nexus-signal/30 group-hover:text-nexus-green transition-colors" />
                         </div>

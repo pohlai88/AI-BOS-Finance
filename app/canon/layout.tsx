@@ -1,44 +1,20 @@
-import { ReactNode } from 'react'
-import Link from 'next/link'
-import { BookOpen, FileText, Database, Settings, CreditCard, ArrowLeft } from 'lucide-react'
-
 /**
  * Canon Layout
  * 
  * Provides the governance shell for all Canon documentation pages.
  * Includes sidebar navigation and consistent styling.
  * 
+ * Uses SSOT from registry - no duplicate data!
+ * 
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-const CANON_SECTIONS = [
-  {
-    id: 'meta',
-    label: 'Metadata',
-    icon: Database,
-    items: [
-      { slug: 'meta-01-architecture', label: 'META_01: Architecture' },
-      { slug: 'meta-02-god-view', label: 'META_02: God View' },
-      { slug: 'meta-03-the-prism', label: 'META_03: The Prism' },
-    ],
-  },
-  {
-    id: 'payment',
-    label: 'Payments',
-    icon: CreditCard,
-    items: [
-      { slug: 'pay-01-payment-hub', label: 'PAY_01: Payment Hub' },
-    ],
-  },
-  {
-    id: 'system',
-    label: 'System',
-    icon: Settings,
-    items: [
-      { slug: 'sys-01-bootloader', label: 'SYS_01: Bootloader' },
-    ],
-  },
-]
+import { ReactNode } from 'react'
+import Link from 'next/link'
+import { BookOpen, FileText, ArrowLeft } from 'lucide-react'
+
+// SSOT imports from registry (DRY!)
+import { CANON_SECTIONS, getCanonPagesBySection } from '@/canon-pages/registry'
 
 export default function CanonLayout({ children }: { children: ReactNode }) {
   return (
@@ -63,10 +39,13 @@ export default function CanonLayout({ children }: { children: ReactNode }) {
           </p>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation - Using SSOT CANON_SECTIONS */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-6">
           {CANON_SECTIONS.map((section) => {
             const Icon = section.icon
+            // Get pages dynamically from registry (DRY!)
+            const pages = getCanonPagesBySection(section.id)
+            
             return (
               <div key={section.id}>
                 <div className="flex items-center gap-2 text-xs font-semibold text-nexus-signal/50 uppercase tracking-wider mb-2">
@@ -74,17 +53,22 @@ export default function CanonLayout({ children }: { children: ReactNode }) {
                   {section.label}
                 </div>
                 <ul className="space-y-1">
-                  {section.items.map((item) => (
-                    <li key={item.slug}>
+                  {pages.map((page) => (
+                    <li key={page.slug}>
                       <Link
-                        href={`/canon/${section.id}/${item.slug}`}
+                        href={`/canon/${section.id}/${page.slug}`}
                         className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-nexus-signal/70 hover:text-nexus-signal hover:bg-nexus-surface/50 transition-colors"
                       >
                         <FileText className="w-3.5 h-3.5 text-nexus-signal/40" />
-                        {item.label}
+                        {page.meta.id}: {page.meta.title}
                       </Link>
                     </li>
                   ))}
+                  {pages.length === 0 && (
+                    <li className="text-xs text-nexus-signal/30 italic px-2 py-1">
+                      No pages yet
+                    </li>
+                  )}
                 </ul>
               </div>
             )
