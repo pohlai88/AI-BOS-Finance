@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { useSysConfig } from '../../context/SysConfigContext';
 import {
   Check,
@@ -54,7 +54,7 @@ const SETUP_TASKS = [
 export function SetupCompanion() {
   const [isOpen, setIsOpen] = useState(false);
   const { steps, applyDefaults } = useSysConfig();
-  const navigate = useNavigate();
+  const { navigate } = useRouterAdapter();
 
   // 1. MAP CONTEXT STATE TO TASKS
   const tasks = useMemo(

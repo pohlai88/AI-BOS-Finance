@@ -3,7 +3,7 @@
 // Clean sidebar navigation following Figma/Linear design patterns
 // ============================================================================
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import {
   X,
   LayoutDashboard,
@@ -144,8 +144,7 @@ const NAVIGATION_GROUPS: NavGroup[] = [
 ];
 
 export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { navigate, pathname } = useRouterAdapter();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['meta', 'sys']);
 
   const toggleGroup = (groupId: string) => {
@@ -253,7 +252,7 @@ export function MetaSideNav({ isOpen, onClose }: MetaSideNavProps) {
                 {isExpanded && (
                   <div className="mt-1 space-y-0.5">
                     {group.items.map((item) => {
-                      const isActive = location.pathname === item.route;
+                      const isActive = pathname === item.route;
                       const Icon = item.icon;
 
                       return (

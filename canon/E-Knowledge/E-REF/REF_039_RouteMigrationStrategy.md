@@ -106,8 +106,9 @@ export default function InventoryPage() {
 6. ⏳ `/meta-registry` → redirect to `/dashboard`
 
 ### Wave 3: Core Routes (Require Refactoring)
-7. ⚠️ `/dashboard` → **BLOCKED**: Uses `useLocation()` from React Router
-   - Requires refactoring `MetaAppShell` to use Next.js `usePathname()`
+7. ✅ `/dashboard` → `app/dashboard/page.tsx`
+   - Created `useRouterAdapter` hook for hybrid routing
+   - Updated: `MetaAppShell`, `SetupCompanion`, `MetaSideNav`
 8. ⏳ `/` (home) → `app/page.tsx` - Has navigation callbacks
 
 ### Wave 4: Cleanup

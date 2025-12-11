@@ -8,7 +8,7 @@ import {
   Wrench, // Added for Setup Companion
 } from 'lucide-react';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { MetaSideNav } from '../MetaSideNav';
 import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { SetupCompanion } from '../sys/SetupCompanion';
@@ -19,10 +19,7 @@ interface MetaAppShellProps {
 
 export function MetaAppShell({ children }: MetaAppShellProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const isActive = (path: string) => location.pathname === path;
+  const { pathname, navigate, isActive } = useRouterAdapter();
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30">
@@ -67,7 +64,7 @@ export function MetaAppShell({ children }: MetaAppShellProps) {
           <NavButton
             icon={<Database className="w-4 h-4" />}
             label="DATA"
-            active={location.pathname.startsWith('/meta-registry')}
+            active={pathname.startsWith('/meta-registry')}
             onClick={() => navigate('/meta-registry')}
           />
         </nav>
