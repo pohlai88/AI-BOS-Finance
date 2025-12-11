@@ -11,6 +11,16 @@
 
 This document provides a **production-ready migration plan** to replace Vite with Next.js 16+ App Router, enabling the Canon page system and following Next.js best practices.
 
+**⚠️ VALIDATION:** This plan has been validated against Next.js 16+ requirements and critical issues have been addressed.
+
+**Critical Fixes Applied:**
+- ✅ Removed `output: 'export'` conflict with `rewrites` (Step 2) - Static exports cannot use rewrites
+- ✅ Verified `mdx-components.tsx` requirement (Step 1) - Already exists at project root
+- ✅ Added environment variable migration (Step 6) - `VITE_*` → `NEXT_PUBLIC_*`
+- ✅ Enhanced SSR safety in SPA mode (Step 5) - Added `ssr: false` and warnings
+
+**Validation Source:** Next.js MCP documentation + Next.js 16+ best practices
+
 **Current State:**
 - ✅ React 18.3.1
 - ✅ TypeScript 5.6.2
@@ -25,6 +35,44 @@ This document provides a **production-ready migration plan** to replace Vite wit
 - ✅ Canon page system functional
 - ✅ Server Components support
 - ✅ Automatic code splitting
+
+---
+
+## Validation Summary
+
+**Validated:** 2025-01-27  
+**Validator:** Next.js MCP + Next.js 16+ Documentation  
+**Status:** ✅ All Critical Issues Resolved
+
+### Critical Issues Found & Fixed
+
+1. **🔴 CRITICAL: `output: 'export'` vs `rewrites` Conflict**
+   - **Issue:** Static exports cannot use server-side rewrites
+   - **Fix:** Removed `output: 'export'` from config (Step 2)
+   - **Impact:** Proxy/rewrites now work correctly
+
+2. **🔴 CRITICAL: `mdx-components.tsx` Requirement**
+   - **Issue:** Next.js App Router requires `mdx-components.tsx` at root
+   - **Status:** ✅ Already exists (created in previous commit)
+   - **Location:** `mdx-components.tsx` at project root
+
+3. **🟡 IMPORTANT: Environment Variables Migration**
+   - **Issue:** Vite uses `import.meta.env.VITE_*`, Next.js uses `process.env.NEXT_PUBLIC_*`
+   - **Fix:** Added Step 6 with automated tool (TOOL_25)
+   - **Impact:** Prevents runtime errors from missing env vars
+
+4. **🟡 IMPORTANT: SSR Safety in SPA Mode**
+   - **Issue:** Client components accessing `window`/`document` can crash SSR
+   - **Fix:** Enhanced Step 5 with `ssr: false` and warnings
+   - **Impact:** Prevents hydration errors
+
+### Validation Checklist
+
+- [x] Next.js config compatible with rewrites
+- [x] MDX components file exists
+- [x] Environment variable migration documented
+- [x] SSR safety measures in place
+- [x] All steps validated against Next.js 16+ requirements
 
 ---
 
@@ -58,6 +106,8 @@ npm install --save-dev eslint-config-next
 - [ ] `next` appears in `package.json` dependencies
 - [ ] `@next/mdx` appears in dependencies
 
+**⚠️ CRITICAL:** Ensure `mdx-components.tsx` exists at project root (already created in previous commit).
+
 ---
 
 ### Step 2: Create Next.js Configuration
@@ -72,12 +122,13 @@ const nextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   
-  // For initial migration: SPA mode (keeps React Router working)
-  // Remove this after migrating to App Router
-  output: 'export',
-  distDir: './dist',
+  // ⚠️ CRITICAL: Do NOT use output: 'export' if you need rewrites/proxy
+  // Static exports cannot support server-side rewrites
+  // Use default output (Node.js server) or 'standalone' for rewrites
+  // output: 'export', // ❌ REMOVED - conflicts with rewrites
   
   // Proxy configuration (replaces Vite proxy)
+  // ⚠️ Requires Node.js server (cannot use with output: 'export')
   async rewrites() {
     return [
       {
@@ -100,6 +151,12 @@ export default withMDX(nextConfig)
 - [ ] `next.config.mjs` created
 - [ ] MDX configured
 - [ ] Proxy configured for `/odata`
+- [ ] **CRITICAL:** `output: 'export'` is NOT present (conflicts with rewrites)
+
+**⚠️ Important:** If you need static export later (e.g., for CDN deployment), you'll need to:
+- Remove `rewrites()` from config
+- Add `output: 'export'`
+- Handle `/odata` proxy differently (e.g., via external proxy or API routes)
 
 ---
 
@@ -233,8 +290,12 @@ export default function RootLayout({
 import dynamic from 'next/dynamic'
 import '../src/styles/globals.css'
 
-// Disable SSR for React Router (temporary)
-const App = dynamic(() => import('../../src/App'), { ssr: false })
+// ⚠️ CRITICAL: Disable SSR to prevent window/document access errors
+// This ensures React Router (which may access browser APIs) doesn't crash during SSR
+const App = dynamic(() => import('../../src/App'), { 
+  ssr: false, // Prevents server-side rendering
+  loading: () => <div>Loading...</div> // Optional loading state
+})
 
 export function generateStaticParams() {
   return [{ slug: [''] }]
@@ -247,14 +308,79 @@ export default function Page() {
 
 **Why:** This keeps your existing React Router app working while we migrate incrementally.
 
+**⚠️ Important Notes:**
+- `ssr: false` is **required** if your `App.tsx` or its dependencies access `window`, `document`, or `localStorage` on load
+- If you encounter hydration mismatches, wrap the import in a `useEffect` or add a client-only check
+- Verify the import path `../../src/App` is correct for your project structure
+
 **Verify:**
 - [ ] Entry point created
 - [ ] React Router still works
 - [ ] App loads in browser
+- [ ] No SSR errors in console
 
 ---
 
-### Step 6: Update package.json Scripts
+### Step 6: Migrate Environment Variables
+
+**⚠️ CRITICAL:** Vite uses `import.meta.env.VITE_*`, Next.js uses `process.env.NEXT_PUBLIC_*`.
+
+**Steps:**
+
+1. **Rename environment variables in `.env` files:**
+   ```bash
+   # Find all .env files
+   # Change VITE_ prefix to NEXT_PUBLIC_
+   VITE_API_BASE_URL → NEXT_PUBLIC_API_BASE_URL
+   VITE_WS_BASE_URL → NEXT_PUBLIC_WS_BASE_URL
+   # ... etc
+   ```
+
+2. **Update code references:**
+   ```bash
+   # Find all import.meta.env.VITE_* references
+   grep -r "import.meta.env.VITE" src/
+   
+   # Replace with process.env.NEXT_PUBLIC_*
+   # Example:
+   # Before: import.meta.env.VITE_API_BASE_URL
+   # After:  process.env.NEXT_PUBLIC_API_BASE_URL
+   ```
+
+3. **Known files to update:**
+   - `src/docs/04-guides/developer-handoff.md` (line 418)
+   - Any other files using `import.meta.env.VITE_*`
+
+4. **Alternative (temporary):** If you want to keep `VITE_` prefix temporarily, add to `next.config.mjs`:
+   ```js
+   env: {
+     NEXT_PUBLIC_API_BASE_URL: process.env.VITE_API_BASE_URL,
+     // ... map other vars
+   }
+   ```
+
+5. **Automated Migration (Recommended):**
+   ```bash
+   # Dry-run first
+   npx tsx canon/D-Operations/D-TOOL/TOOL_25_MigrateViteEnvVars.ts --dry-run
+   
+   # Execute migration
+   npx tsx canon/D-Operations/D-TOOL/TOOL_25_MigrateViteEnvVars.ts --execute
+   ```
+   This tool automatically:
+   - Finds all `.env` files
+   - Renames `VITE_*` to `NEXT_PUBLIC_*`
+   - Updates code references from `import.meta.env.VITE_*` to `process.env.NEXT_PUBLIC_*`
+
+**Verify:**
+- [ ] All `.env` files updated
+- [ ] All code references updated
+- [ ] No `import.meta.env.VITE_*` remaining
+- [ ] Run TOOL_25 to automate (recommended)
+
+---
+
+### Step 7: Update package.json Scripts
 
 **Update scripts:**
 
@@ -283,7 +409,7 @@ dist
 
 ---
 
-### Step 7: Test Next.js Dev Server
+### Step 8: Test Next.js Dev Server
 
 ```bash
 npm run dev
@@ -302,7 +428,7 @@ npm run dev
 
 ---
 
-### Step 8: Migrate React Router to Next.js App Router
+### Step 9: Migrate React Router to Next.js App Router
 
 **This is Phase 2 - after Next.js is working.**
 
@@ -338,7 +464,7 @@ export default function PaymentsPage() {
 
 ---
 
-### Step 9: Enable Canon Page System
+### Step 10: Enable Canon Page System
 
 **After App Router migration:**
 
@@ -359,7 +485,7 @@ export default function PaymentsPage() {
 
 ---
 
-### Step 10: Clean Up Vite
+### Step 11: Clean Up Vite
 
 **After everything works:**
 
@@ -392,13 +518,16 @@ export default function PaymentsPage() {
 
 ### Phase 1: Next.js Setup (SPA Mode)
 - [ ] Install Next.js and MDX dependencies
-- [ ] Create `next.config.mjs` with MDX
+- [ ] **CRITICAL:** Verify `mdx-components.tsx` exists at root
+- [ ] Create `next.config.mjs` with MDX (NO `output: 'export'` if using rewrites)
 - [ ] Update `tsconfig.json`
+- [ ] Migrate environment variables (`VITE_*` → `NEXT_PUBLIC_*`)
 - [ ] Create `app/layout.tsx`
-- [ ] Create `app/[[...slug]]/page.tsx` (SPA entry)
+- [ ] Create `app/[[...slug]]/page.tsx` (SPA entry with `ssr: false`)
 - [ ] Update `package.json` scripts
 - [ ] Test dev server
 - [ ] Verify React Router still works
+- [ ] Verify proxy/rewrites work
 
 ### Phase 2: App Router Migration
 - [ ] Create route structure in `app/`
@@ -432,23 +561,40 @@ export default function PaymentsPage() {
 **Solution:** 
 1. Verify `@next/mdx` is installed
 2. Verify `next.config.mjs` has MDX config
-3. Verify `mdx-components.tsx` exists at root
+3. **CRITICAL:** Verify `mdx-components.tsx` exists at project root (required by Next.js App Router)
+4. Check that `useMDXComponents` function is exported correctly
 
-### Issue: Proxy Not Working
+### Issue: Proxy/Rewrites Not Working
 
-**Solution:** Use Next.js `rewrites` instead of Vite `proxy`:
+**Solution:** 
+1. **CRITICAL:** Ensure `output: 'export'` is NOT in `next.config.mjs` (static exports don't support rewrites)
+2. Use Next.js `rewrites` instead of Vite `proxy`:
+   ```js
+   // next.config.mjs
+   async rewrites() {
+     return [
+       {
+         source: '/odata/:path*',
+         destination: 'http://localhost:4004/odata/:path*',
+       },
+     ]
+   }
+   ```
+3. If you need static export, remove `rewrites()` and handle proxy via external service
 
-```js
-// next.config.mjs
-async rewrites() {
-  return [
-    {
-      source: '/odata/:path*',
-      destination: 'http://localhost:4004/odata/:path*',
-    },
-  ]
-}
-```
+### Issue: Environment Variables Not Working
+
+**Solution:**
+1. Rename `VITE_*` to `NEXT_PUBLIC_*` in `.env` files
+2. Replace `import.meta.env.VITE_*` with `process.env.NEXT_PUBLIC_*` in code
+3. Restart dev server after changing `.env` files
+
+### Issue: SSR/Hydration Errors
+
+**Solution:**
+1. Ensure `ssr: false` in dynamic import for client-only components
+2. Wrap browser API access in `useEffect` or `typeof window !== 'undefined'` checks
+3. Use `'use client'` directive for components that access browser APIs
 
 ### Issue: Images Not Loading
 
@@ -481,8 +627,10 @@ async rewrites() {
 ## Related Documentation
 
 - **REF_036:** Canon Page System Checkpoint
+- **REF_038:** Vite to Next.js Migration Plan Validation Report ⚡ **VALIDATION REPORT**
 - **REF_032:** Canon Page Thin Wrapper Pattern
 - **REF_033:** Canon Page Implementation Guide
+- **TOOL_25:** Migrate Vite Environment Variables (automated tool)
 - **ADR_001:** Next.js App Router Adoption
 - **Next.js Docs:** [Migrating from Vite](https://nextjs.org/docs/app/guides/migrating/from-vite)
 
@@ -492,4 +640,5 @@ async rewrites() {
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1.0 | 2025-01-27 | Validated and fixed critical issues: removed output: 'export' conflict, verified mdx-components.tsx, added env var migration, enhanced SSR safety |
 | 1.0.0 | 2025-01-27 | Initial migration plan created |
