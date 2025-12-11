@@ -459,12 +459,14 @@ npm run dev
 **After (Next.js App Router):**
 ```tsx
 // app/payments/page.tsx
-import PAY01PaymentHubPage from '@/src/pages/PAY_01_PaymentHubPage'
+import PAY01PaymentHubPage from '@/views/PAY_01_PaymentHubPage'
 
 export default function PaymentsPage() {
   return <PAY01PaymentHubPage />
 }
 ```
+
+> **Note:** `src/pages/` was renamed to `src/views/` to avoid conflict with Next.js Pages Router.
 
 **Note:** This is a separate phase. Complete Step 1-7 first.
 

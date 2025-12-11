@@ -68,7 +68,7 @@ async function findPageMetaFiles(): Promise<Array<{ file: string; meta: PageMeta
   
   // Patterns to search for canonical pages
   const patterns = [
-    'src/pages/**/*.tsx',
+    'src/views/**/*.tsx',
     'src/modules/**/*.tsx',
     'apps/web/canon-pages/**/*.tsx', 
   ];
@@ -135,8 +135,8 @@ function generateEntryFile(implFile: string, route: string): string {
   if (implFile.includes('src/modules/')) {
     const pageCode = implFile.match(/([A-Z]+_\d+)/)?.[1];
     if (pageCode) {
-      // Heuristic: Assumes a wrapper exists in src/pages with the code prefix
-      return `src/pages/${pageCode}_Page.tsx`; 
+      // Heuristic: Assumes a wrapper exists in src/views with the code prefix
+      return `src/views/${pageCode}_Page.tsx`; 
     }
   }
   

@@ -52,7 +52,7 @@ export default tseslint.config(
   // Canon Identity Contract - Enforce PAGE_META in canonical pages
   {
     files: [
-      'src/pages/**/*.tsx',
+      'src/views/**/*.tsx',
       'src/modules/**/*Page.tsx',
       'apps/web/canon-pages/**/*.tsx',
     ],

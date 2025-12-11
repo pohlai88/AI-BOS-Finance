@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { LandingPage } from '@/pages/LandingPage';
-import { MetadataGodView } from '@/pages/META_02_MetadataGodView';
+import { LandingPage } from '@/views/LandingPage';
+import { MetadataGodView } from '@/views/META_02_MetadataGodView';
 import { INV01Dashboard } from '@/modules/inventory';
 import { SYS01Bootloader } from '@/modules/system';
-import PAY01PaymentHubPage from '@/pages/PAY_01_PaymentHubPage';
+import PAY01PaymentHubPage from '@/views/PAY_01_PaymentHubPage';
 import { SysConfigProvider } from '@/context/SysConfigContext';
 import { Toaster } from 'sonner';
 

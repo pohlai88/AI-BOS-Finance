@@ -146,10 +146,10 @@ function step2_MigratePlaneA() {
 function step3_MigratePlaneB() {
   console.log('\n🎨 Step 3: Migrating Plane B (Functional)...');
   
-  // Move pages from src/pages/ to B-PAGE (create registry structure)
-  const pagesDir = join(ROOT, 'src/pages');
+  // Move pages from src/views/ to B-PAGE (create registry structure)
+  const pagesDir = join(ROOT, 'src/views');
   if (existsSync(pagesDir)) {
-    console.log('  ℹ️  Pages will remain in src/pages/ (implementation location)');
+    console.log('  ℹ️  Views will remain in src/views/ (implementation location)');
     console.log('  ℹ️  Create registry.yaml in B-PAGE/ to register them');
   }
   

@@ -396,26 +396,27 @@ Authentication: Bearer token in query param or header
 Create `.env` file in root:
 
 ```bash
-# API Configuration
-VITE_API_BASE_URL=https://api.nexuscanon.com
-VITE_WS_BASE_URL=wss://api.nexuscanon.com
+# API Configuration (Next.js uses NEXT_PUBLIC_ prefix for client-side env vars)
+NEXT_PUBLIC_API_BASE_URL=https://api.nexuscanon.com
+NEXT_PUBLIC_WS_BASE_URL=wss://api.nexuscanon.com
 
 # Authentication
-VITE_AUTH_TOKEN_KEY=nexuscanon_auth_token
+NEXT_PUBLIC_AUTH_TOKEN_KEY=nexuscanon_auth_token
 
 # Feature Flags
-VITE_ENABLE_COMMAND_PALETTE=true
-VITE_ENABLE_LIVE_SCANS=true
-VITE_ENABLE_ANALYTICS=false
+NEXT_PUBLIC_ENABLE_COMMAND_PALETTE=true
+NEXT_PUBLIC_ENABLE_LIVE_SCANS=true
+NEXT_PUBLIC_ENABLE_ANALYTICS=false
 
 # Analytics (Optional)
-VITE_ANALYTICS_ID=
+NEXT_PUBLIC_ANALYTICS_ID=
 ```
 
 ### 7.2 Usage in Code
 
 ```tsx
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Next.js: Use process.env.NEXT_PUBLIC_* for client-side environment variables
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const fetchData = async () => {
   const response = await fetch(`${API_BASE_URL}/api/commands`);
@@ -702,14 +703,14 @@ aws cloudfront create-invalidation --distribution-id {ID} --paths "/*"
 ### 11.3 Environment-Specific Builds
 
 ```bash
-# Development
-VITE_API_BASE_URL=http://localhost:3000 npm run build
+# Development (Next.js uses NEXT_PUBLIC_ prefix)
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000 npm run build
 
 # Staging
-VITE_API_BASE_URL=https://staging-api.nexuscanon.com npm run build
+NEXT_PUBLIC_API_BASE_URL=https://staging-api.nexuscanon.com npm run build
 
 # Production
-VITE_API_BASE_URL=https://api.nexuscanon.com npm run build
+NEXT_PUBLIC_API_BASE_URL=https://api.nexuscanon.com npm run build
 ```
 
 ---
