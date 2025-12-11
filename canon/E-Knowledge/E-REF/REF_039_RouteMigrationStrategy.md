@@ -97,17 +97,18 @@ export default function InventoryPage() {
 
 ### Wave 1: Low-Risk Leaves (No Dependencies)
 1. ✅ `/inventory` → `app/inventory/page.tsx`
-2. ⏳ `/payments` → `app/payments/page.tsx`
-3. ⏳ `/system` → `app/system/page.tsx`
+2. ✅ `/payments` → `app/payments/page.tsx`
+3. ✅ `/system` → `app/system/page.tsx`
 
 ### Wave 2: Aliases (After Primary Routes)
 4. ⏳ `/payment-hub` → redirect to `/payments`
 5. ⏳ `/settings` → redirect to `/system`
 6. ⏳ `/meta-registry` → redirect to `/dashboard`
 
-### Wave 3: Core Routes
-7. ⏳ `/dashboard` → `app/dashboard/page.tsx`
-8. ⏳ `/` (home) → `app/page.tsx`
+### Wave 3: Core Routes (Require Refactoring)
+7. ⚠️ `/dashboard` → **BLOCKED**: Uses `useLocation()` from React Router
+   - Requires refactoring `MetaAppShell` to use Next.js `usePathname()`
+8. ⏳ `/` (home) → `app/page.tsx` - Has navigation callbacks
 
 ### Wave 4: Cleanup
 9. ⏳ Remove catch-all `[[...slug]]` SPA fallback
