@@ -22,17 +22,24 @@ interface SysConfigState {
 const SysConfigContext = createContext<SysConfigState | undefined>(undefined);
 
 export function SysConfigProvider({ children }: { children: ReactNode }) {
-  // Initialize from localStorage if available, otherwise default
-  const [steps, setSteps] = useState(() => {
-    const saved = localStorage.getItem('nexus_sys_config');
-    return saved
-      ? JSON.parse(saved)
-      : {
-          profile: false,
-          organization: false,
-          team: false,
-        };
+  // Initialize with defaults first (SSR-safe), then hydrate from localStorage
+  const [steps, setSteps] = useState({
+    profile: false,
+    organization: false,
+    team: false,
   });
+
+  // Hydrate from localStorage after mount (client-side only)
+  useEffect(() => {
+    const saved = localStorage.getItem('nexus_sys_config');
+    if (saved) {
+      try {
+        setSteps(JSON.parse(saved));
+      } catch {
+        // Invalid JSON, use defaults
+      }
+    }
+  }, []);
 
   // Persist to localStorage on change
   useEffect(() => {
