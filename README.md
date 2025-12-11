@@ -1,3 +1,12 @@
+> **🟢 [ACTIVE]** — Project Overview  
+> **Project:** NexusCanon  
+> **Version:** 2.4.1  
+> **Location:** `./` (Root)  
+> **SSOT:** [`canon/A-Governance/A-CONT/CONT_01_CanonIdentity.md`](./canon/A-Governance/A-CONT/CONT_01_CanonIdentity.md) — Canon Identity Contract  
+> **Last Updated:** 2025-12-11
+
+---
+
 # NexusCanon v2.4.1 — Forensic Data Governance
 
 > A **dark-first**, **mobile-responsive**, **test-verified** forensic data platform built with React, SAP CDS, and SQLite.

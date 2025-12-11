@@ -1,3 +1,10 @@
+> **🟢 [ACTIVE]** — Documentation Index  
+> **Purpose:** Project documentation navigation  
+> **Location:** `src/docs/`  
+> **Last Updated:** 2025-12-11
+
+---
+
 # NexusCanon Documentation
 
 ## Directory Structure
