@@ -1,0 +1,62 @@
+# Overview
+
+The Metadata Architecture defines the foundational data structures and governance patterns used throughout the NexusCanon system.
+
+## Core Principles
+
+1. **Schema-First Design** - All data structures are defined by Zod schemas before implementation
+2. **Single Source of Truth** - Each data element has exactly one authoritative source
+3. **Governance by Default** - All metadata is subject to Canon governance rules
+
+## Data Dictionary Structure
+
+The data dictionary is organized into three tiers:
+
+### Tier 1: Core Entities
+
+| Entity | Description | Owner |
+|--------|-------------|-------|
+| `Organization` | Legal entity container | SYS_02 |
+| `Account` | Chart of Accounts element | META_01 |
+| `Journal` | Transaction container | PAY_01 |
+
+### Tier 2: Reference Data
+
+Reference data provides standardized lookups for core entities:
+
+- Currency codes (ISO 4217)
+- Country codes (ISO 3166)
+- Industry classifications (NAICS)
+
+### Tier 3: Operational Data
+
+Operational data captures day-to-day business transactions:
+
+```typescript
+interface JournalEntry {
+  id: string;
+  date: Date;
+  debit: AccountRef;
+  credit: AccountRef;
+  amount: Money;
+  memo?: string;
+}
+```
+
+## Integration Points
+
+The Metadata Architecture integrates with:
+
+- **META_02** (God View) for visualization
+- **META_03** (The Prism) for data lineage
+- **PAY_01** (Payment Hub) for transaction processing
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2025-12-12 | Initial architecture specification |
+
+---
+
+> **Next Steps:** Review [META_02: God View](/canon/meta/meta-02-god-view) for visualization capabilities.
