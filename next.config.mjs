@@ -20,6 +20,28 @@ const nextConfig = {
       },
     ]
   },
+
+  // Wave 2: Alias redirects to native routes
+  // Ensures legacy URLs redirect to new native App Router pages
+  async redirects() {
+    return [
+      {
+        source: '/payment-hub',
+        destination: '/payments',
+        permanent: true,
+      },
+      {
+        source: '/settings',
+        destination: '/system',
+        permanent: true,
+      },
+      {
+        source: '/meta-registry',
+        destination: '/dashboard',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 // Merge MDX config with Next.js config

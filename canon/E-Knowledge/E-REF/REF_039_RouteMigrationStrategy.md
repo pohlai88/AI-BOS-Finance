@@ -100,10 +100,10 @@ export default function InventoryPage() {
 2. ✅ `/payments` → `app/payments/page.tsx`
 3. ✅ `/system` → `app/system/page.tsx`
 
-### Wave 2: Aliases (After Primary Routes)
-4. ⏳ `/payment-hub` → redirect to `/payments`
-5. ⏳ `/settings` → redirect to `/system`
-6. ⏳ `/meta-registry` → redirect to `/dashboard`
+### Wave 2: Aliases (Redirects in next.config.mjs) ✅
+4. ✅ `/payment-hub` → 308 redirect to `/payments`
+5. ✅ `/settings` → 308 redirect to `/system`
+6. ✅ `/meta-registry` → 308 redirect to `/dashboard`
 
 ### Wave 3: Core Routes (Require Refactoring)
 7. ✅ `/dashboard` → `app/dashboard/page.tsx`
@@ -173,3 +173,4 @@ For each migrated route:
 |---------|------|---------|
 | 1.0.0 | 2025-12-12 | Initial route mapping and migration strategy |
 | 1.1.0 | 2025-12-12 | Wave 3.5 complete - all components router-agnostic |
+| 1.2.0 | 2025-12-12 | Wave 2 complete - alias redirects configured |

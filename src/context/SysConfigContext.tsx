@@ -24,9 +24,9 @@ const SysConfigContext = createContext<SysConfigState | undefined>(undefined);
 export function SysConfigProvider({ children }: { children: ReactNode }) {
   // Initialize with defaults first (SSR-safe), then hydrate from localStorage
   const [steps, setSteps] = useState({
-    profile: false,
-    organization: false,
-    team: false,
+          profile: false,
+          organization: false,
+          team: false,
   });
 
   // Hydrate from localStorage after mount (client-side only)
