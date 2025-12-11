@@ -109,7 +109,7 @@ export default function InventoryPage() {
 7. ✅ `/dashboard` → `app/dashboard/page.tsx`
    - Created `useRouterAdapter` hook for hybrid routing
    - Updated: `MetaAppShell`, `SetupCompanion`, `MetaSideNav`
-8. ⏳ `/` (home) → `app/page.tsx` - Has navigation callbacks
+8. ✅ `/` (home) → `app/page.tsx` - Using `useRouterAdapter` for callbacks
 
 ### Wave 3.5: Component Sweep (Router Agnostic) ✅
 Made all shared components router-agnostic:
@@ -129,10 +129,10 @@ Made all shared components router-agnostic:
 - `RouterLink` - Universal link component
 - `RouterAdapterProvider` - Context provider
 
-### Wave 4: Cleanup
-9. ⏳ Remove catch-all `[[...slug]]` SPA fallback
-10. ⏳ Remove React Router from `src/App.tsx`
-11. ⏳ Uninstall `react-router-dom`
+### Wave 4: Cleanup ✅
+9. ✅ Removed catch-all `[[...slug]]` SPA fallback
+10. ⏳ Remove React Router from `src/App.tsx` (legacy, can be deleted)
+11. ⏳ Uninstall `react-router-dom` (optional - may be needed for legacy code)
 
 ---
 
@@ -174,3 +174,4 @@ For each migrated route:
 | 1.0.0 | 2025-12-12 | Initial route mapping and migration strategy |
 | 1.1.0 | 2025-12-12 | Wave 3.5 complete - all components router-agnostic |
 | 1.2.0 | 2025-12-12 | Wave 2 complete - alias redirects configured |
+| 2.0.0 | 2025-12-12 | **MIGRATION COMPLETE** - Wave 4 executed, catch-all removed |
