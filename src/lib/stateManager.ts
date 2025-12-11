@@ -4,7 +4,7 @@
 // ============================================================================
 
 import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 
 // ============================================================================
 // URL STATE MANAGEMENT
@@ -20,7 +20,7 @@ export function useUrlState<T>(
   serialize: (value: T) => string = JSON.stringify,
   deserialize: (value: string) => T = JSON.parse,
 ): [T, (value: T) => void] {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setSearchParams } = useRouterAdapter();
 
   // Get initial value from URL or use default
   const getInitialValue = (): T => {

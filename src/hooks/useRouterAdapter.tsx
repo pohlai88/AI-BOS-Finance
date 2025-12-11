@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useCallback, useMemo, createContext, useContext, ReactNode } from 'react';
+import React, { useCallback, useMemo, createContext, useContext, ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export interface RouterAdapterResult {
@@ -22,8 +22,10 @@ export interface RouterAdapterResult {
   navigate: (path: string) => void;
   /** Check if a path is active */
   isActive: (path: string) => boolean;
-  /** Search params as URLSearchParams */
+  /** Search params as URLSearchParams (read-only snapshot) */
   searchParams: URLSearchParams;
+  /** Update search params (similar to React Router's setSearchParams) */
+  setSearchParams: (params: URLSearchParams, options?: { replace?: boolean }) => void;
 }
 
 /**
@@ -47,11 +49,21 @@ export function useNextRouter(): RouterAdapterResult {
     return pathname === path;
   }, [pathname]);
 
+  const setSearchParams = useCallback((params: URLSearchParams, options?: { replace?: boolean }) => {
+    const newUrl = `${pathname}?${params.toString()}`;
+    if (options?.replace) {
+      router.replace(newUrl);
+    } else {
+      router.push(newUrl);
+    }
+  }, [pathname, router]);
+
   return {
     pathname,
     navigate,
     isActive,
     searchParams,
+    setSearchParams,
   };
 }
 
@@ -87,4 +99,37 @@ export function useRouterAdapter(): RouterAdapterResult {
   }
   
   return contextAdapter;
+}
+
+/**
+ * Universal Link component that works in both Next.js and React Router
+ * Replaces react-router-dom's Link for router-agnostic navigation
+ */
+interface RouterLinkProps {
+  to: string;
+  children: ReactNode;
+  className?: string;
+  title?: string;
+  'aria-label'?: string;
+}
+
+export function RouterLink({ to, children, className, title, 'aria-label': ariaLabel }: RouterLinkProps) {
+  const { navigate } = useRouterAdapter();
+  
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(to);
+  };
+  
+  return (
+    <a 
+      href={to} 
+      onClick={handleClick} 
+      className={className} 
+      title={title}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </a>
+  );
 }

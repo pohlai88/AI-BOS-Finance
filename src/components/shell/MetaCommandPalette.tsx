@@ -5,7 +5,7 @@
 // ============================================================================
 
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import {
   Search,
   ArrowRight,
@@ -40,8 +40,7 @@ interface Command {
 }
 
 export function MetaCommandPalette({ isOpen, onClose }: CommandPaletteProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { navigate, pathname } = useRouterAdapter();
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);

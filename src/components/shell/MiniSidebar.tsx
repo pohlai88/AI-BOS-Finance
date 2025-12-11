@@ -1,9 +1,8 @@
 import { Database, Settings, Home, FileText, Activity } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 
 export function MiniSidebar() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { navigate, pathname } = useRouterAdapter();
 
   const navItems = [
     { icon: Home, path: '/', label: 'Home', id: 'home' },
@@ -21,13 +20,13 @@ export function MiniSidebar() {
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return location.pathname === '/';
+      return pathname === '/';
     }
     // Special handling for metadata routes (META_01, META_02, META_03)
     if (path === '/meta-architecture') {
-      return location.pathname.startsWith('/meta');
+      return pathname.startsWith('/meta');
     }
-    return location.pathname.startsWith(path);
+    return pathname.startsWith(path);
   };
 
   return (

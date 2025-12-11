@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { LynxIcon, LivingLynx } from '../icons/LynxIcon';
 import { CommandPalette } from './CommandPalette';
-import { Link } from 'react-router-dom';
+import { RouterLink } from '@/hooks/useRouterAdapter';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { NexusIcon } from '../nexus/NexusIcon';
 
@@ -47,7 +47,7 @@ export const Header = ({
 
             {/* RIGHT: TERMINAL ACCESS */}
             <div className="flex items-center justify-end">
-              <Link
+              <RouterLink
                 to="/login"
                 className="group flex items-center gap-2.5 px-4 py-2 bg-zinc-950/80 hover:bg-zinc-900/80 border border-white/10 hover:border-emerald-500/50 rounded-lg transition-all duration-300 shadow-lg hover:shadow-emerald-500/10"
               >
@@ -57,7 +57,7 @@ export const Header = ({
                 </span>
                 {/* Status Dot */}
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              </Link>
+              </RouterLink>
             </div>
           </div>
 
@@ -142,9 +142,9 @@ const NavItem = ({
     <Tooltip>
       <TooltipTrigger asChild>
         {isRouterLink ? (
-          <Link to={href || '#'} className={linkClasses}>
+          <RouterLink to={href || '#'} className={linkClasses}>
             {content}
-          </Link>
+          </RouterLink>
         ) : (
           <a href={href} onClick={onClick} className={linkClasses}>
             {content}

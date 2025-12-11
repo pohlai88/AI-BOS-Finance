@@ -111,6 +111,24 @@ export default function InventoryPage() {
    - Updated: `MetaAppShell`, `SetupCompanion`, `MetaSideNav`
 8. ⏳ `/` (home) → `app/page.tsx` - Has navigation callbacks
 
+### Wave 3.5: Component Sweep (Router Agnostic) ✅
+Made all shared components router-agnostic:
+- ✅ `Breadcrumbs.tsx` - Using `useRouterAdapter`
+- ✅ `MetaCommandPalette.tsx` - Using `useRouterAdapter`
+- ✅ `AppShell.tsx` - Using `useRouterAdapter`
+- ✅ `MiniSidebar.tsx` - Using `useRouterAdapter`
+- ✅ `NavMiniSidebar.tsx` - Using `useRouterAdapter`
+- ✅ `MissionControl.tsx` - Using `useRouterAdapter`
+- ✅ `ForensicClassificationStrip.tsx` - Using `useRouterAdapter`
+- ✅ `DetailDrawer.tsx` - Using `RouterLink`
+- ✅ `Header.tsx` - Using `RouterLink`
+- ✅ `stateManager.ts` - Using `useRouterAdapter` (URL state)
+
+**New Exports Added:**
+- `useRouterAdapter` - Universal router hook
+- `RouterLink` - Universal link component
+- `RouterAdapterProvider` - Context provider
+
 ### Wave 4: Cleanup
 9. ⏳ Remove catch-all `[[...slug]]` SPA fallback
 10. ⏳ Remove React Router from `src/App.tsx`
@@ -154,3 +172,4 @@ For each migrated route:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0.0 | 2025-12-12 | Initial route mapping and migration strategy |
+| 1.1.0 | 2025-12-12 | Wave 3.5 complete - all components router-agnostic |

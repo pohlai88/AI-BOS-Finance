@@ -4,7 +4,7 @@
 // ============================================================================
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { NexusCard } from '../nexus/NexusCard';
 import { NexusButton } from '../nexus/NexusButton';
 import { NexusBadge } from '../nexus/NexusBadge';
@@ -44,7 +44,7 @@ export function MissionControl({
   systemVersion,
   lastConfigUpdate,
 }: MissionControlProps) {
-  const navigate = useNavigate();
+  const { navigate } = useRouterAdapter();
   const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>([]);
 
   const visibleAnnouncements = announcements.filter((a) => !dismissedAnnouncements.includes(a.id));

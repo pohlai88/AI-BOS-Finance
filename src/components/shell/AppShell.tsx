@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Search, Database, Settings as SettingsIcon } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { NexusIcon } from '@/components/nexus/NexusIcon';
 import { CommandPalette } from '../landing/CommandPalette';
 import { MiniSidebar } from './MiniSidebar';
@@ -12,8 +12,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { navigate, pathname } = useRouterAdapter();
 
   // Keyboard shortcut: ⌘K or Ctrl+K
   useEffect(() => {
@@ -33,7 +32,7 @@ export function AppShell({ children }: AppShellProps) {
   }, [showCommandPalette]);
 
   // Check if we're on the landing page (no app chrome)
-  const isLandingPage = location.pathname === '/';
+  const isLandingPage = pathname === '/';
 
   // Don't show app shell on landing page
   if (isLandingPage) {

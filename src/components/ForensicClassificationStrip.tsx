@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { NexusIcon } from '@/components/nexus/NexusIcon';
 
 interface ForensicStripProps {
@@ -8,6 +8,8 @@ interface ForensicStripProps {
 }
 
 export function ForensicClassificationStrip({ code, status = 'ACTIVE' }: ForensicStripProps) {
+  const { navigate } = useRouterAdapter();
+  
   return (
     <div className="border-b border-[#1F1F1F] bg-[#000000]">
       {/* Top Green Line */}
@@ -16,13 +18,13 @@ export function ForensicClassificationStrip({ code, status = 'ACTIVE' }: Forensi
       {/* Content */}
       <div className="flex items-center justify-between px-6 md:px-12 h-12">
         <div className="flex items-center gap-6">
-          <Link
-            to="/"
+          <button
+            onClick={() => navigate('/')}
             className="flex items-center gap-2 group hover:opacity-80 transition-opacity"
             title="Return to Home"
           >
             <NexusIcon size="sm" />
-          </Link>
+          </button>
           <div className="w-[1px] h-3 bg-[#333]" />
           <span className="font-mono text-[10px] md:text-[12px] tracking-[0.15em] text-[#666] uppercase">
             Classified // Forensic Metadata

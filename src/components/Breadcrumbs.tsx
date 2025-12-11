@@ -3,7 +3,7 @@
 // Figma Best Practice: Show current location like Linear/Notion
 // ============================================================================
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 import { ChevronRight, Home } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -69,11 +69,10 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
 }
 
 export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { pathname, navigate } = useRouterAdapter();
 
   // Use provided items or generate from pathname
-  const breadcrumbs = items || generateBreadcrumbs(location.pathname);
+  const breadcrumbs = items || generateBreadcrumbs(pathname);
 
   // Don't show breadcrumbs on home page
   if (breadcrumbs.length <= 1) return null;
@@ -136,9 +135,8 @@ interface CompactBreadcrumbsProps {
 }
 
 export function CompactBreadcrumbs({ className = '' }: CompactBreadcrumbsProps) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const breadcrumbs = generateBreadcrumbs(location.pathname);
+  const { pathname, navigate } = useRouterAdapter();
+  const breadcrumbs = generateBreadcrumbs(pathname);
 
   if (breadcrumbs.length <= 1) return null;
 
