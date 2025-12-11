@@ -23,7 +23,7 @@ alwaysApply: false
 | React Aria MCP | ✅ Active | Accessibility documentation |
 | Supabase MCP | ✅ Active | Database operations |
 | Browser Automation | ✅ Active | Visual testing |
-| Next.js DevTools | ⚠️ Future | Next.js development |
+| Next.js DevTools | ✅ Active | Next.js development |
 
 ## Quick Reference Commands
 
@@ -49,6 +49,11 @@ alwaysApply: false
 - `mcp_supabase_execute_sql` - Run SQL queries
 - `mcp_supabase_list_tables` - List database tables
 - `mcp_supabase_apply_migration` - Apply migrations
+
+### Next.js DevTools MCP
+- Provides real-time access to Next.js application internals
+- Error detection and live state queries
+- Development logs and debugging capabilities
 
 ## Recommended Workflows
 

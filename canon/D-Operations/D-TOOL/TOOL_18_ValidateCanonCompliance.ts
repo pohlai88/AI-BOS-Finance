@@ -5,17 +5,22 @@
  * Validates that all files follow Canon Identity guidelines OR framework conventions:
  * - Framework-specific files (Next.js routing, configs) use default naming per CONT_01 Section 3.7
  * - Next.js App Router files (page.tsx, layout.tsx, route.ts, etc.) are allowed with default naming
+ * - Next.js 16+ conventions: proxy.ts (preferred over deprecated middleware.ts)
  * - Next.js Server Actions (*.actions.ts) are allowed with default naming per ADR_001
  * - Canon-governed files follow Canon patterns (TOOL_XX, REF_XXX, etc.)
  * - Documents are in correct Canon planes
  * 
  * Framework Files Allowed (per CONT_01 Section 3.7):
- * - Next.js App Router: page.tsx, layout.tsx, route.ts, loading.tsx, error.tsx, etc.
+ * - Next.js App Router: page.tsx, layout.tsx, route.ts, loading.tsx, error.tsx, forbidden.tsx, unauthorized.tsx, etc.
  * - Next.js Pages Router: _app.tsx, _document.tsx, index.tsx, etc.
- * - Next.js Root: middleware.ts, next-env.d.ts
+ * - Next.js Root: proxy.ts (Next.js 16+, preferred), middleware.ts (deprecated), next-env.d.ts
  * - Server Actions: *.actions.ts (per ADR_001)
  * - Config files: package.json, tsconfig.json, next.config.js, etc.
  * - Generic utilities: utils.ts, helpers.ts, constants.ts, etc.
+ * 
+ * Next.js 16 Best Practices:
+ * - Use proxy.ts instead of middleware.ts (middleware.ts is deprecated)
+ * - Migration: npx @next/codemod@canary middleware-to-proxy .
  * 
  * Usage:
  *   npm run canon:validate-compliance
@@ -50,6 +55,11 @@ const FRAMEWORK_PATTERNS = {
     /^sitemap\.(tsx?|xml)$/,                  // app/**/sitemap.*
     /^robots\.(tsx?|txt)$/,                   // app/**/robots.*
     /^favicon\.ico$/,                         // app/favicon.ico
+    /^forbidden\.tsx?$/,                      // app/**/forbidden.tsx - 403 errors (Next.js 16+)
+    /^unauthorized\.tsx?$/,                   // app/**/unauthorized.tsx - 401 errors (Next.js 16+)
+    /^instrumentation\.tsx?$/,                // app/instrumentation.ts - server instrumentation
+    /^instrumentation-client\.tsx?$/,         // app/instrumentation-client.ts - client instrumentation
+    /^mdx-components\.tsx?$/,                 // app/mdx-components.tsx - MDX component config
     /^\[.*\]\.tsx?$/,                         // app/**/[param]/page.tsx - dynamic routes
     /^\[\.\.\..*\]\.tsx?$/,                   // app/**/[...slug]/page.tsx - catch-all routes
     /^\(.*\)$/,                               // app/(group)/ - route groups (directories)
@@ -65,8 +75,9 @@ const FRAMEWORK_PATTERNS = {
   ],
   // Next.js root-level files
   nextjsRoot: [
-    /^middleware\.tsx?$/,     // middleware.ts - Next.js middleware
-    /^next-env\.d\.ts$/,      // next-env.d.ts - Next.js type definitions
+    /^proxy\.tsx?$/,           // proxy.ts - Next.js 16+ (preferred, replaces middleware)
+    /^middleware\.tsx?$/,      // middleware.ts - DEPRECATED in Next.js 16, use proxy.ts
+    /^next-env\.d\.ts$/,       // next-env.d.ts - Next.js type definitions
   ],
   // Framework config files (CONT_01 Section 3.7)
   frameworkConfigs: [
@@ -230,6 +241,8 @@ function validateFile(filepath: string): FileValidation {
       normalizedPath.includes('build/') ||
       normalizedPath.includes('.turbo/') ||
       normalizedPath.includes('coverage/') ||
+      normalizedPath.includes('/z-archive/') ||
+      normalizedPath.startsWith('z-archive/') ||
       (normalizedPath.startsWith('.') && !normalizedPath.startsWith('./') && 
        !normalizedPath.startsWith('.cursor/') && !normalizedPath.startsWith('.figma/') && 
        !normalizedPath.startsWith('.github/'))) {
@@ -243,6 +256,18 @@ function validateFile(filepath: string): FileValidation {
     };
   }
   
+  // Exclude registry.yaml files (configuration files, not Canon-governed code)
+  if (filename === 'registry.yaml' || filename === 'registry.yml') {
+    return {
+      path: relativePath,
+      filename,
+      isValid: true,
+      category: 'FRAMEWORK',
+      reason: 'Registry configuration file - excluded from Canon validation per REF_014',
+      issues: []
+    };
+  }
+  
   // Check if it's a framework file (allowed with default naming)
   if (isFrameworkFile(filepath, filename)) {
     category = 'FRAMEWORK';
@@ -251,8 +276,10 @@ function validateFile(filepath: string): FileValidation {
       reason = 'Next.js App Router file - allowed with default naming per CONT_01 Section 3.7';
     } else if (normalizedPath.includes('/pages/') || normalizedPath.startsWith('pages/')) {
       reason = 'Next.js Pages Router file - allowed with default naming per CONT_01 Section 3.7';
+    } else if (filename === 'proxy.ts' || filename === 'proxy.tsx') {
+      reason = 'Next.js proxy file (Next.js 16+, preferred over middleware.ts) - allowed with default naming per CONT_01 Section 3.7';
     } else if (filename === 'middleware.ts' || filename === 'middleware.tsx') {
-      reason = 'Next.js middleware file - allowed with default naming per CONT_01 Section 3.7';
+      reason = 'Next.js middleware file (DEPRECATED in Next.js 16, migrate to proxy.ts) - allowed with default naming per CONT_01 Section 3.7';
     } else if (filename.endsWith('.actions.ts') || filename.endsWith('.actions.tsx')) {
       reason = 'Next.js Server Actions file - allowed with default naming per ADR_001 and CONT_01 Section 3.7';
     } else {
@@ -267,6 +294,9 @@ function validateFile(filepath: string): FileValidation {
     reason = 'README file - standard documentation';
     return { path: relativePath, filename, isValid: true, category, reason, issues };
   }
+  
+  // Exclude registry.yaml files (already checked above, but kept for clarity)
+  // This is redundant but ensures we catch it even if directory exclusion changes
   
   // Check if it's in a Canon directory (use normalized path for cross-platform compatibility)
   if (normalizedPath.startsWith('canon/')) {
@@ -441,244 +471,21 @@ main().catch(console.error);
 // DEVELOPER NOTES
 // ============================================================================
 //
-// VALIDATION LOGIC OVERVIEW:
-// ---------------------------
-// This tool validates files against two sets of rules:
-// 1. Framework conventions (Next.js, configs, utilities) - allowed with default naming
-// 2. Canon Identity patterns (TOOL_XX, REF_XXX, etc.) - required for Canon-governed files
+// For comprehensive developer documentation, see:
+// - REF_013: TOOL_18 Developer Guide (canon/E-Knowledge/E-REF/REF_013_TOOL18_DeveloperGuide.md)
 //
-// PATH NORMALIZATION:
-// -------------------
-// All paths are normalized to use forward slashes (/) for cross-platform compatibility.
-// Windows paths (canon\D-TOOL\...) are converted to Unix-style (canon/D-TOOL/...).
-// This ensures pattern matching works consistently on all platforms.
+// Quick Reference:
+// - Validation logic: See REF_013 Section "Validation Logic Overview"
+// - Adding patterns: See REF_013 Section "Adding New Patterns"
+// - Common issues: See REF_013 Section "Common Issues & Fixes"
+// - Next.js best practices: See REF_013 Section "Next.js Workflow Best Practices"
 //
-// FRAMEWORK FILE DETECTION:
-// -------------------------
-// Framework files are identified by:
-// - Location (app/, pages/, root level)
-// - Filename pattern (page.tsx, route.ts, middleware.ts, etc.)
-// - File extension and naming conventions
-//
-// Next.js App Router files are only valid when inside app/ directory.
-// Next.js Pages Router files are only valid when inside pages/ directory.
-// Server Actions (*.actions.ts) are valid anywhere (per ADR_001).
-//
-// CANON FILE DETECTION:
-// ---------------------
-// Canon files are identified by:
-// - Filename pattern matching CANON_PATTERNS regex
-// - Location validation (must be in appropriate canon/ subdirectory)
-//
-// Files in canon/ directory MUST follow Canon patterns.
-// Files with Canon patterns outside canon/ are flagged for relocation.
-//
-// ADDING NEW FRAMEWORK PATTERNS:
-// ------------------------------
-// To add support for new framework conventions:
-// 1. Add pattern to appropriate FRAMEWORK_PATTERNS array
-// 2. Update isFrameworkFile() if location-specific logic is needed
-// 3. Update reason message in validateFile() for better error messages
-//
-// Example:
-//   nextjsAppRouter: [
-//     /^new-convention\.tsx?$/,  // Add new pattern
-//   ],
-//
-// ADDING NEW CANON PATTERNS:
-// --------------------------
-// To add support for new Canon code types:
-// 1. Add pattern to CANON_PATTERNS object
-// 2. Update recommendation logic in validateFile() if needed
-//
-// Example:
-//   NEW_TYPE: /^NEW_\d{3}_[A-Za-z0-9_]+\.(ts|md)$/,
-//
-// COMMON ISSUES & FIXES:
-// ----------------------
-// 1. "File in Canon directory must follow Canon naming pattern"
-//    → Rename file to match appropriate Canon pattern (TOOL_XX, REF_XXX, etc.)
-//
-// 2. "Canon file but outside canon/ directory"
-//    → Move file to appropriate canon/ subdirectory
-//
-// 3. False positives for valid utilities
-//    → Add pattern to genericUtilities array if it's a common utility pattern
-//
-// 4. Windows path issues
-//    → All paths are normalized, but ensure relative() is used consistently
-//
-// TESTING:
-// --------
-// Run validation: npx tsx canon/D-Operations/D-TOOL/TOOL_18_ValidateCanonCompliance.ts
-// Or via npm: npm run canon:validate-compliance
-//
-// DEBUGGING:
-// ----------
-// To debug specific files, add console.log() in validateFile() before return statements.
-// Check normalizedPath vs relativePath to identify path normalization issues.
-//
-// PERFORMANCE:
-// ------------
-// This tool scans all files in key directories (canon/, src/, apps/, packages/).
-// For large codebases, consider:
-// - Adding more specific directory exclusions
-// - Implementing file type filtering earlier in the scan
-// - Caching results for unchanged files
-//
-// RELATED DOCUMENTATION:
-// ---------------------
+// Related Documentation:
 // - CONT_01: Canon Identity Contract (Section 3.7 - Framework Files)
 // - ADR_001: Next.js App Router Adoption
 // - ADR_002: Canon Security (Server-Side Verification)
-//
-// ============================================================================
-// NEXT.JS BEST PRACTICES: MAINTAINING CONSISTENCY & AVOIDING DRIFT
-// ============================================================================
-//
-// WORKFLOW CHECKPOINTS & DOCUMENTATION:
-// -------------------------------------
-// When stopping work on Next.js files, document:
-//
-// 1. **Current State Summary:**
-//    - Which files were modified (app/**/page.tsx, route.ts, *.actions.ts)
-//    - What Canon codes are involved (PAGE_XXX, COMP_XXX, etc.)
-//    - Which routes/pages were affected
-//
-// 2. **Next Steps Checklist:**
-//    - [ ] Run validation: npm run canon:validate-compliance
-//    - [ ] Verify thin wrapper pattern (app/**/page.tsx → canon-pages/)
-//    - [ ] Check Server Actions are in *.actions.ts files
-//    - [ ] Ensure route handlers follow security patterns (ADR_002)
-//    - [ ] Update registry YAML if new pages/components added
-//
-// 3. **Consistency Markers:**
-//    - File naming: Framework files use Next.js conventions, Canon files use Canon patterns
-//    - Location: app/ for routes, canon-pages/ for business logic
-//    - Exports: PAGE_META for pages, COMPONENT_META for components
-//
-// THIN WRAPPER PATTERN (ADR_001):
-// --------------------------------
-// ✅ CORRECT:
-//   app/canon/page.tsx (thin wrapper)
-//   → imports from canon-pages/META/META_02_CanonLandingPage.tsx
-//   → re-exports metadata
-//
-// ❌ AVOID:
-//   - Business logic in app/**/page.tsx
-//   - Canon codes in app/ directory filenames
-//   - Mixing framework routing with Canon governance
-//
-// FILE ORGANIZATION BEST PRACTICES:
-// ---------------------------------
-// 1. **Next.js Routes (app/ directory):**
-//    - Use default Next.js naming: page.tsx, layout.tsx, route.ts
-//    - Keep thin - only routing and metadata re-exports
-//    - Import from canon-pages/ for actual implementation
-//
-// 2. **Canon Pages (canon-pages/ directory):**
-//    - Use Canon naming: PAGE_XXX_Description.tsx
-//    - Export PAGE_META constant
-//    - Contains all business logic
-//
-// 3. **Server Actions (*.actions.ts):**
-//    - Co-locate with page: META_02_CanonLandingPage.actions.ts
-//    - Use 'use server' directive
-//    - Follow security patterns from ADR_002
-//
-// 4. **Route Handlers (app/api/**/route.ts):**
-//    - Use default Next.js naming: route.ts
-//    - Act as BFF layer (per ADR_001)
-//    - Always verify CanonContext server-side (ADR_002)
-//
-// CONTINUING WORK - AVOIDING DRIFT:
-// ----------------------------------
-// When resuming work:
-//
-// 1. **Check Current State:**
-//    - Run: npm run canon:validate-compliance
-//    - Review any validation errors
-//    - Check git status for uncommitted changes
-//
-// 2. **Verify Patterns:**
-//    - Are new files following thin wrapper pattern?
-//    - Are Server Actions in *.actions.ts files?
-//    - Are Canon codes exported correctly?
-//
-// 3. **Update Documentation:**
-//    - Update registry YAML if new pages/components
-//    - Document any new patterns or conventions
-//    - Update ADR if architectural decisions changed
-//
-// 4. **Validation Before Commit:**
-//    - Run: npm run canon:validate-compliance
-//    - Fix any INVALID file errors
-//    - Review UNKNOWN files (may need Canon IDs)
-//
-// COMMON DRIFT PATTERNS TO WATCH:
-// --------------------------------
-// 1. **Business Logic in app/**/page.tsx**
-//    → Move to canon-pages/ and import
-//
-// 2. **Canon Codes in app/ Directory**
-//    → app/**/page.tsx should NOT have Canon codes in filename
-//    → Canon codes belong in canon-pages/ directory
-//
-// 3. **Missing PAGE_META Exports**
-//    → All Canon pages must export PAGE_META constant
-//
-// 4. **Server Actions Not in *.actions.ts**
-//    → Server Actions must be in separate *.actions.ts files
-//    → Use 'use server' directive
-//
-// 5. **Route Handlers Without Security Checks**
-//    → Always verify CanonContext server-side (ADR_002)
-//    → Never trust client-provided CanonContext
-//
-// VALIDATION AS CONTINUITY CHECK:
-// --------------------------------
-// Run this tool regularly to catch drift:
-// - Before starting new features
-// - After major refactoring
-// - Before creating PRs
-// - In CI/CD pipeline
-//
-// The tool will catch:
-// - Files that should have Canon IDs but don't
-// - Canon files in wrong locations
-// - Framework files using incorrect naming
-// - Missing or incorrect patterns
-//
-// REMARKING WORK SESSIONS:
-// ------------------------
-// When documenting where work stopped, include:
-//
-// ```markdown
-// ## Work Session Summary
-// 
-// **Date:** YYYY-MM-DD
-// **Files Modified:**
-// - app/canon/page.tsx (thin wrapper for META_02)
-// - canon-pages/META/META_02_CanonLandingPage.tsx (business logic)
-// 
-// **Canon Codes Involved:**
-// - PAGE_META_02 (Canon Landing Page)
-// 
-// **Validation Status:**
-// - ✅ All files pass validation
-// - ✅ Thin wrapper pattern maintained
-// - ✅ PAGE_META exported correctly
-// 
-// **Next Steps:**
-// - [ ] Add route handler for META_02 API
-// - [ ] Update registry YAML
-// - [ ] Add Server Actions if needed
-// ```
-//
-// This ensures:
-// - Clear context for next developer/AI
-// - Validation status is known
-// - Patterns are documented
-// - Continuity is maintained
+// - REF_011: TOOL_18 Next.js Best Practices Plan
+// - REF_012: TOOL_18 Implementation Summary
+// - REF_013: TOOL_18 Developer Guide
 //
 // ============================================================================
