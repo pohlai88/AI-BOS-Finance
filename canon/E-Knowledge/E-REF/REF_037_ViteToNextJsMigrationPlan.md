@@ -271,10 +271,16 @@ export default function RootLayout({
 - ✅ Used `next/font` for font optimization
 - ✅ Removed `<div id="root">` (not needed in App Router)
 
+**⚠️ Important:** Verify the CSS import path matches your project:
+- If you have `src/styles/globals.css` → use `'../src/styles/globals.css'`
+- If you have `src/index.css` → use `'../src/index.css'`
+- If you have `src/App.css` → use `'../src/App.css'`
+
 **Verify:**
 - [ ] `app/layout.tsx` created
 - [ ] Fonts configured
-- [ ] Global CSS imported
+- [ ] Global CSS imported (path verified)
+- [ ] CSS file exists at specified path
 
 ---
 
@@ -599,9 +605,12 @@ export default function PaymentsPage() {
 ### Issue: Images Not Loading
 
 **Solution:** 
-1. Move images to `public/` directory
-2. Use `/image.png` instead of `import image from './image.png'`
-3. Or use Next.js `Image` component
+1. **If images are in `src/assets/`:** Move them to `public/` directory for string path access
+2. **If using import:** Images can stay in `src/`, but Next.js handles them differently (returns object with `src` property)
+3. **Recommended:** Move to `public/` and use `/image.png` instead of `import image from './image.png'`
+4. **Or use Next.js `Image` component** for automatic optimization
+
+**Pro-tip:** If your Vite app has images in `src/assets/`, move them to `public/` before migration to avoid path issues.
 
 ---
 
