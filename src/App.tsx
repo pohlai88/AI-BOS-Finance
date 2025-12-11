@@ -3,6 +3,7 @@ import { LandingPage } from '@/pages/LandingPage';
 import { MetadataGodView } from '@/pages/META_02_MetadataGodView';
 import { INV01Dashboard } from '@/modules/inventory';
 import { SYS01Bootloader } from '@/modules/system';
+import PAY01PaymentHubPage from '@/pages/PAY_01_PaymentHubPage';
 import { SysConfigProvider } from '@/context/SysConfigContext';
 import { Toaster } from 'sonner';
 
@@ -31,6 +32,10 @@ const AppRoutes = () => {
       {/* SYS_01 - System Bootloader */}
       <Route path="/system" element={<SYS01Bootloader />} />
       <Route path="/settings" element={<SYS01Bootloader />} />
+
+      {/* PAY_01 - Payment Hub */}
+      <Route path="/payments" element={<PAY01PaymentHubPage />} />
+      <Route path="/payment-hub" element={<PAY01PaymentHubPage />} />
 
       {/* FALLBACK: Redirect unknown paths to Home */}
       <Route path="*" element={<LandingPage onTryIt={handleTryIt} onCanonClick={handleTryIt} />} />
