@@ -11,13 +11,12 @@
  */
 
 import type { ReactNode } from 'react';
-// Note: Path will be @/canon/registry/canon-pages in Next.js with proper tsconfig
-// Using relative path for now, will be updated during Next.js migration
-import type { CanonPageInfo } from '../../../canon/registry/canon-pages';
+// Import from local canon-pages registry
+import type { CanonPageMeta } from '@/canon-pages/registry';
 
 interface CanonPageShellProps {
   /** Canon page information from registry */
-  pageInfo: CanonPageInfo;
+  pageInfo: CanonPageMeta;
   /** Page content (MDX component) */
   children: ReactNode;
   /** Optional custom header content */
@@ -41,8 +40,10 @@ export function CanonPageShell({
   headerContent,
   footerContent,
 }: CanonPageShellProps) {
-  const { canonId, domain, title, description, version, classification } =
-    pageInfo;
+  const { id, title, description, version, status } = pageInfo;
+  
+  // Extract domain from ID (e.g., META_01 -> META)
+  const domain = id.split('_')[0] || 'CANON';
 
   return (
     <main className="flex min-h-screen flex-col bg-nexus-void text-nexus-signal antialiased">
@@ -59,7 +60,7 @@ export function CanonPageShell({
             
             {/* Canon ID */}
             <span className="text-xs font-mono text-nexus-green/80">
-              {canonId}
+              {id}
             </span>
             
             {/* Version */}
@@ -70,20 +71,22 @@ export function CanonPageShell({
               </>
             )}
             
-            {/* Classification Badge */}
-            {classification && (
+            {/* Status Badge */}
+            {status && (
               <>
                 <span className="text-xs text-nexus-signal/50">·</span>
                 <span
                   className={`text-xs px-2 py-0.5 rounded ${
-                    classification === 'PUBLIC'
+                    status === 'ACTIVE'
                       ? 'bg-nexus-green/20 text-nexus-green/80'
-                      : classification === 'INTERNAL'
-                      ? 'bg-nexus-signal/20 text-nexus-signal/80'
-                      : 'bg-red-500/20 text-red-400/80'
+                      : status === 'DRAFT'
+                      ? 'bg-yellow-400/20 text-yellow-400/80'
+                      : status === 'DEPRECATED'
+                      ? 'bg-orange-400/20 text-orange-400/80'
+                      : 'bg-gray-400/20 text-gray-400/80'
                   }`}
                 >
-                  {classification}
+                  {status}
                 </span>
               </>
             )}

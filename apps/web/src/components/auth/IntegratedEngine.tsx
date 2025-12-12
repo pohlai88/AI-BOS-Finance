@@ -24,7 +24,7 @@ const THEME = {
 
 // --- PROVIDER COMPONENT ---
 // This handles the "Earthquake" logic when the engine revs
-export const EngineProvider = ({ children, state, setState, shakeX, shakeY }: any) => {
+export const EngineProvider = ({ children, state, shakeX, shakeY }: any) => {
   // The Physics Loop: Triggers screen shake on piston slams
   useEffect(() => {
     let interval: any;

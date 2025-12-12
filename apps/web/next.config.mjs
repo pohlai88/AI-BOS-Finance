@@ -10,6 +10,11 @@ const nextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   
+  // Allow imports from outside app directory (for canon/)
+  experimental: {
+    externalDir: true,
+  },
+  
   // ⚠️ CRITICAL: Do NOT use output: 'export' if you need rewrites/proxy
   // Static exports cannot support server-side rewrites
   // Use default output (Node.js server) for rewrites
@@ -54,7 +59,8 @@ const withMDX = createMDX({
   // Add markdown plugins here if needed
   options: {
     // Use the MDX components from the canon-pages directory
-    providerImportSource: './canon-pages/mdx-components',
+    // Use path alias so it works from subdirectories (META/, PAYMENT/, etc.)
+    providerImportSource: '@/canon-pages/mdx-components',
   },
 })
 

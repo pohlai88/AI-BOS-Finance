@@ -1345,7 +1345,7 @@ export const AgriMetadataLifecycle = () => {
               <span className="text-[8px] font-mono text-gray-600 uppercase tracking-[0.2em] mb-1">
                 Mineral Orchestra
               </span>
-              {rootPaths.slice(0, activeRootCount).map((root, i) => (
+              {rootPaths.slice(0, activeRootCount).map((root) => (
                 <div key={root.label} className="flex items-center gap-2 text-[8px] font-mono">
                   <motion.div
                     className="w-2 h-2 rounded-full"

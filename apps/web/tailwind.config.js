@@ -2,9 +2,9 @@
 export default {
   darkMode: ["class"],
   content: [
-    "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
+    "./canon-pages/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
