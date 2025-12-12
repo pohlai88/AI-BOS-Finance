@@ -161,6 +161,15 @@ export const CANON_FILES: Record<string, CanonFile> = {
     status: 'ACTIVE',
     mdxPath: 'meta/meta-02-god-view',
   },
+
+  // E-Knowledge/E-SPEC
+  'E-Knowledge/E-SPEC/PRD_KERNEL_01_AIBOS_KERNEL.md': {
+    path: 'E-Knowledge/E-SPEC/PRD_KERNEL_01_AIBOS_KERNEL.md',
+    type: 'SPEC',
+    id: 'SPEC_KERNEL_01',
+    title: 'AIBOS Kernel (The Brain)',
+    status: 'ACTIVE',
+  },
 };
 
 /**

@@ -40,8 +40,11 @@
       "@/views/*": [
         "./src/views/*"
       ],
-      "@/canon/*": [
-        "../../canon/*"
+      "@aibos/canon": [
+        "../../packages/canon"
+      ],
+      "@aibos/canon/*": [
+        "../../packages/canon/*"
       ],
       "@/canon-pages/*": [
         "./canon-pages/*"
@@ -55,7 +58,7 @@
     "./src",
     "./app",
     "./canon-pages",
-    "../../canon/**/*.ts",
+    "../../packages/canon/**/*.ts",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts",

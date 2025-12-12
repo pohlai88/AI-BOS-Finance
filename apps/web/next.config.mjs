@@ -10,11 +10,6 @@ const nextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   
-  // Allow imports from outside app directory (for canon/)
-  experimental: {
-    externalDir: true,
-  },
-  
   // ⚠️ CRITICAL: Do NOT use output: 'export' if you need rewrites/proxy
   // Static exports cannot support server-side rewrites
   // Use default output (Node.js server) for rewrites
