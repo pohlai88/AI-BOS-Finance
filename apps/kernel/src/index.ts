@@ -7,8 +7,19 @@
  * @see PRD_KERNEL_01_AIBOS_KERNEL.md
  */
 
-// Load environment variables
-import 'dotenv/config';
+// Load environment variables from root .env.local (monorepo setup)
+// This allows sharing DATABASE_URL and other secrets from root
+import { config } from 'dotenv';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load root .env.local first (shared secrets), then app-level .env.local if exists
+config({ path: resolve(__dirname, '../../../.env.local') });
+config({ path: resolve(__dirname, '../.env.local') }); // App-level override (optional)
 
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';

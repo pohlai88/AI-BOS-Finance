@@ -10,7 +10,19 @@
  * @see PRD_KERNEL_01_AIBOS_KERNEL.md
  */
 
-import 'dotenv/config';
+// Load environment variables from root .env.local (monorepo setup)
+import { config } from 'dotenv';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load root .env.local first (shared secrets), then app-level .env.local if exists
+// seed.ts is in apps/kernel/scripts/, so ../../../ goes to root
+config({ path: resolve(__dirname, '../../../.env.local') });
+config({ path: resolve(__dirname, '../../.env.local') }); // App-level override (optional)
 import { db } from '../src/db/index.js';
 import {
   mdmGlobalMetadata,
