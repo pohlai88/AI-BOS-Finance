@@ -13,8 +13,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Btn } from '@/components/ui/Btn';
-import { Txt } from '@/components/ui/Txt';
+import { Btn, Txt } from '@aibos/ui'
 
 // ============================================================================
 // TYPES

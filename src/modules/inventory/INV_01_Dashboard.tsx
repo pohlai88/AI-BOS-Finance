@@ -8,17 +8,17 @@
 // ============================================================================
 
 import React, { useState, useMemo } from 'react';
-import { SuperTable } from '@/components/metadata/SuperTable';
-import { 
-  generateColumnsFromSchema, 
-  MetadataField, 
-  STATUS_PRESETS 
+import { SuperTable } from '@/modules/metadata/components/SuperTable';
+import {
+  generateColumnsFromSchema,
+  MetadataField,
+  STATUS_PRESETS
 } from '@/kernel';
-import { 
-  Package, 
-  Warehouse, 
-  TrendingUp, 
-  AlertTriangle, 
+import {
+  Package,
+  Warehouse,
+  TrendingUp,
+  AlertTriangle,
   Plus,
   Download,
   RefreshCw
@@ -121,93 +121,93 @@ interface InventoryItem {
 }
 
 const MOCK_INVENTORY: InventoryItem[] = [
-  { 
-    id: '1', 
-    sku_id: 'TECH-001', 
-    product_name: 'Nexus Core Processor', 
-    category: 'electronics', 
-    stock_level: 1450, 
-    unit_price: 299.99, 
-    total_value: 434985.50, 
-    status: 'in_stock', 
-    last_restock: '2024-03-10' 
+  {
+    id: '1',
+    sku_id: 'TECH-001',
+    product_name: 'Nexus Core Processor',
+    category: 'electronics',
+    stock_level: 1450,
+    unit_price: 299.99,
+    total_value: 434985.50,
+    status: 'in_stock',
+    last_restock: '2024-03-10'
   },
-  { 
-    id: '2', 
-    sku_id: 'FURN-882', 
-    product_name: 'ErgoChair Pro', 
-    category: 'furniture', 
-    stock_level: 12, 
-    unit_price: 850.00, 
-    total_value: 10200.00, 
-    status: 'low_stock', 
-    last_restock: '2024-01-15' 
+  {
+    id: '2',
+    sku_id: 'FURN-882',
+    product_name: 'ErgoChair Pro',
+    category: 'furniture',
+    stock_level: 12,
+    unit_price: 850.00,
+    total_value: 10200.00,
+    status: 'low_stock',
+    last_restock: '2024-01-15'
   },
-  { 
-    id: '3', 
-    sku_id: 'OFF-101', 
-    product_name: 'A4 Paper Ream (500)', 
-    category: 'office', 
-    stock_level: 0, 
-    unit_price: 12.50, 
-    total_value: 0.00, 
-    status: 'out_of_stock', 
-    last_restock: '2023-11-20' 
+  {
+    id: '3',
+    sku_id: 'OFF-101',
+    product_name: 'A4 Paper Ream (500)',
+    category: 'office',
+    stock_level: 0,
+    unit_price: 12.50,
+    total_value: 0.00,
+    status: 'out_of_stock',
+    last_restock: '2023-11-20'
   },
-  { 
-    id: '4', 
-    sku_id: 'TECH-202', 
-    product_name: '4K Monitor 27"', 
-    category: 'electronics', 
-    stock_level: 56, 
-    unit_price: 450.00, 
-    total_value: 25200.00, 
-    status: 'in_stock', 
-    last_restock: '2024-03-01' 
+  {
+    id: '4',
+    sku_id: 'TECH-202',
+    product_name: '4K Monitor 27"',
+    category: 'electronics',
+    stock_level: 56,
+    unit_price: 450.00,
+    total_value: 25200.00,
+    status: 'in_stock',
+    last_restock: '2024-03-01'
   },
-  { 
-    id: '5', 
-    sku_id: 'TECH-999', 
-    product_name: 'Server Rack 42U', 
-    category: 'electronics', 
-    stock_level: 3, 
-    unit_price: 1200.00, 
-    total_value: 3600.00, 
-    status: 'low_stock', 
-    last_restock: '2024-02-28' 
+  {
+    id: '5',
+    sku_id: 'TECH-999',
+    product_name: 'Server Rack 42U',
+    category: 'electronics',
+    stock_level: 3,
+    unit_price: 1200.00,
+    total_value: 3600.00,
+    status: 'low_stock',
+    last_restock: '2024-02-28'
   },
-  { 
-    id: '6', 
-    sku_id: 'SOFT-001', 
-    product_name: 'NexusCanon Enterprise License', 
-    category: 'software', 
-    stock_level: 999, 
-    unit_price: 4999.00, 
-    total_value: 4994001.00, 
-    status: 'in_stock', 
-    last_restock: '2024-03-15' 
+  {
+    id: '6',
+    sku_id: 'SOFT-001',
+    product_name: 'NexusCanon Enterprise License',
+    category: 'software',
+    stock_level: 999,
+    unit_price: 4999.00,
+    total_value: 4994001.00,
+    status: 'in_stock',
+    last_restock: '2024-03-15'
   },
-  { 
-    id: '7', 
-    sku_id: 'OFF-202', 
-    product_name: 'Mechanical Keyboard', 
-    category: 'office', 
-    stock_level: 89, 
-    unit_price: 149.99, 
-    total_value: 13349.11, 
-    status: 'in_stock', 
-    last_restock: '2024-02-20' 
+  {
+    id: '7',
+    sku_id: 'OFF-202',
+    product_name: 'Mechanical Keyboard',
+    category: 'office',
+    stock_level: 89,
+    unit_price: 149.99,
+    total_value: 13349.11,
+    status: 'in_stock',
+    last_restock: '2024-02-20'
   },
-  { 
-    id: '8', 
-    sku_id: 'FURN-100', 
-    product_name: 'Standing Desk Frame', 
-    category: 'furniture', 
-    stock_level: 0, 
-    unit_price: 599.00, 
-    total_value: 0.00, 
-    status: 'out_of_stock', 
-    last_restock: '2023-12-01' 
+  {
+    id: '8',
+    sku_id: 'FURN-100',
+    product_name: 'Standing Desk Frame',
+    category: 'furniture',
+    stock_level: 0,
+    unit_price: 599.00,
+    total_value: 0.00,
+    status: 'out_of_stock',
+    last_restock: '2023-12-01'
   },
 ];
 
@@ -220,8 +220,8 @@ export function INV01Dashboard() {
   const [selectedRows, setSelectedRows] = useState<InventoryItem[]>([]);
 
   // === THE MAGIC: Generate columns from schema ===
-  const columns = useMemo(() => 
-    generateColumnsFromSchema<InventoryItem>(INVENTORY_SCHEMA), 
+  const columns = useMemo(() =>
+    generateColumnsFromSchema<InventoryItem>(INVENTORY_SCHEMA),
     []
   );
 
@@ -242,7 +242,7 @@ export function INV01Dashboard() {
   // === RENDER ===
   return (
     <div className="min-h-screen bg-[#050505]">
-      
+
       {/* HEADER */}
       <header className="border-b border-[#1F1F1F] bg-[#0A0A0A]">
         <div className="max-w-[1600px] mx-auto px-6 py-6">
@@ -264,7 +264,7 @@ export function INV01Dashboard() {
                 </div>
               </div>
             </div>
-            
+
             {/* ACTIONS */}
             <div className="flex gap-3">
               <button className="flex items-center gap-2 px-4 py-2 bg-[#1F1F1F] border border-[#333] text-gray-300 rounded-lg hover:text-white hover:border-[#444] text-xs font-mono transition-colors">
@@ -286,7 +286,7 @@ export function INV01Dashboard() {
 
       {/* MAIN CONTENT */}
       <main className="max-w-[1600px] mx-auto px-6 py-6">
-        
+
         {/* STATISTICS CARDS */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg p-4">
@@ -307,8 +307,8 @@ export function INV01Dashboard() {
               </span>
             </div>
             <div className="text-xl text-emerald-400 font-mono">
-              {new Intl.NumberFormat('en-US', { 
-                style: 'currency', 
+              {new Intl.NumberFormat('en-US', {
+                style: 'currency',
                 currency: 'USD',
                 notation: 'compact',
                 maximumFractionDigits: 1
@@ -354,14 +354,14 @@ export function INV01Dashboard() {
           title="INVENTORY_MASTER"
           mobileKey="product_name"
           onRowClick={handleRowClick}
-          
+
           // Feature Flags
           enableSelection={true}
           enablePagination={true}
           enableColumnVisibility={true}
           enableColumnFilters={true}
           enableGlobalFilter={true}
-          
+
           // Selection Handler
           onSelectionChange={setSelectedRows}
         />
@@ -388,11 +388,11 @@ export function INV01Dashboard() {
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSelectedItem(null)}
           />
-          
+
           {/* Panel */}
           <div className="relative ml-auto w-full max-w-md h-full bg-[#0A0A0A] border-l border-[#1F1F1F] shadow-2xl overflow-y-auto custom-scrollbar">
             {/* Panel Header */}
@@ -406,7 +406,7 @@ export function INV01Dashboard() {
                     {selectedItem.product_name}
                   </h2>
                 </div>
-                <button 
+                <button
                   onClick={() => setSelectedItem(null)}
                   className="p-2 hover:bg-[#1F1F1F] rounded-lg text-[#666] hover:text-white transition-colors"
                 >
@@ -427,25 +427,25 @@ export function INV01Dashboard() {
                   <div className={cn(
                     "text-3xl font-mono mt-2",
                     selectedItem.status === 'out_of_stock' ? 'text-red-400' :
-                    selectedItem.status === 'low_stock' ? 'text-amber-400' : 'text-white'
+                      selectedItem.status === 'low_stock' ? 'text-amber-400' : 'text-white'
                   )}>
                     {selectedItem.stock_level.toLocaleString()}
                   </div>
                   <div className={cn(
                     "text-[10px] mt-1 flex items-center gap-1",
                     selectedItem.status === 'in_stock' ? 'text-emerald-500' :
-                    selectedItem.status === 'low_stock' ? 'text-amber-500' : 'text-red-500'
+                      selectedItem.status === 'low_stock' ? 'text-amber-500' : 'text-red-500'
                   )}>
                     {selectedItem.status === 'in_stock' ? '● Safe Level' :
-                     selectedItem.status === 'low_stock' ? '● Reorder Soon' : '● Restock Required'}
+                      selectedItem.status === 'low_stock' ? '● Reorder Soon' : '● Restock Required'}
                   </div>
                 </div>
-                
+
                 <div className="p-4 bg-[#111] rounded-lg border border-[#222]">
                   <div className="text-[10px] text-[#666] uppercase font-mono tracking-wider">Total Asset Value</div>
                   <div className="text-3xl font-mono text-[#28E7A2] mt-2">
-                    {new Intl.NumberFormat('en-US', { 
-                      style: 'currency', 
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
                       currency: 'USD',
                       notation: selectedItem.total_value > 10000 ? 'compact' : 'standard'
                     }).format(selectedItem.total_value)}

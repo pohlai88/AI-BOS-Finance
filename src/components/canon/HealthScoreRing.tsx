@@ -9,7 +9,7 @@
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-import { cn } from '@/components/ui/utils'
+import { cn } from '@aibos/ui'
 
 export interface HealthScoreRingProps {
   score: number
@@ -24,9 +24,9 @@ const SIZES = {
   lg: { ring: 'w-32 h-32', text: 'text-3xl', label: 'text-sm' },
 }
 
-export function HealthScoreRing({ 
-  score, 
-  size = 'md', 
+export function HealthScoreRing({
+  score,
+  size = 'md',
   className,
   label = 'Health Score'
 }: HealthScoreRingProps) {
@@ -36,7 +36,7 @@ export function HealthScoreRing({
   const ringId = `health-score-ring-${size}`
 
   return (
-    <div 
+    <div
       className={cn('flex flex-col items-center', className)}
       role="img"
       aria-labelledby={`${ringId}-label`}
@@ -45,15 +45,15 @@ export function HealthScoreRing({
       aria-valuemax={100}
     >
       <div className={cn('relative', sizeConfig.ring)}>
-        <svg 
-          className={cn(sizeConfig.ring, '-rotate-90')} 
+        <svg
+          className={cn(sizeConfig.ring, '-rotate-90')}
           viewBox="0 0 100 100"
           aria-hidden="true"
         >
           {/* Background ring */}
           <circle
-            cx="50" 
-            cy="50" 
+            cx="50"
+            cy="50"
             r="40"
             fill="none"
             stroke="currentColor"
@@ -62,8 +62,8 @@ export function HealthScoreRing({
           />
           {/* Progress ring */}
           <circle
-            cx="50" 
-            cy="50" 
+            cx="50"
+            cy="50"
             r="40"
             fill="none"
             stroke="currentColor"
@@ -74,7 +74,7 @@ export function HealthScoreRing({
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span 
+          <span
             className={cn('font-bold text-nexus-signal', sizeConfig.text)}
             aria-hidden="true"
           >
@@ -82,7 +82,7 @@ export function HealthScoreRing({
           </span>
         </div>
       </div>
-      <span 
+      <span
         id={`${ringId}-label`}
         className={cn('text-nexus-signal/70 font-medium mt-2', sizeConfig.label)}
       >

@@ -9,8 +9,7 @@
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-import { Card } from '@/components/ui/card'
-import { cn } from '@/components/ui/utils'
+import { Card, cn } from '@aibos/ui'
 import { type LucideIcon } from 'lucide-react'
 
 export interface StatCardProps {
@@ -22,18 +21,18 @@ export interface StatCardProps {
   'aria-label'?: string
 }
 
-export function StatCard({ 
-  icon: Icon, 
-  value, 
-  label, 
+export function StatCard({
+  icon: Icon,
+  value,
+  label,
   valueClassName,
   className,
   'aria-label': ariaLabel
 }: StatCardProps) {
   const cardId = `stat-card-${label.toLowerCase().replace(/\s+/g, '-')}`
-  
+
   return (
-    <Card 
+    <Card
       id={cardId}
       className={cn(
         'border-nexus-border/30 bg-nexus-surface/10 p-4 text-center focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
@@ -44,17 +43,17 @@ export function StatCard({
       aria-label={ariaLabel}
       tabIndex={0}
     >
-      <Icon 
-        className="w-5 h-5 text-nexus-signal/60 mx-auto mb-2" 
+      <Icon
+        className="w-5 h-5 text-nexus-signal/60 mx-auto mb-2"
         aria-hidden="true"
       />
-      <div 
+      <div
         className={cn('text-xl font-bold text-nexus-signal', valueClassName)}
         aria-hidden="true"
       >
         {value}
       </div>
-      <div 
+      <div
         id={`${cardId}-label`}
         className="text-xs font-medium text-nexus-signal/70 mt-1"
       >

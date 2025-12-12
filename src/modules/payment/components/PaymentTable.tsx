@@ -6,7 +6,7 @@
 // ============================================================================
 
 import React, { useMemo } from 'react';
-import { SuperTable } from '@/components/metadata/SuperTable';
+import { SuperTable } from '@/modules/metadata/components/SuperTable';
 import { generateColumnsFromSchema } from '@/kernel';
 import { cn } from '@/lib/utils';
 import {

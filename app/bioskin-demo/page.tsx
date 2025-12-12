@@ -5,15 +5,18 @@
 // 🛡️ GOVERNANCE: Uses BioSkin components (which use atoms only)
 // ============================================================================
 
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { BioObject, BioList, FieldContextSidebar, type ExtendedMetadataField } from '@/packages/bioskin/src';
-import { PAYMENT_SCHEMA } from '@/modules/payment/data/paymentSchema';
-import type { Payment } from '@/modules/payment/data/paymentSchema';
-import { Surface } from '@/components/ui/Surface';
-import { Txt } from '@/components/ui/Txt';
-import { Btn } from '@/components/ui/Btn';
+import { useState } from 'react'
+import {
+  BioObject,
+  BioList,
+  FieldContextSidebar,
+  type ExtendedMetadataField,
+} from '../../../packages/bioskin/src/index'
+import { PAYMENT_SCHEMA } from '@/modules/payment/data/paymentSchema'
+import type { Payment } from '@/modules/payment/data/paymentSchema'
+import { Surface, Txt, Btn } from '@aibos/ui'
 
 // ============================================================================
 // MOCK DATA
@@ -24,7 +27,7 @@ const mockPayment: Payment = {
   tx_id: 'TX-2024-001',
   beneficiary: 'Acme Corporation',
   invoice_ref: 'INV-2024-001',
-  amount: 12500.00,
+  amount: 12500.0,
   currency: 'USD',
   method: 'wire',
   status: 'pending',
@@ -41,7 +44,7 @@ const mockPayment: Payment = {
   gl_account: 'GL-5000',
   docs_attached: 2,
   docs_required: 3,
-};
+}
 
 const mockPayments: Payment[] = [
   mockPayment,
@@ -50,7 +53,7 @@ const mockPayments: Payment[] = [
     id: 'pay-002',
     tx_id: 'TX-2024-002',
     beneficiary: 'Tech Solutions Inc',
-    amount: 8500.00,
+    amount: 8500.0,
     status: 'approved',
   },
   {
@@ -58,40 +61,40 @@ const mockPayments: Payment[] = [
     id: 'pay-003',
     tx_id: 'TX-2024-003',
     beneficiary: 'Global Services Ltd',
-    amount: 22000.00,
+    amount: 22000.0,
     status: 'rejected',
   },
-];
+]
 
 // ============================================================================
 // DEMO PAGE
 // ============================================================================
 
 export default function BioSkinDemoPage() {
-  const [intent, setIntent] = useState<'view' | 'edit'>('view');
-  const [selectedRecord, setSelectedRecord] = useState<Payment | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [paymentData, setPaymentData] = useState<Payment>(mockPayment);
+  const [intent, setIntent] = useState<'view' | 'edit'>('view')
+  const [selectedRecord, setSelectedRecord] = useState<Payment | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [paymentData, setPaymentData] = useState<Payment>(mockPayment)
 
   const handleFieldChange = (fieldName: string, value: unknown) => {
     setPaymentData((prev) => ({
       ...prev,
       [fieldName]: value,
-    }));
-  };
+    }))
+  }
 
   const handleRowClick = (record: Record<string, unknown>) => {
-    setSelectedRecord(record as Payment);
-    setSidebarOpen(true);
-  };
+    setSelectedRecord(record as unknown as Payment)
+    setSidebarOpen(true)
+  }
 
   return (
-    <div className="min-h-screen bg-surface-flat p-8 space-y-8">
+    <div className="min-h-screen space-y-8 bg-surface-flat p-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <Txt variant="h1">BioSkin v0 Demo</Txt>
-          <Txt variant="body" className="text-text-tertiary mt-2">
+          <Txt variant="body" className="mt-2 text-text-tertiary">
             Schema-driven UI rendering Payment entity
           </Txt>
         </div>
@@ -117,8 +120,8 @@ export default function BioSkinDemoPage() {
           BioObject - Details/Form Renderer
         </Txt>
         <BioObject
-          schema={PAYMENT_SCHEMA as ExtendedMetadataField[]}
-          data={paymentData as Record<string, unknown>}
+          schema={PAYMENT_SCHEMA as unknown as ExtendedMetadataField[]}
+          data={paymentData as unknown as Record<string, unknown>}
           intent={intent}
           onChange={handleFieldChange}
         />
@@ -129,12 +132,12 @@ export default function BioSkinDemoPage() {
         <Txt variant="h2" className="mb-4">
           BioList - Table Renderer
         </Txt>
-        <Txt variant="small" className="text-text-tertiary mb-4">
+        <Txt variant="small" className="mb-4 text-text-tertiary">
           Click a row to open FieldContextSidebar
         </Txt>
         <BioList
-          schema={PAYMENT_SCHEMA as ExtendedMetadataField[]}
-          data={mockPayments as Record<string, unknown>[]}
+          schema={PAYMENT_SCHEMA as unknown as ExtendedMetadataField[]}
+          data={mockPayments as unknown as Record<string, unknown>[]}
           onRowClick={handleRowClick}
           rowKey="id"
         />
@@ -144,10 +147,14 @@ export default function BioSkinDemoPage() {
       <FieldContextSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        record={selectedRecord as Record<string, unknown> | undefined}
-        schema={PAYMENT_SCHEMA as ExtendedMetadataField[]}
-        fieldMeta={selectedRecord ? (PAYMENT_SCHEMA[0] as ExtendedMetadataField) : undefined}
+        record={selectedRecord as unknown as Record<string, unknown> | undefined}
+        schema={PAYMENT_SCHEMA as unknown as ExtendedMetadataField[]}
+        fieldMeta={
+          selectedRecord
+            ? (PAYMENT_SCHEMA[0] as unknown as ExtendedMetadataField)
+            : undefined
+        }
       />
     </div>
-  );
+  )
 }

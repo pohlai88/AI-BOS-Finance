@@ -9,8 +9,7 @@
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-import { Card } from '@/components/ui/card'
-import { cn } from '@/components/ui/utils'
+import { Card, cn } from '@aibos/ui'
 import { STATUS_CONFIG, type CanonStatus } from '@/canon-pages/registry'
 
 export interface StatusCardProps {
@@ -25,7 +24,7 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
   const cardId = `status-card-${status.toLowerCase()}`
 
   return (
-    <Card 
+    <Card
       id={cardId}
       className={cn(
         'p-4 transition-all hover:scale-[1.02] focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
@@ -39,14 +38,14 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
     >
       <div className="flex items-center justify-between mb-2">
         <Icon className={cn('w-5 h-5', config.color)} aria-hidden="true" />
-        <span 
+        <span
           className={cn('text-2xl font-bold', config.color)}
           aria-label={`${count} ${config.label.toLowerCase()} pages`}
         >
           {count}
         </span>
       </div>
-      <span 
+      <span
         id={`${cardId}-label`}
         className="text-xs font-medium text-nexus-signal/70"
       >

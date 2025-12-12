@@ -5,14 +5,14 @@
 // 🛡️ GOVERNANCE: Exported types ensure type safety across BioSkin
 // ============================================================================
 
-import type { MetadataField } from '@/kernel';
-import type { z } from 'zod';
+import type { MetadataField } from '@/kernel'
+import type { z } from 'zod'
 
 // ============================================================================
 // CORE TYPES
 // ============================================================================
 
-export type BioIntent = 'view' | 'edit';
+export type BioIntent = 'view' | 'edit'
 
 /**
  * Extended MetadataField with BioSkin-specific properties
@@ -20,15 +20,15 @@ export type BioIntent = 'view' | 'edit';
  */
 export interface ExtendedMetadataField extends MetadataField {
   /** Hide field from rendering */
-  hidden?: boolean;
+  hidden?: boolean
   /** Field is required (shows required indicator) */
-  required?: boolean;
+  required?: boolean
   /** Field ordering (lower numbers appear first) */
-  order?: number;
+  order?: number
   /** Field is read-only (cannot be edited) */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Field group name (for sectioned layouts) */
-  group?: string;
+  group?: string
 }
 
 // ============================================================================
@@ -39,7 +39,7 @@ export interface ExtendedMetadataField extends MetadataField {
  * Field-level error message
  * Key: field technical_name, Value: error message
  */
-export type FieldErrors = Record<string, string>;
+export type FieldErrors = Record<string, string>
 
 // ============================================================================
 // GENERIC SCHEMA TYPES
@@ -51,21 +51,23 @@ export type FieldErrors = Record<string, string>;
  */
 export interface BioObjectPropsWithSchema<TSchema extends z.ZodObject<any>> {
   /** Zod schema for validation */
-  schema: TSchema;
+  schema: TSchema
   /** Initial data (must match schema type) */
-  data: z.infer<TSchema>;
+  data: z.infer<TSchema>
   /** Field metadata from Kernel */
-  fields: ExtendedMetadataField[];
+  fields: ExtendedMetadataField[]
   /** Render mode */
-  intent?: BioIntent;
+  intent?: BioIntent
   /** Submit handler (called with validated data) */
-  onSubmit?: (data: z.infer<TSchema>) => void | Promise<void>;
+  onSubmit?: (data: z.infer<TSchema>) => void | Promise<void>
   /** Cancel handler */
-  onCancel?: () => void;
+  onCancel?: () => void
   /** Optional grouping metadata */
-  groupBy?: string;
+  groupBy?: string
+  /** Loading state (shows skeleton) */
+  isLoading?: boolean
   /** Additional className */
-  className?: string;
+  className?: string
 }
 
 /**
@@ -74,22 +76,24 @@ export interface BioObjectPropsWithSchema<TSchema extends z.ZodObject<any>> {
  */
 export interface BioObjectPropsWithoutSchema {
   /** Array of field metadata from Kernel */
-  schema: ExtendedMetadataField[];
+  schema: ExtendedMetadataField[]
   /** Record data (object with field values) */
-  data: Record<string, unknown>;
+  data: Record<string, unknown>
   /** Render mode */
-  intent?: BioIntent;
+  intent?: BioIntent
   /** Callback when any field changes */
-  onChange?: (fieldName: string, value: unknown) => void;
+  onChange?: (fieldName: string, value: unknown) => void
   /** Optional grouping metadata */
-  groupBy?: string;
+  groupBy?: string
+  /** Loading state (shows skeleton) */
+  isLoading?: boolean
   /** Additional className */
-  className?: string;
+  className?: string
 }
 
 /**
  * Union type: BioObject accepts either schema-based or simple props
  */
-export type BioObjectProps<TSchema extends z.ZodObject<any> = z.ZodObject<any>> =
-  | BioObjectPropsWithSchema<TSchema>
-  | BioObjectPropsWithoutSchema;
+export type BioObjectProps<
+  TSchema extends z.ZodObject<any> = z.ZodObject<any>,
+> = BioObjectPropsWithSchema<TSchema> | BioObjectPropsWithoutSchema

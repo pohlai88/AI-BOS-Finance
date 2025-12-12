@@ -5,16 +5,13 @@
 // 🛡️ GOVERNANCE: Only uses Surface, Txt, Btn, StatusDot
 // ============================================================================
 
-'use client';
+'use client'
 
-import React from 'react';
-import { X } from 'lucide-react';
-import { Surface } from '@/components/ui/Surface';
-import { Txt } from '@/components/ui/Txt';
-import { Btn } from '@/components/ui/Btn';
-import { StatusDot } from '@/components/ui/StatusDot';
-import { BioObject } from './BioObject';
-import type { ExtendedMetadataField } from './types';
+import React from 'react'
+import { X } from 'lucide-react'
+import { Surface, Txt, Btn, StatusDot } from '@aibos/ui'
+import { BioObject } from './BioObject'
+import type { ExtendedMetadataField } from './types'
 
 // ============================================================================
 // TYPES
@@ -22,15 +19,15 @@ import type { ExtendedMetadataField } from './types';
 
 export interface FieldContextSidebarProps {
   /** Field metadata from Kernel */
-  fieldMeta?: ExtendedMetadataField;
+  fieldMeta?: ExtendedMetadataField
   /** Record data (for context) */
-  record?: Record<string, unknown>;
+  record?: Record<string, unknown>
   /** Full schema (for BioObject rendering) */
-  schema?: ExtendedMetadataField[];
+  schema?: ExtendedMetadataField[]
   /** Is sidebar open? */
-  open: boolean;
+  open: boolean
   /** Close handler */
-  onClose: () => void;
+  onClose: () => void
 }
 
 // ============================================================================
@@ -44,20 +41,23 @@ export function FieldContextSidebar({
   open,
   onClose,
 }: FieldContextSidebarProps) {
-  if (!open) return null;
+  if (!open) return null
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full md:w-96 bg-surface-base border-l border-border-surface-base shadow-lg z-50 flex flex-col">
+    <div className="border-border-surface-base fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l bg-surface-base shadow-lg md:w-96">
       {/* Header */}
-      <Surface variant="flat" className="p-4 border-b border-border-surface-base flex items-center justify-between shrink-0">
+      <Surface
+        variant="flat"
+        className="border-border-surface-base flex shrink-0 items-center justify-between border-b p-4"
+      >
         <Txt variant="h3">Field Context</Txt>
         <Btn variant="secondary" size="sm" onClick={onClose} title="Close">
-          <X className="w-4 h-4" />
+          <X className="h-4 w-4" />
         </Btn>
       </Surface>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 space-y-6 overflow-y-auto p-6">
         {/* Field Metadata */}
         {fieldMeta && (
           <Surface variant="base" className="p-4">
@@ -108,5 +108,5 @@ export function FieldContextSidebar({
         )}
       </div>
     </div>
-  );
+  )
 }

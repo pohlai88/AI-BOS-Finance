@@ -1,15 +1,15 @@
-import { HeroSection } from '@/components/landing/HeroSection';
-import { Header } from '@/components/landing/Header';
-import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
-import { CrystallizationSphere } from '@/components/landing/CrystallizationSphere';
-import { StabilitySimulation } from '@/components/simulation';
-import { LivingLens } from '@/components/landing/LivingLens';
-import { TruthBar } from '@/components/landing/TruthBar';
-import { LinearFeatureCard } from '@/components/landing/LinearFeatureCard';
-import { CrystallizationVisual, InterrogationVisual, GovernanceVisual } from '@/components/landing/FeatureVisuals';
+import { HeroSection } from '@/modules/landing/components/HeroSection';
+import { Header } from '@/modules/landing/components/Header';
+import { BackgroundGrid } from '@/modules/landing/components/BackgroundGrid';
+import { CrystallizationSphere } from '@/modules/landing/components/CrystallizationSphere';
+import { StabilitySimulation } from '@/modules/simulation';
+import { LivingLens } from '@/modules/landing/components/LivingLens';
+import { TruthBar } from '@/modules/landing/components/TruthBar';
+import { LinearFeatureCard } from '@/modules/landing/components/LinearFeatureCard';
+import { CrystallizationVisual, InterrogationVisual, GovernanceVisual } from '@/modules/landing/components/FeatureVisuals';
 import { NexusCard } from '@/components/nexus/NexusCard';
 import { NexusButton } from '@/components/nexus/NexusButton';
-import { LandingFooter } from '@/components/landing/LandingFooter';
+import { LandingFooter } from '@/modules/landing/components/LandingFooter';
 import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap, Layers, Search } from 'lucide-react';
 
 export const LandingPage = ({
@@ -42,7 +42,7 @@ export const LandingPage = ({
                 <Layers className="w-3 h-3" />
                 Structural Integrity Protocol
               </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
+              <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 The Inevitable{' '}
                 <span className="text-zinc-400">Divergence</span>
               </h2>
@@ -63,7 +63,7 @@ export const LandingPage = ({
                 <ShieldCheck className="w-3 h-3" />
                 Core Capabilities
               </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white mt-4">
+              <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white mt-4">
                 Forensic{' '}
                 <span className="text-zinc-400">Architecture</span>
               </h2>
@@ -111,12 +111,12 @@ export const LandingPage = ({
                 <GitBranch className="w-3 h-3" />
                 Deterministic Logic Processor
               </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
+              <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 The Truth{' '}
                 <span className="text-zinc-400">Engine</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
-                Watch transactions flow through our Glass Box audit system. 
+                Watch transactions flow through our Glass Box audit system.
                 Every decision is traced. Every rule is visible. Zero hallucinations.
               </p>
             </div>
@@ -134,12 +134,12 @@ export const LandingPage = ({
                 <Search className="w-3 h-3" />
                 Interactive Query Interface
               </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
+              <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
                 Ask the{' '}
                 <span className="text-zinc-400">System</span>
               </h2>
               <p className="text-nexus-noise max-w-2xl mx-auto text-base">
-                Select a transaction and see the full logic traversal path. 
+                Select a transaction and see the full logic traversal path.
                 Click "Show Proof" to reveal exactly how the verdict was reached.
               </p>
             </div>
@@ -161,11 +161,11 @@ export const LandingPage = ({
               State Transformation Event
             </span>
             <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
-              Freeze Your <br/>
-<span className="text-zinc-400">Financial Truth.</span>
+              Freeze Your <br />
+              <span className="text-zinc-400">Financial Truth.</span>
             </h2>
             <p className="text-nexus-noise max-w-xl mx-auto text-lg leading-relaxed">
-              Drifting data is a liability. NexusCanon locks your ledger into an 
+              Drifting data is a liability. NexusCanon locks your ledger into an
               immutable crystalline state, ready for instant audit.
             </p>
           </div>

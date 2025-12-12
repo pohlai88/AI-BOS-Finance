@@ -6,13 +6,14 @@
 // 🛡️ GOVERNANCE: Only uses Surface, Txt, BioCell (which uses atoms)
 // ============================================================================
 
-'use client';
+'use client'
 
-import React from 'react';
-import { Surface } from '@/components/ui/Surface';
-import { Txt } from '@/components/ui/Txt';
-import { BioCell } from './BioCell';
-import type { ExtendedMetadataField } from './types';
+import React from 'react'
+import { Surface, Txt } from '@aibos/ui'
+import { BioCell } from './BioCell'
+import type { ExtendedMetadataField } from './types'
+// Note: TypeScript language server may show errors for @/ imports,
+// but these resolve correctly at build time via tsconfig.json paths
 
 // ============================================================================
 // TYPES
@@ -20,15 +21,21 @@ import type { ExtendedMetadataField } from './types';
 
 export interface BioListProps {
   /** Array of field metadata from Kernel (defines columns) */
-  schema: ExtendedMetadataField[];
+  schema: ExtendedMetadataField[]
   /** Array of records to display */
-  data: Record<string, unknown>[];
+  data: Record<string, unknown>[]
   /** Row click handler (opens FieldContextSidebar) */
-  onRowClick?: (record: Record<string, unknown>) => void;
+  onRowClick?: (record: Record<string, unknown>) => void
   /** Optional row key field (defaults to 'id') */
-  rowKey?: string;
+  rowKey?: string
+  /** Loading state (shows skeleton table rows) */
+  isLoading?: boolean
   /** Additional className */
-  className?: string;
+  className?: string
+  /** Custom cell renderers - Escape hatch for custom columns */
+  customRenderers?: {
+    [fieldName: string]: (value: unknown, record: Record<string, unknown>) => React.ReactNode
+  }
 }
 
 // ============================================================================
@@ -40,17 +47,65 @@ export function BioList({
   data,
   onRowClick,
   rowKey = 'id',
+  isLoading = false,
   className,
+  customRenderers,
 }: BioListProps) {
   // Filter visible columns (exclude hidden fields)
-  const visibleColumns = schema.filter((field) => !field.hidden);
+  const visibleColumns: ExtendedMetadataField[] = schema.filter(
+    (field) => !field.hidden
+  )
 
   // Sort columns by order if specified
-  const sortedColumns = [...visibleColumns].sort((a, b) => {
-    const orderA = a.order ?? 999;
-    const orderB = b.order ?? 999;
-    return orderA - orderB;
-  });
+  const sortedColumns: ExtendedMetadataField[] = [...visibleColumns].sort(
+    (a, b) => {
+      const orderA = a.order ?? 999
+      const orderB = b.order ?? 999
+      return orderA - orderB
+    }
+  )
+
+  // Loading state: render skeleton table
+  if (isLoading) {
+    return (
+      <Surface variant="base" className={`overflow-hidden ${className || ''}`}>
+        <div className="overflow-x-auto">
+          <table
+            className="w-full border-collapse"
+            aria-label="BioSkin data table (loading)"
+          >
+            <thead>
+              <tr className="border-border-surface-base border-b">
+                {sortedColumns.map((field) => (
+                  <th
+                    key={field.technical_name}
+                    className="px-4 py-3 text-left"
+                    scope="col"
+                  >
+                    <div className="h-4 w-24 animate-pulse rounded-action bg-surface-flat" />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[1, 2, 3].map((rowIdx) => (
+                <tr
+                  key={`skeleton-${rowIdx}`}
+                  className="border-border-surface-base border-b"
+                >
+                  {sortedColumns.map((field) => (
+                    <td key={field.technical_name} className="px-4 py-3">
+                      <div className="h-5 w-full animate-pulse rounded-action bg-surface-flat" />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Surface>
+    )
+  }
 
   if (data.length === 0) {
     return (
@@ -61,16 +116,19 @@ export function BioList({
           </Txt>
         </div>
       </Surface>
-    );
+    )
   }
 
   return (
     <Surface variant="base" className={`overflow-hidden ${className || ''}`}>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse" aria-label="BioSkin data table">
+        <table
+          className="w-full border-collapse"
+          aria-label="BioSkin data table"
+        >
           {/* Header */}
           <thead>
-            <tr className="border-b border-border-surface-base">
+            <tr className="border-border-surface-base border-b">
               {sortedColumns.map((field) => (
                 <th
                   key={field.technical_name}
@@ -78,7 +136,10 @@ export function BioList({
                   scope="col"
                   style={field.width ? { width: field.width } : undefined}
                 >
-                  <Txt variant="small" className="font-medium text-text-secondary uppercase">
+                  <Txt
+                    variant="small"
+                    className="font-medium uppercase text-text-secondary"
+                  >
                     {field.business_term}
                   </Txt>
                 </th>
@@ -89,42 +150,54 @@ export function BioList({
           {/* Body */}
           <tbody>
             {data.map((record, index) => {
-              const recordId = record[rowKey] as string | number | undefined;
-              const key = recordId !== undefined ? String(recordId) : `row-${index}`;
-              const isClickable = !!onRowClick;
+              const recordId = record[rowKey] as string | number | undefined
+              const key =
+                recordId !== undefined ? String(recordId) : `row-${index}`
+              const isClickable = !!onRowClick
 
               return (
                 <tr
                   key={key}
-                  className={`
-                    border-b border-border-surface-base
-                    ${isClickable ? 'cursor-pointer hover:bg-surface-flat transition-colors' : ''}
-                  `}
+                  className={`border-border-surface-base border-b ${isClickable ? 'cursor-pointer transition-colors hover:bg-surface-flat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2' : ''}`}
                   tabIndex={isClickable ? 0 : undefined}
                   onKeyDown={(e) => {
-                    if (!isClickable) return;
+                    if (!isClickable) return
                     if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onRowClick?.(record);
+                      e.preventDefault()
+                      onRowClick?.(record)
                     }
                   }}
                   onClick={() => isClickable && onRowClick?.(record)}
                 >
                   {sortedColumns.map((field) => {
-                    const value = record[field.technical_name];
+                    const value = record[field.technical_name]
 
+                    // Escape hatch: Use custom renderer if provided
+                    if (customRenderers && customRenderers[field.technical_name]) {
+                      return (
+                        <td key={field.technical_name} className="px-4 py-3">
+                          {customRenderers[field.technical_name](value, record)}
+                        </td>
+                      )
+                    }
+
+                    // Default: Use BioCell
                     return (
                       <td key={field.technical_name} className="px-4 py-3">
-                        <BioCell fieldMeta={field} value={value} intent="view" />
+                        <BioCell
+                          fieldMeta={field}
+                          value={value}
+                          intent="view"
+                        />
                       </td>
-                    );
+                    )
                   })}
                 </tr>
-              );
+              )
             })}
           </tbody>
         </table>
       </div>
     </Surface>
-  );
+  )
 }

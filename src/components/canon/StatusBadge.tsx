@@ -9,8 +9,7 @@
  * @see REF_037 - Phase 3: Canon Page System
  */
 
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/components/ui/utils'
+import { Badge, cn } from '@aibos/ui'
 import { STATUS_CONFIG, type CanonStatus } from '@/canon-pages/registry'
 
 export interface StatusBadgeProps {

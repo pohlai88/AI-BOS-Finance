@@ -10,8 +10,8 @@ export { AuditSidebar } from './AuditSidebar';
 export { TreasuryHeader } from './TreasuryHeader';
 
 // COM_PAY_03: Functional Card - Batch Processing Clusters
-export { 
-  FunctionalCard, 
+export {
+  FunctionalCard,
   FunctionalCardGrid,
   type FunctionalClusterData,
   type ClusterStatus,
@@ -20,9 +20,10 @@ export {
 
 // COM_PAY_04: Payment Table - Transaction List View
 export { PaymentTable } from './PaymentTable';
+export { PaymentTableGenerative } from './PaymentTableGenerative';
 
 // COM_PAY_05: Approval Actions - Approve/Reject Buttons
-export { 
+export {
   ApprovalActions,
   BatchApprovalButton,
 } from './ApprovalActions';

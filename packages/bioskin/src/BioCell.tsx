@@ -5,16 +5,14 @@
 // 🛡️ GOVERNANCE: Only uses Surface, Txt, Btn, Input, StatusDot
 // ============================================================================
 
-'use client';
+'use client'
 
-import React from 'react';
-import { Txt } from '@/components/ui/Txt';
-import { Input } from '@/components/ui/Input';
-import { StatusDot } from '@/components/ui/StatusDot';
-import type { ExtendedMetadataField, BioIntent } from './types';
+import React from 'react'
+import { Txt, Input, StatusDot } from '@aibos/ui'
+import type { ExtendedMetadataField, BioIntent } from './types'
 
 // Re-export Intent for backward compatibility
-export type Intent = BioIntent;
+export type Intent = BioIntent
 
 // ============================================================================
 // TYPES
@@ -22,25 +20,25 @@ export type Intent = BioIntent;
 
 export interface BioCellProps {
   /** Field metadata from Kernel */
-  fieldMeta: ExtendedMetadataField;
+  fieldMeta: ExtendedMetadataField
   /** Current field value */
-  value: unknown;
+  value: unknown
   /** Render mode: view (read-only) or edit (editable) */
-  intent?: BioIntent;
+  intent?: BioIntent
   /** Callback when value changes (edit mode only) */
-  onChange?: (value: unknown) => void;
+  onChange?: (value: unknown) => void
   /** Error message to display (edit mode only) */
-  error?: string;
+  error?: string
   /** Optional input id (for a11y wiring from BioObject) */
-  inputId?: string;
+  inputId?: string
   /** Optional aria-labelledby (for a11y wiring from BioObject) */
-  ariaLabelledBy?: string;
+  ariaLabelledBy?: string
   /** Optional aria-describedby (for a11y wiring from BioObject) */
-  ariaDescribedBy?: string;
+  ariaDescribedBy?: string
   /** Optional error id (for a11y wiring from BioObject) */
-  errorId?: string;
+  errorId?: string
   /** Additional className */
-  className?: string;
+  className?: string
 }
 
 // ============================================================================
@@ -61,7 +59,9 @@ export function BioCell({
 }: BioCellProps) {
   // View mode: render read-only display
   if (intent === 'view') {
-    return <BioCellView fieldMeta={fieldMeta} value={value} className={className} />;
+    return (
+      <BioCellView fieldMeta={fieldMeta} value={value} className={className} />
+    )
   }
 
   // Edit mode: render editable input
@@ -78,12 +78,12 @@ export function BioCell({
       />
       {/* Error message display */}
       {error && (
-        <Txt variant="small" className="text-status-error mt-1">
+        <Txt variant="small" className="mt-1 text-status-error">
           {errorId ? <span id={errorId}>{error}</span> : error}
         </Txt>
       )}
     </div>
-  );
+  )
 }
 
 // ============================================================================
@@ -95,19 +95,19 @@ function BioCellView({
   value,
   className,
 }: {
-  fieldMeta: ExtendedMetadataField;
-  value: unknown;
-  className?: string;
+  fieldMeta: ExtendedMetadataField
+  value: unknown
+  className?: string
 }) {
-  const { data_type, business_term } = fieldMeta;
+  const { data_type, business_term } = fieldMeta
 
   // Handle null/undefined
   if (value === null || value === undefined) {
     return (
-      <Txt variant="body" className="text-text-tertiary italic">
+      <Txt variant="body" className="italic text-text-tertiary">
         —
       </Txt>
-    );
+    )
   }
 
   switch (data_type) {
@@ -117,15 +117,17 @@ function BioCellView({
         <Txt variant="body" className={className}>
           {String(value)}
         </Txt>
-      );
+      )
 
     case 'number':
     case 'money':
       return (
         <Txt variant="body" className={`font-mono ${className || ''}`}>
-          {typeof value === 'number' ? formatNumber(value, data_type) : String(value)}
+          {typeof value === 'number'
+            ? formatNumber(value, data_type)
+            : String(value)}
         </Txt>
-      );
+      )
 
     case 'boolean':
       return (
@@ -133,32 +135,33 @@ function BioCellView({
           <StatusDot variant={value ? 'success' : 'neutral'} size="sm" />
           <Txt variant="body">{value ? 'Yes' : 'No'}</Txt>
         </div>
-      );
+      )
 
     case 'enum':
     case 'status':
       // Check if it's a status enum (use StatusDot)
-      const statusValue = String(value);
-      const isStatus = fieldMeta.business_term.toLowerCase().includes('status') ||
+      const statusValue = String(value)
+      const isStatus =
+        fieldMeta.business_term.toLowerCase().includes('status') ||
         statusValue.toLowerCase().includes('pending') ||
         statusValue.toLowerCase().includes('approved') ||
-        statusValue.toLowerCase().includes('rejected');
+        statusValue.toLowerCase().includes('rejected')
 
       if (isStatus) {
-        const statusVariant = mapStatusToVariant(statusValue);
+        const statusVariant = mapStatusToVariant(statusValue)
         return (
           <div className={`flex items-center gap-2 ${className || ''}`}>
             <StatusDot variant={statusVariant} size="sm" />
             <Txt variant="body">{statusValue}</Txt>
           </div>
-        );
+        )
       }
 
       return (
         <Txt variant="body" className={className}>
           {statusValue}
         </Txt>
-      );
+      )
 
     case 'date':
     case 'datetime':
@@ -166,14 +169,14 @@ function BioCellView({
         <Txt variant="body" className={className}>
           {formatDate(value as string, data_type)}
         </Txt>
-      );
+      )
 
     default:
       return (
         <Txt variant="body" className={className}>
           {String(value)}
         </Txt>
-      );
+      )
   }
 }
 
@@ -191,36 +194,38 @@ function BioCellEdit({
   ariaDescribedBy,
   className,
 }: {
-  fieldMeta: ExtendedMetadataField;
-  value: unknown;
-  onChange?: (value: unknown) => void;
-  error?: string;
-  inputId?: string;
-  ariaLabelledBy?: string;
-  ariaDescribedBy?: string;
-  className?: string;
+  fieldMeta: ExtendedMetadataField
+  value: unknown
+  onChange?: (value: unknown) => void
+  error?: string
+  inputId?: string
+  ariaLabelledBy?: string
+  ariaDescribedBy?: string
+  className?: string
 }) {
-  const { data_type, business_term, readOnly, required } = fieldMeta;
+  const { data_type, business_term, readOnly, required } = fieldMeta
 
   // Read-only fields: render as view
   if (readOnly) {
-    return <BioCellView fieldMeta={fieldMeta} value={value} className={className} />;
+    return (
+      <BioCellView fieldMeta={fieldMeta} value={value} className={className} />
+    )
   }
 
   const handleChange = (newValue: string) => {
-    if (!onChange) return;
+    if (!onChange) return
 
     // Type conversion based on data_type
-    let convertedValue: unknown = newValue;
+    let convertedValue: unknown = newValue
 
     if (data_type === 'number' || data_type === 'money') {
-      convertedValue = newValue === '' ? null : Number(newValue);
+      convertedValue = newValue === '' ? null : Number(newValue)
     } else if (data_type === 'boolean') {
-      convertedValue = newValue === 'true' || newValue === 'yes';
+      convertedValue = newValue === 'true' || newValue === 'yes'
     }
 
-    onChange(convertedValue);
-  };
+    onChange(convertedValue)
+  }
 
   switch (data_type) {
     case 'text':
@@ -238,7 +243,7 @@ function BioCellEdit({
           error={!!error}
           className={className}
         />
-      );
+      )
 
     case 'number':
     case 'money':
@@ -256,7 +261,7 @@ function BioCellEdit({
           error={!!error}
           className={className}
         />
-      );
+      )
 
     case 'boolean':
       // v0: Simple text input (switch can be v1)
@@ -268,15 +273,15 @@ function BioCellEdit({
           aria-invalid={!!error}
           value={value === true ? 'Yes' : value === false ? 'No' : ''}
           onChange={(e) => {
-            const val = e.target.value.toLowerCase();
-            onChange?.(val === 'yes' || val === 'true');
+            const val = e.target.value.toLowerCase()
+            onChange?.(val === 'yes' || val === 'true')
           }}
           placeholder="Yes / No"
           required={required}
           error={!!error}
           className={className}
         />
-      );
+      )
 
     case 'enum':
       // v0: Text input (select dropdown can be v1)
@@ -293,7 +298,7 @@ function BioCellEdit({
           error={!!error}
           className={className}
         />
-      );
+      )
 
     case 'date':
     case 'datetime':
@@ -310,7 +315,7 @@ function BioCellEdit({
           error={!!error}
           className={className}
         />
-      );
+      )
 
     default:
       return (
@@ -325,7 +330,7 @@ function BioCellEdit({
           error={!!error}
           className={className}
         />
-      );
+      )
   }
 }
 
@@ -338,20 +343,20 @@ function formatNumber(value: number, dataType: string): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-    }).format(value);
+    }).format(value)
   }
-  return new Intl.NumberFormat('en-US').format(value);
+  return new Intl.NumberFormat('en-US').format(value)
 }
 
 function formatDate(value: string, dataType: string): string {
   try {
-    const date = new Date(value);
+    const date = new Date(value)
     if (dataType === 'date') {
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-      });
+      })
     }
     return date.toLocaleString('en-US', {
       year: 'numeric',
@@ -359,22 +364,32 @@ function formatDate(value: string, dataType: string): string {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    });
+    })
   } catch {
-    return String(value);
+    return String(value)
   }
 }
 
-function mapStatusToVariant(status: string): 'success' | 'warning' | 'error' | 'neutral' {
-  const lower = status.toLowerCase();
-  if (lower.includes('approved') || lower.includes('paid') || lower.includes('success')) {
-    return 'success';
+function mapStatusToVariant(
+  status: string
+): 'success' | 'warning' | 'error' | 'neutral' {
+  const lower = status.toLowerCase()
+  if (
+    lower.includes('approved') ||
+    lower.includes('paid') ||
+    lower.includes('success')
+  ) {
+    return 'success'
   }
   if (lower.includes('pending') || lower.includes('warning')) {
-    return 'warning';
+    return 'warning'
   }
-  if (lower.includes('rejected') || lower.includes('error') || lower.includes('failed')) {
-    return 'error';
+  if (
+    lower.includes('rejected') ||
+    lower.includes('error') ||
+    lower.includes('failed')
+  ) {
+    return 'error'
   }
-  return 'neutral';
+  return 'neutral'
 }

@@ -20,10 +20,7 @@ import {
   ArrowRightLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Surface } from '@/components/ui/Surface';
-import { Txt } from '@/components/ui/Txt';
-import { Btn } from '@/components/ui/Btn';
-import { StatusDot } from '@/components/ui/StatusDot';
+import { Surface, Txt, Btn, StatusDot } from '@aibos/ui'
 
 // ============================================================================
 // TYPES

@@ -25,11 +25,7 @@
 'use client'
 
 import React from 'react'
-import { Surface } from "@/components/ui/Surface"
-import { Txt } from "@/components/ui/Txt"
-import { Btn } from "@/components/ui/Btn"
-import { Input } from "@/components/ui/input"
-import { StatusDot } from "@/components/ui/StatusDot"
+import { Surface, Txt, Btn, Input, StatusDot } from '@aibos/ui'
 
 // 🟢 MOCK DATA (Ideally this moves to a hook later)
 const STATS = [

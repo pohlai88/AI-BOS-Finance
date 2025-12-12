@@ -17,19 +17,19 @@
 import { useState, useMemo } from 'react';
 import { MetaAppShell } from '@/components/shell/MetaAppShell';
 import { MetaPageHeader } from '@/components/MetaPageHeader';
-import { SuperTable } from '@/components/metadata/SuperTable';
-import { FlexibleFilterBar } from '@/components/metadata/FlexibleFilterBar';
-import { DetailDrawer } from '@/components/metadata/DetailDrawer';
-import { MetadataRequestForm } from '@/components/metadata/MetadataRequestForm';
+import { SuperTable } from '@/modules/metadata/components/SuperTable';
+import { FlexibleFilterBar } from '@/modules/metadata/components/FlexibleFilterBar';
+import { DetailDrawer } from '@/modules/metadata/components/DetailDrawer';
+import { MetadataRequestForm } from '@/modules/metadata/components/MetadataRequestForm';
 import { mockMetadataRecords } from '@/data/mockMetadata';
 import { MetadataRecord } from '@/types/metadata';
 import { Database, Filter, Shield, Zap, Plus } from 'lucide-react';
 
 // ⚙️ THE KERNEL MAGIC
-import { 
-  generateColumnsFromSchema, 
-  MetadataField, 
-  STATUS_PRESETS 
+import {
+  generateColumnsFromSchema,
+  MetadataField,
+  STATUS_PRESETS
 } from '@/kernel';
 
 // ============================================================================
@@ -204,7 +204,7 @@ export function MetadataGodView() {
   return (
     <MetaAppShell>
       <div className="px-6 py-8 md:px-12 md:py-12 max-w-[1600px] mx-auto">
-        
+
         {/* PAGE HEADER */}
         <MetaPageHeader
           variant="document"
@@ -222,9 +222,9 @@ export function MetadataGodView() {
               Schema-Driven • {REGISTRY_SCHEMA.length} Columns Auto-Generated
             </span>
           </div>
-          
+
           {/* GOVERNANCE: Register New Metadata */}
-          <button 
+          <button
             onClick={() => setIsCreating(true)}
             className="flex items-center gap-2 px-4 py-2 bg-[#28E7A2] text-black font-mono font-bold text-xs rounded-lg hover:bg-[#28E7A2]/80 transition-colors"
           >
@@ -294,19 +294,19 @@ export function MetadataGodView() {
             title="METADATA_REGISTRY"
             mobileKey="business_term"
             onRowClick={handleRowClick}
-            
+
             // Feature Flags
             enableSelection={true}
             enablePagination={true}
             enableColumnVisibility={true}
             enableColumnFilters={false}  // Using FlexibleFilterBar instead
             enableGlobalFilter={true}
-            
+
             // Selection Handler
             onSelectionChange={setSelectedRows}
           />
         </div>
-        
+
         {/* BULK ACTION INDICATOR */}
         {selectedRows.length > 0 && (
           <div className="mt-4 p-4 bg-[#28E7A2]/10 border border-[#28E7A2]/30 rounded flex items-center justify-between">
@@ -345,14 +345,14 @@ export function MetadataGodView() {
       {isCreating && (
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsCreating(false)}
           />
-          
+
           {/* Drawer Panel */}
           <div className="relative ml-auto w-full max-w-xl h-full bg-[#050505] border-l border-[#1F1F1F] shadow-2xl">
-            <MetadataRequestForm 
+            <MetadataRequestForm
               onCancel={() => setIsCreating(false)}
               onSubmit={(data) => {
                 // TODO: Send to governance API

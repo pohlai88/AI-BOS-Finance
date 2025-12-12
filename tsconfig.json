@@ -48,6 +48,18 @@
       ],
       "@/app/*": [
         "./app/*"
+      ],
+      "@aibos/ui": [
+        "./packages/ui/src/index.ts"
+      ],
+      "@aibos/ui/*": [
+        "./packages/ui/src/*"
+      ],
+      "@aibos/bioskin": [
+        "./packages/bioskin/src/index.ts"
+      ],
+      "@aibos/bioskin/*": [
+        "./packages/bioskin/src/*"
       ]
     }
   },
@@ -56,6 +68,8 @@
     "./app",
     "./canon",
     "./canon-pages",
+    "./packages/ui/src",
+    "./packages/bioskin/src",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts",
