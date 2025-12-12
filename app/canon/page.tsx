@@ -17,6 +17,7 @@
 import React from 'react'
 import { Surface } from "@/components/ui/Surface"
 import { Txt } from "@/components/ui/Txt"
+import { Btn } from "@/components/ui/Btn"
 
 // 🟢 MOCK DATA (Ideally this moves to a hook later)
 const STATS = [
@@ -28,7 +29,7 @@ const STATS = [
 export default function CanonHealthDashboard() {
   return (
     <div className="min-h-screen bg-surface-flat p-8 space-y-12">
-      
+
       {/* 1. HEADER SECTION */}
       <header className="flex items-start justify-between">
         <div className="space-y-2">
@@ -36,11 +37,11 @@ export default function CanonHealthDashboard() {
           <Txt variant="h1">Canon Health</Txt>
           <Txt variant="body">Real-time system diagnostics and performance metrics.</Txt>
         </div>
-        
-        {/* 🛡️ Governance: Standardized Action Button */}
-        <Surface variant="base" className="px-4 py-2 cursor-pointer hover:bg-surface-flat">
-          <Txt variant="small">Export Report</Txt>
-        </Surface>
+
+        {/* 🛡️ Governance: Real Button (not fake Surface) */}
+        <Btn variant="secondary" size="sm">
+          Export Report
+        </Btn>
       </header>
 
       {/* 2. STATS GRID */}

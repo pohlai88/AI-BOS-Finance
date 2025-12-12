@@ -26,8 +26,19 @@
     --text-tertiary: 148 163 184; /* Slate-400 (Captions/Icons - light mode) */
     --text-inverse: 255 255 255;  /* White (On dark backgrounds) */
 
+    /* 🟢 Action Tokens (The "What") - RGB format for opacity control */
+    /* These define intent: Primary = Main action, Secondary = Alternative action */
+    --action-primary: 40 231 162;     /* Nexus Green #28E7A2 (primary brand color) */
+    --action-primary-fg: 0 0 0;       /* Black text on green */
+    --action-primary-hover: 45 245 176; /* #2DF5B0 (lighter green on hover) */
+    
+    --action-secondary: 255 255 255;  /* White (light mode) */
+    --action-secondary-fg: 15 23 42; /* Slate-900 text */
+    --action-secondary-border: 226 232 240; /* Slate-200 border */
+
     /* 🟢 Radius Tokens */
     --radius-surface: 1rem;       /* 16px (rounded-2xl) */
+    --radius-action: 0.5rem;      /* 8px (rounded-md) */
   }
 
   .dark {
@@ -44,6 +55,17 @@
     --text-secondary: 136 136 136;/* #888888 (Zinc-400 equivalent - current --color-text-secondary) */
     --text-tertiary: 102 102 102; /* #666666 (Zinc-600 equivalent - current --color-text-tertiary) */
     --text-inverse: 10 10 10;     /* #0A0A0A (Zinc-900 - for text on light surfaces) */
+
+    /* 🌑 Action Overrides (Dark Mode) */
+    /* Primary actions use brand green (same in dark mode) */
+    --action-primary: 40 231 162;     /* Nexus Green #28E7A2 (same as light mode) */
+    --action-primary-fg: 0 0 0;       /* Black text on green (same as light mode) */
+    --action-primary-hover: 45 245 176; /* #2DF5B0 (same as light mode) */
+    
+    /* Secondary actions adapt to dark theme */
+    --action-secondary: 31 31 31;     /* #1F1F1F (dark surface) */
+    --action-secondary-fg: 255 255 255; /* White text */
+    --action-secondary-border: 63 63 70; /* Zinc-700 border */
   }
 }
 

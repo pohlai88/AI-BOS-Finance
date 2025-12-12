@@ -36,6 +36,20 @@ export default {
           tertiary: "rgb(var(--text-tertiary) / <alpha-value>)",
           inverse: "rgb(var(--text-inverse) / <alpha-value>)",
         },
+        // 🛡️ GOVERNANCE: Action tokens (The Bridge to globals.css)
+        // Usage: bg-action-primary / text-action-primary-fg
+        action: {
+          primary: {
+            DEFAULT: "rgb(var(--action-primary) / <alpha-value>)",
+            fg: "rgb(var(--action-primary-fg) / <alpha-value>)",
+            hover: "rgb(var(--action-primary-hover) / <alpha-value>)",
+          },
+          secondary: {
+            DEFAULT: "rgb(var(--action-secondary) / <alpha-value>)",
+            fg: "rgb(var(--action-secondary-fg) / <alpha-value>)",
+            border: "rgb(var(--action-secondary-border) / <alpha-value>)",
+          },
+        },
         // Legacy semantic color aliases (mapped from CSS variables in globals.css)
         'surface-subtle': 'var(--color-surface-subtle)',
         'surface-card': 'var(--color-surface-card)',
@@ -118,6 +132,9 @@ export default {
         // 🛡️ GOVERNANCE: Surface radius token
         // Usage: rounded-surface
         surface: "var(--radius-surface)",
+        // 🛡️ GOVERNANCE: Action radius token
+        // Usage: rounded-action
+        action: "var(--radius-action)",
         // Legacy radius tokens
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
