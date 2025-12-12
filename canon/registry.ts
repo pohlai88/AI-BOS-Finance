@@ -181,6 +181,13 @@ export const CANON_FILES: Record<string, CanonFile> = {
     title: 'Atomic Normalization System',
     status: 'ACTIVE',
   },
+  'E-Knowledge/E-REF/REF_048_RefactoringAuditEvaluation.md': {
+    path: 'E-Knowledge/E-REF/REF_048_RefactoringAuditEvaluation.md',
+    type: 'REF',
+    id: 'REF_048',
+    title: 'Refactoring Audit & Evaluation',
+    status: 'ACTIVE',
+  },
 };
 
 /**

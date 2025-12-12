@@ -70,6 +70,15 @@ export default {
             fg: "rgb(var(--status-neutral-fg) / <alpha-value>)",
           },
         },
+        // 🛡️ GOVERNANCE: Input tokens (The Bridge to globals.css)
+        // Usage: bg-input-bg / border-input-border / text-input-text
+        input: {
+          border: "rgb(var(--input-border) / <alpha-value>)",
+          bg: "rgb(var(--input-bg) / <alpha-value>)",
+          text: "rgb(var(--input-text) / <alpha-value>)",
+          placeholder: "rgb(var(--input-placeholder) / <alpha-value>)",
+          ring: "rgb(var(--input-ring) / <alpha-value>)",
+        },
         // Legacy semantic color aliases (mapped from CSS variables in globals.css)
         'surface-subtle': 'var(--color-surface-subtle)',
         'surface-card': 'var(--color-surface-card)',
@@ -158,6 +167,7 @@ export default {
         // 🛡️ GOVERNANCE: Badge radius token
         // Usage: rounded-badge
         badge: "var(--radius-badge)",
+        // Note: Input uses rounded-action (same as Button) for perfect form symmetry
         // Legacy radius tokens
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
