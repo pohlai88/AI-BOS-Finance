@@ -9,14 +9,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Semantic color aliases (mapped from CSS variables in globals.css)
+        // 🛡️ GOVERNANCE: Surface tokens (The Bridge to globals.css)
+        // Usage: bg-surface-base / bg-surface-flat
+        surface: {
+          base: "rgb(var(--surface-base) / <alpha-value>)",
+          flat: "rgb(var(--surface-flat) / <alpha-value>)",
+          ghost: "transparent", // Ghost is special, always transparent
+        },
+        // 🛡️ GOVERNANCE: Border tokens for Surface
+        // Usage: border-border-surface-base
+        border: {
+          surface: {
+            base: "rgb(var(--border-base) / <alpha-value>)",
+            flat: "rgb(var(--border-flat) / <alpha-value>)",
+          },
+          // Legacy semantic aliases (mapped from CSS variables in globals.css)
+          default: 'var(--color-border-default)',
+          subtle: 'var(--color-border-subtle)',
+          active: 'var(--color-border-active)',
+        },
+        // Legacy semantic color aliases (mapped from CSS variables in globals.css)
         'surface-subtle': 'var(--color-surface-subtle)',
         'surface-card': 'var(--color-surface-card)',
         'surface-hover': 'var(--color-surface-hover)',
         'surface-nested': 'var(--color-surface-nested)',
-        'border-default': 'var(--color-border-default)',
-        'border-subtle': 'var(--color-border-subtle)',
-        'border-active': 'var(--color-border-active)',
         'text-primary': 'var(--color-text-primary)',
         'text-secondary': 'var(--color-text-secondary)',
         'text-tertiary': 'var(--color-text-tertiary)',
@@ -91,6 +107,10 @@ export default {
         mono: ["var(--font-jetbrains)"],
       },
       borderRadius: {
+        // 🛡️ GOVERNANCE: Surface radius token
+        // Usage: rounded-surface
+        surface: "var(--radius-surface)",
+        // Legacy radius tokens
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",

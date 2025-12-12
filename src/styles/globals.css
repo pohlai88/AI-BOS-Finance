@@ -8,6 +8,31 @@
    Changing these updates the entire app automatically.
    ============================================================================ */
 
+@layer base {
+  :root {
+    /* 🟢 Surface Tokens (The "What") - RGB format for opacity control */
+    /* These define WHAT a Surface does, not what it looks like */
+    --surface-base: 255 255 255;  /* White (light mode) */
+    --surface-flat: 248 250 252;  /* Slate-50 (light mode) */
+    
+    /* 🟢 Border Tokens - RGB format */
+    --border-base: 226 232 240;   /* Slate-200 (light mode) */
+    --border-flat: 241 245 249;   /* Slate-100 (light mode) */
+
+    /* 🟢 Radius Tokens */
+    --radius-surface: 1rem;       /* 16px (rounded-2xl) */
+  }
+
+  .dark {
+    /* 🌑 Dark Mode Overrides (Automatic Theming) */
+    /* Converting existing dark theme colors to RGB */
+    --surface-base: 10 10 10;     /* #0A0A0A (current --color-surface-card) */
+    --surface-flat: 31 31 31;     /* #1F1F1F (current --color-surface-subtle) */
+    --border-base: 31 31 31;      /* #1F1F1F (current --color-border-default) */
+    --border-flat: 31 31 31;      /* #1F1F1F (current --color-border-default) */
+  }
+}
+
 :root {
   /* --- COLORS (Semantic) --- */
   /* figma.token: color.background */
@@ -24,20 +49,8 @@
   /* figma.token: surface.nested */
   --color-surface-nested: #050505;
 
-  /* Surface Component Tokens (The Constitution) */
-  /* These define WHAT a Surface does, not what it looks like */
-  /* figma.token: surface.base */
-  --surface-base-bg: var(--color-surface-card);
-  --surface-base-border: var(--color-border-default);
-  --surface-base-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  /* figma.token: surface.flat */
-  --surface-flat-bg: var(--color-surface-subtle);
-  --surface-flat-border: transparent;
-  --surface-flat-shadow: none;
-  /* figma.token: surface.ghost */
-  --surface-ghost-bg: transparent;
-  --surface-ghost-border: transparent;
-  --surface-ghost-shadow: none;
+  /* Legacy Surface tokens (deprecated - use @layer base tokens above) */
+  /* Kept for backward compatibility during migration */
 
   /* "Signal" tokens (The Nexus Brand) */
   /* figma.token: brand.primary */
@@ -163,10 +176,6 @@
   --ring: var(--color-primary);
   /* figma.token: radius.none */
   --radius: 0px; /* Sharp corners for forensic aesthetic */
-  
-  /* Surface Component Shape (Locked) */
-  /* figma.token: surface.radius */
-  --surface-radius: 1rem; /* 16px - locked rounded-2xl equivalent */
 }
 
 /* ============================================================================

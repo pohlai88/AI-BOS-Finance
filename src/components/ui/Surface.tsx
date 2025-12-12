@@ -27,45 +27,23 @@ export const Surface = ({
   children,
   ...props
 }: SurfaceProps) => {
-  
-  // 🛡️ THE LAW: These variants reference CSS variables (The Constitution)
+
+  // 🔒 LOCKED: We only use classes defined in tailwind.config.ts
+  // These classes map to tokens in globals.css (The Constitution)
   // If you change the token in globals.css, it changes EVERYWHERE.
   const variants = {
-    base: "border shadow-sm",
-    flat: "border-transparent",
-    ghost: "border-transparent bg-transparent",
-  }
-
-  // Apply background and border colors via CSS variables
-  const variantStyles = {
-    base: {
-      backgroundColor: 'var(--surface-base-bg)',
-      borderColor: 'var(--surface-base-border)',
-      boxShadow: 'var(--surface-base-shadow)',
-    },
-    flat: {
-      backgroundColor: 'var(--surface-flat-bg)',
-      borderColor: 'var(--surface-flat-border)',
-      boxShadow: 'var(--surface-flat-shadow)',
-    },
-    ghost: {
-      backgroundColor: 'var(--surface-ghost-bg)',
-      borderColor: 'var(--surface-ghost-border)',
-      boxShadow: 'var(--surface-ghost-shadow)',
-    },
+    base: "bg-surface-base border border-border-surface-base shadow-sm",
+    flat: "bg-surface-flat border border-border-surface-flat",
+    ghost: "bg-transparent border-none",
   }
 
   return (
     <div
       className={cn(
-        "border transition-all", // Base styles
-        variants[variant], // Variant-specific classes
+        "rounded-surface transition-all", // Uses token: rounded-surface
+        variants[variant], // Variant-specific classes (all use Tailwind tokens)
         className
       )}
-      style={{
-        borderRadius: 'var(--surface-radius)', // Locked shape from Constitution
-        ...variantStyles[variant], // Apply token-based styles
-      }}
       {...props}
     >
       {children}
