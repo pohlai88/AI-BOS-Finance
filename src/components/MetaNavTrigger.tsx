@@ -3,32 +3,35 @@
 // Forensic-style trigger button for META side navigation
 // ============================================================================
 
-import { Menu } from 'lucide-react';
+import { Menu } from 'lucide-react'
 
 interface MetaNavTriggerProps {
-  onClick: () => void;
-  className?: string;
+  onClick: () => void
+  className?: string
 }
 
-export function MetaNavTrigger({ onClick, className = '' }: MetaNavTriggerProps) {
+export function MetaNavTrigger({
+  onClick,
+  className = '',
+}: MetaNavTriggerProps) {
   return (
     <button
       onClick={onClick}
       // Default: Top Right (Tools/Utility Zone) - Locked to grid coordinates
       // top-[72px] clears the AppShell header (approx 64px) + 8px gap
       // right-6 aligns with standard page padding
-      className={`group fixed right-6 top-[72px] z-[100] border border-[#333] hover:border-[#28E7A2] transition-all bg-[#000000] ${className}`}
+      className={`group fixed right-6 top-[72px] z-[100] border border-[#333] bg-[#000000] transition-all hover:border-[#28E7A2] ${className}`}
     >
       {/* Pulsing Red Alarm Effect - Radar Style */}
       <div
-        className="px-4 py-3 flex items-center gap-3 bg-[#0A0A0A] relative overflow-hidden z-50"
+        className="relative z-50 flex items-center gap-3 overflow-hidden bg-[#0A0A0A] px-4 py-3"
         style={{
           animation: 'radarPulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         }}
       >
         {/* Red Sweep Overlay */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
               'radial-gradient(circle at center, rgba(255, 50, 50, 0.3) 0%, rgba(255, 50, 50, 0) 70%)',
@@ -36,16 +39,20 @@ export function MetaNavTrigger({ onClick, className = '' }: MetaNavTriggerProps)
           }}
         />
 
-        <Menu className="w-4 h-4 text-[#666] group-hover:text-[#28E7A2] transition-colors relative z-10" />
-        <div className="flex flex-col gap-0.5 relative z-10">
-          <span className="font-mono text-[12px] text-white tracking-wide">META</span>
-          <span className="font-mono text-[10px] text-[#666] uppercase tracking-wider">Nav</span>
+        <Menu className="relative z-10 h-4 w-4 text-[#666] transition-colors group-hover:text-[#28E7A2]" />
+        <div className="relative z-10 flex flex-col gap-0.5">
+          <span className="font-mono text-[12px] tracking-wide text-white">
+            META
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
+            Nav
+          </span>
         </div>
       </div>
 
       {/* Corner Crosshairs */}
-      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#28E7A2]/30 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#28E7A2]/30 pointer-events-none" />
+      <div className="pointer-events-none absolute left-0 top-0 h-2 w-2 border-l border-t border-[#28E7A2]/30" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-2 w-2 border-b border-r border-[#28E7A2]/30" />
 
       {/* CSS Keyframes */}
       <style>{`
@@ -62,5 +69,5 @@ export function MetaNavTrigger({ onClick, className = '' }: MetaNavTriggerProps)
         }
       `}</style>
     </button>
-  );
+  )
 }

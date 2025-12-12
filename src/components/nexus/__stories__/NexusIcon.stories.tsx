@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { NexusIcon } from '../NexusIcon';
+import type { Meta, StoryObj } from '@storybook/react'
+import { NexusIcon } from '../NexusIcon'
 
 const meta = {
   title: 'Forensic/Brand/NexusIcon',
@@ -25,10 +25,10 @@ const meta = {
       description: 'Enable/disable animations',
     },
   },
-} satisfies Meta<typeof NexusIcon>;
+} satisfies Meta<typeof NexusIcon>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Default animated icon
 export const Default: Story = {
@@ -36,7 +36,7 @@ export const Default: Story = {
     size: 'md',
     animated: true,
   },
-};
+}
 
 // Size variants
 export const Small: Story = {
@@ -44,14 +44,14 @@ export const Small: Story = {
     size: 'sm',
     animated: true,
   },
-};
+}
 
 export const Large: Story = {
   args: {
     size: 'lg',
     animated: true,
   },
-};
+}
 
 // Static version (for performance-sensitive contexts)
 export const Static: Story = {
@@ -62,11 +62,12 @@ export const Static: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Use this variant in lists or grids where many icons are rendered.',
+        story:
+          'Use this variant in lists or grids where many icons are rendered.',
       },
     },
   },
-};
+}
 
 // All sizes comparison
 export const SizeComparison: Story = {
@@ -74,26 +75,34 @@ export const SizeComparison: Story = {
     <div className="flex items-end gap-8">
       <div className="flex flex-col items-center gap-2">
         <NexusIcon size="sm" />
-        <span className="text-[10px] font-mono text-nexus-noise">SM (24px)</span>
+        <span className="text-nexus-noise font-mono text-[10px]">
+          SM (24px)
+        </span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <NexusIcon size="md" />
-        <span className="text-[10px] font-mono text-nexus-noise">MD (28px)</span>
+        <span className="text-nexus-noise font-mono text-[10px]">
+          MD (28px)
+        </span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <NexusIcon size="lg" />
-        <span className="text-[10px] font-mono text-nexus-noise">LG (40px)</span>
+        <span className="text-nexus-noise font-mono text-[10px]">
+          LG (40px)
+        </span>
       </div>
     </div>
   ),
-};
+}
 
 // Brand lockup (icon + wordmark)
 export const BrandLockup: Story = {
   render: () => (
     <div className="flex items-center gap-3">
       <NexusIcon size="md" />
-      <span className="text-base tracking-tight text-white font-medium">NexusCanon</span>
+      <span className="text-base font-medium tracking-tight text-white">
+        NexusCanon
+      </span>
     </div>
   ),
   parameters: {
@@ -103,5 +112,4 @@ export const BrandLockup: Story = {
       },
     },
   },
-};
-
+}

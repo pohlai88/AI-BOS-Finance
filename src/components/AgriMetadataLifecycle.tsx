@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useMemo } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import {
   Activity,
   ShieldCheck,
@@ -11,7 +11,7 @@ import {
   Play,
   ChevronLeft,
   ChevronRight,
-} from 'lucide-react';
+} from 'lucide-react'
 
 // ---------------------------------------------------------------------
 // LIFECYCLE STAGES
@@ -79,10 +79,17 @@ const STAGES = [
       'COMPLIANCE',
     ],
   },
-];
+]
 
 // Palette for root / beam colours
-const MINERAL_COLORS = ['#ef4444', '#f97316', '#fbbf24', '#22c55e', '#3b82f6', '#8b5cf6'];
+const MINERAL_COLORS = [
+  '#ef4444',
+  '#f97316',
+  '#fbbf24',
+  '#22c55e',
+  '#3b82f6',
+  '#8b5cf6',
+]
 
 // ---------------------------------------------------------------------
 // ROOT GEOMETRY (soft umbrella shapes)
@@ -128,77 +135,78 @@ const useRootPaths = () =>
         color: MINERAL_COLORS[5],
       },
     ],
-    [],
-  );
+    []
+  )
 
 // ---------------------------------------------------------------------
 // COMPONENT
 // ---------------------------------------------------------------------
 export const AgriMetadataLifecycle = () => {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [showProvenance, setShowProvenance] = useState(false);
-  const [hoveredRoot, setHoveredRoot] = useState<number | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [transitionLabel, setTransitionLabel] = useState('');
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [showProvenance, setShowProvenance] = useState(false)
+  const [hoveredRoot, setHoveredRoot] = useState<number | null>(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [transitionLabel, setTransitionLabel] = useState('')
 
-  const current = STAGES[index];
-  const isBlooming = index === 3;
-  const isFruiting = index === 4;
+  const current = STAGES[index]
+  const isBlooming = index === 3
+  const isFruiting = index === 4
 
-  const rootPaths = useRootPaths();
+  const rootPaths = useRootPaths()
 
   // Transition effect trigger
   const triggerTransition = (nextIndex: number) => {
-    setIsTransitioning(true);
-    setTransitionLabel(STAGES[nextIndex].label);
+    setIsTransitioning(true)
+    setTransitionLabel(STAGES[nextIndex].label)
     setTimeout(() => {
-      setIndex(nextIndex);
-      setTimeout(() => setIsTransitioning(false), 800);
-    }, 400);
-  };
+      setIndex(nextIndex)
+      setTimeout(() => setIsTransitioning(false), 800)
+    }, 400)
+  }
 
   // Auto-advance heartbeat with transitions
   useEffect(() => {
-    if (paused || isTransitioning) return;
+    if (paused || isTransitioning) return
     const timer = setInterval(() => {
-      const nextIndex = (index + 1) % STAGES.length;
-      triggerTransition(nextIndex);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [paused, isTransitioning, index]);
+      const nextIndex = (index + 1) % STAGES.length
+      triggerTransition(nextIndex)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [paused, isTransitioning, index])
 
   // Keyboard navigation with transitions
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (isTransitioning) return;
+      if (isTransitioning) return
       if (e.key === 'ArrowLeft') {
-        const nextIndex = (index - 1 + STAGES.length) % STAGES.length;
-        triggerTransition(nextIndex);
+        const nextIndex = (index - 1 + STAGES.length) % STAGES.length
+        triggerTransition(nextIndex)
       }
       if (e.key === 'ArrowRight') {
-        const nextIndex = (index + 1) % STAGES.length;
-        triggerTransition(nextIndex);
+        const nextIndex = (index + 1) % STAGES.length
+        triggerTransition(nextIndex)
       }
       if (e.key === ' ') {
-        e.preventDefault();
-        setPaused((p) => !p);
+        e.preventDefault()
+        setPaused((p) => !p)
       }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [index, isTransitioning]);
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [index, isTransitioning])
 
   // How many roots are "active" at this stage
-  const activeRootCount = Math.min(current.rootNodes.length, rootPaths.length);
+  const activeRootCount = Math.min(current.rootNodes.length, rootPaths.length)
 
   // Special bloom→fruit transformation detection
-  const isBloomToFruitTransition = isTransitioning && transitionLabel === STAGES[4].label;
+  const isBloomToFruitTransition =
+    isTransitioning && transitionLabel === STAGES[4].label
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto h-[720px] bg-[#030305] rounded-xl overflow-hidden border border-white/5 shadow-2xl select-none">
+    <div className="relative mx-auto h-[720px] w-full max-w-6xl select-none overflow-hidden rounded-xl border border-white/5 bg-[#030305] shadow-2xl">
       {/* Atmosphere */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(3,3,5,0.65)_52%,#030305_100%)]" />
       </div>
@@ -211,7 +219,7 @@ export const AgriMetadataLifecycle = () => {
             animate={{ opacity: [0, 0.3, 0] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, times: [0, 0.5, 1] }}
-            className="absolute inset-0 bg-gradient-radial from-amber-400/30 via-yellow-500/10 to-transparent z-[90] pointer-events-none"
+            className="bg-gradient-radial pointer-events-none absolute inset-0 z-[90] from-amber-400/30 via-yellow-500/10 to-transparent"
             style={{
               backgroundImage:
                 'radial-gradient(circle at center, rgba(251, 191, 36, 0.3) 0%, rgba(234, 179, 8, 0.1) 40%, transparent 70%)',
@@ -220,22 +228,27 @@ export const AgriMetadataLifecycle = () => {
         )}
       </AnimatePresence>
 
-      <div className="relative w-full h-full flex flex-col">
+      <div className="relative flex h-full w-full flex-col">
         {/* SKY – PLANT / FRUIT */}
-        <div className="flex-1 relative border-b border-white/10 bg-gradient-to-b from-[#020617] via-transparent to-transparent overflow-hidden">
+        <div className="relative flex-1 overflow-hidden border-b border-white/10 bg-gradient-to-b from-[#020617] via-transparent to-transparent">
           {/* Tag - MOVED TO TOP-LEFT to avoid HUD overlap */}
-          <div className="absolute top-6 left-6 flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-              <Activity className="w-3 h-3 text-emerald-400" />
-              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-[0.2em]">
+          <div className="absolute left-6 top-6 flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+              <Activity className="h-3 w-3 text-emerald-400" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-400">
                 Live Morphology
               </span>
             </div>
           </div>
 
           {/* Plant SVG */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[320px] h-[330px] flex items-end justify-center z-[100]">
-            <svg width="320" height="330" viewBox="0 0 320 330" className="overflow-visible">
+          <div className="absolute bottom-2 left-1/2 z-[100] flex h-[330px] w-[320px] -translate-x-1/2 items-end justify-center">
+            <svg
+              width="320"
+              height="330"
+              viewBox="0 0 320 330"
+              className="overflow-visible"
+            >
               {/* Taller, strong stem - connects to flower AND extends to soil line */}
               <motion.path
                 d="M160,330 C160,280 160,180 160,120"
@@ -412,9 +425,9 @@ export const AgriMetadataLifecycle = () => {
                   { angle: -40, delay: 4.0, duration: 6.0, distance: 98 },
                   { angle: -50, delay: 4.4, duration: 5.8, distance: 84 },
                 ].map((p, i) => {
-                  const radians = (p.angle * Math.PI) / 180;
-                  const dx = Math.cos(radians) * p.distance;
-                  const dy = Math.sin(radians) * p.distance;
+                  const radians = (p.angle * Math.PI) / 180
+                  const dx = Math.cos(radians) * p.distance
+                  const dy = Math.sin(radians) * p.distance
                   return (
                     <motion.circle
                       key={`left-emit-${i}`}
@@ -434,7 +447,7 @@ export const AgriMetadataLifecycle = () => {
                       }}
                       style={{ filter: 'blur(0.4px)' }}
                     />
-                  );
+                  )
                 })}
 
               {/* RIGHT BRANCH with joint node */}
@@ -510,7 +523,13 @@ export const AgriMetadataLifecycle = () => {
                   style={{ filter: 'drop-shadow(0 0 4px #22c55e)' }}
                 />
                 {/* Inner highlight - SMALLER */}
-                <circle cx="222.5" cy="238.5" r="1" fill="#86efac" opacity="0.5" />
+                <circle
+                  cx="222.5"
+                  cy="238.5"
+                  r="1"
+                  fill="#86efac"
+                  opacity="0.5"
+                />
               </motion.g>
 
               {/* 🎻 GOLDEN ORCHESTRA - 2 NEW UPPER BRANCHES (ONLY DURING FRUITING) */}
@@ -582,7 +601,13 @@ export const AgriMetadataLifecycle = () => {
                       style={{ filter: 'drop-shadow(0 0 14px #fbbf24)' }}
                     />
                     {/* Inner highlight - GOLDEN */}
-                    <circle cx="88.5" cy="208.5" r="1.5" fill="#fef3c7" opacity="0.8" />
+                    <circle
+                      cx="88.5"
+                      cy="208.5"
+                      r="1.5"
+                      fill="#fef3c7"
+                      opacity="0.8"
+                    />
                   </motion.g>
 
                   {/* UPPER RIGHT BRANCH - Gold accent */}
@@ -653,19 +678,25 @@ export const AgriMetadataLifecycle = () => {
                       style={{ filter: 'drop-shadow(0 0 14px #fbbf24)' }}
                     />
                     {/* Inner highlight - GOLDEN */}
-                    <circle cx="228.5" cy="193.5" r="1.5" fill="#fef3c7" opacity="0.8" />
+                    <circle
+                      cx="228.5"
+                      cy="193.5"
+                      r="1.5"
+                      fill="#fef3c7"
+                      opacity="0.8"
+                    />
                   </motion.g>
 
                   {/* 🎻 WAVE-BASED GOLDEN PARTICLE EMISSION - UPPER LEFT (8 PARTICLES, 3 WAVES) */}
                   {/* WAVE 1: CRESCENDO (Particles 0-2) */}
                   {[0, 1, 2].map((i) => {
-                    const baseAngle = -40;
-                    const angleVariance = (i - 1) * 20 + (Math.random() * 6 - 3);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 75 + Math.random() * 15;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -40
+                    const angleVariance = (i - 1) * 20 + (Math.random() * 6 - 3)
+                    const angle = baseAngle + angleVariance
+                    const distance = 75 + Math.random() * 15
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-left-wave1-${i}`}
@@ -683,20 +714,22 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
 
                   {/* WAVE 2: FORTISSIMO (Particles 3-5) */}
                   {[3, 4, 5].map((i) => {
-                    const baseAngle = -50;
-                    const angleVariance = (i - 4) * 18 + (Math.random() * 8 - 4);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 85 + Math.random() * 20;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -50
+                    const angleVariance = (i - 4) * 18 + (Math.random() * 8 - 4)
+                    const angle = baseAngle + angleVariance
+                    const distance = 85 + Math.random() * 20
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-left-wave2-${i}`}
@@ -714,20 +747,23 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.4px) drop-shadow(0 0 3px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.4px) drop-shadow(0 0 3px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
 
                   {/* WAVE 3: DECRESCENDO (Particles 6-7) */}
                   {[6, 7].map((i) => {
-                    const baseAngle = -30;
-                    const angleVariance = (i - 6.5) * 15 + (Math.random() * 5 - 2.5);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 70 + Math.random() * 12;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -30
+                    const angleVariance =
+                      (i - 6.5) * 15 + (Math.random() * 5 - 2.5)
+                    const angle = baseAngle + angleVariance
+                    const distance = 70 + Math.random() * 12
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-left-wave3-${i}`}
@@ -745,21 +781,23 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
 
                   {/* 🎻 WAVE-BASED GOLDEN PARTICLE EMISSION - UPPER RIGHT (8 PARTICLES, 3 WAVES) */}
                   {/* WAVE 1: CRESCENDO (Particles 0-2) */}
                   {[0, 1, 2].map((i) => {
-                    const baseAngle = -140;
-                    const angleVariance = (i - 1) * 20 + (Math.random() * 6 - 3);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 75 + Math.random() * 15;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -140
+                    const angleVariance = (i - 1) * 20 + (Math.random() * 6 - 3)
+                    const angle = baseAngle + angleVariance
+                    const distance = 75 + Math.random() * 15
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-right-wave1-${i}`}
@@ -777,20 +815,22 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
 
                   {/* WAVE 2: FORTISSIMO (Particles 3-5) */}
                   {[3, 4, 5].map((i) => {
-                    const baseAngle = -150;
-                    const angleVariance = (i - 4) * 18 + (Math.random() * 8 - 4);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 85 + Math.random() * 20;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -150
+                    const angleVariance = (i - 4) * 18 + (Math.random() * 8 - 4)
+                    const angle = baseAngle + angleVariance
+                    const distance = 85 + Math.random() * 20
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-right-wave2-${i}`}
@@ -808,20 +848,23 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.4px) drop-shadow(0 0 3px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.4px) drop-shadow(0 0 3px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
 
                   {/* WAVE 3: DECRESCENDO (Particles 6-7) */}
                   {[6, 7].map((i) => {
-                    const baseAngle = -130;
-                    const angleVariance = (i - 6.5) * 15 + (Math.random() * 5 - 2.5);
-                    const angle = baseAngle + angleVariance;
-                    const distance = 70 + Math.random() * 12;
-                    const radians = (angle * Math.PI) / 180;
-                    const dx = Math.cos(radians) * distance;
-                    const dy = Math.sin(radians) * distance;
+                    const baseAngle = -130
+                    const angleVariance =
+                      (i - 6.5) * 15 + (Math.random() * 5 - 2.5)
+                    const angle = baseAngle + angleVariance
+                    const distance = 70 + Math.random() * 12
+                    const radians = (angle * Math.PI) / 180
+                    const dx = Math.cos(radians) * distance
+                    const dy = Math.sin(radians) * distance
                     return (
                       <motion.circle
                         key={`upper-right-wave3-${i}`}
@@ -839,9 +882,11 @@ export const AgriMetadataLifecycle = () => {
                           repeat: Infinity,
                           ease: 'easeOut',
                         }}
-                        style={{ filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)' }}
+                        style={{
+                          filter: 'blur(0.3px) drop-shadow(0 0 2px #fbbf24)',
+                        }}
                       />
-                    );
+                    )
                   })}
                 </>
               )}
@@ -860,8 +905,12 @@ export const AgriMetadataLifecycle = () => {
                   opacity="0.35"
                   initial={{ opacity: 0 }}
                   animate={{
-                    opacity: current.plantHeight > 0.35 ? [0, 0.35, 0.4, 0.35, 0] : 0,
-                    y: current.plantHeight > 0.35 ? [280, 260, 220, 180, 140] : 280,
+                    opacity:
+                      current.plantHeight > 0.35 ? [0, 0.35, 0.4, 0.35, 0] : 0,
+                    y:
+                      current.plantHeight > 0.35
+                        ? [280, 260, 220, 180, 140]
+                        : 280,
                     x: [
                       particle.x,
                       particle.x + (i % 2 === 0 ? -8 : 8),
@@ -886,7 +935,11 @@ export const AgriMetadataLifecycle = () => {
                 initial={{ scale: 0.4, opacity: 0 }}
                 animate={{
                   scale:
-                    current.plantHeight > 0.5 ? (isFruiting ? [1.6, 1.7, 1.6] : [1, 1.05, 1]) : 0.8,
+                    current.plantHeight > 0.5
+                      ? isFruiting
+                        ? [1.6, 1.7, 1.6]
+                        : [1, 1.05, 1]
+                      : 0.8,
                   opacity: current.plantHeight > 0.5 ? 1 : 0,
                   y: 310 - 247 * current.plantHeight,
                 }}
@@ -908,7 +961,10 @@ export const AgriMetadataLifecycle = () => {
               >
                 {/* Enhanced petals with subtle veins */}
                 {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
-                  <g key={angle} transform={`rotate(${angle} 160 0) translate(0 -20)`}>
+                  <g
+                    key={angle}
+                    transform={`rotate(${angle} 160 0) translate(0 -20)`}
+                  >
                     <ellipse
                       cx="160"
                       cy="0"
@@ -931,7 +987,12 @@ export const AgriMetadataLifecycle = () => {
                 ))}
 
                 {/* 🌸 ENHANCED CENTER - Concentric data rings + pistils */}
-                <circle cx="160" cy="0" r="14" fill={isFruiting ? 'url(#centerGold)' : '#fda4af'} />
+                <circle
+                  cx="160"
+                  cy="0"
+                  r="14"
+                  fill={isFruiting ? 'url(#centerGold)' : '#fda4af'}
+                />
 
                 {/* Concentric data layer rings */}
                 {[10, 7, 4].map((r, i) => (
@@ -959,9 +1020,9 @@ export const AgriMetadataLifecycle = () => {
 
                 {/* Micro-pistils (8 tiny circles arranged in ring) */}
                 {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
-                  const radians = (angle * Math.PI) / 180;
-                  const cx = 160 + Math.cos(radians) * 5;
-                  const cy = Math.sin(radians) * 5;
+                  const radians = (angle * Math.PI) / 180
+                  const cx = 160 + Math.cos(radians) * 5
+                  const cy = Math.sin(radians) * 5
                   return (
                     <motion.circle
                       key={`pistil-${i}`}
@@ -982,7 +1043,7 @@ export const AgriMetadataLifecycle = () => {
                         filter: `drop-shadow(0 0 2px ${isFruiting ? '#fbbf24' : '#f472b6'})`,
                       }}
                     />
-                  );
+                  )
                 })}
               </motion.g>
 
@@ -1020,34 +1081,34 @@ export const AgriMetadataLifecycle = () => {
           </div>
 
           {/* HUD narrative card - MOVED TO TOP-RIGHT */}
-          <motion.div className="absolute right-6 top-6 w-[240px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-lg p-3 shadow-2xl z-50">
-            <div className="flex justify-between items-start mb-1.5">
+          <motion.div className="absolute right-6 top-6 z-50 w-[240px] rounded-lg border border-white/10 bg-black/40 p-3 shadow-2xl backdrop-blur-xl">
+            <div className="mb-1.5 flex items-start justify-between">
               <div>
                 <motion.div
                   key={current.label}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-xs font-mono font-bold text-white tracking-wide"
+                  className="font-mono text-xs font-bold tracking-wide text-white"
                 >
                   {current.label}
                 </motion.div>
-                <div className="text-[9px] font-mono font-semibold text-gray-300 uppercase tracking-[0.22em] mt-0.5">
+                <div className="mt-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-gray-300">
                   {current.sub}
                 </div>
               </div>
-              <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+              <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5">
                 {isFruiting ? (
-                  <ShieldCheck className="w-3 h-3 text-yellow-500" />
+                  <ShieldCheck className="h-3 w-3 text-yellow-500" />
                 ) : isBlooming ? (
-                  <Flower2 className="w-3 h-3 text-pink-400" />
+                  <Flower2 className="h-3 w-3 text-pink-400" />
                 ) : (
-                  <Scan className="w-3 h-3 text-gray-400" />
+                  <Scan className="h-3 w-3 text-gray-400" />
                 )}
               </div>
             </div>
 
             {/* progress bar */}
-            <div className="w-full h-0.5 bg-white/10 rounded-full mb-1.5 overflow-hidden">
+            <div className="mb-1.5 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
               <motion.div
                 className="h-full"
                 style={{ backgroundColor: current.color }}
@@ -1057,69 +1118,74 @@ export const AgriMetadataLifecycle = () => {
             </div>
 
             {/* system log */}
-            <div className="font-mono text-[9px] font-semibold text-gray-300 leading-relaxed border-l-2 border-white/10 pl-2 mb-1.5">
+            <div className="mb-1.5 border-l-2 border-white/10 pl-2 font-mono text-[9px] font-semibold leading-relaxed text-gray-300">
               <span className="text-gray-500">{'>'}</span> {current.message}
             </div>
 
             {/* controls */}
-            <div className="flex items-center justify-between pt-1.5 border-t border-white/5">
+            <div className="flex items-center justify-between border-t border-white/5 pt-1.5">
               <div className="flex gap-1">
                 <button
                   onClick={() => {
                     if (!isTransitioning) {
-                      const nextIndex = (index - 1 + STAGES.length) % STAGES.length;
-                      triggerTransition(nextIndex);
+                      const nextIndex =
+                        (index - 1 + STAGES.length) % STAGES.length
+                      triggerTransition(nextIndex)
                     }
                   }}
                   disabled={isTransitioning}
-                  className="p-1 rounded bg-white/5 hover:bg-emerald-500/10 border border-emerald-500/50 transition-colors disabled:opacity-30"
+                  className="rounded border border-emerald-500/50 bg-white/5 p-1 transition-colors hover:bg-emerald-500/10 disabled:opacity-30"
                 >
-                  <ChevronLeft className="w-2.5 h-2.5 text-emerald-400" />
+                  <ChevronLeft className="h-2.5 w-2.5 text-emerald-400" />
                 </button>
                 <button
                   onClick={() => setPaused((p) => !p)}
-                  className="p-1 rounded bg-white/5 hover:bg-emerald-500/10 border border-emerald-500/50 transition-colors"
+                  className="rounded border border-emerald-500/50 bg-white/5 p-1 transition-colors hover:bg-emerald-500/10"
                 >
                   {paused ? (
-                    <Play className="w-2.5 h-2.5 text-emerald-400" />
+                    <Play className="h-2.5 w-2.5 text-emerald-400" />
                   ) : (
-                    <Pause className="w-2.5 h-2.5 text-emerald-400" />
+                    <Pause className="h-2.5 w-2.5 text-emerald-400" />
                   )}
                 </button>
                 <button
                   onClick={() => {
                     if (!isTransitioning) {
-                      const nextIndex = (index + 1) % STAGES.length;
-                      triggerTransition(nextIndex);
+                      const nextIndex = (index + 1) % STAGES.length
+                      triggerTransition(nextIndex)
                     }
                   }}
                   disabled={isTransitioning}
-                  className="p-1 rounded bg-white/5 hover:bg-emerald-500/10 border border-emerald-500/50 transition-colors disabled:opacity-30"
+                  className="rounded border border-emerald-500/50 bg-white/5 p-1 transition-colors hover:bg-emerald-500/10 disabled:opacity-30"
                 >
-                  <ChevronRight className="w-2.5 h-2.5 text-emerald-400" />
+                  <ChevronRight className="h-2.5 w-2.5 text-emerald-400" />
                 </button>
               </div>
-              <span className="text-[7px] font-mono text-gray-600">SPACE / ← →</span>
+              <span className="font-mono text-[7px] text-gray-600">
+                SPACE / ← →
+              </span>
             </div>
           </motion.div>
         </div>
 
         {/* SOIL LINE */}
-        <motion.div className="h-11 bg-[#050505] border-y border-white/5 flex items-center justify-between px-8 relative z-20">
+        <motion.div className="relative z-20 flex h-11 items-center justify-between border-y border-white/5 bg-[#050505] px-8">
           <div className="flex items-center gap-4">
             <div className="h-[1px] w-12 bg-white/20" />
-            <span className="text-[9px] font-mono text-gray-500 uppercase tracking-[0.3em]">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-gray-500">
               The Soil Line (Physical / Digital)
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Zap className="w-3 h-3 text-yellow-500" />
-            <span className="text-[9px] font-mono text-yellow-500">{current.scanData}</span>
+            <Zap className="h-3 w-3 text-yellow-500" />
+            <span className="font-mono text-[9px] text-yellow-500">
+              {current.scanData}
+            </span>
           </div>
         </motion.div>
 
         {/* ROOTS – SOFT UMBRELLA LINES & BEAMS */}
-        <div className="flex-1 relative bg-[#020203] overflow-hidden">
+        <div className="relative flex-1 overflow-hidden bg-[#020203]">
           {/* subtle noise */}
           <div
             className="absolute inset-0 opacity-5 mix-blend-overlay"
@@ -1129,7 +1195,7 @@ export const AgriMetadataLifecycle = () => {
             }}
           />
 
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-full flex justify-center">
+          <div className="absolute left-1/2 top-0 flex h-full w-[400px] -translate-x-1/2 justify-center">
             <svg width="400" height="340" viewBox="0 0 400 340">
               {/* central vertical root (matches stem but below soil) */}
               <motion.path
@@ -1148,8 +1214,8 @@ export const AgriMetadataLifecycle = () => {
 
               {/* lateral roots + umbrella beams */}
               {rootPaths.slice(0, activeRootCount).map((root, i) => {
-                const active = i < activeRootCount;
-                const labelLeft = root.tipX < 200;
+                const active = i < activeRootCount
+                const labelLeft = root.tipX < 200
 
                 return (
                   <g key={root.label}>
@@ -1319,7 +1385,7 @@ export const AgriMetadataLifecycle = () => {
                       {root.label}
                     </motion.text>
                   </g>
-                );
+                )
               })}
             </svg>
           </div>
@@ -1328,27 +1394,30 @@ export const AgriMetadataLifecycle = () => {
           <div className="absolute bottom-6 left-6">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 text-gray-600">
-                <Database className="w-3 h-3" />
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em]">
+                <Database className="h-3 w-3" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
                   Metadata Infrastructure
                 </span>
               </div>
-              <span className="text-[12px] font-mono text-gray-400">
-                Depth: {Math.round(current.rootDepth * 100)}% · Nodes: {activeRootCount}/
-                {rootPaths.length}
+              <span className="font-mono text-[12px] text-gray-400">
+                Depth: {Math.round(current.rootDepth * 100)}% · Nodes:{' '}
+                {activeRootCount}/{rootPaths.length}
               </span>
             </div>
           </div>
 
-          <div className="absolute top-6 right-6">
+          <div className="absolute right-6 top-6">
             <div className="flex flex-col gap-1.5">
-              <span className="text-[8px] font-mono text-gray-600 uppercase tracking-[0.2em] mb-1">
+              <span className="mb-1 font-mono text-[8px] uppercase tracking-[0.2em] text-gray-600">
                 Mineral Orchestra
               </span>
               {rootPaths.slice(0, activeRootCount).map((root, i) => (
-                <div key={root.label} className="flex items-center gap-2 text-[8px] font-mono">
+                <div
+                  key={root.label}
+                  className="flex items-center gap-2 font-mono text-[8px]"
+                >
                   <motion.div
-                    className="w-2 h-2 rounded-full"
+                    className="h-2 w-2 rounded-full"
                     style={{
                       backgroundColor: root.color,
                       boxShadow: `0 0 10px ${root.color}`,
@@ -1376,9 +1445,9 @@ export const AgriMetadataLifecycle = () => {
         </div>
 
         {/* Scanner beam */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] pointer-events-none z-20">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-[320px] -translate-x-1/2 -translate-y-1/2">
           <motion.div
-            className="w-full h-[1px] bg-white/18"
+            className="bg-white/18 h-[1px] w-full"
             style={{ boxShadow: '0 0 14px rgba(255,255,255,0.5)' }}
             animate={paused ? {} : { y: [-150, 150, -150] }}
             transition={{ duration: 9, ease: 'linear', repeat: Infinity }}
@@ -1392,12 +1461,12 @@ export const AgriMetadataLifecycle = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] pointer-events-none"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-[100] -translate-x-1/2 -translate-y-1/2"
             >
-              <div className="bg-black/80 backdrop-blur-xl border border-white/20 rounded-lg px-6 py-3 shadow-2xl">
+              <div className="rounded-lg border border-white/20 bg-black/80 px-6 py-3 shadow-2xl backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                   <motion.div
-                    className="w-2 h-2 rounded-full bg-emerald-400"
+                    className="h-2 w-2 rounded-full bg-emerald-400"
                     animate={{
                       scale: [1, 1.3, 1],
                       opacity: [0.6, 1, 0.6],
@@ -1410,10 +1479,10 @@ export const AgriMetadataLifecycle = () => {
                     style={{ filter: 'drop-shadow(0 0 8px #22c55e)' }}
                   />
                   <div>
-                    <div className="text-[8px] font-mono text-gray-500 uppercase tracking-[0.2em]">
+                    <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-gray-500">
                       Transitioning to
                     </div>
-                    <div className="text-xs font-mono font-bold text-white tracking-wide mt-0.5">
+                    <div className="mt-0.5 font-mono text-xs font-bold tracking-wide text-white">
                       {transitionLabel}
                     </div>
                   </div>
@@ -1431,24 +1500,26 @@ export const AgriMetadataLifecycle = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/95 backdrop-blur-xl z-40 flex items-center justify-center"
+            className="absolute inset-0 z-40 flex items-center justify-center bg-black/95 backdrop-blur-xl"
             onClick={() => setShowProvenance(false)}
           >
             <motion.div
               initial={{ scale: 0.92, y: 18 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 18 }}
-              className="bg-[#050505] border border-white/10 rounded-xl p-8 max-w-2xl w-full mx-4"
+              className="mx-4 w-full max-w-2xl rounded-xl border border-white/10 bg-[#050505] p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-start justify-between mb-6">
+              <div className="mb-6 flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-mono text-white tracking-wide">GOLDEN FRUIT #A47F</h3>
-                  <p className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] mt-1">
+                  <h3 className="font-mono text-lg tracking-wide text-white">
+                    GOLDEN FRUIT #A47F
+                  </h3>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-gray-500">
                     Chain of Custody
                   </p>
                 </div>
-                <ShieldCheck className="w-6 h-6 text-yellow-500" />
+                <ShieldCheck className="h-6 w-6 text-yellow-500" />
               </div>
 
               <div className="space-y-3">
@@ -1507,33 +1578,37 @@ export const AgriMetadataLifecycle = () => {
                     initial={{ opacity: 0, x: -18 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.08 }}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-white/5 border border-white/10"
+                    className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-3"
                   >
                     <div
-                      className="w-5 h-5 rounded-full border flex items-center justify-center mt-0.5 flex-shrink-0"
+                      className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border"
                       style={{
                         backgroundColor: `${row.mineral}20`,
                         borderColor: `${row.mineral}80`,
                       }}
                     >
                       <div
-                        className="w-2 h-2 rounded-full"
+                        className="h-2 w-2 rounded-full"
                         style={{ backgroundColor: row.mineral }}
                       />
                     </div>
                     <div className="flex-1">
-                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.14em]">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">
                         {row.label}
                       </div>
-                      <div className="text-xs font-mono text-white mt-1">{row.value}</div>
+                      <div className="mt-1 font-mono text-xs text-white">
+                        {row.value}
+                      </div>
                     </div>
-                    <div className="text-[9px] font-mono text-gray-600">Block {row.block}</div>
+                    <div className="font-mono text-[9px] text-gray-600">
+                      Block {row.block}
+                    </div>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/5 text-center">
-                <p className="text-[10px] font-mono text-gray-500 italic">
+              <div className="mt-6 border-t border-white/5 pt-4 text-center">
+                <p className="font-mono text-[10px] italic text-gray-500">
                   Click outside to close · rainbow colors = mineral orchestra
                 </p>
               </div>
@@ -1542,32 +1617,34 @@ export const AgriMetadataLifecycle = () => {
         )}
       </AnimatePresence>
     </div>
-  );
-};
+  )
+}
 
 // ---------------------------------------------------------------------
 // CONCEPT BRIEFING: Botanical Morphology → Metadata Lifecycle Mapping
 // ---------------------------------------------------------------------
 export const MetadataLifecycleConcept = () => {
   return (
-    <div className="relative max-w-6xl mx-auto px-6 mt-16 mb-20">
+    <div className="relative mx-auto mb-20 mt-16 max-w-6xl px-6">
       {/* Forensic Analysis Terminal */}
-      <div className="relative bg-black/60 backdrop-blur-sm border border-white/[0.08]">
+      <div className="relative border border-white/[0.08] bg-black/60 backdrop-blur-sm">
         {/* Terminal Header Bar */}
-        <div className="h-11 border-b border-white/[0.08] flex items-center justify-between px-6">
+        <div className="flex h-11 items-center justify-between border-b border-white/[0.08] px-6">
           <div className="flex items-center gap-4">
             <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/40 border border-red-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40 border border-yellow-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40 border border-emerald-500/60" />
+              <div className="h-2.5 w-2.5 rounded-full border border-red-500/60 bg-red-500/40" />
+              <div className="h-2.5 w-2.5 rounded-full border border-yellow-500/60 bg-yellow-500/40" />
+              <div className="h-2.5 w-2.5 rounded-full border border-emerald-500/60 bg-emerald-500/40" />
             </div>
-            <span className="text-[12px] font-mono text-gray-500 uppercase tracking-[0.2em]">
+            <span className="font-mono text-[12px] uppercase tracking-[0.2em] text-gray-500">
               Morphological Analysis // Live Feed
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Activity className="w-3.5 h-3.5 text-emerald-500/60" />
-            <span className="text-[12px] font-mono text-emerald-500/60">ACTIVE</span>
+            <Activity className="h-3.5 w-3.5 text-emerald-500/60" />
+            <span className="font-mono text-[12px] text-emerald-500/60">
+              ACTIVE
+            </span>
           </div>
         </div>
 
@@ -1575,9 +1652,9 @@ export const MetadataLifecycleConcept = () => {
         <div className="grid grid-cols-12 gap-px bg-white/[0.03]">
           {/* Left: Botanical Decode */}
           <div className="col-span-5 bg-black/80 p-8">
-            <div className="flex items-baseline gap-3 mb-6">
-              <div className="w-0.5 h-4 bg-pink-400/60" />
-              <span className="text-[12px] font-mono text-gray-500 uppercase tracking-[0.25em]">
+            <div className="mb-6 flex items-baseline gap-3">
+              <div className="h-4 w-0.5 bg-pink-400/60" />
+              <span className="font-mono text-[12px] uppercase tracking-[0.25em] text-gray-500">
                 Botanical Sequence
               </span>
             </div>
@@ -1610,11 +1687,13 @@ export const MetadataLifecycleConcept = () => {
                 },
               ].map((phase) => (
                 <div key={phase.id} className="group">
-                  <div className="flex items-baseline gap-3 mb-1.5">
-                    <span className="text-xs font-mono text-gray-600">{phase.id}</span>
+                  <div className="mb-1.5 flex items-baseline gap-3">
+                    <span className="font-mono text-xs text-gray-600">
+                      {phase.id}
+                    </span>
                     <div className="h-px flex-1 bg-white/5" />
                     <span
-                      className={`text-xs font-mono ${
+                      className={`font-mono text-xs ${
                         phase.color === 'emerald'
                           ? 'text-emerald-400'
                           : phase.color === 'pink'
@@ -1625,7 +1704,7 @@ export const MetadataLifecycleConcept = () => {
                       {phase.label}
                     </span>
                   </div>
-                  <p className="text-[12px] font-mono text-gray-500 leading-relaxed pl-7">
+                  <p className="pl-7 font-mono text-[12px] leading-relaxed text-gray-500">
                     {phase.desc}
                   </p>
                 </div>
@@ -1634,11 +1713,17 @@ export const MetadataLifecycleConcept = () => {
           </div>
 
           {/* Center: Homology Mapping */}
-          <div className="col-span-2 bg-black/60 flex items-center justify-center relative">
+          <div className="relative col-span-2 flex items-center justify-center bg-black/60">
             <div className="absolute inset-0 flex items-center justify-center">
               <svg width="100%" height="100%" className="absolute inset-0">
                 <defs>
-                  <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient
+                    id="flowGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
                     <stop offset="0%" stopColor="#22c55e" stopOpacity="0.1" />
                     <stop offset="50%" stopColor="#22c55e" stopOpacity="0.3" />
                     <stop offset="100%" stopColor="#22c55e" stopOpacity="0.1" />
@@ -1665,12 +1750,12 @@ export const MetadataLifecycleConcept = () => {
                   />
                 ))}
               </svg>
-              <div className="relative z-10 text-center px-3">
-                <div className="text-[10px] font-mono text-emerald-400/60 uppercase tracking-[0.25em] mb-2">
+              <div className="relative z-10 px-3 text-center">
+                <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400/60">
                   Structural
                 </div>
-                <div className="text-sm font-mono text-white">≈</div>
-                <div className="text-[10px] font-mono text-emerald-400/60 uppercase tracking-[0.25em] mt-2">
+                <div className="font-mono text-sm text-white">≈</div>
+                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400/60">
                   Homology
                 </div>
               </div>
@@ -1679,9 +1764,9 @@ export const MetadataLifecycleConcept = () => {
 
           {/* Right: Metadata Decode */}
           <div className="col-span-5 bg-black/80 p-8">
-            <div className="flex items-baseline gap-3 mb-6">
-              <div className="w-0.5 h-4 bg-emerald-400/60" />
-              <span className="text-[12px] font-mono text-gray-500 uppercase tracking-[0.25em]">
+            <div className="mb-6 flex items-baseline gap-3">
+              <div className="h-4 w-0.5 bg-emerald-400/60" />
+              <span className="font-mono text-[12px] uppercase tracking-[0.25em] text-gray-500">
                 Metadata Sequence
               </span>
             </div>
@@ -1714,9 +1799,9 @@ export const MetadataLifecycleConcept = () => {
                 },
               ].map((phase) => (
                 <div key={phase.id} className="group">
-                  <div className="flex items-baseline gap-3 mb-1.5">
+                  <div className="mb-1.5 flex items-baseline gap-3">
                     <span
-                      className={`text-xs font-mono ${
+                      className={`font-mono text-xs ${
                         phase.color === 'emerald'
                           ? 'text-emerald-400'
                           : phase.color === 'pink'
@@ -1727,9 +1812,11 @@ export const MetadataLifecycleConcept = () => {
                       {phase.label}
                     </span>
                     <div className="h-px flex-1 bg-white/5" />
-                    <span className="text-xs font-mono text-gray-600">{phase.id}</span>
+                    <span className="font-mono text-xs text-gray-600">
+                      {phase.id}
+                    </span>
                   </div>
-                  <p className="text-[12px] font-mono text-gray-500 leading-relaxed pr-7 text-right">
+                  <p className="pr-7 text-right font-mono text-[12px] leading-relaxed text-gray-500">
                     {phase.desc}
                   </p>
                 </div>
@@ -1741,43 +1828,51 @@ export const MetadataLifecycleConcept = () => {
         {/* Bottom: Core Research Note */}
         <div className="border-t border-white/[0.08] bg-black/90 p-8">
           <div className="flex gap-5">
-            <div className="shrink-0 mt-1">
-              <ShieldCheck className="w-5 h-5 text-emerald-400/40" />
+            <div className="mt-1 shrink-0">
+              <ShieldCheck className="h-5 w-5 text-emerald-400/40" />
             </div>
             <div className="flex-1">
-              <div className="flex items-baseline gap-4 mb-3">
-                <span className="text-[11px] font-mono text-emerald-400/70 uppercase tracking-[0.2em]">
+              <div className="mb-3 flex items-baseline gap-4">
+                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400/70">
                   Research Note
                 </span>
                 <div className="h-px flex-1 bg-white/5" />
-                <span className="text-[10px] font-mono text-gray-700">NX-META-01-VIZ</span>
+                <span className="font-mono text-[10px] text-gray-700">
+                  NX-META-01-VIZ
+                </span>
               </div>
-              <p className="text-[13px] font-mono text-gray-400 leading-relaxed mb-3">
+              <p className="mb-3 font-mono text-[13px] leading-relaxed text-gray-400">
                 Plant morphology is not metaphor—it&apos;s{' '}
-                <span className="text-gray-300">structural homology</span>. Both systems operate
-                through emergent complexity from simple rules: genetic code (schema) → environmental
-                adaptation (business context) → reproductive success (data reuse).
+                <span className="text-gray-300">structural homology</span>. Both
+                systems operate through emergent complexity from simple rules:
+                genetic code (schema) → environmental adaptation (business
+                context) → reproductive success (data reuse).
               </p>
-              <p className="text-xs font-mono text-gray-500 leading-relaxed">
-                In nature, you cannot skip from seed to fruit. You cannot have flowers without
-                roots. The same physics governs metadata:{' '}
-                <span className="text-emerald-400/80">skip enrichment → lose trust</span>. Attempt
-                activation without lineage?{' '}
-                <span className="text-emerald-400/80">System rejects</span>. This visualization
-                encodes the non-negotiable sequencing of data maturity.
+              <p className="font-mono text-xs leading-relaxed text-gray-500">
+                In nature, you cannot skip from seed to fruit. You cannot have
+                flowers without roots. The same physics governs metadata:{' '}
+                <span className="text-emerald-400/80">
+                  skip enrichment → lose trust
+                </span>
+                . Attempt activation without lineage?{' '}
+                <span className="text-emerald-400/80">System rejects</span>.
+                This visualization encodes the non-negotiable sequencing of data
+                maturity.
               </p>
             </div>
           </div>
         </div>
 
         {/* Terminal Footer */}
-        <div className="h-9 border-t border-white/[0.08] bg-black/95 flex items-center justify-between px-6">
-          <span className="text-[11px] font-mono text-gray-700 tracking-[0.15em]">
+        <div className="flex h-9 items-center justify-between border-t border-white/[0.08] bg-black/95 px-6">
+          <span className="font-mono text-[11px] tracking-[0.15em] text-gray-700">
             © NEXUSCANON // LIFECYCLE MORPHOLOGY ANALYSIS
           </span>
-          <span className="text-[12px] font-mono text-gray-700">2025-12-07 // 14:22:03 UTC</span>
+          <span className="font-mono text-[12px] text-gray-700">
+            2025-12-07 // 14:22:03 UTC
+          </span>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

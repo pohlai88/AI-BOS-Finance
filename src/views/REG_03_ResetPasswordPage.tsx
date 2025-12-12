@@ -5,48 +5,53 @@
 // Visuals: Hazard stripes, electrical arcs, fuse box aesthetics
 // ============================================================================
 
-import { useState, FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AlertTriangle, ArrowLeft, Zap, Power, ShieldAlert } from 'lucide-react';
-import { motion, useMotionValue } from 'motion/react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
-import { EngineProvider, HighVoltageSystem } from '../components/auth/IntegratedEngine';
+import { useState, FormEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AlertTriangle, ArrowLeft, Zap, Power, ShieldAlert } from 'lucide-react'
+import { motion, useMotionValue } from 'motion/react'
+import { NexusIcon } from '@/components/nexus/NexusIcon'
+import {
+  EngineProvider,
+  HighVoltageSystem,
+} from '../components/auth/IntegratedEngine'
 
 // --- SUB-COMPONENT: HAZARD STRIPE ---
 const HazardStripe = () => (
   <div
-    className="h-2 w-full mb-6 opacity-80"
+    className="mb-6 h-2 w-full opacity-80"
     style={{
       backgroundImage:
         'repeating-linear-gradient(45deg, #000, #000 10px, #FFD700 10px, #FFD700 20px)',
     }}
   />
-);
+)
 
 export const ResetPasswordPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // SYSTEM STATE
-  const [email, setEmail] = useState('');
-  const [systemState, setSystemState] = useState<'idle' | 'charging' | 'discharging'>('idle');
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [email, setEmail] = useState('')
+  const [systemState, setSystemState] = useState<
+    'idle' | 'charging' | 'discharging'
+  >('idle')
+  const [isSuccess, setIsSuccess] = useState(false)
 
   // MOUSE PARALLAX
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-  };
+    setMousePos({ x: e.clientX, y: e.clientY })
+  }
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setSystemState('discharging'); // Trigger the arc blast
+    e.preventDefault()
+    setSystemState('discharging') // Trigger the arc blast
 
     // Simulate reset process
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000))
 
-    setIsSuccess(true);
-    setSystemState('idle'); // Calm down
-  };
+    setIsSuccess(true)
+    setSystemState('idle') // Calm down
+  }
 
   return (
     <EngineProvider
@@ -55,7 +60,7 @@ export const ResetPasswordPage = () => {
       shakeY={useMotionValue(0)}
     >
       <div
-        className="min-h-screen w-full bg-black relative overflow-hidden flex items-center justify-center"
+        className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black"
         onMouseMove={handleMouseMove}
       >
         {/* --- LAYER 1: HIGH VOLTAGE BACKGROUND --- */}
@@ -63,7 +68,7 @@ export const ResetPasswordPage = () => {
 
         {/* CRT Scanlines */}
         <div
-          className="absolute inset-0 pointer-events-none z-50 opacity-10"
+          className="pointer-events-none absolute inset-0 z-50 opacity-10"
           style={{
             background:
               'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
@@ -73,7 +78,7 @@ export const ResetPasswordPage = () => {
 
         {/* Grid Background */}
         <div
-          className="absolute inset-0 opacity-8"
+          className="opacity-8 absolute inset-0"
           style={{
             backgroundImage: `
               linear-gradient(#1a1a1a 0.5px, transparent 0.5px), 
@@ -91,7 +96,7 @@ export const ResetPasswordPage = () => {
           className="relative z-20 w-full max-w-[480px] px-6"
         >
           <div
-            className="bg-[#0a0a0a] border-2 p-8 relative overflow-hidden shadow-2xl"
+            className="relative overflow-hidden border-2 bg-[#0a0a0a] p-8 shadow-2xl"
             style={{
               borderColor: isSuccess ? '#28E7A2' : '#333',
               boxShadow: isSuccess
@@ -107,22 +112,33 @@ export const ResetPasswordPage = () => {
             <div className="mb-8">
               <Link
                 to="/login"
-                className="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest hover:text-white transition-colors mb-6"
+                className="mb-6 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-slate-500 transition-colors hover:text-white"
               >
                 <ArrowLeft size={12} />
                 <span>Abort Override</span>
               </Link>
 
-              <div className="flex justify-between items-start">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-white tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+                  <h1
+                    className="tracking-tight text-white"
+                    style={{ letterSpacing: '-0.02em' }}
+                  >
                     {isSuccess ? 'SYSTEM RESTORED' : 'EMERGENCY OVERRIDE'}
                   </h1>
                   <div
-                    className={`text-[10px] font-mono uppercase tracking-[0.2em] flex items-center gap-2 mt-2 ${isSuccess ? 'text-emerald-500' : 'text-rose-500'}`}
+                    className={`mt-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] ${isSuccess ? 'text-emerald-500' : 'text-rose-500'}`}
                   >
-                    {isSuccess ? <Zap size={10} /> : <AlertTriangle size={10} />}
-                    <span>{isSuccess ? 'POWER FLUSH COMPLETE' : 'LOCKOUT PROTOCOL ACTIVE'}</span>
+                    {isSuccess ? (
+                      <Zap size={10} />
+                    ) : (
+                      <AlertTriangle size={10} />
+                    )}
+                    <span>
+                      {isSuccess
+                        ? 'POWER FLUSH COMPLETE'
+                        : 'LOCKOUT PROTOCOL ACTIVE'}
+                    </span>
                   </div>
                 </div>
                 <NexusIcon size="sm" />
@@ -134,18 +150,18 @@ export const ResetPasswordPage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center py-8"
+                className="py-8 text-center"
               >
-                <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10">
                   <Power size={32} className="text-emerald-500" />
                 </div>
-                <p className="text-slate-400 text-sm mb-6">
+                <p className="mb-6 text-sm text-slate-400">
                   Reset frequency transmitted to: <br />
-                  <span className="text-emerald-400 font-mono">{email}</span>
+                  <span className="font-mono text-emerald-400">{email}</span>
                 </p>
                 <button
                   onClick={() => navigate('/login')}
-                  className="w-full py-4 bg-emerald-500 text-black uppercase tracking-widest text-xs hover:bg-emerald-400 transition-colors font-mono"
+                  className="w-full bg-emerald-500 py-4 font-mono text-xs uppercase tracking-widest text-black transition-colors hover:bg-emerald-400"
                   style={{ letterSpacing: '0.2em' }}
                 >
                   Return to Console
@@ -154,17 +170,20 @@ export const ResetPasswordPage = () => {
             ) : (
               /* FORM STATE */
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-rose-500/5 border border-rose-500/20 p-4 flex gap-3 items-start">
-                  <ShieldAlert className="text-rose-500 shrink-0 mt-0.5" size={16} />
-                  <p className="text-[11px] text-rose-200/80 leading-relaxed">
-                    WARNING: Manual override will flush current credentials. Authorization link will
-                    be transmitted via secure channel.
+                <div className="flex items-start gap-3 border border-rose-500/20 bg-rose-500/5 p-4">
+                  <ShieldAlert
+                    className="mt-0.5 shrink-0 text-rose-500"
+                    size={16}
+                  />
+                  <p className="text-[11px] leading-relaxed text-rose-200/80">
+                    WARNING: Manual override will flush current credentials.
+                    Authorization link will be transmitted via secure channel.
                   </p>
                 </div>
 
                 <div className="group relative">
                   <label
-                    className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2 block"
+                    className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-slate-500"
                     style={{ letterSpacing: '0.2em' }}
                   >
                     Target Designation (Email)
@@ -174,14 +193,16 @@ export const ResetPasswordPage = () => {
                     required
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value);
-                      setSystemState(e.target.value.length > 0 ? 'charging' : 'idle');
+                      setEmail(e.target.value)
+                      setSystemState(
+                        e.target.value.length > 0 ? 'charging' : 'idle'
+                      )
                     }}
                     placeholder="OPERATOR@NEXUS.COM"
-                    className="w-full bg-black border border-white/10 text-white p-4 text-sm font-mono focus:outline-none focus:border-rose-500/50 transition-all focus:bg-rose-500/5"
+                    className="w-full border border-white/10 bg-black p-4 font-mono text-sm text-white transition-all focus:border-rose-500/50 focus:bg-rose-500/5 focus:outline-none"
                   />
                   {/* Voltage Indicator Bar */}
-                  <div className="h-1 bg-[#111] mt-1 overflow-hidden relative">
+                  <div className="relative mt-1 h-1 overflow-hidden bg-[#111]">
                     <motion.div
                       className="h-full bg-rose-500"
                       initial={{ width: '0%' }}
@@ -202,23 +223,23 @@ export const ResetPasswordPage = () => {
                 <button
                   type="submit"
                   disabled={systemState === 'discharging' || email.length === 0}
-                  className="w-full group relative overflow-hidden"
+                  className="group relative w-full overflow-hidden"
                 >
                   <div
-                    className={`
-                     relative z-10 w-full py-5 flex items-center justify-center gap-3 
-                     text-xs font-mono uppercase tracking-[0.2em] border-2 transition-all duration-100
-                     ${
-                       systemState === 'discharging'
-                         ? 'bg-white text-black border-white'
-                         : 'bg-transparent border-rose-600 text-rose-500 hover:bg-rose-600 hover:text-black'
-                     }
-                   `}
+                    className={`relative z-10 flex w-full items-center justify-center gap-3 border-2 py-5 font-mono text-xs uppercase tracking-[0.2em] transition-all duration-100 ${
+                      systemState === 'discharging'
+                        ? 'border-white bg-white text-black'
+                        : 'border-rose-600 bg-transparent text-rose-500 hover:bg-rose-600 hover:text-black'
+                    } `}
                     style={{ letterSpacing: '0.2em' }}
                   >
                     {systemState === 'discharging' ? (
                       <>
-                        <Zap className="animate-pulse" size={14} fill="currentColor" />
+                        <Zap
+                          className="animate-pulse"
+                          size={14}
+                          fill="currentColor"
+                        />
                         <span>Discharging...</span>
                       </>
                     ) : (
@@ -232,7 +253,7 @@ export const ResetPasswordPage = () => {
             )}
 
             {/* FOOTER NAVIGATION */}
-            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between text-xs font-mono uppercase tracking-widest">
+            <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6 font-mono text-xs uppercase tracking-widest">
               <Link
                 to="/login"
                 className="flex items-center gap-2 transition-colors hover:text-orange-400"
@@ -246,7 +267,7 @@ export const ResetPasswordPage = () => {
 
             {/* TECHNICAL FOOTER */}
             <div
-              className="mt-4 text-center text-xs font-mono uppercase tracking-widest"
+              className="mt-4 text-center font-mono text-xs uppercase tracking-widest"
               style={{ color: '#333333', letterSpacing: '0.2em' }}
             >
               <div>Auth Protocol: Override</div>
@@ -254,28 +275,31 @@ export const ResetPasswordPage = () => {
 
             {/* FUSE BOX LABELS */}
             <div
-              className="absolute bottom-2 right-2 text-[8px] font-mono text-[#333] uppercase tracking-widest"
-              style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+              className="absolute bottom-2 right-2 font-mono text-[8px] uppercase tracking-widest text-[#333]"
+              style={{
+                writingMode: 'vertical-rl',
+                transform: 'rotate(180deg)',
+              }}
             >
               SERIES-9 BREAKER
             </div>
 
             {/* Screw Heads (Visual Detail) */}
-            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-[#222] flex items-center justify-center">
-              <div className="w-full h-[1px] bg-[#111] rotate-45" />
+            <div className="absolute left-2 top-2 flex h-2 w-2 items-center justify-center rounded-full bg-[#222]">
+              <div className="h-[1px] w-full rotate-45 bg-[#111]" />
             </div>
-            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#222] flex items-center justify-center">
-              <div className="w-full h-[1px] bg-[#111] rotate-12" />
+            <div className="absolute right-2 top-2 flex h-2 w-2 items-center justify-center rounded-full bg-[#222]">
+              <div className="h-[1px] w-full rotate-12 bg-[#111]" />
             </div>
-            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-[#222] flex items-center justify-center">
-              <div className="w-full h-[1px] bg-[#111] rotate-90" />
+            <div className="absolute bottom-2 left-2 flex h-2 w-2 items-center justify-center rounded-full bg-[#222]">
+              <div className="h-[1px] w-full rotate-90 bg-[#111]" />
             </div>
-            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-[#222] flex items-center justify-center">
-              <div className="w-full h-[1px] bg-[#111] rotate-0" />
+            <div className="absolute bottom-2 right-2 flex h-2 w-2 items-center justify-center rounded-full bg-[#222]">
+              <div className="h-[1px] w-full rotate-0 bg-[#111]" />
             </div>
           </div>
         </motion.div>
       </div>
     </EngineProvider>
-  );
-};
+  )
+}

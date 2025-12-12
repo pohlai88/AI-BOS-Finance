@@ -3,15 +3,15 @@ import { Btn } from './Btn'
 
 /**
  * 🛡️ THE CONTROL PLANE - Action Governance
- * 
+ *
  * This Storybook story acts as the "Contract" for the Btn component.
- * 
+ *
  * Governance Workflow:
  * 1. Developer creates/updates Btn.tsx
  * 2. Developer opens Storybook
  * 3. Developer verifies: "Does this match the design spec?"
  * 4. Only then is it merged into the App
- * 
+ *
  * This prevents "Fake Button" drift by forcing visual verification
  * before code enters production.
  */
@@ -50,7 +50,8 @@ as a button or creating arbitrary button styles.
     variant: {
       control: 'select',
       options: ['primary', 'secondary'],
-      description: 'Button variant - defines visual intent (main action vs alternative)',
+      description:
+        'Button variant - defines visual intent (main action vs alternative)',
     },
     size: {
       control: 'select',
@@ -77,7 +78,7 @@ type Story = StoryObj<typeof Btn>
 
 /**
  * 🧪 TEST CASE 1: Primary Actions
- * 
+ *
  * Main actions use brand green (high contrast, prominent).
  */
 export const Primary: Story = {
@@ -96,7 +97,7 @@ export const Primary: Story = {
 
 /**
  * 🧪 TEST CASE 2: Secondary Actions
- * 
+ *
  * Alternative actions use outlined style (subtle, less prominent).
  */
 export const Secondary: Story = {
@@ -107,7 +108,8 @@ export const Secondary: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Secondary button variant - alternative actions use outlined style.',
+        story:
+          'Secondary button variant - alternative actions use outlined style.',
       },
     },
   },
@@ -115,15 +117,21 @@ export const Secondary: Story = {
 
 /**
  * 🧪 TEST CASE 3: Size Variants
- * 
+ *
  * All three size variants for different use cases.
  */
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Btn variant="primary" size="sm">Small</Btn>
-      <Btn variant="primary" size="md">Medium</Btn>
-      <Btn variant="primary" size="lg">Large</Btn>
+      <Btn variant="primary" size="sm">
+        Small
+      </Btn>
+      <Btn variant="primary" size="md">
+        Medium
+      </Btn>
+      <Btn variant="primary" size="lg">
+        Large
+      </Btn>
     </div>
   ),
   parameters: {
@@ -137,7 +145,7 @@ export const Sizes: Story = {
 
 /**
  * 🧪 TEST CASE 4: Loading State
- * 
+ *
  * Loading state shows spinner and disables interaction.
  */
 export const Loading: Story = {
@@ -149,7 +157,8 @@ export const Loading: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Loading state with spinner - button is disabled during loading.',
+        story:
+          'Loading state with spinner - button is disabled during loading.',
       },
     },
   },
@@ -157,20 +166,25 @@ export const Loading: Story = {
 
 /**
  * 🧪 TEST CASE 5: Disabled State
- * 
+ *
  * Disabled state prevents interaction.
  */
 export const Disabled: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Btn variant="primary" disabled>Disabled Primary</Btn>
-      <Btn variant="secondary" disabled>Disabled Secondary</Btn>
+      <Btn variant="primary" disabled>
+        Disabled Primary
+      </Btn>
+      <Btn variant="secondary" disabled>
+        Disabled Secondary
+      </Btn>
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Disabled state - buttons are non-interactive with reduced opacity.',
+        story:
+          'Disabled state - buttons are non-interactive with reduced opacity.',
       },
     },
   },
@@ -178,7 +192,7 @@ export const Disabled: Story = {
 
 /**
  * 🧪 TEST CASE 6: All Variants Comparison
- * 
+ *
  * Side-by-side comparison of all variants.
  * This is the "Visual Audit" - see all button styles in one place.
  */
@@ -190,12 +204,20 @@ export const AllVariants: Story = {
         <Btn variant="secondary">Secondary</Btn>
       </div>
       <div className="flex items-center gap-4">
-        <Btn variant="primary" size="sm">Primary Small</Btn>
-        <Btn variant="secondary" size="sm">Secondary Small</Btn>
+        <Btn variant="primary" size="sm">
+          Primary Small
+        </Btn>
+        <Btn variant="secondary" size="sm">
+          Secondary Small
+        </Btn>
       </div>
       <div className="flex items-center gap-4">
-        <Btn variant="primary" loading>Loading</Btn>
-        <Btn variant="primary" disabled>Disabled</Btn>
+        <Btn variant="primary" loading>
+          Loading
+        </Btn>
+        <Btn variant="primary" disabled>
+          Disabled
+        </Btn>
       </div>
     </div>
   ),
@@ -210,7 +232,7 @@ export const AllVariants: Story = {
 
 /**
  * 🧪 TEST CASE 7: Keyboard Accessibility
- * 
+ *
  * Verify buttons are keyboard accessible (Tab, Enter, Space).
  * This is tested manually - buttons should:
  * - Receive focus on Tab
@@ -225,7 +247,8 @@ export const KeyboardAccessible: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Keyboard accessibility test - Tab to focus, Enter/Space to activate. Focus ring should be visible.',
+        story:
+          'Keyboard accessibility test - Tab to focus, Enter/Space to activate. Focus ring should be visible.',
       },
     },
   },

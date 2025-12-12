@@ -4,39 +4,64 @@
 // Wired to Truth Engine via useRiskTelemetry hook
 // ============================================================================
 
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Shield, Lock, Database, Terminal } from 'lucide-react';
-import { NexusButton } from '@/components/nexus/NexusButton';
-import { useRiskTelemetry, type TelemetryEvent, type Severity } from '@/hooks/useRiskTelemetry';
-import { APP_CONFIG } from '@/constants/app';
-import { ThreatRadar } from '@/components/radar';
+import { motion, AnimatePresence } from 'motion/react'
+import { ArrowRight, Shield, Lock, Database, Terminal } from 'lucide-react'
+import { NexusButton } from '@/components/nexus/NexusButton'
+import {
+  useRiskTelemetry,
+  type TelemetryEvent,
+  type Severity,
+} from '@/hooks/useRiskTelemetry'
+import { APP_CONFIG } from '@/constants/app'
+import { ThreatRadar } from '@/components/radar'
 
 // --- SEVERITY COLOR MAP ---
-const severityColors: Record<Severity, { text: string; bg: string; border: string }> = {
-  low: { text: 'text-nexus-green', bg: 'bg-nexus-green', border: 'border-nexus-green' },
-  medium: { text: 'text-yellow-400', bg: 'bg-yellow-400', border: 'border-yellow-400' },
-  high: { text: 'text-orange-400', bg: 'bg-orange-400', border: 'border-orange-400' },
-  critical: { text: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500' },
-};
+const severityColors: Record<
+  Severity,
+  { text: string; bg: string; border: string }
+> = {
+  low: {
+    text: 'text-nexus-green',
+    bg: 'bg-nexus-green',
+    border: 'border-nexus-green',
+  },
+  medium: {
+    text: 'text-yellow-400',
+    bg: 'bg-yellow-400',
+    border: 'border-yellow-400',
+  },
+  high: {
+    text: 'text-orange-400',
+    bg: 'bg-orange-400',
+    border: 'border-orange-400',
+  },
+  critical: {
+    text: 'text-red-500',
+    bg: 'bg-red-500',
+    border: 'border-red-500',
+  },
+}
 
 // ThreatRadar uses canvas-based RadarDisplay with threat logic
 
 // --- SUB-COMPONENT: THE TERMINAL ---
 const RiskTerminal = ({ events }: { events: TelemetryEvent[] }) => (
-  <div className="border-x border-b border-nexus-structure bg-[#050505] p-4 h-[180px] overflow-hidden flex flex-col font-mono text-[11px]">
+  <div className="border-nexus-structure flex h-[180px] flex-col overflow-hidden border-x border-b bg-[#050505] p-4 font-mono text-[11px]">
     {/* Header */}
-    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-nexus-structure">
+    <div className="border-nexus-structure mb-3 flex items-center gap-2 border-b pb-2">
       <div className="flex gap-1.5">
-        <div className="w-2 h-2 rounded-full bg-red-500/80" />
-        <div className="w-2 h-2 rounded-full bg-yellow-500/80" />
-        <div className="w-2 h-2 rounded-full bg-green-500/80" />
+        <div className="h-2 w-2 rounded-full bg-red-500/80" />
+        <div className="h-2 w-2 rounded-full bg-yellow-500/80" />
+        <div className="h-2 w-2 rounded-full bg-green-500/80" />
       </div>
-      <Terminal className="w-3 h-3 text-nexus-noise ml-2" />
-      <span className="text-nexus-noise uppercase tracking-widest text-[9px]">system.log</span>
+      <Terminal className="text-nexus-noise ml-2 h-3 w-3" />
+      <span className="text-nexus-noise text-[9px] uppercase tracking-widest">
+        system.log
+      </span>
     </div>
-    
+
     {/* Event Feed */}
-    <div className="flex-1 overflow-hidden relative">
+    <div className="relative flex-1 overflow-hidden">
       <AnimatePresence initial={false}>
         {events.slice(0, 5).map((event) => (
           <motion.div
@@ -47,51 +72,59 @@ const RiskTerminal = ({ events }: { events: TelemetryEvent[] }) => (
             transition={{ duration: 0.3 }}
             className="flex gap-2 py-1"
           >
-            <span className="text-nexus-structure min-w-[60px]">{event.time}</span>
-            <span className={`font-bold min-w-[70px] ${severityColors[event.severity].text}`}>
+            <span className="text-nexus-structure min-w-[60px]">
+              {event.time}
+            </span>
+            <span
+              className={`min-w-[70px] font-bold ${severityColors[event.severity].text}`}
+            >
               [{event.severity.toUpperCase()}]
             </span>
-            <span className="text-nexus-signal truncate flex-1">{event.message}</span>
+            <span className="text-nexus-signal flex-1 truncate">
+              {event.message}
+            </span>
           </motion.div>
         ))}
       </AnimatePresence>
-      
+
       {/* Scanline overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] pointer-events-none opacity-30" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] opacity-30" />
     </div>
-    
+
     {/* Footer */}
-    <div className="flex items-center gap-2 pt-2 border-t border-nexus-structure mt-auto">
+    <div className="border-nexus-structure mt-auto flex items-center gap-2 border-t pt-2">
       <motion.div
-        className="w-1.5 h-1.5 rounded-full bg-nexus-green"
+        className="bg-nexus-green h-1.5 w-1.5 rounded-full"
         animate={{ opacity: [1, 0.3, 1] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       />
-      <span className="text-[9px] text-nexus-noise uppercase tracking-widest">Live monitoring active</span>
+      <span className="text-nexus-noise text-[9px] uppercase tracking-widest">
+        Live monitoring active
+      </span>
     </div>
   </div>
-);
+)
 
 // --- MAIN HERO SECTION ---
 export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
-  const { events, activeRisks, systemStatus } = useRiskTelemetry();
+  const { events, activeRisks, systemStatus } = useRiskTelemetry()
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center px-6 md:px-12 border-b border-nexus-structure overflow-hidden">
+    <section className="border-nexus-structure relative flex min-h-[90vh] flex-col justify-center overflow-hidden border-b px-6 md:px-12">
       {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-      
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+
       {/* Metadata Decoration */}
-      <div className="absolute top-32 left-8 hidden lg:block">
-        <motion.div 
-          className="w-[1px] h-20 bg-gradient-to-b from-nexus-green to-transparent"
+      <div className="absolute left-8 top-32 hidden lg:block">
+        <motion.div
+          className="from-nexus-green h-20 w-[1px] bg-gradient-to-b to-transparent"
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ transformOrigin: 'top' }}
         />
-        <motion.p 
-          className="mt-3 font-mono text-[9px] text-nexus-noise tracking-widest -rotate-90 origin-top-left translate-y-full"
+        <motion.p
+          className="text-nexus-noise mt-3 origin-top-left translate-y-full -rotate-90 font-mono text-[9px] tracking-widest"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
@@ -100,26 +133,25 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
         </motion.p>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-12 lg:py-0">
-        
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 py-12 lg:grid-cols-12 lg:gap-12 lg:py-0">
         {/* LEFT COLUMN: THE PITCH */}
-        <motion.div 
-          className="lg:col-span-7 space-y-6 z-10 flex flex-col justify-center"
+        <motion.div
+          className="z-10 flex flex-col justify-center space-y-6 lg:col-span-7"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {/* Micro-Label */}
           <div className="flex items-center gap-3">
-            <div className="h-[1px] w-8 bg-nexus-green" />
-            <span className="text-nexus-green font-mono text-[11px] tracking-widest uppercase">
+            <div className="bg-nexus-green h-[1px] w-8" />
+            <span className="text-nexus-green font-mono text-[11px] uppercase tracking-widest">
               Immutable Ledger Control
             </span>
           </div>
 
           {/* Headline */}
-          <motion.h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.9] text-white"
+          <motion.h1
+            className="text-5xl font-medium leading-[0.9] tracking-tighter text-white md:text-7xl lg:text-8xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -129,18 +161,19 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
           </motion.h1>
 
           {/* Subhead */}
-          <motion.p 
-            className="text-lg md:text-xl text-nexus-noise max-w-xl leading-relaxed border-l border-nexus-structure pl-6"
+          <motion.p
+            className="text-nexus-noise border-nexus-structure max-w-xl border-l pl-6 text-lg leading-relaxed md:text-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Eliminate retroactive data drift. NexusCanon cryptographically freezes your financial
-            state, rendering audits instantaneous and irrefutable.
+            Eliminate retroactive data drift. NexusCanon cryptographically
+            freezes your financial state, rendering audits instantaneous and
+            irrefutable.
           </motion.p>
 
           {/* CTAs */}
-          <motion.div 
+          <motion.div
             className="flex flex-wrap items-center gap-4 pt-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,14 +182,18 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
             <NexusButton variant="primary" size="lg" onClick={onGetStarted}>
               Initialize Protocol
             </NexusButton>
-            <NexusButton variant="secondary" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
+            <NexusButton
+              variant="secondary"
+              size="lg"
+              icon={<ArrowRight className="h-4 w-4" />}
+            >
               Enter the Canon
             </NexusButton>
           </motion.div>
-          
+
           {/* Metrics */}
-          <motion.div 
-            className="flex gap-6 lg:gap-8 pt-6 border-t border-nexus-structure"
+          <motion.div
+            className="border-nexus-structure flex gap-6 border-t pt-6 lg:gap-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -167,10 +204,14 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
               { icon: Database, label: 'RECORDS', value: '1.2M' },
             ].map((m, i) => (
               <div key={i} className="flex items-center gap-2">
-                <m.icon className="w-4 h-4 text-nexus-green/50" />
+                <m.icon className="text-nexus-green/50 h-4 w-4" />
                 <div>
-                  <div className="text-[9px] font-mono text-nexus-structure uppercase tracking-widest">{m.label}</div>
-                  <div className="text-sm text-nexus-signal font-mono">{m.value}</div>
+                  <div className="text-nexus-structure font-mono text-[9px] uppercase tracking-widest">
+                    {m.label}
+                  </div>
+                  <div className="text-nexus-signal font-mono text-sm">
+                    {m.value}
+                  </div>
                 </div>
               </div>
             ))}
@@ -178,25 +219,30 @@ export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
         </motion.div>
 
         {/* RIGHT COLUMN: THE BRAIN VISUALIZATION - MAXIMUM SIZE */}
-        <motion.div 
-          className="lg:col-span-5 relative flex items-center justify-end"
+        <motion.div
+          className="relative flex items-center justify-end lg:col-span-5"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           {/* THE STACK: Radar + Terminal - Full width, no constraints */}
-          <div className="flex flex-col shadow-2xl shadow-nexus-green/5 w-full">
-            <ThreatRadar activeRisks={activeRisks} showLog={false} size={560} className="w-full" />
+          <div className="shadow-nexus-green/5 flex w-full flex-col shadow-2xl">
+            <ThreatRadar
+              activeRisks={activeRisks}
+              showLog={false}
+              size={560}
+              className="w-full"
+            />
             <RiskTerminal events={events} />
           </div>
-          
+
           {/* Decorative Glow */}
-          <div className="absolute -inset-8 bg-nexus-green/5 blur-3xl -z-10 rounded-full opacity-50" />
+          <div className="bg-nexus-green/5 absolute -inset-8 -z-10 rounded-full opacity-50 blur-3xl" />
         </motion.div>
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-nexus-void to-transparent" />
+      <div className="from-nexus-void absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t to-transparent" />
     </section>
-  );
-};
+  )
+}

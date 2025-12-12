@@ -1,14 +1,14 @@
-import { Github, Twitter, Linkedin } from 'lucide-react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { Github, Twitter, Linkedin } from 'lucide-react'
+import { NexusIcon } from '@/components/nexus/NexusIcon'
 
 export function AppFooter() {
   return (
     <footer className="border-t border-[#1F1F1F] bg-black">
-      <div className="px-6 py-4 flex items-center justify-between">
+      <div className="flex items-center justify-between px-6 py-4">
         {/* LEFT: Brand + Tagline */}
         <div className="flex items-center gap-4">
           <NexusIcon size="sm" />
-          <span className="font-mono text-[#888] text-[10px] uppercase tracking-widest">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[#888]">
             NexusCanon
           </span>
         </div>
@@ -22,23 +22,23 @@ export function AppFooter() {
         </nav>
       </div>
     </footer>
-  );
+  )
 }
 
 // --- FOOTER LINK COMPONENT ---
 
 interface FooterLinkProps {
-  href: string;
-  children: React.ReactNode;
+  href: string
+  children: React.ReactNode
 }
 
 function FooterLink({ href, children }: FooterLinkProps) {
   return (
     <a
       href={href}
-      className="text-[#666] hover:text-[#28E7A2] transition-colors text-[11px] font-mono"
+      className="font-mono text-[11px] text-[#666] transition-colors hover:text-[#28E7A2]"
     >
       {children}
     </a>
-  );
+  )
 }

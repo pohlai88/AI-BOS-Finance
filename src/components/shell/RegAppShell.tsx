@@ -5,18 +5,21 @@
 // Per Guidelines.md: Forensic aesthetic, no SaaS blob, engineered precision
 // ============================================================================
 
-import { ReactNode } from 'react';
-import { MechanicalOrchestra } from '../auth/MechanicalOrchestra';
+import { ReactNode } from 'react'
+import { MechanicalOrchestra } from '../auth/MechanicalOrchestra'
 
 interface RegAppShellProps {
-  children: ReactNode;
-  showOrchestra?: boolean; // Toggle the right panel visualization
+  children: ReactNode
+  showOrchestra?: boolean // Toggle the right panel visualization
 }
 
-export const RegAppShell = ({ children, showOrchestra = true }: RegAppShellProps) => {
+export const RegAppShell = ({
+  children,
+  showOrchestra = true,
+}: RegAppShellProps) => {
   return (
     <div
-      className="min-h-screen w-full flex"
+      className="flex min-h-screen w-full"
       style={{
         backgroundColor: '#000000', // The Void
         color: 'var(--prism-signal)',
@@ -24,10 +27,12 @@ export const RegAppShell = ({ children, showOrchestra = true }: RegAppShellProps
     >
       {/* LEFT PANEL - The Control Panel */}
       <div
-        className="flex-1 flex items-center justify-center relative"
+        className="relative flex flex-1 items-center justify-center"
         style={{
           backgroundColor: '#000000',
-          borderRight: showOrchestra ? '1px solid var(--prism-structure-primary)' : 'none',
+          borderRight: showOrchestra
+            ? '1px solid var(--prism-structure-primary)'
+            : 'none',
         }}
       >
         {/* Form Content (Outlet) */}
@@ -36,11 +41,14 @@ export const RegAppShell = ({ children, showOrchestra = true }: RegAppShellProps
 
       {/* RIGHT PANEL - The Mechanical Orchestra */}
       {showOrchestra && (
-        <div className="flex-1 relative overflow-hidden" style={{ backgroundColor: '#000000' }}>
+        <div
+          className="relative flex-1 overflow-hidden"
+          style={{ backgroundColor: '#000000' }}
+        >
           {/* Orchestra Visualization */}
           <MechanicalOrchestra />
         </div>
       )}
     </div>
-  );
-};
+  )
+}

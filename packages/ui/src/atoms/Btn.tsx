@@ -1,9 +1,9 @@
-import * as React from "react"
+import * as React from 'react'
 import { cn } from '../lib/utils'
 
 /**
  * 🛡️ The Allowed Variants (No "Large-Bold-Blue-Button" allowed)
- * 
+ *
  * These are the ONLY button styles allowed in the system.
  * No arbitrary combinations. No guessing colors or sizes.
  */
@@ -37,11 +37,11 @@ interface BtnProps extends React.ComponentProps<'button'> {
 
 /**
  * Btn Component - Action Enforcement Layer
- * 
+ *
  * 🛡️ Governance: This component ENFORCES the action system.
  * Developers CANNOT use Surface as a fake button.
  * They MUST use Btn for all interactive actions.
- * 
+ *
  * Features:
  * - ✅ Keyboard accessible (Tab, Enter, Space)
  * - ✅ Focus states (visible focus ring)
@@ -49,7 +49,7 @@ interface BtnProps extends React.ComponentProps<'button'> {
  * - ✅ Loading states (spinner + disabled)
  * - ✅ Consistent padding (size variants)
  * - ✅ Semantic HTML (<button> tag)
- * 
+ *
  * Changing action tokens in globals.css updates ALL buttons automatically.
  * This is the "Action Atom" - no drift allowed.
  */
@@ -62,19 +62,20 @@ export const Btn = ({
   children,
   ...props
 }: BtnProps) => {
-
   // 🔒 LOCKED: Variant styles use governed colors (action-primary/secondary)
   // No arbitrary colors allowed. No guessing button styles.
   const variants = {
-    primary: "bg-action-primary text-action-primary-fg hover:bg-action-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2",
-    secondary: "bg-action-secondary text-action-secondary-fg border border-action-secondary-border hover:bg-action-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-secondary-border focus-visible:ring-offset-2",
+    primary:
+      'bg-action-primary text-action-primary-fg hover:bg-action-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2',
+    secondary:
+      'bg-action-secondary text-action-secondary-fg border border-action-secondary-border hover:bg-action-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-secondary-border focus-visible:ring-offset-2',
   }
 
   // 🔒 LOCKED: Size variants use consistent padding
   const sizes = {
-    sm: "h-8 px-3 text-sm",
-    md: "h-10 px-4 text-base",
-    lg: "h-12 px-6 text-lg",
+    sm: 'h-8 px-3 text-sm',
+    md: 'h-10 px-4 text-base',
+    lg: 'h-12 px-6 text-lg',
   }
 
   const isDisabled = disabled || loading
@@ -83,8 +84,8 @@ export const Btn = ({
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-action font-medium transition-all",
-        "disabled:pointer-events-none disabled:opacity-50",
+        'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-action font-medium transition-all',
+        'disabled:pointer-events-none disabled:opacity-50',
         variants[variant],
         sizes[size],
         className
@@ -95,7 +96,7 @@ export const Btn = ({
     >
       {loading && (
         <svg
-          className="animate-spin h-4 w-4"
+          className="h-4 w-4 animate-spin"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

@@ -1,5 +1,5 @@
-import React from 'react';
-import { CanonRecord } from '../../data/mockCanonMatrix';
+import React from 'react'
+import { CanonRecord } from '../../data/mockCanonMatrix'
 import {
   ArrowDown,
   Shield,
@@ -10,69 +10,72 @@ import {
   Anchor,
   Ban,
   GitCommit,
-} from 'lucide-react';
+} from 'lucide-react'
 
 interface CanonDetailPanelProps {
-  record: CanonRecord | null;
-  onClose?: () => void;
+  record: CanonRecord | null
+  onClose?: () => void
 }
 
 export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
   if (!record) {
     return (
-      <div className="h-full border-l border-[#1F1F1F] bg-[#050505] p-8 flex flex-col items-center justify-center text-center">
-        <div className="w-16 h-16 rounded-full bg-[#111] border border-[#333] flex items-center justify-center mb-4">
-          <Layers className="w-6 h-6 text-[#666]" />
+      <div className="flex h-full flex-col items-center justify-center border-l border-[#1F1F1F] bg-[#050505] p-8 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-[#333] bg-[#111]">
+          <Layers className="h-6 w-6 text-[#666]" />
         </div>
-        <h3 className="text-[#888] font-mono text-sm uppercase tracking-wider mb-2">
+        <h3 className="mb-2 font-mono text-sm uppercase tracking-wider text-[#888]">
           No Canon Selected
         </h3>
-        <p className="text-[#666] text-xs max-w-[200px]">
+        <p className="max-w-[200px] text-xs text-[#666]">
           Select a row from the matrix to view its governance DNA.
         </p>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="h-full border-l border-[#1F1F1F] bg-[#050505] flex flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden border-l border-[#1F1F1F] bg-[#050505]">
       {/* Header - Fixed */}
-      <div className="p-6 border-b border-[#1F1F1F] bg-[#0A0A0A]">
-        <div className="flex items-center justify-between mb-4">
-          <span className="font-mono text-[10px] text-[#28E7A2] uppercase tracking-widest">
+      <div className="border-b border-[#1F1F1F] bg-[#0A0A0A] p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[#28E7A2]">
             {record.id}
           </span>
           <div
-            className={`px-2 py-0.5 border text-[10px] font-mono uppercase tracking-wider rounded-sm
-            ${record.status === 'ACTIVE' ? 'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]' : 'border-[#666] text-[#666]'}`}
+            className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${record.status === 'ACTIVE' ? 'border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]' : 'border-[#666] text-[#666]'}`}
           >
             {record.status}
           </div>
         </div>
-        <h2 className="text-xl text-white font-medium leading-tight mb-2">{record.name}</h2>
-        <p className="text-[#888] text-xs leading-relaxed border-l-2 border-[#333] pl-3 mt-3">
+        <h2 className="mb-2 text-xl font-medium leading-tight text-white">
+          {record.name}
+        </h2>
+        <p className="mt-3 border-l-2 border-[#333] pl-3 text-xs leading-relaxed text-[#888]">
           {record.description}
         </p>
       </div>
 
       {/* Scrollable Circuit Board Content */}
-      <div className="flex-1 overflow-y-auto p-0 relative">
+      <div className="relative flex-1 overflow-y-auto p-0">
         {/* The Golden Thread Line */}
-        <div className="absolute left-8 top-0 bottom-0 w-[1px] bg-[#1F1F1F] z-0" />
+        <div className="absolute bottom-0 left-8 top-0 z-0 w-[1px] bg-[#1F1F1F]" />
 
         {/* Node 1: Standards (The Source) */}
         <div className="relative z-10 px-8 py-8">
-          <div className="absolute left-[31px] top-10 w-2 h-2 rounded-full bg-[#333] border border-[#666]" />
+          <div className="absolute left-[31px] top-10 h-2 w-2 rounded-full border border-[#666] bg-[#333]" />
           <div className="pl-8">
-            <h4 className="font-mono text-[10px] text-[#666] uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Shield className="w-3 h-3" /> Policy Source
+            <h4 className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#666]">
+              <Shield className="h-3 w-3" /> Policy Source
             </h4>
 
-            <div className="bg-[#0F0F0F] border border-[#1F1F1F] rounded-sm p-4 hover:border-[#333] transition-colors">
+            <div className="rounded-sm border border-[#1F1F1F] bg-[#0F0F0F] p-4 transition-colors hover:border-[#333]">
               <div className="mb-3">
-                <div className="text-[10px] text-[#666] uppercase mb-1">Primary Standard</div>
-                <div className="text-sm text-white font-medium flex items-center gap-2">
-                  <FileText className="w-3 h-3 text-[#28E7A2]" />
+                <div className="mb-1 text-[10px] uppercase text-[#666]">
+                  Primary Standard
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-white">
+                  <FileText className="h-3 w-3 text-[#28E7A2]" />
                   {record.primaryStandard}
                 </div>
               </div>
@@ -80,17 +83,18 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
                 {record.supportingFrameworks.map((fw, i) => (
                   <span
                     key={i}
-                    className="px-1.5 py-0.5 bg-[#1A1A1A] border border-[#333] text-[10px] text-[#BBB] rounded-sm"
+                    className="rounded-sm border border-[#333] bg-[#1A1A1A] px-1.5 py-0.5 text-[10px] text-[#BBB]"
                   >
                     {fw}
                   </span>
                 ))}
               </div>
-              <div className="mt-3 pt-3 border-t border-[#1F1F1F] flex items-center justify-between">
-                <span className="text-[10px] text-[#666] uppercase">Weight</span>
+              <div className="mt-3 flex items-center justify-between border-t border-[#1F1F1F] pt-3">
+                <span className="text-[10px] uppercase text-[#666]">
+                  Weight
+                </span>
                 <span
-                  className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border 
-                  ${record.riskWeight === 'CRITICAL' ? 'border-red-900 bg-red-900/10 text-red-500' : 'border-blue-900 bg-blue-900/10 text-blue-400'}`}
+                  className={`rounded-sm border px-1.5 py-0.5 font-mono text-[10px] uppercase ${record.riskWeight === 'CRITICAL' ? 'border-red-900 bg-red-900/10 text-red-500' : 'border-blue-900 bg-blue-900/10 text-blue-400'}`}
                 >
                   {record.riskWeight}
                 </span>
@@ -101,28 +105,32 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
 
         {/* Node 2: Inheritance (The Logic) */}
         <div className="relative z-10 px-8 pb-8">
-          <div className="absolute left-[31px] top-2 w-2 h-2 rounded-full bg-[#28E7A2] shadow-[0_0_10px_rgba(40,231,162,0.3)]" />
+          <div className="absolute left-[31px] top-2 h-2 w-2 rounded-full bg-[#28E7A2] shadow-[0_0_10px_rgba(40,231,162,0.3)]" />
           <div className="pl-8">
-            <h4 className="font-mono text-[10px] text-[#28E7A2] uppercase tracking-widest mb-3 flex items-center gap-2">
-              <GitCommit className="w-3 h-3" /> Logic Node
+            <h4 className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#28E7A2]">
+              <GitCommit className="h-3 w-3" /> Logic Node
             </h4>
 
             <div className="space-y-1">
               <div
-                className={`p-3 border-l-2 ${record.type === 'Group' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs`}
+                className={`border-l-2 p-3 ${record.type === 'Group' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs`}
               >
-                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Group</span>
+                <span className="mb-1 block font-mono text-[9px] uppercase text-[#666]">
+                  Group
+                </span>
                 <span className="text-[#EEE]">
-                  {record.type === 'Group' ? record.name : record.parentId || 'Parent Group'}
+                  {record.type === 'Group'
+                    ? record.name
+                    : record.parentId || 'Parent Group'}
                 </span>
               </div>
 
-              <div className="ml-1 pl-2 border-l border-[#333] border-dashed h-2" />
+              <div className="ml-1 h-2 border-l border-dashed border-[#333] pl-2" />
 
               <div
-                className={`p-3 border-l-2 ${record.type === 'Transaction' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-2`}
+                className={`border-l-2 p-3 ${record.type === 'Transaction' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} ml-2 border-y border-r border-[#1F1F1F] text-xs`}
               >
-                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">
+                <span className="mb-1 block font-mono text-[9px] uppercase text-[#666]">
                   Transaction
                 </span>
                 <span className="text-[#EEE]">
@@ -134,12 +142,14 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
                 </span>
               </div>
 
-              <div className="ml-3 pl-2 border-l border-[#333] border-dashed h-2" />
+              <div className="ml-3 h-2 border-l border-dashed border-[#333] pl-2" />
 
               <div
-                className={`p-3 border-l-2 ${record.type === 'Cell' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} border-y border-r border-[#1F1F1F] text-xs ml-4`}
+                className={`border-l-2 p-3 ${record.type === 'Cell' ? 'border-l-[#28E7A2] bg-[#28E7A2]/5' : 'border-l-[#333] bg-[#0A0A0A] opacity-60'} ml-4 border-y border-r border-[#1F1F1F] text-xs`}
               >
-                <span className="font-mono text-[9px] text-[#666] uppercase block mb-1">Cell</span>
+                <span className="mb-1 block font-mono text-[9px] uppercase text-[#666]">
+                  Cell
+                </span>
                 <span className="text-[#EEE]">
                   {record.type === 'Cell' ? record.name : 'Target Field'}
                 </span>
@@ -151,27 +161,33 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
         {/* Node 3: Binding (The Anchor) */}
         <div className="relative z-10 px-8 pb-12">
           {/* Terminal Point */}
-          <div className="absolute left-[29px] top-2 w-3 h-3 border border-[#28E7A2] bg-[#050505] flex items-center justify-center">
-            <div className="w-1 h-1 bg-[#28E7A2]" />
+          <div className="absolute left-[29px] top-2 flex h-3 w-3 items-center justify-center border border-[#28E7A2] bg-[#050505]">
+            <div className="h-1 w-1 bg-[#28E7A2]" />
           </div>
 
           <div className="pl-8">
-            <h4 className="font-mono text-[10px] text-[#666] uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Anchor className="w-3 h-3" /> Binding Point
+            <h4 className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#666]">
+              <Anchor className="h-3 w-3" /> Binding Point
             </h4>
 
             {record.bindable ? (
-              <div className="bg-[#0F0F0F] border border-[#1F1F1F] p-4">
-                <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border border-[#1F1F1F] bg-[#0F0F0F] p-4">
+                <div className="mb-4 grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-[10px] text-[#666] uppercase mb-1">Systems</div>
+                    <div className="mb-1 text-[10px] uppercase text-[#666]">
+                      Systems
+                    </div>
                     <div className="text-xs text-[#EEE]">
-                      {record.usage.systems.length > 0 ? record.usage.systems.join(', ') : 'None'}
+                      {record.usage.systems.length > 0
+                        ? record.usage.systems.join(', ')
+                        : 'None'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-[#666] uppercase mb-1">GL Accounts</div>
-                    <div className="text-xs text-[#28E7A2] font-mono">
+                    <div className="mb-1 text-[10px] uppercase text-[#666]">
+                      GL Accounts
+                    </div>
+                    <div className="font-mono text-xs text-[#28E7A2]">
                       {record.usage.glAccounts.length > 0
                         ? record.usage.glAccounts.join(', ')
                         : '—'}
@@ -180,23 +196,25 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
                 </div>
 
                 {record.usage.riskSignals > 0 && (
-                  <div className="p-2 bg-red-900/10 border border-red-900/30 flex items-center gap-3">
-                    <AlertTriangle className="w-3 h-3 text-red-500" />
-                    <span className="text-[10px] text-red-400 font-mono uppercase">
+                  <div className="flex items-center gap-3 border border-red-900/30 bg-red-900/10 p-2">
+                    <AlertTriangle className="h-3 w-3 text-red-500" />
+                    <span className="font-mono text-[10px] uppercase text-red-400">
                       {record.usage.riskSignals} Risk Signals Active
                     </span>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="border border-[#1F1F1F] bg-[#111] p-4 flex items-center gap-3 opacity-60">
-                <Ban className="w-4 h-4 text-[#666]" />
-                <span className="text-xs text-[#666]">Abstract Canon. Not bindable to ledger.</span>
+              <div className="flex items-center gap-3 border border-[#1F1F1F] bg-[#111] p-4 opacity-60">
+                <Ban className="h-4 w-4 text-[#666]" />
+                <span className="text-xs text-[#666]">
+                  Abstract Canon. Not bindable to ledger.
+                </span>
               </div>
             )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -4,11 +4,11 @@
 // IFRS/MFRS Compliant Consolidation & Validation
 // ============================================================================
 
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { MetaAppShell } from '../components/shell/MetaAppShell';
-import { CardSection } from '../components/nexus/CardSection';
-import { NexusBadge } from '../components/nexus/NexusBadge';
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { MetaAppShell } from '../components/shell/MetaAppShell'
+import { CardSection } from '../components/nexus/CardSection'
+import { NexusBadge } from '../components/nexus/NexusBadge'
 import {
   ArrowLeft,
   Building2,
@@ -25,25 +25,25 @@ import {
   Shield,
   Edit2,
   ExternalLink,
-} from 'lucide-react';
+} from 'lucide-react'
 import {
   MOCK_ENTITY_GOVERNANCE,
   getEntityGovernance,
   computeEntityProperties,
-} from '../data/mockEntityGovernance';
-import type { EntityGovernance } from '../types/entity-governance';
-import { motion, AnimatePresence } from 'motion/react';
+} from '../data/mockEntityGovernance'
+import type { EntityGovernance } from '../types/entity-governance'
+import { motion, AnimatePresence } from 'motion/react'
 
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
 
-type TabId = 'profile' | 'ownership' | 'officers' | 'documents';
+type TabId = 'profile' | 'ownership' | 'officers' | 'documents'
 
 interface TabState {
-  isDirty: boolean;
-  isSaving: boolean;
-  saveSuccess: boolean;
+  isDirty: boolean
+  isSaving: boolean
+  saveSuccess: boolean
 }
 
 // ============================================================================
@@ -51,23 +51,23 @@ interface TabState {
 // ============================================================================
 
 export function EntityMasterPage() {
-  const { entityId } = useParams<{ entityId: string }>();
-  const navigate = useNavigate();
+  const { entityId } = useParams<{ entityId: string }>()
+  const navigate = useNavigate()
 
   // ============================================================================
   // STATE MANAGEMENT
   // ============================================================================
 
-  const [activeTab, setActiveTab] = useState<TabId>('profile');
-  const [entity, setEntity] = useState<EntityGovernance | null>(null);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabId>('profile')
+  const [entity, setEntity] = useState<EntityGovernance | null>(null)
+  const [pageLoading, setPageLoading] = useState(true)
 
   const [tabStates, setTabStates] = useState<Record<TabId, TabState>>({
     profile: { isDirty: false, isSaving: false, saveSuccess: false },
     ownership: { isDirty: false, isSaving: false, saveSuccess: false },
     officers: { isDirty: false, isSaving: false, saveSuccess: false },
     documents: { isDirty: false, isSaving: false, saveSuccess: false },
-  });
+  })
 
   // ============================================================================
   // EFFECTS
@@ -75,13 +75,13 @@ export function EntityMasterPage() {
 
   useEffect(() => {
     if (entityId) {
-      const loadedEntity = getEntityGovernance(entityId);
+      const loadedEntity = getEntityGovernance(entityId)
       if (loadedEntity) {
-        setEntity(computeEntityProperties(loadedEntity));
+        setEntity(computeEntityProperties(loadedEntity))
       }
     }
-    setTimeout(() => setPageLoading(false), 600);
-  }, [entityId]);
+    setTimeout(() => setPageLoading(false), 600)
+  }, [entityId])
 
   // ============================================================================
   // HANDLERS
@@ -91,51 +91,53 @@ export function EntityMasterPage() {
     setTabStates((prev) => ({
       ...prev,
       [tabId]: { ...prev[tabId], isDirty: true, saveSuccess: false },
-    }));
-  };
+    }))
+  }
 
   const handleTabSave = async (tabId: TabId) => {
     setTabStates((prev) => ({
       ...prev,
       [tabId]: { ...prev[tabId], isSaving: true },
-    }));
+    }))
 
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    await new Promise((resolve) => setTimeout(resolve, 1200))
 
     setTabStates((prev) => ({
       ...prev,
       [tabId]: { isDirty: false, isSaving: false, saveSuccess: true },
-    }));
+    }))
 
     setTimeout(() => {
       setTabStates((prev) => ({
         ...prev,
         [tabId]: { ...prev[tabId], saveSuccess: false },
-      }));
-    }, 3000);
-  };
+      }))
+    }, 3000)
+  }
 
   const handleTabRevert = (tabId: TabId) => {
     setTabStates((prev) => ({
       ...prev,
       [tabId]: { isDirty: false, isSaving: false, saveSuccess: false },
-    }));
-  };
+    }))
+  }
 
   const handleSaveAll = async () => {
     const dirtyTabs = Object.keys(tabStates).filter(
-      (key) => tabStates[key as TabId].isDirty,
-    ) as TabId[];
+      (key) => tabStates[key as TabId].isDirty
+    ) as TabId[]
 
-    await Promise.all(dirtyTabs.map((tab) => handleTabSave(tab)));
-  };
+    await Promise.all(dirtyTabs.map((tab) => handleTabSave(tab)))
+  }
 
   // ============================================================================
   // COMPUTED VALUES
   // ============================================================================
 
-  const hasAnyChanges = Object.values(tabStates).some((state) => state.isDirty);
-  const changedTabsCount = Object.values(tabStates).filter((state) => state.isDirty).length;
+  const hasAnyChanges = Object.values(tabStates).some((state) => state.isDirty)
+  const changedTabsCount = Object.values(tabStates).filter(
+    (state) => state.isDirty
+  ).length
 
   // ============================================================================
   // LOADING SKELETON
@@ -144,16 +146,16 @@ export function EntityMasterPage() {
   if (pageLoading || !entity) {
     return (
       <MetaAppShell>
-        <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <div className="w-12 h-12 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-zinc-500 font-mono uppercase tracking-wider">
+        <div className="flex min-h-[calc(100vh-64px)] items-center justify-center">
+          <div className="space-y-4 text-center">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+            <p className="font-mono text-sm uppercase tracking-wider text-zinc-500">
               Loading Entity Governance
             </p>
           </div>
         </div>
       </MetaAppShell>
-    );
+    )
   }
 
   // ============================================================================
@@ -162,33 +164,35 @@ export function EntityMasterPage() {
 
   return (
     <MetaAppShell>
-      <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-start p-6 pt-8 relative overflow-hidden">
+      <div className="relative flex min-h-[calc(100vh-64px)] flex-col items-center justify-start overflow-hidden p-6 pt-8">
         {/* Ambient Background */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,#0A0A0A_0%,#000000_60%)] -z-10" />
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_10%,#0A0A0A_0%,#000000_60%)]" />
+        <div className="absolute left-0 top-0 h-[1px] w-full bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
 
         {/* CONTAINER */}
-        <div className="w-full max-w-[1280px] z-10 space-y-6">
+        <div className="z-10 w-full max-w-[1280px] space-y-6">
           {/* ================================================================ */}
           {/* HEADER WITH BREADCRUMB */}
           {/* ================================================================ */}
-          <div className="sticky top-4 z-30 bg-[#0A0A0A] pb-6 border-b border-[#1F1F1F]">
+          <div className="sticky top-4 z-30 border-b border-[#1F1F1F] bg-[#0A0A0A] pb-6">
             <div className="flex flex-col gap-4">
               <div className="flex items-start justify-between gap-4">
-                <div className="space-y-2 flex-1">
+                <div className="flex-1 space-y-2">
                   {/* Breadcrumb */}
-                  <div className="flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+                  <div className="flex items-center gap-2 font-mono text-[10px] text-zinc-600">
                     <button
                       onClick={() => navigate('/sys-organization')}
-                      className="hover:text-emerald-500 transition-colors focus-visible:outline-none focus-visible:text-emerald-500 flex items-center gap-1"
+                      className="flex items-center gap-1 transition-colors hover:text-emerald-500 focus-visible:text-emerald-500 focus-visible:outline-none"
                     >
-                      <ArrowLeft className="w-3 h-3" />
+                      <ArrowLeft className="h-3 w-3" />
                       SYS_02
                     </button>
                     <span>/</span>
                     <span className="text-zinc-500">Entity Master</span>
                     <span>/</span>
-                    <span className="text-white">{entity.profile.entityCode}</span>
+                    <span className="text-white">
+                      {entity.profile.entityCode}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -196,14 +200,19 @@ export function EntityMasterPage() {
                       {entity.profile.legalEntityName}
                     </h1>
                     <NexusBadge
-                      variant={entity.validation.status === 'VERIFIED' ? 'success' : 'warning'}
+                      variant={
+                        entity.validation.status === 'VERIFIED'
+                          ? 'success'
+                          : 'warning'
+                      }
                     >
                       {entity.validation.status}
                     </NexusBadge>
                   </div>
 
-                  <p className="text-zinc-500 font-mono text-sm">
-                    {entity.profile.entityCode} · {entity.profile.countryOfIncorporation} ·{' '}
+                  <p className="font-mono text-sm text-zinc-500">
+                    {entity.profile.entityCode} ·{' '}
+                    {entity.profile.countryOfIncorporation} ·{' '}
                     {entity.profile.status}
                   </p>
                 </div>
@@ -215,11 +224,12 @@ export function EntityMasterPage() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                        className="flex items-center gap-2 px-3 py-2 border border-amber-500/40 bg-amber-950/10"
+                        className="flex items-center gap-2 border border-amber-500/40 bg-amber-950/10 px-3 py-2"
                       >
-                        <AlertCircle className="w-3 h-3 text-amber-500" />
-                        <span className="text-[10px] font-mono text-amber-500 tracking-wider">
-                          {changedTabsCount} {changedTabsCount === 1 ? 'tab' : 'tabs'} unsaved
+                        <AlertCircle className="h-3 w-3 text-amber-500" />
+                        <span className="font-mono text-[10px] tracking-wider text-amber-500">
+                          {changedTabsCount}{' '}
+                          {changedTabsCount === 1 ? 'tab' : 'tabs'} unsaved
                         </span>
                       </motion.div>
                     )}
@@ -228,22 +238,17 @@ export function EntityMasterPage() {
                   <button
                     onClick={handleSaveAll}
                     disabled={!hasAnyChanges}
-                    className={`
-                      relative h-10 px-4 font-mono text-[10px] uppercase tracking-[0.15em]
-                      border transition-all duration-200
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40
-                      ${
-                        hasAnyChanges
-                          ? 'bg-emerald-950/20 border-emerald-500 text-emerald-500 hover:bg-emerald-900/20'
-                          : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
-                      }
-                    `}
+                    className={`relative h-10 border px-4 font-mono text-[10px] uppercase tracking-[0.15em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 ${
+                      hasAnyChanges
+                        ? 'border-emerald-500 bg-emerald-950/20 text-emerald-500 hover:bg-emerald-900/20'
+                        : 'cursor-not-allowed border-[#1F1F1F] bg-[#050505] text-zinc-700'
+                    } `}
                   >
                     {hasAnyChanges && (
-                      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
+                      <div className="absolute left-0 right-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
                     )}
                     <div className="flex items-center gap-2">
-                      <Save className="w-3 h-3" />
+                      <Save className="h-3 w-3" />
                       <span>Save All</span>
                     </div>
                   </button>
@@ -255,21 +260,23 @@ export function EntityMasterPage() {
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="p-3 border border-amber-500/40 bg-amber-950/10"
+                  className="border border-amber-500/40 bg-amber-950/10 p-3"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <AlertCircle className="w-4 h-4 text-amber-500" />
+                      <AlertCircle className="h-4 w-4 text-amber-500" />
                       <div>
-                        <div className="text-[11px] text-amber-500 font-mono mb-0.5">
-                          Governance Incomplete ({entity.computed.governanceCompleteness}%)
+                        <div className="mb-0.5 font-mono text-[11px] text-amber-500">
+                          Governance Incomplete (
+                          {entity.computed.governanceCompleteness}%)
                         </div>
                         <div className="text-[9px] text-zinc-600">
-                          Missing: {entity.computed.missingGovernanceItems.join(', ')}
+                          Missing:{' '}
+                          {entity.computed.missingGovernanceItems.join(', ')}
                         </div>
                       </div>
                     </div>
-                    <div className="text-[9px] text-amber-400 font-mono">
+                    <div className="font-mono text-[9px] text-amber-400">
                       ⚠️ Cannot consolidate until verified
                     </div>
                   </div>
@@ -286,22 +293,22 @@ export function EntityMasterPage() {
               { id: 'profile', label: 'Profile', icon: Building2 },
               { id: 'ownership', label: 'Ownership & Capital', icon: Users },
               { id: 'officers', label: 'Officers & Board', icon: Shield },
-              { id: 'documents', label: 'Documents & Validation', icon: FileText },
+              {
+                id: 'documents',
+                label: 'Documents & Validation',
+                icon: FileText,
+              },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabId)}
-                className={`
-                  relative px-4 py-3 font-mono text-[10px] uppercase tracking-wider
-                  transition-colors focus-visible:outline-none
-                  ${activeTab === tab.id ? 'text-emerald-500' : 'text-zinc-500 hover:text-white'}
-                `}
+                className={`relative px-4 py-3 font-mono text-[10px] uppercase tracking-wider transition-colors focus-visible:outline-none ${activeTab === tab.id ? 'text-emerald-500' : 'text-zinc-500 hover:text-white'} `}
               >
                 <div className="flex items-center gap-2">
-                  <tab.icon className="w-3 h-3" />
+                  <tab.icon className="h-3 w-3" />
                   <span>{tab.label}</span>
                   {tabStates[tab.id as TabId].isDirty && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                   )}
                 </div>
                 {activeTab === tab.id && (
@@ -368,10 +375,11 @@ export function EntityMasterPage() {
           {/* ================================================================ */}
           {/* STICKY FOOTER */}
           {/* ================================================================ */}
-          <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A] border-t border-[#1F1F1F] z-40">
-            <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
-              <div className="text-[9px] text-zinc-600 font-mono">
-                Last modified: {new Date(entity.profile.lastModifiedAt).toLocaleString()} by{' '}
+          <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#1F1F1F] bg-[#0A0A0A]">
+            <div className="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-4">
+              <div className="font-mono text-[9px] text-zinc-600">
+                Last modified:{' '}
+                {new Date(entity.profile.lastModifiedAt).toLocaleString()} by{' '}
                 {entity.profile.lastModifiedBy}
               </div>
 
@@ -379,25 +387,26 @@ export function EntityMasterPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleTabRevert(activeTab)}
-                    className="h-9 px-3 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-zinc-500 hover:text-white transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500/40 flex items-center gap-1"
+                    className="flex h-9 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[9px] uppercase tracking-wider text-zinc-500 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500/40"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="h-3 w-3" />
                     Revert
                   </button>
                   <button
                     onClick={() => handleTabSave(activeTab)}
                     disabled={tabStates[activeTab].isSaving}
-                    className="h-9 px-3 font-mono text-[9px] uppercase tracking-wider border border-emerald-500 text-emerald-500 hover:bg-emerald-950/20 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 flex items-center gap-1"
+                    className="flex h-9 items-center gap-1 border border-emerald-500 bg-[#050505] px-3 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:bg-emerald-950/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40"
                   >
                     {tabStates[activeTab].isSaving ? (
                       <>
-                        <div className="w-3 h-3 border border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                        <div className="h-3 w-3 animate-spin rounded-full border border-emerald-500 border-t-transparent" />
                         Saving
                       </>
                     ) : (
                       <>
-                        <Save className="w-3 h-3" />
-                        Save {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+                        <Save className="h-3 w-3" />
+                        Save{' '}
+                        {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                       </>
                     )}
                   </button>
@@ -408,7 +417,7 @@ export function EntityMasterPage() {
         </div>
       </div>
     </MetaAppShell>
-  );
+  )
 }
 
 // ============================================================================
@@ -422,11 +431,11 @@ function ProfileTab({
   onRevert,
   tabState,
 }: {
-  entity: EntityGovernance;
-  onDirty: () => void;
-  onSave: () => void;
-  onRevert: () => void;
-  tabState: TabState;
+  entity: EntityGovernance
+  onDirty: () => void
+  onSave: () => void
+  onRevert: () => void
+  tabState: TabState
 }) {
   return (
     <motion.div
@@ -447,47 +456,47 @@ function ProfileTab({
       >
         <div className="space-y-2.5">
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Legal Entity Name *
             </label>
             <input
               type="text"
               defaultValue={entity.profile.legalEntityName}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Trading Name
             </label>
             <input
               type="text"
               defaultValue={entity.profile.tradingName}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Entity Code *
               </label>
               <input
                 type="text"
                 defaultValue={entity.profile.entityCode}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus-ring-emerald-500/40"
+                className="focus-ring-emerald-500/40 h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2"
               />
             </div>
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Entity Type *
               </label>
               <select
                 defaultValue={entity.profile.entityType}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               >
                 <option>Holding</option>
                 <option>Subsidiary</option>
@@ -512,36 +521,36 @@ function ProfileTab({
       >
         <div className="space-y-2.5">
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Registration Number *
             </label>
             <input
               type="text"
               defaultValue={entity.profile.registrationNumber}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Tax ID *
             </label>
             <input
               type="text"
               defaultValue={entity.profile.taxId}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Incorporation Date *
             </label>
             <input
               type="date"
               defaultValue={entity.profile.incorporationDate}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
         </div>
@@ -559,25 +568,25 @@ function ProfileTab({
       >
         <div className="space-y-2.5">
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Country of Incorporation *
             </label>
             <input
               type="text"
               defaultValue={entity.profile.countryOfIncorporation}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Country of Operations *
             </label>
             <input
               type="text"
               defaultValue={entity.profile.countryOfOperations}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
         </div>
@@ -596,36 +605,36 @@ function ProfileTab({
         <div className="space-y-2.5">
           <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Base Currency *
               </label>
               <input
                 type="text"
                 defaultValue={entity.profile.baseCurrency}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Reporting Currency *
               </label>
               <input
                 type="text"
                 defaultValue={entity.profile.reportingCurrency}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Accounting Framework *
             </label>
             <select
               defaultValue={entity.profile.accountingFramework}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             >
               <option>IFRS</option>
               <option>MFRS</option>
@@ -634,7 +643,7 @@ function ProfileTab({
             </select>
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Fiscal Year End *
             </label>
             <input
@@ -642,13 +651,13 @@ function ProfileTab({
               defaultValue={entity.profile.fiscalYearEnd}
               onChange={onDirty}
               placeholder="e.g., 31 Dec"
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             />
           </div>
         </div>
       </CardSection>
     </motion.div>
-  );
+  )
 }
 
 // ============================================================================
@@ -662,11 +671,11 @@ function OwnershipTab({
   onRevert,
   tabState,
 }: {
-  entity: EntityGovernance;
-  onDirty: () => void;
-  onSave: () => void;
-  onRevert: () => void;
-  tabState: TabState;
+  entity: EntityGovernance
+  onDirty: () => void
+  onSave: () => void
+  onRevert: () => void
+  tabState: TabState
 }) {
   return (
     <motion.div
@@ -685,9 +694,9 @@ function OwnershipTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="h-3 w-3" />
             Add Shareholder
           </button>
         }
@@ -699,50 +708,58 @@ function OwnershipTab({
           <table className="w-full text-[10px]">
             <thead>
               <tr className="border-b border-[#1F1F1F]">
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Shareholder
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Type
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Country
                 </th>
-                <th className="text-right py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-right font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Ownership %
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Share Class
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Related Party
                 </th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-center font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
               {entity.shareholders.map((sh, idx) => (
-                <tr key={idx} className="border-b border-[#1F1F1F] hover:bg-[#0A0A0A]">
-                  <td className="py-2 px-3 text-white">{sh.name}</td>
-                  <td className="py-2 px-3 text-zinc-500">{sh.type}</td>
-                  <td className="py-2 px-3 text-zinc-500 font-mono">{sh.country}</td>
-                  <td className="py-2 px-3 text-right text-white font-mono">
+                <tr
+                  key={idx}
+                  className="border-b border-[#1F1F1F] hover:bg-[#0A0A0A]"
+                >
+                  <td className="px-3 py-2 text-white">{sh.name}</td>
+                  <td className="px-3 py-2 text-zinc-500">{sh.type}</td>
+                  <td className="px-3 py-2 font-mono text-zinc-500">
+                    {sh.country}
+                  </td>
+                  <td className="px-3 py-2 text-right font-mono text-white">
                     {sh.ownershipPercent}%
                   </td>
-                  <td className="py-2 px-3 text-zinc-500">{sh.shareClass}</td>
-                  <td className="py-2 px-3">
-                    <NexusBadge variant={sh.isRelatedParty ? 'warning' : 'neutral'} size="sm">
+                  <td className="px-3 py-2 text-zinc-500">{sh.shareClass}</td>
+                  <td className="px-3 py-2">
+                    <NexusBadge
+                      variant={sh.isRelatedParty ? 'warning' : 'neutral'}
+                      size="sm"
+                    >
                       {sh.isRelatedParty ? 'Yes' : 'No'}
                     </NexusBadge>
                   </td>
-                  <td className="py-2 px-3 text-center">
+                  <td className="px-3 py-2 text-center">
                     <button
                       onClick={onDirty}
-                      className="text-emerald-500 hover:text-emerald-400 p-1 focus-visible:outline-none focus-visible:text-emerald-400"
+                      className="p-1 text-emerald-500 hover:text-emerald-400 focus-visible:text-emerald-400 focus-visible:outline-none"
                     >
-                      <Edit2 className="w-3 h-3" />
+                      <Edit2 className="h-3 w-3" />
                     </button>
                   </td>
                 </tr>
@@ -752,14 +769,14 @@ function OwnershipTab({
               <tr className="border-t-2 border-[#1F1F1F]">
                 <td
                   colSpan={3}
-                  className="py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600"
+                  className="px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-zinc-600"
                 >
                   Total
                 </td>
-                <td className="py-2 px-3 text-right text-white font-mono">
+                <td className="px-3 py-2 text-right font-mono text-white">
                   {entity.computed.totalOwnership}%
                 </td>
-                <td colSpan={3} className="py-2 px-3">
+                <td colSpan={3} className="px-3 py-2">
                   {entity.computed.ownershipBalance !== 0 && (
                     <span className="text-[9px] text-amber-500">
                       ⚠️ Balance: {entity.computed.ownershipBalance}%
@@ -784,32 +801,32 @@ function OwnershipTab({
       >
         <div className="space-y-2.5">
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Consolidation Method
             </label>
             <select
               defaultValue={entity.consolidation.actualMethod}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             >
               <option>Full</option>
               <option>Equity</option>
               <option>Proportionate</option>
               <option>None</option>
             </select>
-            <div className="text-[9px] text-zinc-600 mt-1">
+            <div className="mt-1 text-[9px] text-zinc-600">
               Suggested: {entity.consolidation.suggestedMethod} (based on{' '}
               {entity.consolidation.totalParentOwnership}% ownership)
             </div>
           </div>
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+            <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Control Basis
             </label>
             <select
               defaultValue={entity.consolidation.controlBasis}
               onChange={onDirty}
-              className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
             >
               <option>Voting Rights</option>
               <option>Contractual</option>
@@ -819,37 +836,39 @@ function OwnershipTab({
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Parent Ownership
               </label>
               <input
                 type="text"
                 value={`${entity.consolidation.totalParentOwnership}%`}
                 readOnly
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 NCI %
               </label>
               <input
                 type="text"
                 value={`${entity.consolidation.nciPercent}%`}
                 readOnly
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
                 defaultChecked={entity.consolidation.inConsolidationScope}
                 onChange={onDirty}
-                className="w-4 h-4 bg-[#050505] border border-[#1F1F1F] text-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
+                className="h-4 w-4 border border-[#1F1F1F] bg-[#050505] text-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
               />
-              <span className="text-[10px] text-white">Include in Consolidation Scope</span>
+              <span className="text-[10px] text-white">
+                Include in Consolidation Scope
+              </span>
             </label>
           </div>
         </div>
@@ -868,56 +887,56 @@ function OwnershipTab({
         <div className="space-y-2.5">
           <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Authorized Capital
               </label>
               <input
                 type="number"
                 defaultValue={entity.capital.authorizedCapital}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Currency
               </label>
               <input
                 type="text"
                 defaultValue={entity.capital.authorizedCurrency}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Paid-up Capital
               </label>
               <input
                 type="number"
                 defaultValue={entity.capital.paidUpCapital}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 block mb-1">
+              <label className="mb-1 block font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Total Shares
               </label>
               <input
                 type="number"
                 defaultValue={entity.capital.totalShares}
                 onChange={onDirty}
-                className="w-full h-9 px-3 bg-[#050505] border border-[#1F1F1F] text-white text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
           </div>
         </div>
       </CardSection>
     </motion.div>
-  );
+  )
 }
 
 // ============================================================================
@@ -931,11 +950,11 @@ function OfficersTab({
   onRevert,
   tabState,
 }: {
-  entity: EntityGovernance;
-  onDirty: () => void;
-  onSave: () => void;
-  onRevert: () => void;
-  tabState: TabState;
+  entity: EntityGovernance
+  onDirty: () => void
+  onSave: () => void
+  onRevert: () => void
+  tabState: TabState
 }) {
   return (
     <motion.div
@@ -954,9 +973,9 @@ function OfficersTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="h-3 w-3" />
             Add
           </button>
         }
@@ -970,16 +989,18 @@ function OfficersTab({
             .map((rep, idx) => (
               <div
                 key={idx}
-                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+                className="border border-[#1F1F1F] bg-[#050505] p-2.5 transition-colors hover:bg-[#0A0A0A]"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] text-white">{rep.personName}</span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[11px] text-white">
+                    {rep.personName}
+                  </span>
                   <NexusBadge variant="success" size="sm">
                     Active
                   </NexusBadge>
                 </div>
                 <div className="text-[9px] text-zinc-600">{rep.roleTitle}</div>
-                <div className="text-[9px] text-zinc-600 font-mono">
+                <div className="font-mono text-[9px] text-zinc-600">
                   Since: {rep.appointmentDate}
                 </div>
               </div>
@@ -997,9 +1018,9 @@ function OfficersTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="h-3 w-3" />
             Add
           </button>
         }
@@ -1013,10 +1034,12 @@ function OfficersTab({
             .map((director, idx) => (
               <div
                 key={idx}
-                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+                className="border border-[#1F1F1F] bg-[#050505] p-2.5 transition-colors hover:bg-[#0A0A0A]"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] text-white">{director.personName}</span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[11px] text-white">
+                    {director.personName}
+                  </span>
                   <div className="flex items-center gap-1">
                     <NexusBadge variant="neutral" size="sm">
                       {director.role}
@@ -1048,9 +1071,9 @@ function OfficersTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="h-3 w-3" />
             Add
           </button>
         }
@@ -1064,15 +1087,17 @@ function OfficersTab({
             .map((officer, idx) => (
               <div
                 key={idx}
-                className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+                className="border border-[#1F1F1F] bg-[#050505] p-2.5 transition-colors hover:bg-[#0A0A0A]"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] text-white">{officer.personName}</span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[11px] text-white">
+                    {officer.personName}
+                  </span>
                   <NexusBadge variant="neutral" size="sm">
                     {officer.role}
                   </NexusBadge>
                 </div>
-                <div className="text-[9px] text-zinc-600 font-mono">
+                <div className="font-mono text-[9px] text-zinc-600">
                   Since: {officer.appointmentDate}
                 </div>
               </div>
@@ -1090,9 +1115,9 @@ function OfficersTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="h-3 w-3" />
             Add
           </button>
         }
@@ -1104,9 +1129,9 @@ function OfficersTab({
           {entity.principalBanks.map((bank, idx) => (
             <div
               key={idx}
-              className="p-2.5 border border-[#1F1F1F] bg-[#050505] hover:bg-[#0A0A0A] transition-colors"
+              className="border border-[#1F1F1F] bg-[#050505] p-2.5 transition-colors hover:bg-[#0A0A0A]"
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="mb-1 flex items-center justify-between">
                 <span className="text-[11px] text-white">{bank.bankName}</span>
                 <div className="flex items-center gap-1">
                   <NexusBadge variant="neutral" size="sm">
@@ -1123,14 +1148,16 @@ function OfficersTab({
                 {bank.branch} · {bank.country}
               </div>
               {bank.accountNumber && (
-                <div className="text-[9px] text-zinc-600 font-mono">A/C: {bank.accountNumber}</div>
+                <div className="font-mono text-[9px] text-zinc-600">
+                  A/C: {bank.accountNumber}
+                </div>
               )}
             </div>
           ))}
         </div>
       </CardSection>
     </motion.div>
-  );
+  )
 }
 
 // ============================================================================
@@ -1144,11 +1171,11 @@ function DocumentsTab({
   onRevert,
   tabState,
 }: {
-  entity: EntityGovernance;
-  onDirty: () => void;
-  onSave: () => void;
-  onRevert: () => void;
-  tabState: TabState;
+  entity: EntityGovernance
+  onDirty: () => void
+  onSave: () => void
+  onRevert: () => void
+  tabState: TabState
 }) {
   return (
     <motion.div
@@ -1167,9 +1194,9 @@ function DocumentsTab({
         headerActions={
           <button
             onClick={onDirty}
-            className="h-7 px-2.5 font-mono text-[9px] uppercase tracking-wider border border-[#1F1F1F] text-emerald-500 hover:border-emerald-900/40 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40 flex items-center gap-1"
+            className="flex h-7 items-center gap-1 border border-[#1F1F1F] bg-[#050505] px-2.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500 transition-colors hover:border-emerald-900/40 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
           >
-            <Upload className="w-3 h-3" />
+            <Upload className="h-3 w-3" />
             Upload
           </button>
         }
@@ -1181,39 +1208,47 @@ function DocumentsTab({
           <table className="w-full text-[10px]">
             <thead>
               <tr className="border-b border-[#1F1F1F]">
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Document Type
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Name
                 </th>
-                <th className="text-left py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-left font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Uploaded
                 </th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-center font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Verified
                 </th>
-                <th className="text-center py-2 px-3 text-[9px] font-mono uppercase tracking-wider text-zinc-600">
+                <th className="px-3 py-2 text-center font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
               {entity.documents.map((doc, idx) => (
-                <tr key={idx} className="border-b border-[#1F1F1F] hover:bg-[#0A0A0A]">
-                  <td className="py-2 px-3 text-zinc-500">{doc.documentType}</td>
-                  <td className="py-2 px-3 text-white">{doc.documentName}</td>
-                  <td className="py-2 px-3 text-zinc-600 font-mono">
+                <tr
+                  key={idx}
+                  className="border-b border-[#1F1F1F] hover:bg-[#0A0A0A]"
+                >
+                  <td className="px-3 py-2 text-zinc-500">
+                    {doc.documentType}
+                  </td>
+                  <td className="px-3 py-2 text-white">{doc.documentName}</td>
+                  <td className="px-3 py-2 font-mono text-zinc-600">
                     {new Date(doc.uploadedAt).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-3 text-center">
-                    <NexusBadge variant={doc.isVerified ? 'success' : 'neutral'} size="sm">
+                  <td className="px-3 py-2 text-center">
+                    <NexusBadge
+                      variant={doc.isVerified ? 'success' : 'neutral'}
+                      size="sm"
+                    >
                       {doc.isVerified ? '✓' : '—'}
                     </NexusBadge>
                   </td>
-                  <td className="py-2 px-3 text-center">
-                    <button className="text-emerald-500 hover:text-emerald-400 p-1 focus-visible:outline-none focus-visible:text-emerald-400">
-                      <Download className="w-3 h-3" />
+                  <td className="px-3 py-2 text-center">
+                    <button className="p-1 text-emerald-500 hover:text-emerald-400 focus-visible:text-emerald-400 focus-visible:outline-none">
+                      <Download className="h-3 w-3" />
                     </button>
                   </td>
                 </tr>
@@ -1230,7 +1265,11 @@ function DocumentsTab({
         title="Validation Status"
         compact
         badge={
-          <NexusBadge variant={entity.validation.status === 'VERIFIED' ? 'success' : 'warning'}>
+          <NexusBadge
+            variant={
+              entity.validation.status === 'VERIFIED' ? 'success' : 'warning'
+            }
+          >
             {entity.validation.status}
           </NexusBadge>
         }
@@ -1239,8 +1278,8 @@ function DocumentsTab({
         onRevert={onRevert}
       >
         <div className="space-y-3">
-          <div className="p-3 border border-[#1F1F1F] bg-[#050505]">
-            <div className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 mb-2">
+          <div className="border border-[#1F1F1F] bg-[#050505] p-3">
+            <div className="mb-2 font-mono text-[9px] uppercase tracking-wider text-zinc-600">
               Current Status
             </div>
             <div className="space-y-1.5">
@@ -1248,7 +1287,9 @@ function DocumentsTab({
                 <span className="text-zinc-600">Status</span>
                 <span
                   className={`font-mono ${
-                    entity.validation.status === 'VERIFIED' ? 'text-emerald-500' : 'text-amber-500'
+                    entity.validation.status === 'VERIFIED'
+                      ? 'text-emerald-500'
+                      : 'text-amber-500'
                   }`}
                 >
                   {entity.validation.status}
@@ -1256,19 +1297,25 @@ function DocumentsTab({
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-zinc-600">Level</span>
-                <span className="text-white font-mono">{entity.validation.level}</span>
+                <span className="font-mono text-white">
+                  {entity.validation.level}
+                </span>
               </div>
               {entity.validation.verifiedBy && (
                 <>
                   <div className="flex justify-between text-[10px]">
                     <span className="text-zinc-600">Verified By</span>
-                    <span className="text-white">{entity.validation.verifiedByName}</span>
+                    <span className="text-white">
+                      {entity.validation.verifiedByName}
+                    </span>
                   </div>
                   <div className="flex justify-between text-[10px]">
                     <span className="text-zinc-600">Verified At</span>
-                    <span className="text-white font-mono text-[9px]">
+                    <span className="font-mono text-[9px] text-white">
                       {entity.validation.verifiedAt &&
-                        new Date(entity.validation.verifiedAt).toLocaleDateString()}
+                        new Date(
+                          entity.validation.verifiedAt
+                        ).toLocaleDateString()}
                     </span>
                   </div>
                 </>
@@ -1281,13 +1328,13 @@ function DocumentsTab({
             <div className="space-y-2">
               <button
                 onClick={onDirty}
-                className="w-full h-9 px-3 font-mono text-[10px] uppercase tracking-wider border border-emerald-500 text-emerald-500 hover:bg-emerald-950/20 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-emerald-500/40"
+                className="h-9 w-full border border-emerald-500 bg-[#050505] px-3 font-mono text-[10px] uppercase tracking-wider text-emerald-500 transition-colors hover:bg-emerald-950/20 focus:ring-emerald-500/40 focus-visible:outline-none focus-visible:ring-2"
               >
                 Approve (L2 Verification)
               </button>
               <button
                 onClick={onDirty}
-                className="w-full h-9 px-3 font-mono text-[10px] uppercase tracking-wider border border-red-500 text-red-500 hover:bg-red-950/20 transition-colors bg-[#050505] focus-visible:outline-none focus-visible:ring-2 focus:ring-red-500/40"
+                className="h-9 w-full border border-red-500 bg-[#050505] px-3 font-mono text-[10px] uppercase tracking-wider text-red-500 transition-colors hover:bg-red-950/20 focus:ring-red-500/40 focus-visible:outline-none focus-visible:ring-2"
               >
                 Reject
               </button>
@@ -1295,13 +1342,17 @@ function DocumentsTab({
           )}
 
           {entity.validation.status === 'VERIFIED' && (
-            <div className="p-3 border border-emerald-500/40 bg-emerald-950/10">
-              <div className="text-[10px] text-emerald-500 mb-1">✓ Entity Verified</div>
-              <div className="text-[9px] text-zinc-600">Can be included in consolidation scope</div>
+            <div className="border border-emerald-500/40 bg-emerald-950/10 p-3">
+              <div className="mb-1 text-[10px] text-emerald-500">
+                ✓ Entity Verified
+              </div>
+              <div className="text-[9px] text-zinc-600">
+                Can be included in consolidation scope
+              </div>
             </div>
           )}
         </div>
       </CardSection>
     </motion.div>
-  );
+  )
 }

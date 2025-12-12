@@ -19,7 +19,7 @@ import {
   calculateNCI,
   calculateGovernanceCompleteness,
   getMissingGovernanceItems,
-} from '../types/entity-governance';
+} from '../types/entity-governance'
 
 // ============================================================================
 // MOCK DATA: NEXUS FARMING MY (Fully Verified Subsidiary)
@@ -50,7 +50,8 @@ const nexusFarmingMY: EntityGovernance = {
     industryCode: '0111',
     employeeCount: 45,
     website: 'https://nexusfarming.my',
-    registeredAddress: 'Level 12, Menara Nexus, Jalan Sultan Ismail, 50250 Kuala Lumpur',
+    registeredAddress:
+      'Level 12, Menara Nexus, Jalan Sultan Ismail, 50250 Kuala Lumpur',
     operatingAddress: 'Lot 123, Jalan Kebun, 71700 Mantin, Negeri Sembilan',
     createdAt: '2023-01-15T08:00:00Z',
     createdBy: 'system',
@@ -108,7 +109,8 @@ const nexusFarmingMY: EntityGovernance = {
     controlBasis: 'Voting Rights',
     controlStartDate: '2023-01-15',
     inConsolidationScope: true,
-    consolidationNotes: 'Fully consolidated as per MFRS 10. NCI recognized at 30%.',
+    consolidationNotes:
+      'Fully consolidated as per MFRS 10. NCI recognized at 30%.',
   },
 
   capital: {
@@ -291,7 +293,7 @@ const nexusFarmingMY: EntityGovernance = {
     governanceCompleteness: 100,
     missingGovernanceItems: [],
   },
-};
+}
 
 // ============================================================================
 // MOCK DATA: NEXUS RETAIL SG (Unverified, Pending Governance)
@@ -354,7 +356,8 @@ const nexusRetailSG: EntityGovernance = {
     controlBasis: 'Voting Rights',
     controlStartDate: '2023-11-01',
     inConsolidationScope: false, // Dormant - excluded from scope
-    consolidationNotes: 'Dormant entity. Not included in consolidation scope until activated.',
+    consolidationNotes:
+      'Dormant entity. Not included in consolidation scope until activated.',
   },
 
   capital: {
@@ -410,7 +413,7 @@ const nexusRetailSG: EntityGovernance = {
       'Entity Verification',
     ],
   },
-};
+}
 
 // ============================================================================
 // MOCK DATA: NEXUS FARMING VN (Partial Governance)
@@ -578,7 +581,7 @@ const nexusFarmingVN: EntityGovernance = {
     governanceCompleteness: 100,
     missingGovernanceItems: [],
   },
-};
+}
 
 // ============================================================================
 // EXPORT ALL MOCK DATA
@@ -588,16 +591,21 @@ export const MOCK_ENTITY_GOVERNANCE: Record<string, EntityGovernance> = {
   'nexus-my': nexusFarmingMY,
   'nexus-sg': nexusRetailSG,
   'nexus-vn': nexusFarmingVN,
-};
+}
 
 // Helper to get entity by ID
 export function getEntityGovernance(entityId: string): EntityGovernance | null {
-  return MOCK_ENTITY_GOVERNANCE[entityId] || null;
+  return MOCK_ENTITY_GOVERNANCE[entityId] || null
 }
 
 // Calculate computed properties for all entities
-export function computeEntityProperties(entity: EntityGovernance): EntityGovernance {
-  const totalOwnership = entity.shareholders.reduce((sum, sh) => sum + sh.ownershipPercent, 0);
+export function computeEntityProperties(
+  entity: EntityGovernance
+): EntityGovernance {
+  const totalOwnership = entity.shareholders.reduce(
+    (sum, sh) => sum + sh.ownershipPercent,
+    0
+  )
 
   return {
     ...entity,
@@ -608,9 +616,10 @@ export function computeEntityProperties(entity: EntityGovernance): EntityGoverna
       hasNCI: entity.consolidation.nciPercent > 0,
       isVerified: entity.validation.status === 'VERIFIED',
       canConsolidate:
-        entity.validation.status === 'VERIFIED' && entity.consolidation.inConsolidationScope,
+        entity.validation.status === 'VERIFIED' &&
+        entity.consolidation.inConsolidationScope,
       governanceCompleteness: calculateGovernanceCompleteness(entity),
       missingGovernanceItems: getMissingGovernanceItems(entity),
     },
-  };
+  }
 }

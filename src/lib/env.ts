@@ -1,9 +1,9 @@
 /**
  * Environment Variable Validation
- * 
+ *
  * Uses Zod for type-safe environment variable validation.
  * This replaces the deprecated @next/env package.
- * 
+ *
  * @see REF_010 - Next.js Tools Recommendations
  */
 import { z } from 'zod'
@@ -13,7 +13,9 @@ import { z } from 'zod'
  * These are only available on the server
  */
 const serverEnvSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   // Add server-only env vars here
   // DATABASE_URL: z.string().url().optional(),
 })
@@ -35,7 +37,7 @@ const envSchema = serverEnvSchema.merge(clientEnvSchema)
 
 /**
  * Validated environment variables
- * 
+ *
  * Usage:
  * ```ts
  * import { env } from '@/lib/env'

@@ -34,7 +34,10 @@ export interface BioListProps {
   className?: string
   /** Custom cell renderers - Escape hatch for custom columns */
   customRenderers?: {
-    [fieldName: string]: (value: unknown, record: Record<string, unknown>) => React.ReactNode
+    [fieldName: string]: (
+      value: unknown,
+      record: Record<string, unknown>
+    ) => React.ReactNode
   }
 }
 
@@ -173,7 +176,10 @@ export function BioList({
                     const value = record[field.technical_name]
 
                     // Escape hatch: Use custom renderer if provided
-                    if (customRenderers && customRenderers[field.technical_name]) {
+                    if (
+                      customRenderers &&
+                      customRenderers[field.technical_name]
+                    ) {
                       return (
                         <td key={field.technical_name} className="px-4 py-3">
                           {customRenderers[field.technical_name](value, record)}

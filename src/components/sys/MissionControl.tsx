@@ -3,11 +3,11 @@
 // Ongoing system health, announcements, and configuration management
 // ============================================================================
 
-import { useState } from 'react';
-import { useRouterAdapter } from '@/hooks/useRouterAdapter';
-import { NexusCard } from '../nexus/NexusCard';
-import { NexusButton } from '../nexus/NexusButton';
-import { NexusBadge } from '../nexus/NexusBadge';
+import { useState } from 'react'
+import { useRouterAdapter } from '@/hooks/useRouterAdapter'
+import { NexusCard } from '../nexus/NexusCard'
+import { NexusButton } from '../nexus/NexusButton'
+import { NexusBadge } from '../nexus/NexusBadge'
 import {
   Bell,
   TrendingUp,
@@ -25,16 +25,20 @@ import {
   Building2,
   UserCircle,
   Shield,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import type { SystemAnnouncement, ConfigurationGap, SystemHealthMetric } from '../../types/system';
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import type {
+  SystemAnnouncement,
+  ConfigurationGap,
+  SystemHealthMetric,
+} from '../../types/system'
 
 interface MissionControlProps {
-  announcements: SystemAnnouncement[];
-  configGaps: ConfigurationGap[];
-  healthMetrics: SystemHealthMetric[];
-  systemVersion: string;
-  lastConfigUpdate: string;
+  announcements: SystemAnnouncement[]
+  configGaps: ConfigurationGap[]
+  healthMetrics: SystemHealthMetric[]
+  systemVersion: string
+  lastConfigUpdate: string
 }
 
 export function MissionControl({
@@ -44,148 +48,159 @@ export function MissionControl({
   systemVersion,
   lastConfigUpdate,
 }: MissionControlProps) {
-  const { navigate } = useRouterAdapter();
-  const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>([]);
+  const { navigate } = useRouterAdapter()
+  const [dismissedAnnouncements, setDismissedAnnouncements] = useState<
+    string[]
+  >([])
 
-  const visibleAnnouncements = announcements.filter((a) => !dismissedAnnouncements.includes(a.id));
+  const visibleAnnouncements = announcements.filter(
+    (a) => !dismissedAnnouncements.includes(a.id)
+  )
 
   const dismissAnnouncement = (id: string) => {
-    setDismissedAnnouncements((prev) => [...prev, id]);
-  };
+    setDismissedAnnouncements((prev) => [...prev, id])
+  }
 
   const getPriorityColor = (priority: SystemAnnouncement['priority']) => {
     switch (priority) {
       case 'CRITICAL':
-        return 'text-red-500 border-red-900/40';
+        return 'text-red-500 border-red-900/40'
       case 'HIGH':
-        return 'text-amber-500 border-amber-900/40';
+        return 'text-amber-500 border-amber-900/40'
       case 'NORMAL':
-        return 'text-blue-500 border-blue-900/40';
+        return 'text-blue-500 border-blue-900/40'
       case 'LOW':
-        return 'text-zinc-500 border-zinc-800/40';
+        return 'text-zinc-500 border-zinc-800/40'
     }
-  };
+  }
 
   const getSeverityIcon = (severity: ConfigurationGap['severity']) => {
     switch (severity) {
       case 'ERROR':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircle className="h-4 w-4 text-red-500" />
       case 'WARNING':
-        return <AlertTriangle className="w-4 h-4 text-amber-500" />;
+        return <AlertTriangle className="h-4 w-4 text-amber-500" />
       case 'SUGGESTION':
-        return <Info className="w-4 h-4 text-blue-500" />;
+        return <Info className="h-4 w-4 text-blue-500" />
     }
-  };
+  }
 
   const getHealthIcon = (status: SystemHealthMetric['status']) => {
     switch (status) {
       case 'HEALTHY':
-        return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-emerald-500" />
       case 'WARNING':
-        return <AlertTriangle className="w-4 h-4 text-amber-500" />;
+        return <AlertTriangle className="h-4 w-4 text-amber-500" />
       case 'CRITICAL':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircle className="h-4 w-4 text-red-500" />
     }
-  };
+  }
 
   const getTrendIcon = (trend?: SystemHealthMetric['trend']) => {
     switch (trend) {
       case 'UP':
-        return <TrendingUp className="w-3 h-3 text-emerald-500" />;
+        return <TrendingUp className="h-3 w-3 text-emerald-500" />
       case 'DOWN':
-        return <TrendingDown className="w-3 h-3 text-red-500" />;
+        return <TrendingDown className="h-3 w-3 text-red-500" />
       case 'STABLE':
-        return <Minus className="w-3 h-3 text-zinc-500" />;
+        return <Minus className="h-3 w-3 text-zinc-500" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const quickActions = [
     {
       label: 'Company Configuration',
       sysCode: 'SYS_02',
-      icon: <Building2 className="w-4 h-4" />,
+      icon: <Building2 className="h-4 w-4" />,
       route: '/sys-organization',
     },
     {
       label: 'Access Management',
       sysCode: 'SYS_03',
-      icon: <Users className="w-4 h-4" />,
+      icon: <Users className="h-4 w-4" />,
       route: '/sys-access',
     },
     {
       label: 'Employee Profile',
       sysCode: 'SYS_04',
-      icon: <UserCircle className="w-4 h-4" />,
+      icon: <UserCircle className="h-4 w-4" />,
       route: '/sys-profile',
     },
-  ];
+  ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-6 gap-4 auto-rows-[200px]">
+    <div className="grid auto-rows-[200px] grid-cols-1 gap-4 md:grid-cols-6">
       {/* PANEL 1: System Status - Large Hero (col-span-4, row-span-2) */}
-      <NexusCard className="md:col-span-4 md:row-span-2 p-6 relative overflow-hidden">
+      <NexusCard className="relative overflow-hidden p-6 md:col-span-4 md:row-span-2">
         {/* Subtle gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/5 via-transparent to-transparent pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/5 via-transparent to-transparent" />
 
-        <div className="relative h-full flex flex-col">
+        <div className="relative flex h-full flex-col">
           {/* Header */}
-          <div className="flex items-start justify-between mb-6">
+          <div className="mb-6 flex items-start justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
-                <h3 className="text-xl tracking-tight text-white">System Operational</h3>
+              <div className="mb-2 flex items-center gap-3">
+                <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+                <h3 className="text-xl tracking-tight text-white">
+                  System Operational
+                </h3>
               </div>
-              <p className="text-sm text-zinc-500 font-mono">All services running nominally</p>
+              <p className="font-mono text-sm text-zinc-500">
+                All services running nominally
+              </p>
             </div>
             <div className="text-right">
-              <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">
+              <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-600">
                 Version
               </div>
-              <div className="text-lg font-mono text-emerald-500 tracking-tight">
+              <div className="font-mono text-lg tracking-tight text-emerald-500">
                 {systemVersion}
               </div>
             </div>
           </div>
 
           {/* Health Metrics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-auto">
+          <div className="mt-auto grid grid-cols-2 gap-3 md:grid-cols-4">
             {healthMetrics.map((metric) => (
               <div
                 key={metric.id}
-                className="p-3 bg-[#050505] border border-[#1F1F1F] relative group hover:border-zinc-700 transition-colors"
+                className="group relative border border-[#1F1F1F] bg-[#050505] p-3 transition-colors hover:border-zinc-700"
               >
                 {/* Top highlight */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#333] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute left-0 right-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#333] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   {getHealthIcon(metric.status)}
                   {getTrendIcon(metric.trend)}
                 </div>
 
-                <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider mb-1">
+                <div className="mb-1 font-mono text-[10px] uppercase tracking-wider text-zinc-600">
                   {metric.label}
                 </div>
-                <div className="text-xl tracking-tight text-white font-mono">{metric.value}</div>
+                <div className="font-mono text-xl tracking-tight text-white">
+                  {metric.value}
+                </div>
               </div>
             ))}
           </div>
 
           {/* Footer timestamp */}
-          <div className="mt-4 pt-4 border-t border-[#1F1F1F] text-[10px] font-mono text-zinc-700 uppercase tracking-[0.2em]">
-            Last Config Update: {new Date(lastConfigUpdate).toLocaleDateString()}{' '}
+          <div className="mt-4 border-t border-[#1F1F1F] pt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-700">
+            Last Config Update:{' '}
+            {new Date(lastConfigUpdate).toLocaleDateString()}{' '}
             {new Date(lastConfigUpdate).toLocaleTimeString()}
           </div>
         </div>
       </NexusCard>
 
       {/* PANEL 2: Quick Actions - Vertical Stack (col-span-2, row-span-2) */}
-      <div className="md:col-span-2 md:row-span-2 space-y-4">
+      <div className="space-y-4 md:col-span-2 md:row-span-2">
         {/* Header */}
         <div className="flex items-center gap-2 px-1">
           <div className="h-[1px] w-4 bg-zinc-700" />
-          <h3 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500">
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
             Quick Actions
           </h3>
         </div>
@@ -194,19 +209,19 @@ export function MissionControl({
         {quickActions.map((action) => (
           <NexusCard
             key={action.sysCode}
-            className="p-4 hover:border-emerald-900/40 transition-all cursor-pointer group h-[calc((100%-3rem)/3)]"
+            className="group h-[calc((100%-3rem)/3)] cursor-pointer p-4 transition-all hover:border-emerald-900/40"
             onClick={() => navigate(action.route)}
           >
-            <div className="h-full flex flex-col">
-              <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-[#050505] border border-[#1F1F1F] text-zinc-500 group-hover:text-emerald-500 group-hover:border-emerald-900/40 transition-all">
+            <div className="flex h-full flex-col">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="border border-[#1F1F1F] bg-[#050505] p-2 text-zinc-500 transition-all group-hover:border-emerald-900/40 group-hover:text-emerald-500">
                   {action.icon}
                 </div>
-                <div className="text-[9px] font-mono text-zinc-700 uppercase tracking-[0.2em]">
+                <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-700">
                   {action.sysCode}
                 </div>
               </div>
-              <div className="text-sm tracking-tight text-white group-hover:text-emerald-50 transition-colors">
+              <div className="text-sm tracking-tight text-white transition-colors group-hover:text-emerald-50">
                 {action.label}
               </div>
             </div>
@@ -215,12 +230,12 @@ export function MissionControl({
       </div>
 
       {/* PANEL 3: Announcements - Wide (col-span-4, row-span-1) */}
-      <NexusCard className="md:col-span-4 md:row-span-1 p-5 relative overflow-hidden">
+      <NexusCard className="relative overflow-hidden p-5 md:col-span-4 md:row-span-1">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Bell className="w-4 h-4 text-zinc-500" />
-            <h3 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
+            <Bell className="h-4 w-4 text-zinc-500" />
+            <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
               System Announcements
             </h3>
           </div>
@@ -233,50 +248,55 @@ export function MissionControl({
 
         {/* Announcements - Horizontal Scroll */}
         {visibleAnnouncements.length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-track-[#050505] scrollbar-thumb-[#1F1F1F]">
+          <div className="scrollbar-thin scrollbar-track-[#050505] scrollbar-thumb-[#1F1F1F] flex gap-3 overflow-x-auto pb-2">
             {visibleAnnouncements.map((announcement) => (
               <div
                 key={announcement.id}
-                className={`flex-shrink-0 w-[320px] p-3 bg-[#050505] border-l-2 ${getPriorityColor(announcement.priority)} relative group`}
+                className={`w-[320px] flex-shrink-0 border-l-2 bg-[#050505] p-3 ${getPriorityColor(announcement.priority)} group relative`}
               >
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <NexusBadge variant="neutral" className="text-[9px] uppercase">
+                <div className="mb-2 flex items-start justify-between gap-3">
+                  <NexusBadge
+                    variant="neutral"
+                    className="text-[9px] uppercase"
+                  >
                     {announcement.category}
                   </NexusBadge>
                   {announcement.dismissible && (
                     <button
                       onClick={() => dismissAnnouncement(announcement.id)}
-                      className="p-1 hover:bg-[#1F1F1F] transition-colors"
+                      className="p-1 transition-colors hover:bg-[#1F1F1F]"
                     >
-                      <X className="w-3 h-3 text-zinc-600 hover:text-white" />
+                      <X className="h-3 w-3 text-zinc-600 hover:text-white" />
                     </button>
                   )}
                 </div>
 
-                <h4 className="text-sm tracking-tight text-white mb-2 line-clamp-1">
+                <h4 className="mb-2 line-clamp-1 text-sm tracking-tight text-white">
                   {announcement.title}
                 </h4>
 
-                <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2">
+                <p className="line-clamp-2 text-xs leading-relaxed text-zinc-500">
                   {announcement.message}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-sm text-zinc-600 font-mono">No active announcements</p>
+          <div className="flex h-full items-center justify-center">
+            <p className="font-mono text-sm text-zinc-600">
+              No active announcements
+            </p>
           </div>
         )}
       </NexusCard>
 
       {/* PANEL 4: Configuration Audit - Tall (col-span-2, row-span-2) */}
-      <NexusCard className="md:col-span-2 md:row-span-2 p-5 relative overflow-hidden flex flex-col">
+      <NexusCard className="relative flex flex-col overflow-hidden p-5 md:col-span-2 md:row-span-2">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4 flex-shrink-0">
+        <div className="mb-4 flex flex-shrink-0 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Settings className="w-4 h-4 text-zinc-500" />
-            <h3 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
+            <Settings className="h-4 w-4 text-zinc-500" />
+            <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
               Config Audit
             </h3>
           </div>
@@ -289,31 +309,33 @@ export function MissionControl({
 
         {/* Config Gaps - Scrollable */}
         {configGaps.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-3" />
-            <p className="text-sm text-zinc-500 text-center">No issues detected</p>
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <CheckCircle2 className="mb-3 h-8 w-8 text-emerald-500" />
+            <p className="text-center text-sm text-zinc-500">
+              No issues detected
+            </p>
           </div>
         ) : (
-          <div className="flex-1 space-y-2 overflow-y-auto scrollbar-thin scrollbar-track-[#050505] scrollbar-thumb-[#1F1F1F]">
+          <div className="scrollbar-thin scrollbar-track-[#050505] scrollbar-thumb-[#1F1F1F] flex-1 space-y-2 overflow-y-auto">
             {configGaps.map((gap) => (
               <div
                 key={gap.id}
-                className="p-3 bg-[#050505] border border-[#1F1F1F] hover:border-zinc-700 transition-colors cursor-pointer"
+                className="cursor-pointer border border-[#1F1F1F] bg-[#050505] p-3 transition-colors hover:border-zinc-700"
                 onClick={() => navigate(gap.actionRoute)}
               >
-                <div className="flex items-start gap-2 mb-2">
+                <div className="mb-2 flex items-start gap-2">
                   {getSeverityIcon(gap.severity)}
-                  <h4 className="text-xs tracking-tight text-white flex-1 leading-tight">
+                  <h4 className="flex-1 text-xs leading-tight tracking-tight text-white">
                     {gap.title}
                   </h4>
                 </div>
 
-                <p className="text-[10px] text-zinc-600 leading-relaxed line-clamp-2 mb-2">
+                <p className="mb-2 line-clamp-2 text-[10px] leading-relaxed text-zinc-600">
                   {gap.description}
                 </p>
 
-                <div className="flex items-center text-[9px] font-mono text-amber-500 uppercase tracking-wider">
-                  {gap.actionLabel} <ArrowRight className="w-3 h-3 ml-1" />
+                <div className="flex items-center font-mono text-[9px] uppercase tracking-wider text-amber-500">
+                  {gap.actionLabel} <ArrowRight className="ml-1 h-3 w-3" />
                 </div>
               </div>
             ))}
@@ -321,5 +343,5 @@ export function MissionControl({
         )}
       </NexusCard>
     </div>
-  );
+  )
 }

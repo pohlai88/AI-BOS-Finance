@@ -1,10 +1,10 @@
 export interface IndustrialCanonRecord {
-  id: string;
-  system: string;
-  type: 'Open SME ERP' | 'Enterprise ERP' | 'Process Framework' | 'UX Reference';
-  domain_strength: string;
-  access_level: 'Open Source' | 'Proprietary' | 'Public Standard';
-  nexus_usage: string;
+  id: string
+  system: string
+  type: 'Open SME ERP' | 'Enterprise ERP' | 'Process Framework' | 'UX Reference'
+  domain_strength: string
+  access_level: 'Open Source' | 'Proprietary' | 'Public Standard'
+  nexus_usage: string
 }
 
 export const industrialCanonRegistry: IndustrialCanonRecord[] = [
@@ -56,4 +56,4 @@ export const industrialCanonRegistry: IndustrialCanonRecord[] = [
     access_level: 'Proprietary',
     nexus_usage: 'Interaction Patterns & User Experience Benchmarks',
   },
-];
+]

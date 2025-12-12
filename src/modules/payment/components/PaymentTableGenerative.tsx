@@ -11,7 +11,10 @@
 import React from 'react'
 import { z } from 'zod'
 import { ZodBioList } from '@aibos/bioskin'
-import { PaymentSchema, PaymentIntrospectionOptions } from '../schemas/PaymentZodSchema'
+import {
+  PaymentSchema,
+  PaymentIntrospectionOptions,
+} from '../schemas/PaymentZodSchema'
 import type { Payment } from '../data/paymentSchema'
 
 // ============================================================================
@@ -44,10 +47,10 @@ export interface PaymentTableGenerativeProps {
 
 /**
  * PaymentTableGenerative - Renders payment table from Zod schema
- * 
+ *
  * This is the "Biological" approach - the UI grows from the schema.
  * Change the PaymentSchema, and the table adapts automatically.
- * 
+ *
  * @example
  * ```tsx
  * <PaymentTableGenerative
@@ -97,7 +100,7 @@ export function PaymentTableGenerative({
       Object.entries(customRenderers).map(([fieldName, renderer]) => [
         fieldName,
         (value: unknown, record: PaymentZod) =>
-          renderer(value, record as Payment)
+          renderer(value, record as Payment),
       ])
     )
   }, [customRenderers])
@@ -106,7 +109,9 @@ export function PaymentTableGenerative({
     <ZodBioList
       schema={PaymentSchema}
       data={validatedPayments}
-      onRowClick={onRowClick ? (record) => onRowClick(record as Payment) : undefined}
+      onRowClick={
+        onRowClick ? (record) => onRowClick(record as Payment) : undefined
+      }
       rowKey="id"
       isLoading={isLoading}
       className={className}

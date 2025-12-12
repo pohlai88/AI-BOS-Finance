@@ -1,9 +1,9 @@
 /**
  * StatCard - Canon Component
- * 
+ *
  * Displays statistics with icon, value, and label.
  * Built on shadcn/ui Card with Canon styling.
- * 
+ *
  * @component COMP_StatCard
  * @version 1.0.0
  * @see REF_037 - Phase 3: Canon Page System
@@ -27,7 +27,7 @@ export function StatCard({
   label,
   valueClassName,
   className,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
 }: StatCardProps) {
   const cardId = `stat-card-${label.toLowerCase().replace(/\s+/g, '-')}`
 
@@ -35,7 +35,7 @@ export function StatCard({
     <Card
       id={cardId}
       className={cn(
-        'border-nexus-border/30 bg-nexus-surface/10 p-4 text-center focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
+        'border-nexus-border/30 bg-nexus-surface/10 focus-within:ring-nexus-green p-4 text-center focus-within:ring-2 focus-within:ring-offset-2',
         className
       )}
       role="region"
@@ -44,18 +44,18 @@ export function StatCard({
       tabIndex={0}
     >
       <Icon
-        className="w-5 h-5 text-nexus-signal/60 mx-auto mb-2"
+        className="text-nexus-signal/60 mx-auto mb-2 h-5 w-5"
         aria-hidden="true"
       />
       <div
-        className={cn('text-xl font-bold text-nexus-signal', valueClassName)}
+        className={cn('text-nexus-signal text-xl font-bold', valueClassName)}
         aria-hidden="true"
       >
         {value}
       </div>
       <div
         id={`${cardId}-label`}
-        className="text-xs font-medium text-nexus-signal/70 mt-1"
+        className="text-nexus-signal/70 mt-1 text-xs font-medium"
       >
         {label}
       </div>

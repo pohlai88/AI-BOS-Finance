@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { MetaAppShell } from '../components/shell/MetaAppShell';
-import { MetaPageHeader } from '../components/MetaPageHeader';
+import { useState } from 'react'
+import { MetaAppShell } from '../components/shell/MetaAppShell'
+import { MetaPageHeader } from '../components/MetaPageHeader'
 import {
   Shield,
   AlertTriangle,
@@ -19,8 +19,8 @@ import {
   Network,
   Eye,
   Play,
-} from 'lucide-react';
-import { AgriMetadataLifecycle } from '../components/AgriMetadataLifecycle';
+} from 'lucide-react'
+import { AgriMetadataLifecycle } from '../components/AgriMetadataLifecycle'
 
 // Mock real-time data
 const SCHEMA_SYSTEMS = [
@@ -93,7 +93,7 @@ const SCHEMA_SYSTEMS = [
     compliance: 100,
     tables: ['orders', 'customers', 'products', 'invoices'],
   },
-];
+]
 
 const LIVE_METRICS = {
   totalSchemas: 2696,
@@ -103,7 +103,7 @@ const LIVE_METRICS = {
   avgCompliance: 99.4,
   lastIncident: '3h ago',
   uptimePercent: 99.97,
-};
+}
 
 const RECENT_EVENTS = [
   {
@@ -141,25 +141,25 @@ const RECENT_EVENTS = [
     severity: 'high',
     table: 'DIM_CUSTOMER.EMAIL',
   },
-];
+]
 
 export function MetadataArchitecturePage() {
-  const [selectedSystem, setSelectedSystem] = useState<string | null>(null);
+  const [selectedSystem, setSelectedSystem] = useState<string | null>(null)
   const [selectedViolation, setSelectedViolation] = useState<{
-    system: string;
-    field: string;
-  } | null>(null);
-  const selected = SCHEMA_SYSTEMS.find((s) => s.id === selectedSystem);
+    system: string
+    field: string
+  } | null>(null)
+  const selected = SCHEMA_SYSTEMS.find((s) => s.id === selectedSystem)
 
   const violation = selectedViolation
-    ? SCHEMA_SYSTEMS.find((s) => s.id === selectedViolation.system)?.violations?.find(
-        (v) => v.field === selectedViolation.field,
-      )
-    : null;
+    ? SCHEMA_SYSTEMS.find(
+        (s) => s.id === selectedViolation.system
+      )?.violations?.find((v) => v.field === selectedViolation.field)
+    : null
 
   return (
     <MetaAppShell>
-      <div className="px-6 py-8 md:px-12 md:py-12 max-w-[1800px] mx-auto">
+      <div className="mx-auto max-w-[1800px] px-6 py-8 md:px-12 md:py-12">
         {/* PAGE HEADER */}
         <MetaPageHeader
           variant="document"
@@ -170,104 +170,114 @@ export function MetadataArchitecturePage() {
         />
 
         {/* LIVE METRICS BAR */}
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
           {/* Total Schemas */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Database className="w-3 h-3 text-[#666]" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <Database className="h-3 w-3 text-[#666]" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Schemas
               </div>
             </div>
-            <div className="text-white font-mono text-2xl">
+            <div className="font-mono text-2xl text-white">
               {LIVE_METRICS.totalSchemas.toLocaleString()}
             </div>
           </div>
 
           {/* Validated */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <CheckCircle className="w-3 h-3 text-[#28E7A2]" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <CheckCircle className="h-3 w-3 text-[#28E7A2]" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Validated
               </div>
             </div>
-            <div className="text-[#28E7A2] font-mono text-2xl">
+            <div className="font-mono text-2xl text-[#28E7A2]">
               {LIVE_METRICS.validated.toLocaleString()}
             </div>
           </div>
 
           {/* Violations */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <AlertTriangle className="w-3 h-3 text-red-500" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <AlertTriangle className="h-3 w-3 text-red-500" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Violations
               </div>
             </div>
-            <div className="text-red-500 font-mono text-2xl">{LIVE_METRICS.violations}</div>
+            <div className="font-mono text-2xl text-red-500">
+              {LIVE_METRICS.violations}
+            </div>
           </div>
 
           {/* Systems */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Activity className="w-3 h-3 text-blue-500" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <Activity className="h-3 w-3 text-blue-500" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Systems
               </div>
             </div>
-            <div className="text-blue-400 font-mono text-2xl">{LIVE_METRICS.systemsMonitored}</div>
+            <div className="font-mono text-2xl text-blue-400">
+              {LIVE_METRICS.systemsMonitored}
+            </div>
           </div>
 
           {/* Compliance */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Shield className="w-3 h-3 text-[#28E7A2]" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <Shield className="h-3 w-3 text-[#28E7A2]" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Compliance
               </div>
             </div>
-            <div className="text-[#28E7A2] font-mono text-2xl">{LIVE_METRICS.avgCompliance}%</div>
+            <div className="font-mono text-2xl text-[#28E7A2]">
+              {LIVE_METRICS.avgCompliance}%
+            </div>
           </div>
 
           {/* Uptime */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="w-3 h-3 text-[#28E7A2]" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <TrendingUp className="h-3 w-3 text-[#28E7A2]" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Uptime
               </div>
             </div>
-            <div className="text-white font-mono text-2xl">{LIVE_METRICS.uptimePercent}%</div>
+            <div className="font-mono text-2xl text-white">
+              {LIVE_METRICS.uptimePercent}%
+            </div>
           </div>
 
           {/* Last Incident */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-3 h-3 text-[#666]" />
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A] p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <Clock className="h-3 w-3 text-[#666]" />
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Last Event
               </div>
             </div>
-            <div className="text-[#888] font-mono text-sm">{LIVE_METRICS.lastIncident}</div>
+            <div className="font-mono text-sm text-[#888]">
+              {LIVE_METRICS.lastIncident}
+            </div>
           </div>
         </div>
 
         {/* MAIN GRID: Systems + Lifecycle */}
-        <div className="mt-8 grid lg:grid-cols-2 gap-6">
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* LEFT: SYSTEM BINDINGS */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded">
+          <div className="rounded border border-[#1F1F1F] bg-[#0A0A0A]">
             <div className="border-b border-[#1F1F1F] p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <GitBranch className="w-4 h-4 text-[#28E7A2]" />
-                  <h3 className="text-white font-mono uppercase tracking-wider text-sm">
+                  <GitBranch className="h-4 w-4 text-[#28E7A2]" />
+                  <h3 className="font-mono text-sm uppercase tracking-wider text-white">
                     System Bindings
                   </h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#28E7A2] animate-pulse" />
-                  <span className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-[#28E7A2]" />
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                     Live
                   </span>
                 </div>
@@ -278,60 +288,71 @@ export function MetadataArchitecturePage() {
               {SCHEMA_SYSTEMS.map((system) => (
                 <button
                   key={system.id}
-                  onClick={() => setSelectedSystem(system.id === selectedSystem ? null : system.id)}
-                  className="w-full p-4 hover:bg-[#0F0F0F] transition-colors text-left"
+                  onClick={() =>
+                    setSelectedSystem(
+                      system.id === selectedSystem ? null : system.id
+                    )
+                  }
+                  className="w-full p-4 text-left transition-colors hover:bg-[#0F0F0F]"
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="mb-3 flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       {system.status === 'healthy' && (
-                        <CheckCircle className="w-4 h-4 text-[#28E7A2] flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 flex-shrink-0 text-[#28E7A2]" />
                       )}
                       {system.status === 'warning' && (
-                        <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                        <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-500" />
                       )}
                       {system.status === 'critical' && (
-                        <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                        <AlertCircle className="h-4 w-4 flex-shrink-0 text-red-500" />
                       )}
                       <div>
-                        <div className="text-white font-mono text-sm">{system.name}</div>
-                        <div className="text-[10px] font-mono text-[#666] mt-0.5">
+                        <div className="font-mono text-sm text-white">
+                          {system.name}
+                        </div>
+                        <div className="mt-0.5 font-mono text-[10px] text-[#666]">
                           {system.validated}/{system.schemas} schemas validated
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <div className="text-xs font-mono text-[#888]">{system.compliance}%</div>
-                        <div className="text-[10px] font-mono text-[#666]">{system.lastSync}</div>
+                        <div className="font-mono text-xs text-[#888]">
+                          {system.compliance}%
+                        </div>
+                        <div className="font-mono text-[10px] text-[#666]">
+                          {system.lastSync}
+                        </div>
                       </div>
                       <ChevronRight
-                        className={`w-4 h-4 text-[#666] transition-transform ${selectedSystem === system.id ? 'rotate-90' : ''}`}
+                        className={`h-4 w-4 text-[#666] transition-transform ${selectedSystem === system.id ? 'rotate-90' : ''}`}
                       />
                     </div>
                   </div>
 
                   {/* Drift indicator */}
                   {system.drift > 0 && (
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingDown className="w-3 h-3 text-red-500" />
-                      <span className="text-xs font-mono text-red-500">
-                        {system.drift} schema{system.drift > 1 ? 's' : ''} drifted from Canon
+                    <div className="mb-2 flex items-center gap-2">
+                      <TrendingDown className="h-3 w-3 text-red-500" />
+                      <span className="font-mono text-xs text-red-500">
+                        {system.drift} schema{system.drift > 1 ? 's' : ''}{' '}
+                        drifted from Canon
                       </span>
                     </div>
                   )}
 
                   {/* Sample tables */}
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex flex-wrap items-center gap-2">
                     {system.tables.slice(0, 4).map((table) => (
                       <div
                         key={table}
-                        className="px-2 py-0.5 bg-black/50 border border-[#1F1F1F] rounded text-[10px] font-mono text-[#666]"
+                        className="rounded border border-[#1F1F1F] bg-black/50 px-2 py-0.5 font-mono text-[10px] text-[#666]"
                       >
                         {table}
                       </div>
                     ))}
                     {system.tables.length > 4 && (
-                      <div className="text-[10px] font-mono text-[#666]">
+                      <div className="font-mono text-[10px] text-[#666]">
                         +{system.tables.length - 4} more
                       </div>
                     )}
@@ -339,29 +360,29 @@ export function MetadataArchitecturePage() {
 
                   {/* Expanded violations */}
                   {selectedSystem === system.id && system.violations && (
-                    <div className="mt-4 pt-4 border-t border-[#1F1F1F] space-y-2">
+                    <div className="mt-4 space-y-2 border-t border-[#1F1F1F] pt-4">
                       {system.violations.map((violation, idx) => (
                         <button
                           key={idx}
                           onClick={(e) => {
-                            e.stopPropagation();
+                            e.stopPropagation()
                             setSelectedViolation(
                               selectedViolation?.field === violation.field
                                 ? null
-                                : { system: system.id, field: violation.field },
-                            );
+                                : { system: system.id, field: violation.field }
+                            )
                           }}
-                          className={`w-full text-left p-3 rounded border ${
+                          className={`w-full rounded border p-3 text-left ${
                             violation.severity === 'critical'
-                              ? 'bg-red-500/5 border-red-500/20 hover:bg-red-500/10'
+                              ? 'border-red-500/20 bg-red-500/5 hover:bg-red-500/10'
                               : violation.severity === 'high'
-                                ? 'bg-orange-500/5 border-orange-500/20 hover:bg-orange-500/10'
-                                : 'bg-yellow-500/5 border-yellow-500/20 hover:bg-yellow-500/10'
+                                ? 'border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10'
+                                : 'border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/10'
                           } transition-colors`}
                         >
-                          <div className="flex items-start gap-2 mb-1">
+                          <div className="mb-1 flex items-start gap-2">
                             <AlertTriangle
-                              className={`w-3 h-3 flex-shrink-0 mt-0.5 ${
+                              className={`mt-0.5 h-3 w-3 flex-shrink-0 ${
                                 violation.severity === 'critical'
                                   ? 'text-red-500'
                                   : violation.severity === 'high'
@@ -370,24 +391,24 @@ export function MetadataArchitecturePage() {
                               }`}
                             />
                             <div className="flex-1">
-                              <div className="text-xs font-mono text-white mb-1">
+                              <div className="mb-1 font-mono text-xs text-white">
                                 {violation.field}
                               </div>
-                              <div className="text-[11px] text-[#888] leading-relaxed">
+                              <div className="text-[11px] leading-relaxed text-[#888]">
                                 {violation.issue}
                               </div>
 
                               {/* Impact metrics */}
-                              <div className="flex items-center gap-3 mt-2">
+                              <div className="mt-2 flex items-center gap-3">
                                 <div className="flex items-center gap-1">
-                                  <Network className="w-3 h-3 text-[#666]" />
-                                  <span className="text-[10px] font-mono text-[#666]">
+                                  <Network className="h-3 w-3 text-[#666]" />
+                                  <span className="font-mono text-[10px] text-[#666]">
                                     {violation.impactedSystems} systems
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  <Database className="w-3 h-3 text-[#666]" />
-                                  <span className="text-[10px] font-mono text-[#666]">
+                                  <Database className="h-3 w-3 text-[#666]" />
+                                  <span className="font-mono text-[10px] text-[#666]">
                                     {violation.downstreamTables} tables
                                   </span>
                                 </div>
@@ -396,24 +417,27 @@ export function MetadataArchitecturePage() {
                           </div>
                           <div className="flex items-center gap-2">
                             <div
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider ${
+                              className={`inline-flex items-center gap-1 rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
                                 violation.severity === 'critical'
-                                  ? 'bg-red-500/10 border border-red-500/30 text-red-500'
+                                  ? 'border border-red-500/30 bg-red-500/10 text-red-500'
                                   : violation.severity === 'high'
-                                    ? 'bg-orange-500/10 border border-orange-500/30 text-orange-500'
-                                    : 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-500'
+                                    ? 'border border-orange-500/30 bg-orange-500/10 text-orange-500'
+                                    : 'border border-yellow-500/30 bg-yellow-500/10 text-yellow-500'
                               }`}
                             >
                               {violation.severity}
                             </div>
                             <button
                               onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedViolation({ system: system.id, field: violation.field });
+                                e.stopPropagation()
+                                setSelectedViolation({
+                                  system: system.id,
+                                  field: violation.field,
+                                })
                               }}
-                              className="ml-auto px-2 py-0.5 bg-[#1F1F1F] hover:bg-[#2F2F2F] border border-[#333] rounded text-[9px] font-mono text-[#888] uppercase tracking-wider transition-colors flex items-center gap-1"
+                              className="ml-auto flex items-center gap-1 rounded border border-[#333] bg-[#1F1F1F] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[#888] transition-colors hover:bg-[#2F2F2F]"
                             >
-                              <Eye className="w-3 h-3" />
+                              <Eye className="h-3 w-3" />
                               Impact
                             </button>
                           </div>
@@ -427,15 +451,15 @@ export function MetadataArchitecturePage() {
           </div>
 
           {/* RIGHT: LIFECYCLE VISUALIZATION */}
-          <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded overflow-hidden">
+          <div className="overflow-hidden rounded border border-[#1F1F1F] bg-[#0A0A0A]">
             <div className="border-b border-[#1F1F1F] p-4">
               <div className="flex items-center gap-3">
-                <Activity className="w-4 h-4 text-[#28E7A2]" />
-                <h3 className="text-white font-mono uppercase tracking-wider text-sm">
+                <Activity className="h-4 w-4 text-[#28E7A2]" />
+                <h3 className="font-mono text-sm uppercase tracking-wider text-white">
                   Canonical Data Flow
                 </h3>
               </div>
-              <p className="text-xs text-[#666] mt-2">
+              <p className="mt-2 text-xs text-[#666]">
                 Living metadata propagation from genesis to immutable truth
               </p>
             </div>
@@ -444,16 +468,16 @@ export function MetadataArchitecturePage() {
         </div>
 
         {/* LIVE EVENT STREAM */}
-        <div className="mt-6 bg-[#0A0A0A] border border-[#1F1F1F] rounded">
+        <div className="mt-6 rounded border border-[#1F1F1F] bg-[#0A0A0A]">
           <div className="border-b border-[#1F1F1F] p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Zap className="w-4 h-4 text-[#28E7A2]" />
-                <h3 className="text-white font-mono uppercase tracking-wider text-sm">
+                <Zap className="h-4 w-4 text-[#28E7A2]" />
+                <h3 className="font-mono text-sm uppercase tracking-wider text-white">
                   Event Stream
                 </h3>
               </div>
-              <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                 Last 30 minutes
               </div>
             </div>
@@ -461,31 +485,40 @@ export function MetadataArchitecturePage() {
 
           <div className="divide-y divide-[#1F1F1F]">
             {RECENT_EVENTS.map((event, idx) => (
-              <div key={idx} className="p-4 hover:bg-[#0F0F0F] transition-colors">
+              <div
+                key={idx}
+                className="p-4 transition-colors hover:bg-[#0F0F0F]"
+              >
                 <div className="flex items-start gap-4">
-                  <div className="flex items-center gap-2 min-w-[70px]">
-                    <Clock className="w-3 h-3 text-[#666]" />
-                    <span className="text-xs font-mono text-[#666]">{event.time}</span>
+                  <div className="flex min-w-[70px] items-center gap-2">
+                    <Clock className="h-3 w-3 text-[#666]" />
+                    <span className="font-mono text-xs text-[#666]">
+                      {event.time}
+                    </span>
                   </div>
 
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-white">{event.system}</span>
-                      <ChevronRight className="w-3 h-3 text-[#666]" />
-                      <span className="text-xs font-mono text-[#888]">{event.table}</span>
+                    <div className="mb-1 flex items-center gap-2">
+                      <span className="font-mono text-xs text-white">
+                        {event.system}
+                      </span>
+                      <ChevronRight className="h-3 w-3 text-[#666]" />
+                      <span className="font-mono text-xs text-[#888]">
+                        {event.table}
+                      </span>
                     </div>
                     <div className="text-xs text-[#888]">{event.event}</div>
                   </div>
 
                   <div
-                    className={`px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider ${
+                    className={`rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
                       event.severity === 'critical'
-                        ? 'bg-red-500/10 border border-red-500/30 text-red-500'
+                        ? 'border border-red-500/30 bg-red-500/10 text-red-500'
                         : event.severity === 'high'
-                          ? 'bg-orange-500/10 border border-orange-500/30 text-orange-500'
+                          ? 'border border-orange-500/30 bg-orange-500/10 text-orange-500'
                           : event.severity === 'warning'
-                            ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-500'
-                            : 'bg-[#28E7A2]/10 border border-[#28E7A2]/30 text-[#28E7A2]'
+                            ? 'border border-yellow-500/30 bg-yellow-500/10 text-yellow-500'
+                            : 'border border-[#28E7A2]/30 bg-[#28E7A2]/10 text-[#28E7A2]'
                     }`}
                   >
                     {event.severity}
@@ -499,26 +532,30 @@ export function MetadataArchitecturePage() {
         {/* IMPACT ANALYSIS MODAL */}
         {selectedViolation && violation && (
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm"
             onClick={() => setSelectedViolation(null)}
           >
             <div
-              className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden"
+              className="max-h-[80vh] w-full max-w-4xl overflow-hidden rounded-lg border border-[#1F1F1F] bg-[#0A0A0A]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div className="border-b border-[#1F1F1F] p-6">
-                <div className="flex items-start justify-between mb-4">
+                <div className="mb-4 flex items-start justify-between">
                   <div className="flex items-start gap-3">
-                    <Network className="w-5 h-5 text-red-500 flex-shrink-0 mt-1" />
+                    <Network className="mt-1 h-5 w-5 flex-shrink-0 text-red-500" />
                     <div>
-                      <h3 className="text-white font-mono text-lg">Impact Analysis</h3>
-                      <p className="text-xs text-[#666] mt-1 font-mono">{violation.field}</p>
+                      <h3 className="font-mono text-lg text-white">
+                        Impact Analysis
+                      </h3>
+                      <p className="mt-1 font-mono text-xs text-[#666]">
+                        {violation.field}
+                      </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setSelectedViolation(null)}
-                    className="px-3 py-1.5 bg-[#1F1F1F] hover:bg-[#2F2F2F] border border-[#333] rounded text-xs font-mono text-[#888] uppercase tracking-wider transition-colors"
+                    className="rounded border border-[#333] bg-[#1F1F1F] px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-[#888] transition-colors hover:bg-[#2F2F2F]"
                   >
                     Close
                   </button>
@@ -526,38 +563,42 @@ export function MetadataArchitecturePage() {
 
                 {/* Violation details */}
                 <div
-                  className={`p-4 rounded border ${
+                  className={`rounded border p-4 ${
                     violation.severity === 'critical'
-                      ? 'bg-red-500/5 border-red-500/20'
+                      ? 'border-red-500/20 bg-red-500/5'
                       : violation.severity === 'high'
-                        ? 'bg-orange-500/5 border-orange-500/20'
-                        : 'bg-yellow-500/5 border-yellow-500/20'
+                        ? 'border-orange-500/20 bg-orange-500/5'
+                        : 'border-yellow-500/20 bg-yellow-500/5'
                   }`}
                 >
-                  <div className="text-xs text-[#888] leading-relaxed">{violation.issue}</div>
+                  <div className="text-xs leading-relaxed text-[#888]">
+                    {violation.issue}
+                  </div>
                 </div>
               </div>
 
               {/* Impact metrics */}
-              <div className="p-6 border-b border-[#1F1F1F]">
+              <div className="border-b border-[#1F1F1F] p-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-black/50 border border-[#1F1F1F] rounded p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Network className="w-4 h-4 text-[#666]" />
-                      <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+                  <div className="rounded border border-[#1F1F1F] bg-black/50 p-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Network className="h-4 w-4 text-[#666]" />
+                      <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                         Impacted Systems
                       </div>
                     </div>
-                    <div className="text-white font-mono text-3xl">{violation.impactedSystems}</div>
+                    <div className="font-mono text-3xl text-white">
+                      {violation.impactedSystems}
+                    </div>
                   </div>
-                  <div className="bg-black/50 border border-[#1F1F1F] rounded p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Database className="w-4 h-4 text-[#666]" />
-                      <div className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+                  <div className="rounded border border-[#1F1F1F] bg-black/50 p-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Database className="h-4 w-4 text-[#666]" />
+                      <div className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
                         Downstream Tables
                       </div>
                     </div>
-                    <div className="text-white font-mono text-3xl">
+                    <div className="font-mono text-3xl text-white">
                       {violation.downstreamTables}
                     </div>
                   </div>
@@ -565,8 +606,8 @@ export function MetadataArchitecturePage() {
               </div>
 
               {/* Affected systems & tables */}
-              <div className="p-6 overflow-y-auto max-h-[400px]">
-                <h4 className="text-white font-mono uppercase tracking-wider text-sm mb-4">
+              <div className="max-h-[400px] overflow-y-auto p-6">
+                <h4 className="mb-4 font-mono text-sm uppercase tracking-wider text-white">
                   Downstream Dependencies
                 </h4>
 
@@ -575,21 +616,36 @@ export function MetadataArchitecturePage() {
                   {[
                     {
                       system: 'Tableau Analytics',
-                      tables: ['Revenue Dashboard', 'Executive Summary', 'Sales Forecast'],
+                      tables: [
+                        'Revenue Dashboard',
+                        'Executive Summary',
+                        'Sales Forecast',
+                      ],
                     },
-                    { system: 'Power BI', tables: ['Monthly Reports', 'KPI Tracker'] },
-                    { system: 'Custom Reports API', tables: ['Financial Export', 'Audit Trail'] },
+                    {
+                      system: 'Power BI',
+                      tables: ['Monthly Reports', 'KPI Tracker'],
+                    },
+                    {
+                      system: 'Custom Reports API',
+                      tables: ['Financial Export', 'Audit Trail'],
+                    },
                   ].map((dep, idx) => (
-                    <div key={idx} className="bg-black/50 border border-[#1F1F1F] rounded p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <AlertCircle className="w-4 h-4 text-orange-500" />
-                        <div className="text-white font-mono text-sm">{dep.system}</div>
+                    <div
+                      key={idx}
+                      className="rounded border border-[#1F1F1F] bg-black/50 p-4"
+                    >
+                      <div className="mb-2 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-orange-500" />
+                        <div className="font-mono text-sm text-white">
+                          {dep.system}
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 ml-6">
+                      <div className="ml-6 flex flex-wrap gap-2">
                         {dep.tables.map((table) => (
                           <div
                             key={table}
-                            className="px-2 py-1 bg-[#0A0A0A] border border-[#1F1F1F] rounded text-[10px] font-mono text-[#666]"
+                            className="rounded border border-[#1F1F1F] bg-[#0A0A0A] px-2 py-1 font-mono text-[10px] text-[#666]"
                           >
                             {table}
                           </div>
@@ -600,18 +656,19 @@ export function MetadataArchitecturePage() {
                 </div>
 
                 {/* Recommended action */}
-                <div className="mt-6 p-4 bg-[#28E7A2]/5 border border-[#28E7A2]/20 rounded">
+                <div className="mt-6 rounded border border-[#28E7A2]/20 bg-[#28E7A2]/5 p-4">
                   <div className="flex items-start gap-2">
-                    <Play className="w-4 h-4 text-[#28E7A2] flex-shrink-0 mt-0.5" />
+                    <Play className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#28E7A2]" />
                     <div>
-                      <div className="text-xs font-mono text-[#28E7A2] uppercase tracking-wider mb-1">
+                      <div className="mb-1 font-mono text-xs uppercase tracking-wider text-[#28E7A2]">
                         Recommended Action
                       </div>
-                      <div className="text-xs text-[#888] leading-relaxed">
-                        Update {violation.field} in source system to match Canon specification, or
-                        update Canon if the business logic has changed. Run validation after changes
-                        to verify propagation across all {violation.downstreamTables} dependent
-                        tables.
+                      <div className="text-xs leading-relaxed text-[#888]">
+                        Update {violation.field} in source system to match Canon
+                        specification, or update Canon if the business logic has
+                        changed. Run validation after changes to verify
+                        propagation across all {violation.downstreamTables}{' '}
+                        dependent tables.
                       </div>
                     </div>
                   </div>
@@ -622,5 +679,5 @@ export function MetadataArchitecturePage() {
         )}
       </div>
     </MetaAppShell>
-  );
+  )
 }

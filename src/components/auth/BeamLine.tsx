@@ -5,25 +5,28 @@
 // Colors: Steel Blue (idle) → Golden/Amber (active)
 // ============================================================================
 
-import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 interface BeamLineProps {
-  isActive?: boolean; // User is typing or submitting
-  className?: string;
+  isActive?: boolean // User is typing or submitting
+  className?: string
 }
 
-export const BeamLine = ({ isActive = false, className = '' }: BeamLineProps) => {
-  const [pulseKey, setPulseKey] = useState(0);
+export const BeamLine = ({
+  isActive = false,
+  className = '',
+}: BeamLineProps) => {
+  const [pulseKey, setPulseKey] = useState(0)
 
   // Reset animation when isActive changes
   useEffect(() => {
-    setPulseKey((prev) => prev + 1);
-  }, [isActive]);
+    setPulseKey((prev) => prev + 1)
+  }, [isActive])
 
   // Colors
-  const idleColor = '#64748b'; // Steel Blue (slate-500)
-  const activeColor = '#f59e0b'; // Golden/Amber (amber-500)
+  const idleColor = '#64748b' // Steel Blue (slate-500)
+  const activeColor = '#f59e0b' // Golden/Amber (amber-500)
 
   return (
     <div className={`relative h-[2px] w-full overflow-hidden ${className}`}>
@@ -70,5 +73,5 @@ export const BeamLine = ({ isActive = false, className = '' }: BeamLineProps) =>
         />
       )}
     </div>
-  );
-};
+  )
+}

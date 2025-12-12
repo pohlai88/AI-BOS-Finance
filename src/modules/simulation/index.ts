@@ -4,4 +4,4 @@
 // The Forensic Engine - Visualizes architectural stability
 // ============================================================================
 
-export * from './components';
+export * from './components'

@@ -12,7 +12,7 @@ export {
   PAYMENT_SCHEMA,
   PAYMENT_EXTENDED_FIELDS,
   PAYMENT_CONFIG,
-  
+
   // Types
   type Payment,
   type PaymentStatus,
@@ -21,14 +21,14 @@ export {
   type EliminationStatus,
   type FunctionalCluster,
   type Manifest,
-  
+
   // Mock Data
   MOCK_PAYMENTS,
   getPaymentsByStatus,
   getPaymentsByEntity,
   getPaymentsByCluster,
   aggregateFunctionalClusters,
-  
+
   // Treasury
   TREASURY_DATA,
   ENTITY_OPTIONS,
@@ -44,10 +44,10 @@ export {
   getGroupTreasurySummary,
   canAffordPayment,
   getICPositionsForEntity,
-} from './data';
+} from './data'
 
 // Components (Sprint 2)
-export { 
+export {
   AuditSidebar,
   TreasuryHeader,
   FunctionalCard,
@@ -58,7 +58,7 @@ export {
   type FunctionalClusterData,
   type ClusterStatus,
   type ClusterType,
-} from './components';
+} from './components'
 
 // Governance Hooks (Sprint 3)
 export {
@@ -68,7 +68,7 @@ export {
   type ApproverRole,
   type SoDCheckResult,
   type CurrentUser,
-  
+
   // RULE_PAY_02: IC Validation
   validateICTransaction,
   useICValidation,
@@ -77,14 +77,14 @@ export {
   type ICValidationResult,
   type ICSettlementStep,
   type ICSettlementStatus,
-  
+
   // RULE_PAY_03: Batch Approval
   validateBatchApproval,
   useBatchApproval,
   useClusterSummary,
   type BatchValidationResult,
   type BatchApprovalState,
-  
+
   // RULE_PAY_04: Document Completeness
   validateDocuments,
   useDocumentValidation,
@@ -93,15 +93,14 @@ export {
   type DocumentType,
   type DocumentRequirement,
   type DocumentValidationResult,
-  
+
   // Unified Approval
   checkApproval,
   usePaymentApproval,
   DEFAULT_USER,
   type ApprovalDecision,
   type PaymentApprovalState,
-} from './hooks';
+} from './hooks'
 
 // Page (Sprint 4)
-export { PAY01PaymentHub } from './PAY_01_PaymentHub';
-
+export { PAY01PaymentHub } from './PAY_01_PaymentHub'

@@ -6,12 +6,12 @@
 // This proves the architecture handles not just data, but configuration.
 // ============================================================================
 
-import React, { useState, useMemo } from 'react';
-import { 
-  Settings, 
-  Shield, 
-  Palette, 
-  Bell, 
+import React, { useState, useMemo } from 'react'
+import {
+  Settings,
+  Shield,
+  Palette,
+  Bell,
   Database,
   Globe,
   Lock,
@@ -24,22 +24,27 @@ import {
   Terminal,
   Cpu,
   Server,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 // ============================================================================
 // 1. SYSTEM CONFIG SCHEMA
 // ============================================================================
 
 interface ConfigField {
-  key: string;
-  label: string;
-  description: string;
-  type: 'text' | 'toggle' | 'select' | 'number';
-  category: 'identity' | 'security' | 'appearance' | 'notifications' | 'advanced';
-  is_critical?: boolean;
-  options?: { value: string; label: string }[];
-  default_value: string | boolean | number;
+  key: string
+  label: string
+  description: string
+  type: 'text' | 'toggle' | 'select' | 'number'
+  category:
+    | 'identity'
+    | 'security'
+    | 'appearance'
+    | 'notifications'
+    | 'advanced'
+  is_critical?: boolean
+  options?: { value: string; label: string }[]
+  default_value: string | boolean | number
 }
 
 const SYSTEM_CONFIG_SCHEMA: ConfigField[] = [
@@ -197,120 +202,125 @@ const SYSTEM_CONFIG_SCHEMA: ConfigField[] = [
     category: 'advanced',
     default_value: 365,
   },
-];
+]
 
 // ============================================================================
 // 2. CATEGORY METADATA
 // ============================================================================
 
 const CATEGORIES = {
-  identity: { 
-    label: 'Identity', 
-    icon: Globe, 
-    description: 'System identification and branding' 
+  identity: {
+    label: 'Identity',
+    icon: Globe,
+    description: 'System identification and branding',
   },
-  security: { 
-    label: 'Security', 
-    icon: Shield, 
-    description: 'Access control and authentication' 
+  security: {
+    label: 'Security',
+    icon: Shield,
+    description: 'Access control and authentication',
   },
-  appearance: { 
-    label: 'Appearance', 
-    icon: Palette, 
-    description: 'Theme and visual preferences' 
+  appearance: {
+    label: 'Appearance',
+    icon: Palette,
+    description: 'Theme and visual preferences',
   },
-  notifications: { 
-    label: 'Notifications', 
-    icon: Bell, 
-    description: 'Alerts and communication channels' 
+  notifications: {
+    label: 'Notifications',
+    icon: Bell,
+    description: 'Alerts and communication channels',
   },
-  advanced: { 
-    label: 'Advanced', 
-    icon: Terminal, 
-    description: 'Performance and developer options' 
+  advanced: {
+    label: 'Advanced',
+    icon: Terminal,
+    description: 'Performance and developer options',
   },
-};
+}
 
 // ============================================================================
 // 3. MAIN COMPONENT
 // ============================================================================
 
-type ConfigValues = Record<string, string | boolean | number>;
+type ConfigValues = Record<string, string | boolean | number>
 
 export function SYS01Bootloader() {
   // Initialize config from defaults
   const [config, setConfig] = useState<ConfigValues>(() => {
-    const initial: ConfigValues = {};
+    const initial: ConfigValues = {}
     SYSTEM_CONFIG_SCHEMA.forEach((field) => {
-      initial[field.key] = field.default_value;
-    });
-    return initial;
-  });
+      initial[field.key] = field.default_value
+    })
+    return initial
+  })
 
-  const [activeCategory, setActiveCategory] = useState<keyof typeof CATEGORIES>('identity');
-  const [hasChanges, setHasChanges] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [activeCategory, setActiveCategory] =
+    useState<keyof typeof CATEGORIES>('identity')
+  const [hasChanges, setHasChanges] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
+    'idle'
+  )
 
   // Group fields by category
   const fieldsByCategory = useMemo(() => {
-    const grouped: Record<string, ConfigField[]> = {};
+    const grouped: Record<string, ConfigField[]> = {}
     SYSTEM_CONFIG_SCHEMA.forEach((field) => {
-      if (!grouped[field.category]) grouped[field.category] = [];
-      grouped[field.category].push(field);
-    });
-    return grouped;
-  }, []);
+      if (!grouped[field.category]) grouped[field.category] = []
+      grouped[field.category].push(field)
+    })
+    return grouped
+  }, [])
 
   // === HANDLERS ===
   const handleChange = (key: string, value: string | boolean | number) => {
-    setConfig((prev) => ({ ...prev, [key]: value }));
-    setHasChanges(true);
-    setSaveStatus('idle');
-  };
+    setConfig((prev) => ({ ...prev, [key]: value }))
+    setHasChanges(true)
+    setSaveStatus('idle')
+  }
 
   const handleSave = () => {
-    setSaveStatus('saving');
+    setSaveStatus('saving')
     // Simulate API call
     setTimeout(() => {
-      setSaveStatus('saved');
-      setHasChanges(false);
-      console.log('💾 Config saved:', config);
-    }, 1000);
-  };
+      setSaveStatus('saved')
+      setHasChanges(false)
+      console.log('💾 Config saved:', config)
+    }, 1000)
+  }
 
   const handleReset = () => {
-    const initial: ConfigValues = {};
+    const initial: ConfigValues = {}
     SYSTEM_CONFIG_SCHEMA.forEach((field) => {
-      initial[field.key] = field.default_value;
-    });
-    setConfig(initial);
-    setHasChanges(true);
-    setSaveStatus('idle');
-  };
+      initial[field.key] = field.default_value
+    })
+    setConfig(initial)
+    setHasChanges(true)
+    setSaveStatus('idle')
+  }
 
   // === RENDER FIELD ===
   const renderField = (field: ConfigField) => {
-    const value = config[field.key];
+    const value = config[field.key]
 
     switch (field.type) {
       case 'toggle':
         return (
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex cursor-pointer items-center">
             <input
               type="checkbox"
-              className="sr-only peer"
+              className="peer sr-only"
               checked={Boolean(value)}
               onChange={(e) => handleChange(field.key, e.target.checked)}
             />
-            <div className={cn(
-              "w-11 h-6 rounded-full transition-colors",
-              "peer-checked:bg-[#28E7A2] bg-[#333]",
-              "after:content-[''] after:absolute after:top-0.5 after:left-0.5",
-              "after:bg-white after:rounded-full after:h-5 after:w-5",
-              "after:transition-all peer-checked:after:translate-x-5"
-            )} />
+            <div
+              className={cn(
+                'h-6 w-11 rounded-full transition-colors',
+                'bg-[#333] peer-checked:bg-[#28E7A2]',
+                "after:absolute after:left-0.5 after:top-0.5 after:content-['']",
+                'after:h-5 after:w-5 after:rounded-full after:bg-white',
+                'after:transition-all peer-checked:after:translate-x-5'
+              )}
+            />
           </label>
-        );
+        )
 
       case 'select':
         return (
@@ -318,9 +328,9 @@ export function SYS01Bootloader() {
             value={String(value)}
             onChange={(e) => handleChange(field.key, e.target.value)}
             className={cn(
-              "bg-[#111] border border-[#333] rounded-lg px-3 py-2",
-              "text-white text-sm font-mono focus:ring-1 focus:ring-[#28E7A2]",
-              "outline-none appearance-none cursor-pointer min-w-[200px]"
+              'rounded-lg border border-[#333] bg-[#111] px-3 py-2',
+              'font-mono text-sm text-white focus:ring-1 focus:ring-[#28E7A2]',
+              'min-w-[200px] cursor-pointer appearance-none outline-none'
             )}
           >
             {field.options?.map((opt) => (
@@ -329,21 +339,23 @@ export function SYS01Bootloader() {
               </option>
             ))}
           </select>
-        );
+        )
 
       case 'number':
         return (
           <input
             type="number"
             value={Number(value)}
-            onChange={(e) => handleChange(field.key, parseInt(e.target.value) || 0)}
+            onChange={(e) =>
+              handleChange(field.key, parseInt(e.target.value) || 0)
+            }
             className={cn(
-              "bg-[#111] border border-[#333] rounded-lg px-3 py-2 w-24",
-              "text-white text-sm font-mono focus:ring-1 focus:ring-[#28E7A2]",
-              "outline-none text-right"
+              'w-24 rounded-lg border border-[#333] bg-[#111] px-3 py-2',
+              'font-mono text-sm text-white focus:ring-1 focus:ring-[#28E7A2]',
+              'text-right outline-none'
             )}
           />
-        );
+        )
 
       default:
         return (
@@ -352,71 +364,71 @@ export function SYS01Bootloader() {
             value={String(value)}
             onChange={(e) => handleChange(field.key, e.target.value)}
             className={cn(
-              "bg-[#111] border border-[#333] rounded-lg px-3 py-2 w-64",
-              "text-white text-sm font-mono focus:ring-1 focus:ring-[#28E7A2]",
-              "outline-none"
+              'w-64 rounded-lg border border-[#333] bg-[#111] px-3 py-2',
+              'font-mono text-sm text-white focus:ring-1 focus:ring-[#28E7A2]',
+              'outline-none'
             )}
           />
-        );
+        )
     }
-  };
+  }
 
   // === MAIN RENDER ===
   return (
     <div className="min-h-screen bg-[#050505]">
-      
       {/* HEADER */}
       <header className="border-b border-[#1F1F1F] bg-[#0A0A0A]">
-        <div className="max-w-[1400px] mx-auto px-6 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="mx-auto max-w-[1400px] px-6 py-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-[#28E7A2]/10 border border-[#28E7A2]/30 flex items-center justify-center">
-                <Cpu className="w-6 h-6 text-[#28E7A2]" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#28E7A2]/30 bg-[#28E7A2]/10">
+                <Cpu className="h-6 w-6 text-[#28E7A2]" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span className="text-[#28E7A2] font-mono">SYS_01</span>
+                <h1 className="flex items-center gap-2 text-xl font-bold text-white">
+                  <span className="font-mono text-[#28E7A2]">SYS_01</span>
                   <span className="text-[#333]">/</span>
                   <span>System Bootloader</span>
                 </h1>
-                <p className="text-[11px] text-[#666] font-mono">
-                  Core Configuration • {SYSTEM_CONFIG_SCHEMA.length} Settings • Schema-Driven
+                <p className="font-mono text-[11px] text-[#666]">
+                  Core Configuration • {SYSTEM_CONFIG_SCHEMA.length} Settings •
+                  Schema-Driven
                 </p>
               </div>
             </div>
-            
+
             {/* SAVE ACTIONS */}
             <div className="flex items-center gap-3">
               {hasChanges && (
-                <div className="flex items-center gap-2 text-amber-500 text-xs font-mono">
-                  <AlertTriangle className="w-4 h-4" />
+                <div className="flex items-center gap-2 font-mono text-xs text-amber-500">
+                  <AlertTriangle className="h-4 w-4" />
                   Unsaved Changes
                 </div>
               )}
               {saveStatus === 'saved' && (
-                <div className="flex items-center gap-2 text-[#28E7A2] text-xs font-mono">
-                  <CheckCircle2 className="w-4 h-4" />
+                <div className="flex items-center gap-2 font-mono text-xs text-[#28E7A2]">
+                  <CheckCircle2 className="h-4 w-4" />
                   Saved
                 </div>
               )}
               <button
                 onClick={handleReset}
-                className="flex items-center gap-2 px-4 py-2 bg-[#1F1F1F] border border-[#333] text-gray-300 rounded-lg hover:text-white hover:border-[#444] text-xs font-mono transition-colors"
+                className="flex items-center gap-2 rounded-lg border border-[#333] bg-[#1F1F1F] px-4 py-2 font-mono text-xs text-gray-300 transition-colors hover:border-[#444] hover:text-white"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="h-3.5 w-3.5" />
                 Reset
               </button>
               <button
                 onClick={handleSave}
                 disabled={!hasChanges || saveStatus === 'saving'}
                 className={cn(
-                  "flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-bold transition-all",
+                  'flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-bold transition-all',
                   hasChanges
-                    ? "bg-[#28E7A2] text-black hover:bg-[#28E7A2]/80 shadow-[0_0_15px_rgba(40,231,162,0.3)]"
-                    : "bg-[#1F1F1F] text-[#666] cursor-not-allowed"
+                    ? 'bg-[#28E7A2] text-black shadow-[0_0_15px_rgba(40,231,162,0.3)] hover:bg-[#28E7A2]/80'
+                    : 'cursor-not-allowed bg-[#1F1F1F] text-[#666]'
                 )}
               >
-                <Save className="w-4 h-4" />
+                <Save className="h-4 w-4" />
                 {saveStatus === 'saving' ? 'Saving...' : 'Save Config'}
               </button>
             </div>
@@ -425,38 +437,43 @@ export function SYS01Bootloader() {
       </header>
 
       {/* MAIN CONTENT */}
-      <main className="max-w-[1400px] mx-auto px-6 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          
+      <main className="mx-auto max-w-[1400px] px-6 py-8">
+        <div className="flex flex-col gap-8 lg:flex-row">
           {/* SIDEBAR NAV */}
-          <nav className="lg:w-64 shrink-0">
+          <nav className="shrink-0 lg:w-64">
             <div className="sticky top-8 space-y-2">
               {Object.entries(CATEGORIES).map(([key, cat]) => {
-                const Icon = cat.icon;
-                const isActive = activeCategory === key;
-                const fieldCount = fieldsByCategory[key]?.length || 0;
-                
+                const Icon = cat.icon
+                const isActive = activeCategory === key
+                const fieldCount = fieldsByCategory[key]?.length || 0
+
                 return (
                   <button
                     key={key}
-                    onClick={() => setActiveCategory(key as keyof typeof CATEGORIES)}
+                    onClick={() =>
+                      setActiveCategory(key as keyof typeof CATEGORIES)
+                    }
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all",
+                      'flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-all',
                       isActive
-                        ? "bg-[#28E7A2]/10 border border-[#28E7A2]/30 text-white"
-                        : "bg-[#0A0A0A] border border-[#1F1F1F] text-[#888] hover:text-white hover:border-[#333]"
+                        ? 'border border-[#28E7A2]/30 bg-[#28E7A2]/10 text-white'
+                        : 'border border-[#1F1F1F] bg-[#0A0A0A] text-[#888] hover:border-[#333] hover:text-white'
                     )}
                   >
-                    <Icon className={cn(
-                      "w-5 h-5",
-                      isActive ? "text-[#28E7A2]" : "text-[#666]"
-                    )} />
+                    <Icon
+                      className={cn(
+                        'h-5 w-5',
+                        isActive ? 'text-[#28E7A2]' : 'text-[#666]'
+                      )}
+                    />
                     <div className="flex-1">
                       <div className="text-sm font-medium">{cat.label}</div>
-                      <div className="text-[10px] text-[#666]">{fieldCount} settings</div>
+                      <div className="text-[10px] text-[#666]">
+                        {fieldCount} settings
+                      </div>
                     </div>
                   </button>
-                );
+                )
               })}
             </div>
           </nav>
@@ -464,14 +481,14 @@ export function SYS01Bootloader() {
           {/* CONFIG PANEL */}
           <div className="flex-1">
             {/* Category Header */}
-            <div className="mb-6 pb-4 border-b border-[#1F1F1F]">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <div className="mb-6 border-b border-[#1F1F1F] pb-4">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-white">
                 {React.createElement(CATEGORIES[activeCategory].icon, {
-                  className: "w-5 h-5 text-[#28E7A2]"
+                  className: 'w-5 h-5 text-[#28E7A2]',
                 })}
                 {CATEGORIES[activeCategory].label}
               </h2>
-              <p className="text-sm text-[#666] mt-1">
+              <p className="mt-1 text-sm text-[#666]">
                 {CATEGORIES[activeCategory].description}
               </p>
             </div>
@@ -482,28 +499,28 @@ export function SYS01Bootloader() {
                 <div
                   key={field.key}
                   className={cn(
-                    "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg",
-                    "bg-[#0A0A0A] border border-[#1F1F1F] hover:border-[#333] transition-colors"
+                    'flex flex-col justify-between gap-4 rounded-lg p-4 sm:flex-row sm:items-center',
+                    'border border-[#1F1F1F] bg-[#0A0A0A] transition-colors hover:border-[#333]'
                   )}
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{field.label}</span>
+                      <span className="text-sm font-medium text-white">
+                        {field.label}
+                      </span>
                       {field.is_critical && (
-                        <Lock className="w-3 h-3 text-amber-500" />
+                        <Lock className="h-3 w-3 text-amber-500" />
                       )}
                     </div>
-                    <p className="text-xs text-[#666] mt-0.5 flex items-start gap-1">
-                      <Info className="w-3 h-3 mt-0.5 shrink-0" />
+                    <p className="mt-0.5 flex items-start gap-1 text-xs text-[#666]">
+                      <Info className="mt-0.5 h-3 w-3 shrink-0" />
                       {field.description}
                     </p>
-                    <div className="text-[10px] font-mono text-[#444] mt-1">
+                    <div className="mt-1 font-mono text-[10px] text-[#444]">
                       key: {field.key}
                     </div>
                   </div>
-                  <div className="flex justify-end">
-                    {renderField(field)}
-                  </div>
+                  <div className="flex justify-end">{renderField(field)}</div>
                 </div>
               ))}
             </div>
@@ -511,46 +528,47 @@ export function SYS01Bootloader() {
         </div>
 
         {/* SYSTEM STATUS FOOTER */}
-        <div className="mt-12 p-6 bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg">
-          <h3 className="text-[11px] font-mono text-[#666] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Server className="w-4 h-4" />
+        <div className="mt-12 rounded-lg border border-[#1F1F1F] bg-[#0A0A0A] p-6">
+          <h3 className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#666]">
+            <Server className="h-4 w-4" />
             System Status
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#28E7A2] animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-[#28E7A2]" />
               <div>
                 <div className="text-xs text-[#666]">Database</div>
-                <div className="text-sm text-white font-mono">Connected</div>
+                <div className="font-mono text-sm text-white">Connected</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#28E7A2] animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-[#28E7A2]" />
               <div>
                 <div className="text-xs text-[#666]">API Gateway</div>
-                <div className="text-sm text-white font-mono">Healthy</div>
+                <div className="font-mono text-sm text-white">Healthy</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#28E7A2] animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-[#28E7A2]" />
               <div>
                 <div className="text-xs text-[#666]">Cache</div>
-                <div className="text-sm text-white font-mono">98% Hit Rate</div>
+                <div className="font-mono text-sm text-white">98% Hit Rate</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <div className="h-2 w-2 rounded-full bg-amber-500" />
               <div>
                 <div className="text-xs text-[#666]">Queue</div>
-                <div className="text-sm text-amber-400 font-mono">3 Pending</div>
+                <div className="font-mono text-sm text-amber-400">
+                  3 Pending
+                </div>
               </div>
             </div>
           </div>
         </div>
       </main>
     </div>
-  );
+  )
 }
 
-export default SYS01Bootloader;
-
+export default SYS01Bootloader

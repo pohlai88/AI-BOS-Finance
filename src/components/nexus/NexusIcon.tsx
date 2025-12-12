@@ -1,17 +1,17 @@
-import { motion } from 'motion/react';
-import { cn } from '@/lib/utils';
+import { motion } from 'motion/react'
+import { cn } from '@/lib/utils'
 
 interface NexusIconProps {
-  size?: 'sm' | 'md' | 'lg';
-  animated?: boolean;
-  className?: string;
+  size?: 'sm' | 'md' | 'lg'
+  animated?: boolean
+  className?: string
 }
 
 const sizeMap = {
   sm: { wrapper: 'w-6 h-6', svg: 24 },
   md: { wrapper: 'w-7 h-7', svg: 28 },
   lg: { wrapper: 'w-10 h-10', svg: 40 },
-} as const;
+} as const
 
 /**
  * NexusIcon - The Official NexusCanon Logo
@@ -22,13 +22,16 @@ const sizeMap = {
  * @example
  * <NexusIcon size="md" animated />
  */
-export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIconProps) => {
-  const { wrapper, svg } = sizeMap[size];
+export const NexusIcon = ({
+  size = 'md',
+  animated = true,
+  className,
+}: NexusIconProps) => {
+  const { wrapper, svg } = sizeMap[size]
 
   return (
     <div className={cn(wrapper, 'relative flex-shrink-0', className)}>
       <svg width={svg} height={svg} viewBox="0 0 40 40" fill="none">
-        
         {/* OUTER RING - Orbiting around the diamond */}
         {animated ? (
           <g style={{ transformOrigin: 'center', transformBox: 'fill-box' }}>
@@ -41,21 +44,21 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
               strokeDasharray="2 2"
               fill="none"
               animate={{ rotate: 360 }}
-              transition={{ 
-                duration: 15, 
-                repeat: Infinity, 
-                ease: 'linear' 
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: 'linear',
               }}
               style={{ transformOrigin: '20px 20px' }}
             />
           </g>
         ) : (
-          <circle 
-            cx="20" 
-            cy="20" 
-            r="16" 
-            stroke="rgba(40, 231, 162, 0.3)" 
-            strokeWidth="1" 
+          <circle
+            cx="20"
+            cy="20"
+            r="16"
+            stroke="rgba(40, 231, 162, 0.3)"
+            strokeWidth="1"
             strokeDasharray="2 2"
             fill="none"
           />
@@ -95,7 +98,14 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
             transition={{ duration: 1, delay: 1 }}
           />
         ) : (
-          <line x1="20" y1="8" x2="20" y2="32" stroke="rgba(40, 231, 162, 0.8)" strokeWidth="1" />
+          <line
+            x1="20"
+            y1="8"
+            x2="20"
+            y2="32"
+            stroke="rgba(40, 231, 162, 0.8)"
+            strokeWidth="1"
+          />
         )}
 
         {/* Pulse Center */}
@@ -117,5 +127,5 @@ export const NexusIcon = ({ size = 'md', animated = true, className }: NexusIcon
         )}
       </svg>
     </div>
-  );
-};
+  )
+}

@@ -1,24 +1,33 @@
-import React from 'react';
-import { ResponsiveContainer, RadialBarChart, RadialBar, PolarAngleAxis, Tooltip } from 'recharts';
+import React from 'react'
+import {
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar,
+  PolarAngleAxis,
+  Tooltip,
+} from 'recharts'
 
 interface HealthCoreGaugeProps {
   data: {
-    subject: string;
-    A: number;
-    fullMark: number;
-  }[];
-  color?: string;
+    subject: string
+    A: number
+    fullMark: number
+  }[]
+  color?: string
 }
 
-export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProps) {
+export function HealthCoreGauge({
+  data,
+  color = '#28E7A2',
+}: HealthCoreGaugeProps) {
   // TRANSFORM DATA: Military / Forensic styling
   // We use thin bars and strict coloring
   const formattedData = data.map((d, i) => {
     // Semantic Coloring Logic
-    let ringColor = '#28E7A2'; // Default: Secure (Green)
+    let ringColor = '#28E7A2' // Default: Secure (Green)
     if (d.A < 60)
-      ringColor = '#EF4444'; // Critical (Red)
-    else if (d.A < 85) ringColor = '#FBBF24'; // Warning (Amber)
+      ringColor = '#EF4444' // Critical (Red)
+    else if (d.A < 85) ringColor = '#FBBF24' // Warning (Amber)
 
     // Override for specific types if needed, but semantic is more "Military"
     return {
@@ -27,21 +36,21 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
       fill: ringColor,
       // Add a "track" value for the full circle background?
       // Recharts handles background prop on RadialBar
-    };
-  });
+    }
+  })
 
   return (
-    <div className="w-full h-[320px] relative flex items-center justify-center bg-[#050505] overflow-hidden">
+    <div className="relative flex h-[320px] w-full items-center justify-center overflow-hidden bg-[#050505]">
       {/* =========================================================================
           LAYER 0: STATIC HUD ELEMENTS (The "Reticle")
           ========================================================================= */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0">
         {/* Crosshairs */}
-        <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-[#111]" />
+        <div className="absolute bottom-0 left-1/2 top-0 w-[1px] bg-[#111]" />
         <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-[#111]" />
 
         {/* Outer Ring Ticks */}
-        <svg className="absolute inset-0 w-full h-full opacity-30">
+        <svg className="absolute inset-0 h-full w-full opacity-30">
           <circle
             cx="50%"
             cy="50%"
@@ -51,20 +60,27 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
             strokeWidth="1"
             strokeDasharray="4 4"
           />
-          <circle cx="50%" cy="50%" r="32%" fill="none" stroke="#333" strokeWidth="1" />
+          <circle
+            cx="50%"
+            cy="50%"
+            r="32%"
+            fill="none"
+            stroke="#333"
+            strokeWidth="1"
+          />
         </svg>
 
         {/* Corner Brackets */}
-        <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#28E7A2]" />
-        <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-[#28E7A2]" />
-        <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-[#28E7A2]" />
-        <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#28E7A2]" />
+        <div className="absolute left-2 top-2 h-4 w-4 border-l border-t border-[#28E7A2]" />
+        <div className="absolute right-2 top-2 h-4 w-4 border-r border-t border-[#28E7A2]" />
+        <div className="absolute bottom-2 left-2 h-4 w-4 border-b border-l border-[#28E7A2]" />
+        <div className="absolute bottom-2 right-2 h-4 w-4 border-b border-r border-[#28E7A2]" />
       </div>
 
       {/* =========================================================================
           LAYER 1: DATA VISUALIZATION (Recharts)
           ========================================================================= */}
-      <div className="w-full h-full relative z-10">
+      <div className="relative z-10 h-full w-full">
         <ResponsiveContainer
           width="100%"
           height="100%"
@@ -83,7 +99,12 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
             endAngle={-180}
           >
             {/* The PolarAngleAxis is tricky in RadialBar, often invisible. We simulate scale via SVG above. */}
-            <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
+            <PolarAngleAxis
+              type="number"
+              domain={[0, 100]}
+              angleAxisId={0}
+              tick={false}
+            />
 
             <RadialBar
               background={{ fill: '#111' }} // Dark tracks
@@ -98,25 +119,30 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
               cursor={false}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
-                  const data = payload[0].payload;
+                  const data = payload[0].payload
                   return (
-                    <div className="bg-black/90 border border-[#28E7A2] p-2 shadow-[0_0_10px_rgba(40,231,162,0.2)]">
-                      <div className="flex items-center justify-between gap-4 mb-1">
-                        <span className="font-mono text-[10px] text-[#28E7A2] uppercase tracking-widest">
+                    <div className="border border-[#28E7A2] bg-black/90 p-2 shadow-[0_0_10px_rgba(40,231,162,0.2)]">
+                      <div className="mb-1 flex items-center justify-between gap-4">
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-[#28E7A2]">
                           {data.name}
                         </span>
-                        <span className="font-mono text-[10px] text-white">{data.value}%</span>
+                        <span className="font-mono text-[10px] text-white">
+                          {data.value}%
+                        </span>
                       </div>
                       <div className="h-[2px] w-full bg-[#111]">
                         <div
                           className="h-full"
-                          style={{ width: `${data.value}%`, backgroundColor: data.fill }}
+                          style={{
+                            width: `${data.value}%`,
+                            backgroundColor: data.fill,
+                          }}
                         />
                       </div>
                     </div>
-                  );
+                  )
                 }
-                return null;
+                return null
               }}
             />
           </RadialBarChart>
@@ -127,26 +153,32 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
           LAYER 2: DATA LABELS (Absolute Positioning for Precision)
           ========================================================================= */}
       {/* We list the metrics on the side or overlay them, but let's do a "List Overlay" style for clarity */}
-      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
+      <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-end justify-between">
         <div className="flex flex-col gap-1">
           {formattedData.slice(0, 3).map((d) => (
             <div key={d.name} className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5" style={{ backgroundColor: d.fill }} />
-              <span className="font-mono text-[9px] text-[#666] uppercase tracking-wide">
+              <div
+                className="h-1.5 w-1.5"
+                style={{ backgroundColor: d.fill }}
+              />
+              <span className="font-mono text-[9px] uppercase tracking-wide text-[#666]">
                 {d.name}
               </span>
               <span className="font-mono text-[9px] text-white">{d.value}</span>
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 items-end">
+        <div className="flex flex-col items-end gap-1">
           {formattedData.slice(3).map((d) => (
             <div key={d.name} className="flex items-center gap-2">
               <span className="font-mono text-[9px] text-white">{d.value}</span>
-              <span className="font-mono text-[9px] text-[#666] uppercase tracking-wide">
+              <span className="font-mono text-[9px] uppercase tracking-wide text-[#666]">
                 {d.name}
               </span>
-              <div className="w-1.5 h-1.5" style={{ backgroundColor: d.fill }} />
+              <div
+                className="h-1.5 w-1.5"
+                style={{ backgroundColor: d.fill }}
+              />
             </div>
           ))}
         </div>
@@ -155,28 +187,31 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
       {/* =========================================================================
           LAYER 3: CORE READOUT
           ========================================================================= */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-0">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 flex -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center">
         {/* Decorative brackets */}
         <div className="absolute -left-6 h-8 border-l border-[#28E7A2] opacity-50" />
         <div className="absolute -right-6 h-8 border-r border-[#28E7A2] opacity-50" />
 
-        <span className="text-4xl font-mono text-white font-medium tracking-tighter tabular-nums text-shadow-glow">
-          {Math.round(data.reduce((acc, curr) => acc + curr.A, 0) / data.length)}
+        <span className="text-shadow-glow font-mono text-4xl font-medium tabular-nums tracking-tighter text-white">
+          {Math.round(
+            data.reduce((acc, curr) => acc + curr.A, 0) / data.length
+          )}
         </span>
-        <span className="text-[7px] text-[#28E7A2] font-mono uppercase tracking-[0.2em] mt-1 bg-[#28E7A2]/10 px-1">
+        <span className="mt-1 bg-[#28E7A2]/10 px-1 font-mono text-[7px] uppercase tracking-[0.2em] text-[#28E7A2]">
           INTEGRITY
         </span>
       </div>
 
       {/* SCAN LINE ANIMATION */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-10"
+        className="pointer-events-none absolute inset-0 opacity-10"
         style={{
-          background: 'linear-gradient(transparent 50%, rgba(40, 231, 162, 0.2) 50%)',
+          background:
+            'linear-gradient(transparent 50%, rgba(40, 231, 162, 0.2) 50%)',
           backgroundSize: '100% 4px',
         }}
       />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#28E7A2] opacity-20 animate-[scanVertical_4s_linear_infinite]" />
+      <div className="absolute left-0 right-0 top-0 h-[1px] animate-[scanVertical_4s_linear_infinite] bg-[#28E7A2] opacity-20" />
       <style>{`
         @keyframes scanVertical {
           0% { transform: translateY(0); opacity: 0; }
@@ -186,5 +221,5 @@ export function HealthCoreGauge({ data, color = '#28E7A2' }: HealthCoreGaugeProp
         }
       `}</style>
     </div>
-  );
+  )
 }

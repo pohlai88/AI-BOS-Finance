@@ -2,10 +2,10 @@
 
 /**
  * Home Page (/)
- * 
+ *
  * Native Next.js App Router page (Wave 4 migration)
  * Migrated from: React Router route "/"
- * 
+ *
  * @see REF_039_RouteMigrationStrategy.md - Wave 4
  */
 

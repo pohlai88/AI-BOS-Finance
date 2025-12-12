@@ -6,12 +6,12 @@ import type { CanonPageMeta } from '@/canon-pages/registry'
 
 /**
  * Canon Page Shell
- * 
+ *
  * Wraps MDX content with governance metadata:
  * - Status banner (ACTIVE, DRAFT, DEPRECATED, ARCHIVED)
  * - Version and last updated info
  * - Canon ID badge
- * 
+ *
  * @see REF_037 - Phase 3: Canon Page System
  */
 
@@ -54,49 +54,49 @@ export function CanonPageShell({ meta, children }: CanonPageShellProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="border-b border-nexus-border/30 pb-6">
+      <header className="border-nexus-border/30 border-b pb-6">
         {/* Canon ID Badge */}
-        <div className="flex items-center gap-3 mb-4">
-          <span className="px-2 py-1 rounded bg-nexus-green/20 text-nexus-green text-xs font-mono font-semibold">
+        <div className="mb-4 flex items-center gap-3">
+          <span className="bg-nexus-green/20 text-nexus-green rounded px-2 py-1 font-mono text-xs font-semibold">
             {meta.id}
           </span>
           <span className="text-nexus-signal/40 text-xs">v{meta.version}</span>
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-nexus-signal mb-2">
+        <h1 className="text-nexus-signal mb-2 text-3xl font-bold">
           {meta.title}
         </h1>
 
         {/* Description */}
         {meta.description && (
-          <p className="text-nexus-signal/60 text-lg">
-            {meta.description}
-          </p>
+          <p className="text-nexus-signal/60 text-lg">{meta.description}</p>
         )}
 
         {/* Status Banner */}
-        <div className={`mt-4 flex items-center gap-2 px-3 py-2 rounded border ${status.className}`}>
-          <StatusIcon className="w-4 h-4" />
-          <span className="font-medium text-sm">{status.label}</span>
+        <div
+          className={`mt-4 flex items-center gap-2 rounded border px-3 py-2 ${status.className}`}
+        >
+          <StatusIcon className="h-4 w-4" />
+          <span className="text-sm font-medium">{status.label}</span>
           <span className="text-sm opacity-70">— {status.description}</span>
         </div>
 
         {/* Last Updated */}
-        <div className="mt-4 flex items-center gap-4 text-xs text-nexus-signal/40">
+        <div className="text-nexus-signal/40 mt-4 flex items-center gap-4 text-xs">
           <span>Last updated: {meta.lastUpdated}</span>
         </div>
       </header>
 
       {/* MDX Content */}
-      <div className="min-h-[50vh]">
-        {children}
-      </div>
+      <div className="min-h-[50vh]">{children}</div>
 
       {/* Footer */}
-      <footer className="border-t border-nexus-border/30 pt-6 mt-12">
-        <div className="flex items-center justify-between text-xs text-nexus-signal/40">
-          <span>Canon ID: {meta.id} | Version: {meta.version}</span>
+      <footer className="border-nexus-border/30 mt-12 border-t pt-6">
+        <div className="text-nexus-signal/40 flex items-center justify-between text-xs">
+          <span>
+            Canon ID: {meta.id} | Version: {meta.version}
+          </span>
           <span>Part of the Nexus Canon Governance System</span>
         </div>
       </footer>

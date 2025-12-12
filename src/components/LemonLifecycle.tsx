@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
 
 // --- Types ---
 interface MorphologyNodeProps {
-  angle: number;
-  emoji: string;
-  label: string;
-  sublabel: string;
-  examples: string[];
-  color: string;
-  tier: 'child' | 'cell' | 'trace';
-  isMerged: boolean;
+  angle: number
+  emoji: string
+  label: string
+  sublabel: string
+  examples: string[]
+  color: string
+  tier: 'child' | 'cell' | 'trace'
+  isMerged: boolean
 }
 
 // --- Components ---
@@ -26,17 +26,32 @@ const MorphologyNode = ({
   tier,
   isMerged,
 }: MorphologyNodeProps) => {
-  const radius = 220; // Slightly wider for better separation
-  const x = Math.cos((angle * Math.PI) / 180) * radius;
-  const y = Math.sin((angle * Math.PI) / 180) * radius;
+  const radius = 220 // Slightly wider for better separation
+  const x = Math.cos((angle * Math.PI) / 180) * radius
+  const y = Math.sin((angle * Math.PI) / 180) * radius
 
   const colorMap = {
-    child: { border: '#FFD600', bg: '#1F1F1F', text: '#FFD600', glow: 'rgba(255, 214, 0, 0.2)' },
-    cell: { border: '#28E7A2', bg: '#0D2420', text: '#28E7A2', glow: 'rgba(40, 231, 162, 0.2)' },
-    trace: { border: '#FFFFFF', bg: '#1F1F1F', text: '#FFFFFF', glow: 'rgba(255, 255, 255, 0.2)' },
-  };
+    child: {
+      border: '#FFD600',
+      bg: '#1F1F1F',
+      text: '#FFD600',
+      glow: 'rgba(255, 214, 0, 0.2)',
+    },
+    cell: {
+      border: '#28E7A2',
+      bg: '#0D2420',
+      text: '#28E7A2',
+      glow: 'rgba(40, 231, 162, 0.2)',
+    },
+    trace: {
+      border: '#FFFFFF',
+      bg: '#1F1F1F',
+      text: '#FFFFFF',
+      glow: 'rgba(255, 255, 255, 0.2)',
+    },
+  }
 
-  const colors = colorMap[tier];
+  const colors = colorMap[tier]
 
   return (
     <motion.div
@@ -64,44 +79,44 @@ const MorphologyNode = ({
     >
       {/* Node Content */}
       <motion.div
-        className="relative w-[120px] h-[120px] rounded-full flex flex-col items-center justify-center cursor-pointer bg-[#1F1F1F]"
+        className="relative flex h-[120px] w-[120px] cursor-pointer flex-col items-center justify-center rounded-full bg-[#1F1F1F]"
         style={{
           backgroundColor: colors.bg,
           border: `2px solid ${colors.border}`,
           boxShadow: `0 0 20px ${colors.glow}`,
         }}
       >
-        <div className="text-3xl mb-1 select-none">{emoji}</div>
+        <div className="mb-1 select-none text-3xl">{emoji}</div>
         <div
-          className="font-mono text-[8px] tracking-wider uppercase font-semibold"
+          className="font-mono text-[8px] font-semibold uppercase tracking-wider"
           style={{ color: colors.text }}
         >
           {label}
         </div>
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}
 
 const Tether = ({
   angle,
   color,
   isMerged,
 }: {
-  angle: number;
-  color: string;
-  isMerged: boolean;
+  angle: number
+  color: string
+  isMerged: boolean
 }) => {
   const colorMap: Record<string, string> = {
     yellow: '#FFD600',
     green: '#28E7A2',
     white: '#FFFFFF',
-  };
-  const hexColor = colorMap[color];
+  }
+  const hexColor = colorMap[color]
 
   return (
     <motion.div
-      className="absolute w-full h-full pointer-events-none z-0"
+      className="pointer-events-none absolute z-0 h-full w-full"
       style={{ transform: `rotate(${angle}deg)` }}
       animate={{ opacity: isMerged ? 0 : 1 }}
       transition={{ duration: 0.5 }}
@@ -116,7 +131,7 @@ const Tether = ({
         {/* Only pulse data when NOT merged */}
         {!isMerged && (
           <motion.div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-4 rounded-full blur-[1px]"
+            className="absolute left-1/2 top-0 h-4 w-1.5 -translate-x-1/2 rounded-full blur-[1px]"
             style={{ backgroundColor: hexColor }}
             animate={{ top: ['10%', '100%'], opacity: [0, 1, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'circOut' }}
@@ -124,28 +139,28 @@ const Tether = ({
         )}
       </div>
     </motion.div>
-  );
-};
+  )
+}
 
 // --- Main Scene ---
 
 export const LemonLifecycle = () => {
   // State to control the heartbeat of the animation
-  const [isMerged, setIsMerged] = useState(false);
+  const [isMerged, setIsMerged] = useState(false)
 
   // Cycle every 6 seconds (3s expanded, 3s merged)
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsMerged((prev) => !prev);
-    }, 6000); // 6 seconds per phase
-    return () => clearInterval(interval);
-  }, []);
+      setIsMerged((prev) => !prev)
+    }, 6000) // 6 seconds per phase
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto h-[700px] flex items-center justify-center overflow-hidden bg-[#050505] text-white">
+    <div className="relative mx-auto flex h-[700px] w-full max-w-6xl items-center justify-center overflow-hidden bg-[#050505] text-white">
       {/* Background Grid */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage:
             'linear-gradient(#999 1px, transparent 1px), linear-gradient(90deg, #999 1px, transparent 1px)',
@@ -155,18 +170,22 @@ export const LemonLifecycle = () => {
 
       {/* Orbit Rings (Fade out when merged to focus on center) */}
       <motion.div
-        className="absolute w-[440px] h-[440px] rounded-full border border-[#333]"
+        className="absolute h-[440px] w-[440px] rounded-full border border-[#333]"
         animate={{ scale: isMerged ? 0.5 : 1, opacity: isMerged ? 0 : 0.3 }}
         transition={{ duration: 1 }}
       />
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full border border-dashed border-[#333]"
-        animate={{ scale: isMerged ? 0.5 : 1, opacity: isMerged ? 0 : 0.15, rotate: 180 }}
+        className="absolute h-[500px] w-[500px] rounded-full border border-dashed border-[#333]"
+        animate={{
+          scale: isMerged ? 0.5 : 1,
+          opacity: isMerged ? 0 : 0.15,
+          rotate: 180,
+        }}
         transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
       />
 
       {/* --- THE SCENE WRAPPER --- */}
-      <div className="relative w-[600px] h-[600px] flex items-center justify-center">
+      <div className="relative flex h-[600px] w-[600px] items-center justify-center">
         {/* CENTER LEMON (The Mother Canon) */}
         <motion.div
           className="absolute z-40 flex flex-col items-center justify-center"
@@ -177,7 +196,7 @@ export const LemonLifecycle = () => {
         >
           {/* Golden Aura (Only visible when merged) */}
           <motion.div
-            className="absolute w-full h-full rounded-full bg-[#FFD600] blur-2xl -z-10"
+            className="absolute -z-10 h-full w-full rounded-full bg-[#FFD600] blur-2xl"
             animate={{
               opacity: isMerged ? 0.3 : 0,
               scale: isMerged ? 1.5 : 0.8,
@@ -186,7 +205,7 @@ export const LemonLifecycle = () => {
 
           {/* Main Core UI */}
           <motion.div
-            className="relative w-32 h-32 bg-[#0A0A0A] rounded-full flex flex-col items-center justify-center z-20 overflow-hidden"
+            className="relative z-20 flex h-32 w-32 flex-col items-center justify-center overflow-hidden rounded-full bg-[#0A0A0A]"
             style={{
               border: isMerged ? '4px solid #FFD600' : '3px solid #444',
               boxShadow: isMerged ? '0 0 50px rgba(255, 214, 0, 0.4)' : 'none',
@@ -200,11 +219,15 @@ export const LemonLifecycle = () => {
             <AnimatePresence>
               {isMerged && (
                 <motion.div
-                  className="absolute w-full h-1 bg-[#FFD600] blur-sm z-30 opacity-70"
+                  className="absolute z-30 h-1 w-full bg-[#FFD600] opacity-70 blur-sm"
                   initial={{ top: '-10%' }}
                   animate={{ top: '110%' }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
                 />
               )}
             </AnimatePresence>
@@ -213,7 +236,7 @@ export const LemonLifecycle = () => {
             <AnimatePresence>
               {isMerged && (
                 <motion.div
-                  className="absolute inset-0 bg-[linear-gradient(rgba(255,214,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,214,0,0.1)_1px,transparent_1px)] bg-[size:8px_8px] z-10"
+                  className="absolute inset-0 z-10 bg-[linear-gradient(rgba(255,214,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,214,0,0.1)_1px,transparent_1px)] bg-[size:8px_8px]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -223,7 +246,7 @@ export const LemonLifecycle = () => {
 
             {/* Icon Transformation */}
             <motion.span
-              className="filter drop-shadow-lg relative z-10"
+              className="relative z-10 drop-shadow-lg filter"
               animate={{ fontSize: isMerged ? '60px' : '48px' }}
             >
               🍋
@@ -239,10 +262,10 @@ export const LemonLifecycle = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute bottom-4 flex flex-col items-center"
                 >
-                  <span className="font-mono text-[6px] text-[#FFD600] uppercase font-bold tracking-widest bg-black/50 px-1">
+                  <span className="bg-black/50 px-1 font-mono text-[6px] font-bold uppercase tracking-widest text-[#FFD600]">
                     Immutable
                   </span>
-                  <span className="font-mono text-[5px] text-white uppercase tracking-widest">
+                  <span className="font-mono text-[5px] uppercase tracking-widest text-white">
                     Metadata
                   </span>
                 </motion.div>
@@ -254,7 +277,7 @@ export const LemonLifecycle = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute bottom-4 flex flex-col items-center"
                 >
-                  <span className="font-mono text-[7px] text-[#888] uppercase tracking-widest">
+                  <span className="font-mono text-[7px] uppercase tracking-widest text-[#888]">
                     Base Canon
                   </span>
                 </motion.div>
@@ -268,32 +291,40 @@ export const LemonLifecycle = () => {
               <>
                 {/* Left Panel: VARIABLE */}
                 <motion.div
-                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#0A0A0A] border-l-2 border-[#888] p-3 text-right pointer-events-none"
+                  className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 border-l-2 border-[#888] bg-[#0A0A0A] p-3 text-right"
                   initial={{ x: 60, opacity: 0 }}
                   animate={{ x: -140, opacity: 1 }}
                   exit={{ x: 60, opacity: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                  <div className="text-[9px] text-[#666] uppercase tracking-[0.15em] mb-1">
+                  <div className="mb-1 text-[9px] uppercase tracking-[0.15em] text-[#666]">
                     Morphology
                   </div>
-                  <div className="text-sm text-white font-light tracking-tight">VARIABLE</div>
-                  <div className="mt-1 text-[7px] text-[#444] font-mono">💧 📦 🧬</div>
+                  <div className="text-sm font-light tracking-tight text-white">
+                    VARIABLE
+                  </div>
+                  <div className="mt-1 font-mono text-[7px] text-[#444]">
+                    💧 📦 🧬
+                  </div>
                 </motion.div>
 
                 {/* Right Panel: CONSTANT */}
                 <motion.div
-                  className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#0A0A0A] border-r-2 border-[#FFD600] p-3 text-left pointer-events-none"
+                  className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 border-r-2 border-[#FFD600] bg-[#0A0A0A] p-3 text-left"
                   initial={{ x: -60, opacity: 0 }}
                   animate={{ x: 140, opacity: 1 }}
                   exit={{ x: -60, opacity: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                  <div className="text-[9px] text-[#666] uppercase tracking-[0.15em] mb-1">
+                  <div className="mb-1 text-[9px] uppercase tracking-[0.15em] text-[#666]">
                     Metadata
                   </div>
-                  <div className="text-sm text-[#FFD600] font-bold tracking-tight">CONSTANT</div>
-                  <div className="mt-1 text-[7px] text-[#FFD600]/60 font-mono">🍋 TRUTH</div>
+                  <div className="text-sm font-bold tracking-tight text-[#FFD600]">
+                    CONSTANT
+                  </div>
+                  <div className="mt-1 font-mono text-[7px] text-[#FFD600]/60">
+                    🍋 TRUTH
+                  </div>
                 </motion.div>
               </>
             )}
@@ -307,11 +338,11 @@ export const LemonLifecycle = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 10, opacity: 0 }}
                 transition={{ delay: 0.6 }}
-                className="absolute -bottom-20 flex flex-col items-center pointer-events-none"
+                className="pointer-events-none absolute -bottom-20 flex flex-col items-center"
               >
-                <div className="flex items-center gap-2 bg-[#FFD600]/10 border border-[#FFD600] px-3 py-1 rounded-full">
-                  <ShieldCheck className="w-3 h-3 text-[#FFD600]" />
-                  <span className="font-mono text-[8px] text-[#FFD600] tracking-[0.15em] uppercase">
+                <div className="flex items-center gap-2 rounded-full border border-[#FFD600] bg-[#FFD600]/10 px-3 py-1">
+                  <ShieldCheck className="h-3 w-3 text-[#FFD600]" />
+                  <span className="font-mono text-[8px] uppercase tracking-[0.15em] text-[#FFD600]">
                     Verified
                   </span>
                 </div>
@@ -326,9 +357,9 @@ export const LemonLifecycle = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute -bottom-16 px-4 py-1.5 bg-[#111] border border-[#333] rounded-full whitespace-nowrap"
+                className="absolute -bottom-16 whitespace-nowrap rounded-full border border-[#333] bg-[#111] px-4 py-1.5"
               >
-                <span className="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">
+                <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">
                   STATE: MORPHOLOGICAL FLOW
                 </span>
               </motion.div>
@@ -337,7 +368,7 @@ export const LemonLifecycle = () => {
         </motion.div>
 
         {/* Tethers */}
-        <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="pointer-events-none absolute inset-0 z-0">
           <Tether angle={0} color="yellow" isMerged={isMerged} />
           <Tether angle={120} color="green" isMerged={isMerged} />
           <Tether angle={240} color="white" isMerged={isMerged} />
@@ -389,19 +420,28 @@ export const LemonLifecycle = () => {
       </div>
 
       {/* Storytelling Legend at Bottom */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-4 px-6 py-3 bg-[#0A0A0A]/90 backdrop-blur border border-[#333] rounded-full shadow-2xl">
+      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
+        <div className="flex items-center gap-4 rounded-full border border-[#333] bg-[#0A0A0A]/90 px-6 py-3 shadow-2xl backdrop-blur">
           {/* Animated Icons based on state */}
           <div className="flex items-center gap-3">
-            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>💧</motion.span>
-            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>📦</motion.span>
-            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>🧬</motion.span>
+            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>
+              💧
+            </motion.span>
+            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>
+              📦
+            </motion.span>
+            <motion.span animate={{ opacity: isMerged ? 0.3 : 1 }}>
+              🧬
+            </motion.span>
           </div>
 
-          <ArrowRight className="w-4 h-4 text-[#444]" />
+          <ArrowRight className="h-4 w-4 text-[#444]" />
 
           {/* The Result */}
-          <motion.div className="flex items-center gap-2" animate={{ scale: isMerged ? 1.1 : 1 }}>
+          <motion.div
+            className="flex items-center gap-2"
+            animate={{ scale: isMerged ? 1.1 : 1 }}
+          >
             <span className="text-xl">🍋</span>
             <span
               className={`font-mono text-[10px] tracking-wider transition-colors duration-500 ${isMerged ? 'text-[#FFD600]' : 'text-white'}`}
@@ -412,7 +452,7 @@ export const LemonLifecycle = () => {
         </div>
 
         {/* Progress Bar for the cycle */}
-        <div className="w-32 h-1 bg-[#222] rounded-full overflow-hidden">
+        <div className="h-1 w-32 overflow-hidden rounded-full bg-[#222]">
           <motion.div
             className="h-full bg-[#FFD600]"
             animate={{ width: isMerged ? ['0%', '100%'] : ['0%', '100%'] }}
@@ -421,5 +461,5 @@ export const LemonLifecycle = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

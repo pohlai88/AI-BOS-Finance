@@ -3,15 +3,15 @@ import { Txt } from './Txt'
 
 /**
  * 🛡️ THE CONTROL PLANE - Typography Governance
- * 
+ *
  * This Storybook story acts as the "Contract" for the Txt component.
- * 
+ *
  * Governance Workflow:
  * 1. Developer creates/updates Txt.tsx
  * 2. Developer opens Storybook
  * 3. Developer verifies: "Does this match the design spec?"
  * 4. Only then is it merged into the App
- * 
+ *
  * This prevents "50 Shades of Grey" by forcing visual verification
  * before code enters production.
  */
@@ -45,11 +45,13 @@ by preventing developers from using arbitrary text classes like \`text-slate-500
     variant: {
       control: 'select',
       options: ['h1', 'h2', 'h3', 'h4', 'body', 'subtle', 'small'],
-      description: 'Text variant - defines semantic meaning and visual hierarchy',
+      description:
+        'Text variant - defines semantic meaning and visual hierarchy',
     },
     as: {
       control: false,
-      description: 'Semantic HTML element override (e.g., render h1 visually but use h2 tag)',
+      description:
+        'Semantic HTML element override (e.g., render h1 visually but use h2 tag)',
     },
     children: {
       control: 'text',
@@ -63,7 +65,7 @@ type Story = StoryObj<typeof Txt>
 
 /**
  * 🧪 TEST CASE 1: Heading Hierarchy
- * 
+ *
  * Verify all heading variants render correctly.
  * This is the "Visual Audit" - see all text styles in one place.
  */
@@ -87,18 +89,20 @@ export const Headings: Story = {
 
 /**
  * 🧪 TEST CASE 2: Body Text
- * 
+ *
  * Standard body text with proper contrast and line height.
  */
 export const BodyText: Story = {
   args: {
     variant: 'body',
-    children: 'The quick brown fox jumps over the lazy dog. Standard body text should be readable, high contrast but not harsh black, and have comfortable line height. This is the default variant.',
+    children:
+      'The quick brown fox jumps over the lazy dog. Standard body text should be readable, high contrast but not harsh black, and have comfortable line height. This is the default variant.',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Standard body text variant with proper contrast and line height.',
+        story:
+          'Standard body text variant with proper contrast and line height.',
       },
     },
   },
@@ -106,7 +110,7 @@ export const BodyText: Story = {
 
 /**
  * 🧪 TEST CASE 3: Subtle Context
- * 
+ *
  * Subtle text for captions, metadata, and less important information.
  */
 export const SubtleContext: Story = {
@@ -117,7 +121,8 @@ export const SubtleContext: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Subtle text variant for captions, metadata, and less important information.',
+        story:
+          'Subtle text variant for captions, metadata, and less important information.',
       },
     },
   },
@@ -125,7 +130,7 @@ export const SubtleContext: Story = {
 
 /**
  * 🧪 TEST CASE 4: Small Labels
- * 
+ *
  * Small text for labels, fine print, and compact UI elements.
  */
 export const SmallLabels: Story = {
@@ -136,7 +141,8 @@ export const SmallLabels: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Small text variant for labels, fine print, and compact UI elements.',
+        story:
+          'Small text variant for labels, fine print, and compact UI elements.',
       },
     },
   },
@@ -144,7 +150,7 @@ export const SmallLabels: Story = {
 
 /**
  * 🧪 TEST CASE 5: Semantic Override
- * 
+ *
  * Verify the `as` prop works for SEO (visual h1, semantic h2).
  */
 export const SemanticOverride: Story = {
@@ -169,13 +175,13 @@ export const SemanticOverride: Story = {
 
 /**
  * 🧪 TEST CASE 6: All Variants Comparison
- * 
+ *
  * Side-by-side comparison of all variants.
  * This is the "Visual Audit" - see all text styles in one place.
  */
 export const AllVariants: Story = {
   render: () => (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       <div>
         <Txt variant="h1">Heading 1</Txt>
         <Txt variant="body" className="mt-2">
@@ -208,7 +214,8 @@ export const AllVariants: Story = {
       </div>
       <div>
         <Txt variant="subtle">
-          Subtle text for captions, metadata, timestamps, and less important information.
+          Subtle text for captions, metadata, timestamps, and less important
+          information.
         </Txt>
       </div>
       <div>
@@ -229,19 +236,21 @@ export const AllVariants: Story = {
 
 /**
  * 🧪 TEST CASE 7: Stress Test - Long Content
- * 
+ *
  * Verify Txt handles long content gracefully.
  * This prevents production bugs from content overflow.
  */
 export const LongContent: Story = {
   args: {
     variant: 'body',
-    children: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    children:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Stress test with long content to verify proper wrapping and spacing.',
+        story:
+          'Stress test with long content to verify proper wrapping and spacing.',
       },
     },
   },

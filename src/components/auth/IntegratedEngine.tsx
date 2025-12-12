@@ -4,15 +4,15 @@
 // Features: Interval-based screen shake, simplified stable SVG, heavy physics
 // ============================================================================
 
-import { createContext, useContext, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { createContext, useContext, useEffect } from 'react'
+import { motion } from 'motion/react'
 
 // --- TYPES & CONTEXT ---
 interface EngineContextType {
-  state: 'idle' | 'revving';
+  state: 'idle' | 'revving'
 }
 
-const EngineContext = createContext<EngineContextType>({ state: 'idle' });
+const EngineContext = createContext<EngineContextType>({ state: 'idle' })
 
 // --- THEME CONSTANTS ---
 const THEME = {
@@ -20,73 +20,93 @@ const THEME = {
   cyan: '#00F0FF', // Piston
   nexus: '#28E7A2',
   grid: '#1a1a1a',
-};
+}
 
 // --- PROVIDER COMPONENT ---
 // This handles the "Earthquake" logic when the engine revs
-export const EngineProvider = ({ children, state, setState, shakeX, shakeY }: any) => {
+export const EngineProvider = ({
+  children,
+  state,
+  setState,
+  shakeX,
+  shakeY,
+}: any) => {
   // The Physics Loop: Triggers screen shake on piston slams
   useEffect(() => {
-    let interval: any;
+    let interval: any
     if (state === 'revving') {
       // Violent shake every 400ms (synced with piston)
       interval = setInterval(() => {
-        const intensity = 5;
-        shakeX.set(Math.random() * intensity - intensity / 2);
-        shakeY.set(Math.random() * intensity - intensity / 2);
+        const intensity = 5
+        shakeX.set(Math.random() * intensity - intensity / 2)
+        shakeY.set(Math.random() * intensity - intensity / 2)
 
         // Reset quickly (damping)
         setTimeout(() => {
-          shakeX.set(0);
-          shakeY.set(0);
-        }, 50);
-      }, 400);
+          shakeX.set(0)
+          shakeY.set(0)
+        }, 50)
+      }, 400)
     } else {
       // Gentle idle vibration
       interval = setInterval(() => {
-        const intensity = 0.5;
-        shakeX.set(Math.random() * intensity - intensity / 2);
-        shakeY.set(Math.random() * intensity - intensity / 2);
+        const intensity = 0.5
+        shakeX.set(Math.random() * intensity - intensity / 2)
+        shakeY.set(Math.random() * intensity - intensity / 2)
 
         setTimeout(() => {
-          shakeX.set(0);
-          shakeY.set(0);
-        }, 100);
-      }, 3000);
+          shakeX.set(0)
+          shakeY.set(0)
+        }, 100)
+      }, 3000)
     }
-    return () => clearInterval(interval);
-  }, [state, shakeX, shakeY]);
+    return () => clearInterval(interval)
+  }, [state, shakeX, shakeY])
 
-  return <EngineContext.Provider value={{ state }}>{children}</EngineContext.Provider>;
-};
+  return (
+    <EngineContext.Provider value={{ state }}>
+      {children}
+    </EngineContext.Provider>
+  )
+}
 
 // --- UTILITY: POLAR MATH ---
-const polarToCartesian = (cx: number, cy: number, r: number, degrees: number) => {
-  const radians = ((degrees - 90) * Math.PI) / 180;
+const polarToCartesian = (
+  cx: number,
+  cy: number,
+  r: number,
+  degrees: number
+) => {
+  const radians = ((degrees - 90) * Math.PI) / 180
   return {
     x: cx + r * Math.cos(radians),
     y: cy + r * Math.sin(radians),
-  };
-};
+  }
+}
 
 // --- COMPONENT 1: AMBER FLYWHEEL (Left) ---
 export const AmberFlywheel = () => {
-  const { state } = useContext(EngineContext);
+  const { state } = useContext(EngineContext)
 
   // Generate precision tick marks
   const ticks = Array.from({ length: 60 }).map((_, i) => {
-    const angle = (i / 60) * 360;
-    const isMajor = i % 5 === 0;
-    const r1 = 130;
-    const r2 = isMajor ? 115 : 122;
-    const start = polarToCartesian(150, 150, r1, angle);
-    const end = polarToCartesian(150, 150, r2, angle);
-    return { x1: start.x, y1: start.y, x2: end.x, y2: end.y, isMajor, angle };
-  });
+    const angle = (i / 60) * 360
+    const isMajor = i % 5 === 0
+    const r1 = 130
+    const r2 = isMajor ? 115 : 122
+    const start = polarToCartesian(150, 150, r1, angle)
+    const end = polarToCartesian(150, 150, r2, angle)
+    return { x1: start.x, y1: start.y, x2: end.x, y2: end.y, isMajor, angle }
+  })
 
   return (
-    <div className="absolute left-[8vw] top-1/2 -translate-y-1/2 w-[300px] h-[300px] pointer-events-none">
-      <svg width="300" height="300" viewBox="0 0 300 300" className="overflow-visible">
+    <div className="pointer-events-none absolute left-[8vw] top-1/2 h-[300px] w-[300px] -translate-y-1/2">
+      <svg
+        width="300"
+        height="300"
+        viewBox="0 0 300 300"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="amber-glow">
             <feGaussianBlur stdDeviation="2" result="blur1" />
@@ -160,8 +180,8 @@ export const AmberFlywheel = () => {
           {ticks
             .filter((t) => t.isMajor)
             .map((tick, i) => {
-              const label = (i * 30).toString();
-              const pos = polarToCartesian(150, 150, 100, tick.angle);
+              const label = (i * 30).toString()
+              const pos = polarToCartesian(150, 150, 100, tick.angle)
               return (
                 <text
                   key={i}
@@ -171,18 +191,22 @@ export const AmberFlywheel = () => {
                   dominantBaseline="middle"
                   fill={THEME.amber}
                   opacity="0.7"
-                  style={{ fontSize: '8px', fontFamily: 'monospace', fontWeight: '600' }}
+                  style={{
+                    fontSize: '8px',
+                    fontFamily: 'monospace',
+                    fontWeight: '600',
+                  }}
                 >
                   {label}
                 </text>
-              );
+              )
             })}
 
           {/* Inner Spokes */}
           {Array.from({ length: 8 }).map((_, i) => {
-            const angle = (i / 8) * 360;
-            const inner = polarToCartesian(150, 150, 40, angle);
-            const outer = polarToCartesian(150, 150, 100, angle);
+            const angle = (i / 8) * 360
+            const inner = polarToCartesian(150, 150, 40, angle)
+            const outer = polarToCartesian(150, 150, 100, angle)
             return (
               <line
                 key={i}
@@ -194,7 +218,7 @@ export const AmberFlywheel = () => {
                 strokeWidth="1"
                 opacity="0.4"
               />
-            );
+            )
           })}
         </motion.g>
 
@@ -213,7 +237,14 @@ export const AmberFlywheel = () => {
 
         {/* Apply glow */}
         <g filter="url(#amber-glow)" opacity="0.6">
-          <circle cx="150" cy="150" r="120" stroke={THEME.amber} strokeWidth="0.5" fill="none" />
+          <circle
+            cx="150"
+            cy="150"
+            r="120"
+            stroke={THEME.amber}
+            strokeWidth="0.5"
+            fill="none"
+          />
         </g>
 
         {/* Static Mounting Arm (Connects to center screen) */}
@@ -221,8 +252,18 @@ export const AmberFlywheel = () => {
           animate={{ opacity: state === 'idle' ? 0.3 : 0.7 }}
           transition={{ duration: 0.3 }}
         >
-          <path d="M 150 150 L 300 150" stroke={THEME.amber} strokeWidth="6" opacity="0.4" />
-          <path d="M 150 150 L 300 150" stroke={THEME.amber} strokeWidth="2" opacity="0.8" />
+          <path
+            d="M 150 150 L 300 150"
+            stroke={THEME.amber}
+            strokeWidth="6"
+            opacity="0.4"
+          />
+          <path
+            d="M 150 150 L 300 150"
+            stroke={THEME.amber}
+            strokeWidth="2"
+            opacity="0.8"
+          />
           {/* Bolt points */}
           <circle cx="190" cy="150" r="4" fill={THEME.amber} opacity="0.7" />
           <circle cx="230" cy="150" r="4" fill={THEME.amber} opacity="0.7" />
@@ -238,16 +279,16 @@ export const AmberFlywheel = () => {
         RPM: {state === 'idle' ? '800' : '7500'}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 2: TRANSMISSION SHAFT (Center) ---
 export const TransmissionShaft = () => {
-  const { state } = useContext(EngineContext);
+  const { state } = useContext(EngineContext)
 
   return (
     <div
-      className="absolute top-1/2 -translate-y-1/2 h-[3px] bg-[#0a0a0a] overflow-hidden opacity-60 z-0 hidden lg:block"
+      className="absolute top-1/2 z-0 hidden h-[3px] -translate-y-1/2 overflow-hidden bg-[#0a0a0a] opacity-60 lg:block"
       style={{
         left: 'calc(8vw + 150px)',
         right: 'calc(8vw + 100px)',
@@ -264,7 +305,7 @@ export const TransmissionShaft = () => {
 
       {/* Energy Pulse - The Visual Connection */}
       <motion.div
-        className="absolute top-0 bottom-0 w-40 bg-gradient-to-r from-transparent via-white to-transparent"
+        className="absolute bottom-0 top-0 w-40 bg-gradient-to-r from-transparent via-white to-transparent"
         style={{ filter: 'blur(4px)' }}
         animate={{ left: ['-100%', '500%'] }}
         transition={{
@@ -280,7 +321,7 @@ export const TransmissionShaft = () => {
       {[0, 1].map((i) => (
         <motion.div
           key={i}
-          className="absolute top-0 bottom-0 w-20"
+          className="absolute bottom-0 top-0 w-20"
           style={{
             background:
               'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent)',
@@ -296,16 +337,21 @@ export const TransmissionShaft = () => {
         />
       ))}
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 3: CYAN PISTON (Right) ---
 export const CyanPiston = () => {
-  const { state } = useContext(EngineContext);
+  const { state } = useContext(EngineContext)
 
   return (
-    <div className="absolute right-[8vw] top-1/2 -translate-y-1/2 w-[200px] h-[420px] pointer-events-none">
-      <svg width="200" height="420" viewBox="0 0 200 420" className="overflow-visible">
+    <div className="pointer-events-none absolute right-[8vw] top-1/2 h-[420px] w-[200px] -translate-y-1/2">
+      <svg
+        width="200"
+        height="420"
+        viewBox="0 0 200 420"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="cyan-glow">
             <feGaussianBlur stdDeviation="2" result="blur1" />
@@ -340,8 +386,8 @@ export const CyanPiston = () => {
 
         {/* Measurement Ticks */}
         {Array.from({ length: 17 }).map((_, i) => {
-          const y = 50 + i * 20;
-          const isMajor = i % 5 === 0;
+          const y = 50 + i * 20
+          const isMajor = i % 5 === 0
           return (
             <g key={i}>
               <line
@@ -376,7 +422,7 @@ export const CyanPiston = () => {
                 </text>
               )}
             </g>
-          );
+          )
         })}
 
         {/* Top/Bottom brackets */}
@@ -413,7 +459,14 @@ export const CyanPiston = () => {
           }}
         >
           {/* Piston Head Body */}
-          <rect x="64" y="70" width="72" height="60" fill={`${THEME.cyan}20`} opacity="0.9" />
+          <rect
+            x="64"
+            y="70"
+            width="72"
+            height="60"
+            fill={`${THEME.cyan}20`}
+            opacity="0.9"
+          />
           <rect
             x="64"
             y="70"
@@ -493,9 +546,9 @@ export const CyanPiston = () => {
 
             {/* Impact particles/sparks */}
             {Array.from({ length: 8 }).map((_, i) => {
-              const angle = (i / 8) * 360;
-              const x = 100 + 30 * Math.cos((angle * Math.PI) / 180);
-              const y = 370 + 20 * Math.sin((angle * Math.PI) / 180);
+              const angle = (i / 8) * 360
+              const x = 100 + 30 * Math.cos((angle * Math.PI) / 180)
+              const y = 370 + 20 * Math.sin((angle * Math.PI) / 180)
               return (
                 <motion.circle
                   key={i}
@@ -513,7 +566,7 @@ export const CyanPiston = () => {
                     ease: 'easeOut',
                   }}
                 />
-              );
+              )
             })}
           </motion.g>
         )}
@@ -552,7 +605,7 @@ export const CyanPiston = () => {
 
       {/* Pressure Readout (Dynamic) */}
       <div
-        className="absolute top-4 right-4 font-mono uppercase tracking-widest text-right"
+        className="absolute right-4 top-4 text-right font-mono uppercase tracking-widest"
         style={{ fontSize: '9px', color: THEME.cyan }}
       >
         <div>PRESSURE</div>
@@ -561,16 +614,21 @@ export const CyanPiston = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 4: AMBER PISTON (Top Right) ---
 export const AmberPistonTop = () => {
-  const { state } = useContext(EngineContext);
+  const { state } = useContext(EngineContext)
 
   return (
-    <div className="absolute right-[14vw] top-[15vh] w-[120px] h-[280px] pointer-events-none">
-      <svg width="120" height="280" viewBox="0 0 120 280" className="overflow-visible">
+    <div className="pointer-events-none absolute right-[14vw] top-[15vh] h-[280px] w-[120px]">
+      <svg
+        width="120"
+        height="280"
+        viewBox="0 0 120 280"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="amber-piston-glow">
             <feGaussianBlur stdDeviation="2" result="blur1" />
@@ -581,14 +639,27 @@ export const AmberPistonTop = () => {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <linearGradient id="amber-piston-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="amber-piston-gradient"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor={THEME.amber} stopOpacity="0.15" />
             <stop offset="100%" stopColor={THEME.amber} stopOpacity="0.03" />
           </linearGradient>
         </defs>
 
         {/* Volumetric glow */}
-        <ellipse cx="60" cy="140" rx="80" ry="160" fill={`${THEME.amber}15`} opacity="0.4" />
+        <ellipse
+          cx="60"
+          cy="140"
+          rx="80"
+          ry="160"
+          fill={`${THEME.amber}15`}
+          opacity="0.4"
+        />
 
         {/* Hydraulic Cylinder Housing (Hexagonal design) */}
         <path
@@ -601,8 +672,8 @@ export const AmberPistonTop = () => {
 
         {/* Hydraulic fluid level indicators */}
         {Array.from({ length: 11 }).map((_, i) => {
-          const y = 40 + i * 20;
-          const isMajor = i % 3 === 0;
+          const y = 40 + i * 20
+          const isMajor = i % 3 === 0
           return (
             <g key={i}>
               <line
@@ -624,7 +695,7 @@ export const AmberPistonTop = () => {
                 opacity={isMajor ? 0.8 : 0.4}
               />
             </g>
-          );
+          )
         })}
 
         {/* Hexagonal mounting brackets */}
@@ -765,7 +836,7 @@ export const AmberPistonTop = () => {
 
       {/* Hydraulic Pressure Readout */}
       <div
-        className="absolute top-2 left-2 font-mono uppercase tracking-widest"
+        className="absolute left-2 top-2 font-mono uppercase tracking-widest"
         style={{ fontSize: '7px', color: THEME.amber }}
       >
         <div>HYDRAULIC</div>
@@ -774,16 +845,21 @@ export const AmberPistonTop = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 5: NEXUS PISTON (Bottom Left) ---
 export const NexusPistonBottom = () => {
-  const { state } = useContext(EngineContext);
+  const { state } = useContext(EngineContext)
 
   return (
-    <div className="absolute left-[12vw] bottom-[12vh] w-[160px] h-[360px] pointer-events-none">
-      <svg width="160" height="360" viewBox="0 0 160 360" className="overflow-visible">
+    <div className="pointer-events-none absolute bottom-[12vh] left-[12vw] h-[360px] w-[160px]">
+      <svg
+        width="160"
+        height="360"
+        viewBox="0 0 160 360"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="nexus-piston-glow">
             <feGaussianBlur stdDeviation="2" result="blur1" />
@@ -802,7 +878,13 @@ export const NexusPistonBottom = () => {
         </defs>
 
         {/* Volumetric glow */}
-        <ellipse cx="80" cy="180" rx="100" ry="200" fill="url(#nexus-piston-radial)" />
+        <ellipse
+          cx="80"
+          cy="180"
+          rx="100"
+          ry="200"
+          fill="url(#nexus-piston-radial)"
+        />
 
         {/* Dual Chamber Cylinder (Vertical split design) */}
         <rect
@@ -840,8 +922,8 @@ export const NexusPistonBottom = () => {
 
         {/* Digital scale markers */}
         {Array.from({ length: 15 }).map((_, i) => {
-          const y = 40 + i * 20;
-          const isMajor = i % 4 === 0;
+          const y = 40 + i * 20
+          const isMajor = i % 4 === 0
           return (
             <g key={i}>
               <line
@@ -876,7 +958,7 @@ export const NexusPistonBottom = () => {
                 </text>
               )}
             </g>
-          );
+          )
         })}
 
         {/* Top/Bottom mounting plates */}
@@ -911,7 +993,14 @@ export const NexusPistonBottom = () => {
           }}
         >
           {/* Left piston */}
-          <rect x="48" y="60" width="24" height="50" fill={`${THEME.nexus}20`} opacity="0.9" />
+          <rect
+            x="48"
+            y="60"
+            width="24"
+            height="50"
+            fill={`${THEME.nexus}20`}
+            opacity="0.9"
+          />
           <rect
             x="48"
             y="60"
@@ -950,7 +1039,14 @@ export const NexusPistonBottom = () => {
           />
 
           {/* Right piston */}
-          <rect x="88" y="60" width="24" height="50" fill={`${THEME.nexus}20`} opacity="0.9" />
+          <rect
+            x="88"
+            y="60"
+            width="24"
+            height="50"
+            fill={`${THEME.nexus}20`}
+            opacity="0.9"
+          />
           <rect
             x="88"
             y="60"
@@ -1039,10 +1135,10 @@ export const NexusPistonBottom = () => {
 
             {/* Dual spark particles */}
             {Array.from({ length: 6 }).map((_, i) => {
-              const angle = (i / 6) * 180 - 90;
-              const xBase = i < 3 ? 60 : 100;
-              const x = xBase + 25 * Math.cos((angle * Math.PI) / 180);
-              const y = 318 + 18 * Math.sin((angle * Math.PI) / 180);
+              const angle = (i / 6) * 180 - 90
+              const xBase = i < 3 ? 60 : 100
+              const x = xBase + 25 * Math.cos((angle * Math.PI) / 180)
+              const y = 318 + 18 * Math.sin((angle * Math.PI) / 180)
               return (
                 <motion.circle
                   key={i}
@@ -1060,7 +1156,7 @@ export const NexusPistonBottom = () => {
                     ease: 'easeOut',
                   }}
                 />
-              );
+              )
             })}
           </motion.g>
         )}
@@ -1117,8 +1213,8 @@ export const NexusPistonBottom = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ============================================================================
 // REACTOR ASSEMBLY COMPONENTS (For Sign-Up Page)
@@ -1127,15 +1223,20 @@ export const NexusPistonBottom = () => {
 // --- COMPONENT 6: REACTOR CORE (Center Background) ---
 export const ReactorCore = ({ stability }: { stability: number }) => {
   // stability: 0 (volatile) -> 100 (stable)
-  const isStable = stability > 80;
-  const isModerate = stability > 40 && stability <= 80;
+  const isStable = stability > 80
+  const isModerate = stability > 40 && stability <= 80
 
   // Color based on stability
-  const coreColor = isStable ? THEME.cyan : isModerate ? '#FFD700' : '#FF0055';
+  const coreColor = isStable ? THEME.cyan : isModerate ? '#FFD700' : '#FF0055'
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-30 z-0">
-      <svg width="600" height="600" viewBox="0 0 600 600" className="overflow-visible">
+    <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-30">
+      <svg
+        width="600"
+        height="600"
+        viewBox="0 0 600 600"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="core-glow">
             <feGaussianBlur stdDeviation="10" result="blur" />
@@ -1208,11 +1309,11 @@ export const ReactorCore = ({ stability }: { stability: number }) => {
         {/* Energy Arcs (Unstable cores have more arcs) */}
         {!isStable &&
           Array.from({ length: 6 }).map((_, i) => {
-            const angle = (i / 6) * 360;
-            const x1 = 300 + 80 * Math.cos((angle * Math.PI) / 180);
-            const y1 = 300 + 80 * Math.sin((angle * Math.PI) / 180);
-            const x2 = 300 + 200 * Math.cos((angle * Math.PI) / 180);
-            const y2 = 300 + 200 * Math.sin((angle * Math.PI) / 180);
+            const angle = (i / 6) * 360
+            const x1 = 300 + 80 * Math.cos((angle * Math.PI) / 180)
+            const y1 = 300 + 80 * Math.sin((angle * Math.PI) / 180)
+            const x2 = 300 + 200 * Math.cos((angle * Math.PI) / 180)
+            const y2 = 300 + 200 * Math.sin((angle * Math.PI) / 180)
 
             return (
               <motion.line
@@ -1234,7 +1335,7 @@ export const ReactorCore = ({ stability }: { stability: number }) => {
                   repeatDelay: 0.5,
                 }}
               />
-            );
+            )
           })}
 
         {/* The Core Itself */}
@@ -1274,16 +1375,27 @@ export const ReactorCore = ({ stability }: { stability: number }) => {
         />
       </svg>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 7: COOLANT CIRCULATION SYSTEM (Left) ---
 export const CoolantSystem = ({ active }: { active: boolean }) => {
   return (
-    <div className="absolute left-[8vw] top-1/2 -translate-y-1/2 w-[180px] h-[400px] pointer-events-none">
-      <svg width="180" height="400" viewBox="0 0 180 400" className="overflow-visible">
+    <div className="pointer-events-none absolute left-[8vw] top-1/2 h-[400px] w-[180px] -translate-y-1/2">
+      <svg
+        width="180"
+        height="400"
+        viewBox="0 0 180 400"
+        className="overflow-visible"
+      >
         <defs>
-          <linearGradient id="coolant-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="coolant-gradient"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#FFD700" stopOpacity="0.6" />
             <stop offset="100%" stopColor="#FFD700" stopOpacity="0.2" />
           </linearGradient>
@@ -1331,7 +1443,7 @@ export const CoolantSystem = ({ active }: { active: boolean }) => {
 
             {/* Measurement markers */}
             {Array.from({ length: 8 }).map((_, j) => {
-              const y = 80 + j * 35;
+              const y = 80 + j * 35
               return (
                 <line
                   key={j}
@@ -1343,7 +1455,7 @@ export const CoolantSystem = ({ active }: { active: boolean }) => {
                   strokeWidth="0.5"
                   opacity="0.5"
                 />
-              );
+              )
             })}
           </g>
         ))}
@@ -1390,21 +1502,28 @@ export const CoolantSystem = ({ active }: { active: boolean }) => {
 
       {/* Coolant Label */}
       <div
-        className="absolute top-2 left-2 font-mono uppercase tracking-widest"
+        className="absolute left-2 top-2 font-mono uppercase tracking-widest"
         style={{ fontSize: '7px', color: '#FFD700', opacity: 0.6 }}
       >
         <div>COOLANT</div>
-        <div style={{ fontSize: '9px', fontWeight: 'bold' }}>{active ? 'ACTIVE' : 'STANDBY'}</div>
+        <div style={{ fontSize: '9px', fontWeight: 'bold' }}>
+          {active ? 'ACTIVE' : 'STANDBY'}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 8: ENERGY CONTAINMENT FIELD (Right) ---
 export const EnergyField = ({ active }: { active: boolean }) => {
   return (
-    <div className="absolute right-[8vw] top-1/2 -translate-y-1/2 w-[180px] h-[400px] pointer-events-none">
-      <svg width="180" height="400" viewBox="0 0 180 400" className="overflow-visible">
+    <div className="pointer-events-none absolute right-[8vw] top-1/2 h-[400px] w-[180px] -translate-y-1/2">
+      <svg
+        width="180"
+        height="400"
+        viewBox="0 0 180 400"
+        className="overflow-visible"
+      >
         <defs>
           <linearGradient id="field-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00F0FF" stopOpacity="0" />
@@ -1422,7 +1541,7 @@ export const EnergyField = ({ active }: { active: boolean }) => {
 
         {/* Field emitter array */}
         {Array.from({ length: 5 }).map((_, i) => {
-          const y = 80 + i * 60;
+          const y = 80 + i * 60
           return (
             <g key={i}>
               {/* Emitter node */}
@@ -1475,7 +1594,7 @@ export const EnergyField = ({ active }: { active: boolean }) => {
                 />
               )}
             </g>
-          );
+          )
         })}
 
         {/* Field containment frame */}
@@ -1508,15 +1627,17 @@ export const EnergyField = ({ active }: { active: boolean }) => {
 
       {/* Field Label */}
       <div
-        className="absolute top-2 right-2 font-mono uppercase tracking-widest text-right"
+        className="absolute right-2 top-2 text-right font-mono uppercase tracking-widest"
         style={{ fontSize: '7px', color: '#00F0FF', opacity: 0.6 }}
       >
         <div>CONTAINMENT</div>
-        <div style={{ fontSize: '9px', fontWeight: 'bold' }}>{active ? 'ACTIVE' : 'STANDBY'}</div>
+        <div style={{ fontSize: '9px', fontWeight: 'bold' }}>
+          {active ? 'ACTIVE' : 'STANDBY'}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ============================================================================
 // CIRCUIT BREAKER COMPONENTS (For Reset Password Page)
@@ -1525,12 +1646,17 @@ export const EnergyField = ({ active }: { active: boolean }) => {
 // --- COMPONENT 9: HIGH VOLTAGE PANEL (Center Background) ---
 export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
   // voltage: 0 (dark) -> 100 (full power)
-  const isActive = voltage > 50;
-  const color = isActive ? '#FF6B35' : '#8B0000'; // Orange when active, dark red when dormant
+  const isActive = voltage > 50
+  const color = isActive ? '#FF6B35' : '#8B0000' // Orange when active, dark red when dormant
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none opacity-25 z-0">
-      <svg width="700" height="500" viewBox="0 0 700 500" className="overflow-visible">
+    <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 opacity-25">
+      <svg
+        width="700"
+        height="500"
+        viewBox="0 0 700 500"
+        className="overflow-visible"
+      >
         <defs>
           <filter id="voltage-glow">
             <feGaussianBlur stdDeviation="8" result="blur" />
@@ -1559,17 +1685,38 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
         />
 
         {/* Panel Divisions */}
-        <line x1="50" y1="150" x2="650" y2="150" stroke="#333" strokeWidth="1" />
-        <line x1="50" y1="350" x2="650" y2="350" stroke="#333" strokeWidth="1" />
-        <line x1="350" y1="50" x2="350" y2="450" stroke="#333" strokeWidth="1" />
+        <line
+          x1="50"
+          y1="150"
+          x2="650"
+          y2="150"
+          stroke="#333"
+          strokeWidth="1"
+        />
+        <line
+          x1="50"
+          y1="350"
+          x2="650"
+          y2="350"
+          stroke="#333"
+          strokeWidth="1"
+        />
+        <line
+          x1="350"
+          y1="50"
+          x2="350"
+          y2="450"
+          stroke="#333"
+          strokeWidth="1"
+        />
 
         {/* Breaker Switches (8 total) */}
         {Array.from({ length: 8 }).map((_, i) => {
-          const row = Math.floor(i / 4);
-          const col = i % 4;
-          const x = 120 + col * 140;
-          const y = 100 + row * 150;
-          const isOn = voltage > i * 12.5;
+          const row = Math.floor(i / 4)
+          const col = i % 4
+          const x = 120 + col * 140
+          const y = 100 + row * 150
+          const isOn = voltage > i * 12.5
 
           return (
             <g key={i}>
@@ -1626,7 +1773,7 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
                 {String(i + 1).padStart(2, '0')}
               </text>
             </g>
-          );
+          )
         })}
 
         {/* Warning Labels */}
@@ -1641,7 +1788,14 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
         >
           ⚠ HIGH VOLTAGE ⚠
         </text>
-        <text x="350" y="480" textAnchor="middle" fill="#666" fontSize="8" fontFamily="monospace">
+        <text
+          x="350"
+          y="480"
+          textAnchor="middle"
+          fill="#666"
+          fontSize="8"
+          fontFamily="monospace"
+        >
           AUTHORIZED PERSONNEL ONLY
         </text>
 
@@ -1649,7 +1803,7 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
         {isActive && (
           <g>
             {Array.from({ length: 3 }).map((_, i) => {
-              const cx = 180 + i * 170;
+              const cx = 180 + i * 170
               return (
                 <g key={i}>
                   {/* Meter background */}
@@ -1693,7 +1847,7 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
                     transition={{ duration: 0.5 }}
                   />
                 </g>
-              );
+              )
             })}
           </g>
         )}
@@ -1701,10 +1855,10 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
         {/* Electric arcs when voltage is high */}
         {voltage > 70 &&
           Array.from({ length: 5 }).map((_, i) => {
-            const x1 = 100 + Math.random() * 500;
-            const y1 = 60 + Math.random() * 300;
-            const x2 = x1 + (Math.random() - 0.5) * 100;
-            const y2 = y1 + (Math.random() - 0.5) * 100;
+            const x1 = 100 + Math.random() * 500
+            const y1 = 60 + Math.random() * 300
+            const x2 = x1 + (Math.random() - 0.5) * 100
+            const y2 = y1 + (Math.random() - 0.5) * 100
 
             return (
               <motion.path
@@ -1725,18 +1879,23 @@ export const HighVoltagePanel = ({ voltage }: { voltage: number }) => {
                   repeatDelay: 1,
                 }}
               />
-            );
+            )
           })}
       </svg>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 10: TESLA COIL (Left Side) ---
 export const TeslaCoil = ({ active }: { active: boolean }) => {
   return (
-    <div className="absolute left-[10vw] top-1/2 -translate-y-1/2 w-[120px] h-[350px] pointer-events-none">
-      <svg width="120" height="350" viewBox="0 0 120 350" className="overflow-visible">
+    <div className="pointer-events-none absolute left-[10vw] top-1/2 h-[350px] w-[120px] -translate-y-1/2">
+      <svg
+        width="120"
+        height="350"
+        viewBox="0 0 120 350"
+        className="overflow-visible"
+      >
         <defs>
           <radialGradient id="coil-glow">
             <stop offset="0%" stopColor="#FF6B35" stopOpacity="0.8" />
@@ -1764,7 +1923,7 @@ export const TeslaCoil = ({ active }: { active: boolean }) => {
 
         {/* Coil windings */}
         {Array.from({ length: 15 }).map((_, i) => {
-          const y = 270 - i * 12;
+          const y = 270 - i * 12
           return (
             <ellipse
               key={i}
@@ -1777,11 +1936,18 @@ export const TeslaCoil = ({ active }: { active: boolean }) => {
               fill="none"
               opacity={active ? 0.6 : 0.3}
             />
-          );
+          )
         })}
 
         {/* Top electrode */}
-        <circle cx="60" cy="80" r="25" stroke="#666" strokeWidth="1" fill="rgba(80, 80, 80, 0.5)" />
+        <circle
+          cx="60"
+          cy="80"
+          r="25"
+          stroke="#666"
+          strokeWidth="1"
+          fill="rgba(80, 80, 80, 0.5)"
+        />
         <motion.circle
           cx="60"
           cy="80"
@@ -1800,12 +1966,12 @@ export const TeslaCoil = ({ active }: { active: boolean }) => {
         {/* Lightning bolts */}
         {active &&
           Array.from({ length: 8 }).map((_, i) => {
-            const angle = (i / 8) * Math.PI * 2;
-            const x1 = 60 + Math.cos(angle) * 25;
-            const y1 = 80 + Math.sin(angle) * 25;
-            const length = 40 + Math.random() * 30;
-            const x2 = 60 + Math.cos(angle) * (25 + length);
-            const y2 = 80 + Math.sin(angle) * (25 + length);
+            const angle = (i / 8) * Math.PI * 2
+            const x1 = 60 + Math.cos(angle) * 25
+            const y1 = 80 + Math.sin(angle) * 25
+            const length = 40 + Math.random() * 30
+            const x2 = 60 + Math.cos(angle) * (25 + length)
+            const y2 = 80 + Math.sin(angle) * (25 + length)
 
             return (
               <motion.line
@@ -1830,26 +1996,44 @@ export const TeslaCoil = ({ active }: { active: boolean }) => {
                   repeatDelay: 0.8,
                 }}
               />
-            );
+            )
           })}
 
         {/* Label */}
-        <text x="60" y="360" textAnchor="middle" fill="#666" fontSize="8" fontFamily="monospace">
+        <text
+          x="60"
+          y="360"
+          textAnchor="middle"
+          fill="#666"
+          fontSize="8"
+          fontFamily="monospace"
+        >
           TESLA-01
         </text>
       </svg>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 11: CAPACITOR BANK (Right Side) ---
 export const CapacitorBank = ({ charge }: { charge: number }) => {
   // charge: 0-100
   return (
-    <div className="absolute right-[10vw] top-1/2 -translate-y-1/2 w-[140px] h-[320px] pointer-events-none">
-      <svg width="140" height="320" viewBox="0 0 140 320" className="overflow-visible">
+    <div className="pointer-events-none absolute right-[10vw] top-1/2 h-[320px] w-[140px] -translate-y-1/2">
+      <svg
+        width="140"
+        height="320"
+        viewBox="0 0 140 320"
+        className="overflow-visible"
+      >
         <defs>
-          <linearGradient id="charge-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          <linearGradient
+            id="charge-gradient"
+            x1="0%"
+            y1="100%"
+            x2="0%"
+            y2="0%"
+          >
             <stop offset="0%" stopColor="#FF6B35" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#FFD700" stopOpacity="0.3" />
           </linearGradient>
@@ -1857,8 +2041,8 @@ export const CapacitorBank = ({ charge }: { charge: number }) => {
 
         {/* Capacitor units (4 vertical cylinders) */}
         {Array.from({ length: 4 }).map((_, i) => {
-          const x = 15 + i * 32;
-          const fillHeight = (charge / 100) * 220;
+          const x = 15 + i * 32
+          const fillHeight = (charge / 100) * 220
 
           return (
             <g key={i}>
@@ -1886,7 +2070,7 @@ export const CapacitorBank = ({ charge }: { charge: number }) => {
 
               {/* Charge indicator marks */}
               {Array.from({ length: 10 }).map((_, j) => {
-                const markY = 70 + j * 20;
+                const markY = 70 + j * 20
                 return (
                   <line
                     key={j}
@@ -1897,12 +2081,26 @@ export const CapacitorBank = ({ charge }: { charge: number }) => {
                     stroke="#444"
                     strokeWidth="0.5"
                   />
-                );
+                )
               })}
 
               {/* Terminals */}
-              <circle cx={x + 12.5} cy="40" r="4" stroke="#666" strokeWidth="1" fill="#888" />
-              <circle cx={x + 12.5} cy="280" r="4" stroke="#666" strokeWidth="1" fill="#444" />
+              <circle
+                cx={x + 12.5}
+                cy="40"
+                r="4"
+                stroke="#666"
+                strokeWidth="1"
+                fill="#888"
+              />
+              <circle
+                cx={x + 12.5}
+                cy="280"
+                r="4"
+                stroke="#666"
+                strokeWidth="1"
+                fill="#444"
+              />
 
               {/* Spark effect when charged */}
               {charge > 80 && (
@@ -1925,11 +2123,18 @@ export const CapacitorBank = ({ charge }: { charge: number }) => {
                 />
               )}
             </g>
-          );
+          )
         })}
 
         {/* Bank label */}
-        <text x="70" y="310" textAnchor="middle" fill="#666" fontSize="8" fontFamily="monospace">
+        <text
+          x="70"
+          y="310"
+          textAnchor="middle"
+          fill="#666"
+          fontSize="8"
+          fontFamily="monospace"
+        >
           CAP BANK
         </text>
 
@@ -1947,14 +2152,23 @@ export const CapacitorBank = ({ charge }: { charge: number }) => {
         </text>
       </svg>
     </div>
-  );
-};
+  )
+}
 
 // --- COMPONENT 12: HIGH VOLTAGE SYSTEM (Full Background for Reset Page) ---
-export const HighVoltageSystem = ({ state }: { state: 'idle' | 'charging' | 'discharging' }) => {
+export const HighVoltageSystem = ({
+  state,
+}: {
+  state: 'idle' | 'charging' | 'discharging'
+}) => {
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-      <svg width="800" height="600" viewBox="0 0 800 600" className="overflow-visible opacity-30">
+    <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
+      <svg
+        width="800"
+        height="600"
+        viewBox="0 0 800 600"
+        className="overflow-visible opacity-30"
+      >
         <defs>
           <filter id="arc-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -1972,7 +2186,14 @@ export const HighVoltageSystem = ({ state }: { state: 'idle' | 'charging' | 'dis
 
         {/* Left Transformer Coil */}
         <g transform="translate(100, 100)">
-          <rect x="0" y="0" width="60" height="400" fill="url(#coil-gradient)" stroke="#333" />
+          <rect
+            x="0"
+            y="0"
+            width="60"
+            height="400"
+            fill="url(#coil-gradient)"
+            stroke="#333"
+          />
           {Array.from({ length: 20 }).map((_, i) => (
             <line
               key={`left-${i}`}
@@ -2000,7 +2221,14 @@ export const HighVoltageSystem = ({ state }: { state: 'idle' | 'charging' | 'dis
 
         {/* Right Transformer Coil */}
         <g transform="translate(640, 100)">
-          <rect x="0" y="0" width="60" height="400" fill="url(#coil-gradient)" stroke="#333" />
+          <rect
+            x="0"
+            y="0"
+            width="60"
+            height="400"
+            fill="url(#coil-gradient)"
+            stroke="#333"
+          />
           {Array.from({ length: 20 }).map((_, i) => (
             <line
               key={`right-${i}`}
@@ -2053,5 +2281,5 @@ export const HighVoltageSystem = ({ state }: { state: 'idle' | 'charging' | 'dis
         )}
       </svg>
     </div>
-  );
-};
+  )
+}

@@ -5,36 +5,46 @@
 // Orchestrates: SoD, IC Validation, Document Completeness
 // ============================================================================
 
-import { useMemo, useCallback, useState } from 'react';
-import type { Payment, PaymentStatus } from '../data';
-import { checkSoD, type CurrentUser, type SoDCheckResult } from './usePaymentGovernance';
-import { validateICTransaction, type ICValidationResult } from './useICValidation';
-import { validateDocuments, type DocumentValidationResult } from './useDocumentValidation';
+import { useMemo, useCallback, useState } from 'react'
+import type { Payment, PaymentStatus } from '../data'
+import {
+  checkSoD,
+  type CurrentUser,
+  type SoDCheckResult,
+} from './usePaymentGovernance'
+import {
+  validateICTransaction,
+  type ICValidationResult,
+} from './useICValidation'
+import {
+  validateDocuments,
+  type DocumentValidationResult,
+} from './useDocumentValidation'
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
 export interface ApprovalDecision {
-  canApprove: boolean;
-  canReject: boolean;
-  blockReasons: string[];
-  warnings: string[];
-  sodCheck: SoDCheckResult;
-  icCheck: ICValidationResult;
-  docCheck: DocumentValidationResult;
-  requiresICSettlement: boolean;
+  canApprove: boolean
+  canReject: boolean
+  blockReasons: string[]
+  warnings: string[]
+  sodCheck: SoDCheckResult
+  icCheck: ICValidationResult
+  docCheck: DocumentValidationResult
+  requiresICSettlement: boolean
 }
 
 export interface PaymentApprovalState {
-  payments: Payment[];
-  selectedId: string | null;
-  isProcessing: boolean;
+  payments: Payment[]
+  selectedId: string | null
+  isProcessing: boolean
   lastAction: {
-    type: 'approve' | 'reject' | null;
-    paymentId: string | null;
-    timestamp: Date | null;
-  };
+    type: 'approve' | 'reject' | null
+    paymentId: string | null
+    timestamp: Date | null
+  }
 }
 
 // ============================================================================
@@ -43,35 +53,35 @@ export interface PaymentApprovalState {
 
 export function checkApproval(
   payment: Payment,
-  currentUser: CurrentUser,
+  currentUser: CurrentUser
 ): ApprovalDecision {
-  const sodCheck = checkSoD(payment, currentUser);
-  const icCheck = validateICTransaction(payment);
-  const docCheck = validateDocuments(payment);
-  
-  const blockReasons: string[] = [];
-  const warnings: string[] = [];
-  
+  const sodCheck = checkSoD(payment, currentUser)
+  const icCheck = validateICTransaction(payment)
+  const docCheck = validateDocuments(payment)
+
+  const blockReasons: string[] = []
+  const warnings: string[] = []
+
   // SoD violations are hard blocks
   if (!sodCheck.allowed) {
-    blockReasons.push(sodCheck.message!);
+    blockReasons.push(sodCheck.message!)
   }
-  
+
   // IC unmatched is a hard block
   if (!icCheck.canApprove) {
-    blockReasons.push(icCheck.blockReason!);
+    blockReasons.push(icCheck.blockReason!)
   }
-  
+
   // Document issues are warnings (MVP)
   if (!docCheck.isComplete) {
-    warnings.push(docCheck.warningMessage!);
+    warnings.push(docCheck.warningMessage!)
   }
-  
+
   // Hard block if doc validation says so (Phase 2)
   if (docCheck.blockApproval) {
-    blockReasons.push('Required documents missing');
+    blockReasons.push('Required documents missing')
   }
-  
+
   return {
     canApprove: blockReasons.length === 0 && payment.status === 'pending',
     canReject: payment.status === 'pending',
@@ -81,7 +91,7 @@ export function checkApproval(
     icCheck,
     docCheck,
     requiresICSettlement: icCheck.isIC && !icCheck.isMatched,
-  };
+  }
 }
 
 // ============================================================================
@@ -90,7 +100,7 @@ export function checkApproval(
 
 export function usePaymentApproval(
   initialPayments: Payment[],
-  currentUser: CurrentUser,
+  currentUser: CurrentUser
 ) {
   const [state, setState] = useState<PaymentApprovalState>({
     payments: initialPayments,
@@ -101,84 +111,85 @@ export function usePaymentApproval(
       paymentId: null,
       timestamp: null,
     },
-  });
+  })
 
   // Get selected payment
-  const selectedPayment = useMemo(() => 
-    state.payments.find(p => p.id === state.selectedId) || null,
+  const selectedPayment = useMemo(
+    () => state.payments.find((p) => p.id === state.selectedId) || null,
     [state.payments, state.selectedId]
-  );
+  )
 
   // Get approval decision for selected payment
   const approvalDecision = useMemo(() => {
-    if (!selectedPayment) return null;
-    return checkApproval(selectedPayment, currentUser);
-  }, [selectedPayment, currentUser]);
+    if (!selectedPayment) return null
+    return checkApproval(selectedPayment, currentUser)
+  }, [selectedPayment, currentUser])
 
   // Select a payment
   const selectPayment = useCallback((id: string | null) => {
-    setState(prev => ({ ...prev, selectedId: id }));
-  }, []);
+    setState((prev) => ({ ...prev, selectedId: id }))
+  }, [])
 
   // Approve a payment
-  const approvePayment = useCallback((id: string) => {
-    const payment = state.payments.find(p => p.id === id);
-    if (!payment) return { success: false, error: 'Payment not found' };
-    
-    const decision = checkApproval(payment, currentUser);
-    if (!decision.canApprove) {
-      return { 
-        success: false, 
-        error: decision.blockReasons[0] || 'Cannot approve',
-      };
-    }
-    
-    setState(prev => ({
-      ...prev,
-      isProcessing: true,
-    }));
-    
-    // Simulate async approval
-    setTimeout(() => {
-      setState(prev => ({
+  const approvePayment = useCallback(
+    (id: string) => {
+      const payment = state.payments.find((p) => p.id === id)
+      if (!payment) return { success: false, error: 'Payment not found' }
+
+      const decision = checkApproval(payment, currentUser)
+      if (!decision.canApprove) {
+        return {
+          success: false,
+          error: decision.blockReasons[0] || 'Cannot approve',
+        }
+      }
+
+      setState((prev) => ({
         ...prev,
-        payments: prev.payments.map(p => 
-          p.id === id 
-            ? { 
-                ...p, 
-                status: 'approved' as PaymentStatus, 
-                approved_by: currentUser.name,
-                approver_id: currentUser.id,
-                approved_at: new Date().toISOString(),
-              } 
-            : p
-        ),
-        isProcessing: false,
-        lastAction: {
-          type: 'approve',
-          paymentId: id,
-          timestamp: new Date(),
-        },
-      }));
-    }, 300);
-    
-    return { success: true };
-  }, [state.payments, currentUser]);
+        isProcessing: true,
+      }))
+
+      // Simulate async approval
+      setTimeout(() => {
+        setState((prev) => ({
+          ...prev,
+          payments: prev.payments.map((p) =>
+            p.id === id
+              ? {
+                  ...p,
+                  status: 'approved' as PaymentStatus,
+                  approved_by: currentUser.name,
+                  approver_id: currentUser.id,
+                  approved_at: new Date().toISOString(),
+                }
+              : p
+          ),
+          isProcessing: false,
+          lastAction: {
+            type: 'approve',
+            paymentId: id,
+            timestamp: new Date(),
+          },
+        }))
+      }, 300)
+
+      return { success: true }
+    },
+    [state.payments, currentUser]
+  )
 
   // Reject a payment
   const rejectPayment = useCallback((id: string, reason?: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isProcessing: true,
-    }));
-    
+    }))
+
     setTimeout(() => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        payments: prev.payments.map(p => 
-          p.id === id 
-            ? { ...p, status: 'rejected' as PaymentStatus } 
-            : p
+        payments: prev.payments.map((p) =>
+          p.id === id ? { ...p, status: 'rejected' as PaymentStatus } : p
         ),
         selectedId: null,
         isProcessing: false,
@@ -187,31 +198,37 @@ export function usePaymentApproval(
           paymentId: id,
           timestamp: new Date(),
         },
-      }));
-    }, 300);
-    
-    return { success: true };
-  }, []);
+      }))
+    }, 300)
+
+    return { success: true }
+  }, [])
 
   // Filter payments by status
-  const getPaymentsByStatus = useCallback((status: PaymentStatus | 'all') => {
-    if (status === 'all') return state.payments;
-    return state.payments.filter(p => p.status === status);
-  }, [state.payments]);
+  const getPaymentsByStatus = useCallback(
+    (status: PaymentStatus | 'all') => {
+      if (status === 'all') return state.payments
+      return state.payments.filter((p) => p.status === status)
+    },
+    [state.payments]
+  )
 
   // Stats
-  const stats = useMemo(() => ({
-    total: state.payments.length,
-    pending: state.payments.filter(p => p.status === 'pending').length,
-    approved: state.payments.filter(p => p.status === 'approved').length,
-    rejected: state.payments.filter(p => p.status === 'rejected').length,
-    pendingAmount: state.payments
-      .filter(p => p.status === 'pending')
-      .reduce((sum, p) => sum + p.amount, 0),
-    approvedAmount: state.payments
-      .filter(p => p.status === 'approved')
-      .reduce((sum, p) => sum + p.amount, 0),
-  }), [state.payments]);
+  const stats = useMemo(
+    () => ({
+      total: state.payments.length,
+      pending: state.payments.filter((p) => p.status === 'pending').length,
+      approved: state.payments.filter((p) => p.status === 'approved').length,
+      rejected: state.payments.filter((p) => p.status === 'rejected').length,
+      pendingAmount: state.payments
+        .filter((p) => p.status === 'pending')
+        .reduce((sum, p) => sum + p.amount, 0),
+      approvedAmount: state.payments
+        .filter((p) => p.status === 'approved')
+        .reduce((sum, p) => sum + p.amount, 0),
+    }),
+    [state.payments]
+  )
 
   return {
     // State
@@ -220,22 +237,22 @@ export function usePaymentApproval(
     selectedId: state.selectedId,
     isProcessing: state.isProcessing,
     lastAction: state.lastAction,
-    
+
     // Decision
     approvalDecision,
-    
+
     // Actions
     selectPayment,
     approvePayment,
     rejectPayment,
     getPaymentsByStatus,
-    
+
     // Stats
     stats,
-    
+
     // Current user
     currentUser,
-  };
+  }
 }
 
 // ============================================================================
@@ -246,5 +263,4 @@ export const DEFAULT_USER: CurrentUser = {
   id: 'USR-CFO',
   name: 'CFO (You)',
   role: 'cfo',
-};
-
+}

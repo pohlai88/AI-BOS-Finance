@@ -5,10 +5,10 @@ import { CanonPageShell } from './CanonPageShell'
 
 /**
  * Canon Dynamic Page Loader
- * 
+ *
  * Catches all `/canon/*` routes and renders the appropriate MDX content.
  * Uses the Canon Registry to map slugs to MDX components.
- * 
+ *
  * @see REF_037 - Phase 3: Canon Page System
  */
 
@@ -77,9 +77,9 @@ export default async function CanonPage({ params }: PageProps) {
 function CanonPageLoading() {
   return (
     <div className="animate-pulse space-y-4">
-      <div className="h-8 bg-nexus-surface/50 rounded w-3/4" />
-      <div className="h-4 bg-nexus-surface/30 rounded w-1/2" />
-      <div className="h-32 bg-nexus-surface/20 rounded" />
+      <div className="bg-nexus-surface/50 h-8 w-3/4 rounded" />
+      <div className="bg-nexus-surface/30 h-4 w-1/2 rounded" />
+      <div className="bg-nexus-surface/20 h-32 rounded" />
     </div>
   )
 }

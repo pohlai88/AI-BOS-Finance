@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { NexusInput } from '../NexusInput';
-import { Search, Mail, Key, User } from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react'
+import { NexusInput } from '../NexusInput'
+import { Search, Mail, Key, User } from 'lucide-react'
 
 /**
  * # NexusInput
@@ -59,10 +59,10 @@ const meta: Meta<typeof NexusInput> = {
       description: 'Optional icon on the right side',
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof NexusInput>;
+export default meta
+type Story = StoryObj<typeof NexusInput>
 
 // ============================================================================
 // STORIES
@@ -73,13 +73,13 @@ export const Default: Story = {
     placeholder: 'Enter value...',
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const WithLabel: Story = {
   args: {
@@ -87,28 +87,28 @@ export const WithLabel: Story = {
     placeholder: 'ACME_CORP_001',
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const WithIcon: Story = {
   args: {
     label: 'Search Registry',
     placeholder: 'Search...',
-    icon: <Search className="w-4 h-4" />,
+    icon: <Search className="h-4 w-4" />,
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const WithError: Story = {
   args: {
@@ -116,16 +116,16 @@ export const WithError: Story = {
     placeholder: 'user@example.com',
     defaultValue: 'invalid-email',
     error: 'Invalid email format',
-    icon: <Mail className="w-4 h-4" />,
+    icon: <Mail className="h-4 w-4" />,
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const Disabled: Story = {
   args: {
@@ -134,13 +134,13 @@ export const Disabled: Story = {
     disabled: true,
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const ReadOnly: Story = {
   args: {
@@ -149,32 +149,44 @@ export const ReadOnly: Story = {
     readOnly: true,
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div className="w-[300px]">
         <Story />
       </div>
     ),
   ],
-};
+}
 
 export const FormExample: Story = {
   render: () => (
-    <div className="w-[400px] space-y-6 p-6 bg-nexus-matter border border-nexus-structure">
-      <div className="border-b border-nexus-structure pb-4 mb-4">
-        <span className="text-xs font-mono text-nexus-green uppercase tracking-widest">
+    <div className="bg-nexus-matter border-nexus-structure w-[400px] space-y-6 border p-6">
+      <div className="border-nexus-structure mb-4 border-b pb-4">
+        <span className="text-nexus-green font-mono text-xs uppercase tracking-widest">
           USER_PROFILE
         </span>
       </div>
-      <NexusInput label="Username" placeholder="Enter username" icon={<User className="w-4 h-4" />} />
+      <NexusInput
+        label="Username"
+        placeholder="Enter username"
+        icon={<User className="h-4 w-4" />}
+      />
       <NexusInput
         label="Email"
         type="email"
         placeholder="user@domain.com"
-        icon={<Mail className="w-4 h-4" />}
+        icon={<Mail className="h-4 w-4" />}
       />
-      <NexusInput label="API Key" type="password" placeholder="••••••••" icon={<Key className="w-4 h-4" />} />
-      <NexusInput label="Organization ID" defaultValue="ORG_NEXUS_001" readOnly />
+      <NexusInput
+        label="API Key"
+        type="password"
+        placeholder="••••••••"
+        icon={<Key className="h-4 w-4" />}
+      />
+      <NexusInput
+        label="Organization ID"
+        defaultValue="ORG_NEXUS_001"
+        readOnly
+      />
     </div>
   ),
-};
-
+}

@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import RadarDisplay, { RadarConfig, RadarPoint } from './components/RadarDisplay';
-import RadarDecorations from './components/RadarDecorations';
-import ControlPanel from './components/ControlPanel';
-import PointManager from './components/PointManager';
-import PresetManager from './components/PresetManager';
-import { Radio } from 'lucide-react';
+import { useState } from 'react'
+import RadarDisplay, {
+  RadarConfig,
+  RadarPoint,
+} from './components/RadarDisplay'
+import RadarDecorations from './components/RadarDecorations'
+import ControlPanel from './components/ControlPanel'
+import PointManager from './components/PointManager'
+import PresetManager from './components/PresetManager'
+import { Radio } from 'lucide-react'
 
 export default function App() {
   const [config, setConfig] = useState<RadarConfig>({
@@ -17,53 +20,87 @@ export default function App() {
     gridColor: '#1E2433',
     angleMarkers: true,
     showLabels: true,
-    fadeTrail: true
-  });
+    fadeTrail: true,
+  })
 
   const [points, setPoints] = useState<RadarPoint[]>([
-    { id: '1', angle: 45, distance: 0.7, label: 'Alpha', color: '#95C7FD', size: 6 },
-    { id: '2', angle: 135, distance: 0.5, label: 'Beta', color: '#4ECDC4', size: 6 },
-    { id: '3', angle: 225, distance: 0.8, label: 'Gamma', color: '#FFE66D', size: 7 },
-    { id: '4', angle: 315, distance: 0.4, label: 'Delta', color: '#FF6B6B', size: 5 }
-  ]);
+    {
+      id: '1',
+      angle: 45,
+      distance: 0.7,
+      label: 'Alpha',
+      color: '#95C7FD',
+      size: 6,
+    },
+    {
+      id: '2',
+      angle: 135,
+      distance: 0.5,
+      label: 'Beta',
+      color: '#4ECDC4',
+      size: 6,
+    },
+    {
+      id: '3',
+      angle: 225,
+      distance: 0.8,
+      label: 'Gamma',
+      color: '#FFE66D',
+      size: 7,
+    },
+    {
+      id: '4',
+      angle: 315,
+      distance: 0.4,
+      label: 'Delta',
+      color: '#FF6B6B',
+      size: 5,
+    },
+  ])
 
-  const [selectedPoint, setSelectedPoint] = useState<RadarPoint | null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<RadarPoint | null>(null)
 
   const handleConfigChange = (newConfig: Partial<RadarConfig>) => {
-    setConfig({ ...config, ...newConfig });
-  };
+    setConfig({ ...config, ...newConfig })
+  }
 
   const handlePointClick = (point: RadarPoint) => {
-    setSelectedPoint(point);
-  };
+    setSelectedPoint(point)
+  }
 
-  const handleLoadPreset = (preset: { config: RadarConfig; points: RadarPoint[] }) => {
-    setConfig(preset.config);
-    setPoints(preset.points);
-    setSelectedPoint(null);
-  };
+  const handleLoadPreset = (preset: {
+    config: RadarConfig
+    points: RadarPoint[]
+  }) => {
+    setConfig(preset.config)
+    setPoints(preset.points)
+    setSelectedPoint(null)
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0E17] p-6 md:p-8">
-      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      
-      <div className="max-w-[1800px] mx-auto space-y-8">
+      <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+
+      <div className="mx-auto max-w-[1800px] space-y-8">
         {/* Header */}
-        <div className="text-center space-y-3 py-4">
+        <div className="space-y-3 py-4 text-center">
           <div className="flex items-center justify-center gap-4">
             <div className="relative">
               <Radio className="size-14 text-[#95C7FD]" strokeWidth={1.5} />
-              <div className="absolute inset-0 blur-xl bg-[#95C7FD] opacity-30 animate-pulse" />
+              <div className="absolute inset-0 animate-pulse bg-[#95C7FD] opacity-30 blur-xl" />
             </div>
-            <h1 
-              className="text-[#95C7FD] tracking-[0.15em]"
+            <h1
+              className="tracking-[0.15em] text-[#95C7FD]"
               style={{ fontFamily: "'Orbitron', sans-serif" }}
             >
               RADAR SYSTEM
             </h1>
           </div>
-          <p 
-            className="text-[#95C7FD]/50 tracking-wider"
+          <p
+            className="tracking-wider text-[#95C7FD]/50"
             style={{ fontFamily: "'Orbitron', sans-serif" }}
           >
             Real-Time Tracking &amp; Analysis Platform
@@ -71,29 +108,34 @@ export default function App() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-6">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_420px]">
           {/* Radar Display */}
-          <div className="relative flex items-center justify-center rounded-2xl p-8 border border-[#95C7FD]/10">
+          <div className="relative flex items-center justify-center rounded-2xl border border-[#95C7FD]/10 p-8">
             {/* Transparent radial gradient overlay - 90-99% transparency */}
-            <div 
-              className="absolute inset-0 rounded-2xl pointer-events-none"
+            <div
+              className="pointer-events-none absolute inset-0 rounded-2xl"
               style={{
-                background: 'radial-gradient(circle at center, rgba(149, 199, 253, 0.10) 0%, rgba(149, 199, 253, 0.05) 30%, rgba(149, 199, 253, 0.02) 50%, rgba(149, 199, 253, 0.01) 70%, transparent 90%)'
+                background:
+                  'radial-gradient(circle at center, rgba(149, 199, 253, 0.10) 0%, rgba(149, 199, 253, 0.05) 30%, rgba(149, 199, 253, 0.02) 50%, rgba(149, 199, 253, 0.01) 70%, transparent 90%)',
               }}
             />
             {/* Secondary glow layer - subtle atmospheric effect */}
-            <div 
-              className="absolute inset-0 rounded-2xl pointer-events-none"
+            <div
+              className="pointer-events-none absolute inset-0 rounded-2xl"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(149, 199, 253, 0.08) 0%, rgba(149, 199, 253, 0.03) 40%, transparent 60%)',
-                filter: 'blur(80px)'
+                background:
+                  'radial-gradient(ellipse at center, rgba(149, 199, 253, 0.08) 0%, rgba(149, 199, 253, 0.03) 40%, transparent 60%)',
+                filter: 'blur(80px)',
               }}
             />
             {/* Radar container - ensures canvas and SVG are perfectly aligned */}
-            <div className="relative" style={{ width: config.size, height: config.size }}>
-              <RadarDisplay 
-                config={config} 
-                points={points} 
+            <div
+              className="relative"
+              style={{ width: config.size, height: config.size }}
+            >
+              <RadarDisplay
+                config={config}
+                points={points}
                 onPointClick={handlePointClick}
               />
               <RadarDecorations size={config.size} />
@@ -102,11 +144,8 @@ export default function App() {
 
           {/* Controls */}
           <div className="space-y-4">
-            <ControlPanel 
-              config={config} 
-              onConfigChange={handleConfigChange}
-            />
-            
+            <ControlPanel config={config} onConfigChange={handleConfigChange} />
+
             <PointManager
               points={points}
               onPointsChange={setPoints}
@@ -124,61 +163,61 @@ export default function App() {
 
         {/* Info Panel */}
         {selectedPoint && (
-          <div className="bg-gradient-to-br from-[#0F1419] to-[#0A0E17] rounded-2xl p-6 border border-[#95C7FD]/30 shadow-2xl animate-fade-in backdrop-blur-sm">
+          <div className="animate-fade-in rounded-2xl border border-[#95C7FD]/30 bg-gradient-to-br from-[#0F1419] to-[#0A0E17] p-6 shadow-2xl backdrop-blur-sm">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 
-                  className="text-[#95C7FD] mb-4 tracking-wider"
+                <h3
+                  className="mb-4 tracking-wider text-[#95C7FD]"
                   style={{ fontFamily: "'Orbitron', sans-serif" }}
                 >
                   TARGET: {selectedPoint.label?.toUpperCase() || 'UNNAMED'}
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                   <div className="space-y-2">
-                    <div 
-                      className="text-[#95C7FD]/50 tracking-wider"
+                    <div
+                      className="tracking-wider text-[#95C7FD]/50"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       BEARING
                     </div>
-                    <div 
-                      className="text-white tracking-wider"
+                    <div
+                      className="tracking-wider text-white"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       {selectedPoint.angle.toString().padStart(3, '0')}°
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div 
-                      className="text-[#95C7FD]/50 tracking-wider"
+                    <div
+                      className="tracking-wider text-[#95C7FD]/50"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       RANGE
                     </div>
-                    <div 
-                      className="text-white tracking-wider"
+                    <div
+                      className="tracking-wider text-white"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       {(selectedPoint.distance * 100).toFixed(0)}%
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div 
-                      className="text-[#95C7FD]/50 tracking-wider"
+                    <div
+                      className="tracking-wider text-[#95C7FD]/50"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       SIGNATURE
                     </div>
                     <div className="flex items-center gap-2">
-                      <div 
-                        className="w-5 h-5 rounded-sm border border-[#95C7FD]/20 shadow-lg"
-                        style={{ 
+                      <div
+                        className="h-5 w-5 rounded-sm border border-[#95C7FD]/20 shadow-lg"
+                        style={{
                           backgroundColor: selectedPoint.color,
-                          boxShadow: `0 0 12px ${selectedPoint.color}60`
+                          boxShadow: `0 0 12px ${selectedPoint.color}60`,
                         }}
                       />
-                      <span 
-                        className="text-white tracking-wider"
+                      <span
+                        className="tracking-wider text-white"
                         style={{ fontFamily: "'Orbitron', sans-serif" }}
                       >
                         {selectedPoint.color}
@@ -186,14 +225,14 @@ export default function App() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div 
-                      className="text-[#95C7FD]/50 tracking-wider"
+                    <div
+                      className="tracking-wider text-[#95C7FD]/50"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       MAGNITUDE
                     </div>
-                    <div 
-                      className="text-white tracking-wider"
+                    <div
+                      className="tracking-wider text-white"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       {selectedPoint.size}px
@@ -203,7 +242,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => setSelectedPoint(null)}
-                className="text-[#95C7FD]/40 hover:text-[#95C7FD] transition-colors ml-4 p-1"
+                className="ml-4 p-1 text-[#95C7FD]/40 transition-colors hover:text-[#95C7FD]"
                 style={{ fontFamily: "'Orbitron', sans-serif" }}
               >
                 ✕
@@ -213,11 +252,13 @@ export default function App() {
         )}
 
         {/* Footer */}
-        <div 
-          className="text-center text-[#95C7FD]/30 pt-6 border-t border-[#95C7FD]/5 tracking-wider"
+        <div
+          className="border-t border-[#95C7FD]/5 pt-6 text-center tracking-wider text-[#95C7FD]/30"
           style={{ fontFamily: "'Orbitron', sans-serif" }}
         >
-          <p>INTERACTIVE TRACKING • REAL-TIME ANALYSIS • EXPORT CONFIGURATIONS</p>
+          <p>
+            INTERACTIVE TRACKING • REAL-TIME ANALYSIS • EXPORT CONFIGURATIONS
+          </p>
         </div>
       </div>
 
@@ -251,5 +292,5 @@ export default function App() {
         }
       `}</style>
     </div>
-  );
+  )
 }

@@ -4,17 +4,22 @@
 // Usage: <FadeIn><YourComponent /></FadeIn>
 // ============================================================================
 
-import { motion, MotionProps } from 'motion/react';
-import { ReactNode } from 'react';
+import { motion, MotionProps } from 'motion/react'
+import { ReactNode } from 'react'
 
 interface FadeInProps {
-  children: ReactNode;
-  duration?: number;
-  delay?: number;
-  className?: string;
+  children: ReactNode
+  duration?: number
+  delay?: number
+  className?: string
 }
 
-export const FadeIn = ({ children, duration = 0.3, delay = 0, className }: FadeInProps) => {
+export const FadeIn = ({
+  children,
+  duration = 0.3,
+  delay = 0,
+  className,
+}: FadeInProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -29,5 +34,5 @@ export const FadeIn = ({ children, duration = 0.3, delay = 0, className }: FadeI
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}

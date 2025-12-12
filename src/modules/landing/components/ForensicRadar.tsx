@@ -1,10 +1,10 @@
-import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 /**
  * ForensicRadar - High-fidelity cinematic radar visualization
  * Matches reference image with 95%+ quality accuracy
- * 
+ *
  * Features:
  * - 5 concentric rings with cyan glow
  * - 60 radial tick marks (every 6 degrees)
@@ -15,29 +15,29 @@ import { useEffect, useState } from 'react';
  */
 
 interface ParticleData {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  opacity: number;
-  delay: number;
+  id: number
+  x: number
+  y: number
+  size: number
+  opacity: number
+  delay: number
 }
 
 export const ForensicRadar = () => {
-  const [particles, setParticles] = useState<ParticleData[]>([]);
+  const [particles, setParticles] = useState<ParticleData[]>([])
 
   // Generate random particles on mount
   useEffect(() => {
     const generateParticles = () => {
-      const newParticles: ParticleData[] = [];
-      const particleCount = 40;
+      const newParticles: ParticleData[] = []
+      const particleCount = 40
 
       for (let i = 0; i < particleCount; i++) {
         // Generate particles in circular pattern, avoiding center
-        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
-        const distance = 50 + Math.random() * 150; // 50-200 radius
-        const x = 250 + Math.cos(angle) * distance;
-        const y = 250 + Math.sin(angle) * distance;
+        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5
+        const distance = 50 + Math.random() * 150 // 50-200 radius
+        const x = 250 + Math.cos(angle) * distance
+        const y = 250 + Math.sin(angle) * distance
 
         newParticles.push({
           id: i,
@@ -46,29 +46,29 @@ export const ForensicRadar = () => {
           size: 1.5 + Math.random() * 2.5, // 1.5-4px
           opacity: 0.4 + Math.random() * 0.5, // 0.4-0.9
           delay: Math.random() * 2,
-        });
+        })
       }
 
-      setParticles(newParticles);
-    };
+      setParticles(newParticles)
+    }
 
-    generateParticles();
-  }, []);
+    generateParticles()
+  }, [])
 
   // Simplified world map paths (major landmasses)
   const worldMapPath = `
     M 200,220 L 210,218 L 215,225 L 220,220 L 230,225 L 235,218 L 245,220 L 250,215 L 260,220 L 265,225 L 270,220 L 280,225 L 285,220 L 290,225 L 295,228 L 300,225 L 305,230 L 300,235 L 295,240 L 290,238 L 285,245 L 280,243 L 275,248 L 270,245 L 265,250 L 260,247 L 255,252 L 250,248 L 245,253 L 240,250 L 235,255 L 230,252 L 225,257 L 220,255 L 215,258 L 210,255 L 205,258 L 200,255 Z
     M 180,240 L 185,235 L 190,238 L 195,233 L 200,235 L 195,240 L 190,243 L 185,245 L 180,243 Z
     M 250,200 L 255,195 L 260,198 L 265,195 L 270,200 L 265,205 L 260,203 L 255,208 L 250,205 Z
-  `;
+  `
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative flex h-full w-full items-center justify-center">
       <svg
         width="500"
         height="500"
         viewBox="0 0 500 500"
-        className="max-w-full h-auto"
+        className="h-auto max-w-full"
         style={{ filter: 'drop-shadow(0 0 40px rgba(0, 217, 255, 0.3))' }}
       >
         {/* SVG Definitions */}
@@ -99,7 +99,13 @@ export const ForensicRadar = () => {
           </radialGradient>
 
           {/* Linear Gradient for Sweep Line */}
-          <linearGradient id="sweepLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient
+            id="sweepLineGradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
             <stop offset="0%" stopColor="#00D9FF" stopOpacity="0" />
             <stop offset="80%" stopColor="#00FFFF" stopOpacity="1" />
             <stop offset="100%" stopColor="#00FFFF" stopOpacity="0.8" />
@@ -107,13 +113,7 @@ export const ForensicRadar = () => {
         </defs>
 
         {/* Background Circle (darkest) */}
-        <circle
-          cx="250"
-          cy="250"
-          r="240"
-          fill="#000814"
-          opacity="0.9"
-        />
+        <circle cx="250" cy="250" r="240" fill="#000814" opacity="0.9" />
 
         {/* Concentric Rings (5 rings) */}
         {[48, 96, 144, 192, 240].map((radius, index) => (
@@ -132,13 +132,13 @@ export const ForensicRadar = () => {
 
         {/* Radial Tick Marks (60 ticks, every 6 degrees) */}
         {Array.from({ length: 60 }).map((_, i) => {
-          const angle = (i * 6 * Math.PI) / 180;
-          const innerRadius = 232;
-          const outerRadius = i % 5 === 0 ? 244 : 238; // Longer tick every 30 degrees
-          const x1 = 250 + innerRadius * Math.cos(angle);
-          const y1 = 250 + innerRadius * Math.sin(angle);
-          const x2 = 250 + outerRadius * Math.cos(angle);
-          const y2 = 250 + outerRadius * Math.sin(angle);
+          const angle = (i * 6 * Math.PI) / 180
+          const innerRadius = 232
+          const outerRadius = i % 5 === 0 ? 244 : 238 // Longer tick every 30 degrees
+          const x1 = 250 + innerRadius * Math.cos(angle)
+          const y1 = 250 + innerRadius * Math.sin(angle)
+          const x2 = 250 + outerRadius * Math.cos(angle)
+          const y2 = 250 + outerRadius * Math.sin(angle)
 
           return (
             <line
@@ -151,7 +151,7 @@ export const ForensicRadar = () => {
               strokeWidth={i % 5 === 0 ? 1.5 : 0.8}
               opacity={i % 5 === 0 ? 0.7 : 0.4}
             />
-          );
+          )
         })}
 
         {/* World Map Silhouette */}
@@ -173,7 +173,11 @@ export const ForensicRadar = () => {
             opacity={particle.opacity}
             filter="url(#glow)"
             animate={{
-              opacity: [particle.opacity, particle.opacity * 0.3, particle.opacity],
+              opacity: [
+                particle.opacity,
+                particle.opacity * 0.3,
+                particle.opacity,
+              ],
               scale: [1, 1.3, 1],
             }}
             transition={{
@@ -234,13 +238,7 @@ export const ForensicRadar = () => {
           opacity="0.6"
           filter="url(#strongGlow)"
         />
-        <circle
-          cx="250"
-          cy="250"
-          r="4"
-          fill="#00FFFF"
-          opacity="0.9"
-        />
+        <circle cx="250" cy="250" r="4" fill="#00FFFF" opacity="0.9" />
 
         {/* Outer Ring with Extra Glow */}
         <circle
@@ -255,5 +253,5 @@ export const ForensicRadar = () => {
         />
       </svg>
     </div>
-  );
-};
+  )
+}

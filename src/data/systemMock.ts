@@ -2,7 +2,11 @@
 // MOCK SYSTEM DATA - For SYS_01 Mission Control
 // ============================================================================
 
-import { SystemAnnouncement, ConfigurationGap, SystemHealthMetric } from '../types/system';
+import {
+  SystemAnnouncement,
+  ConfigurationGap,
+  SystemHealthMetric,
+} from '../types/system'
 
 export const MOCK_ANNOUNCEMENTS: SystemAnnouncement[] = [
   {
@@ -44,7 +48,7 @@ export const MOCK_ANNOUNCEMENTS: SystemAnnouncement[] = [
     dismissible: false,
     dismissed: false,
   },
-];
+]
 
 export const MOCK_CONFIG_GAPS: ConfigurationGap[] = [
   {
@@ -80,7 +84,7 @@ export const MOCK_CONFIG_GAPS: ConfigurationGap[] = [
     actionRoute: '/sys-organization',
     impact: 'Data synchronization will fail after expiration',
   },
-];
+]
 
 export const MOCK_HEALTH_METRICS: SystemHealthMetric[] = [
   {
@@ -131,4 +135,4 @@ export const MOCK_HEALTH_METRICS: SystemHealthMetric[] = [
     trend: 'STABLE',
     lastChecked: '2025-12-09T08:00:00Z',
   },
-];
+]

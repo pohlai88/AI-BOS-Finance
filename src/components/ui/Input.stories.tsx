@@ -4,15 +4,15 @@ import { Btn } from './Btn'
 
 /**
  * 🛡️ THE CONTROL PLANE - Input Governance
- * 
+ *
  * This Storybook story acts as the "Contract" for the Input component.
- * 
+ *
  * Governance Workflow:
  * 1. Developer creates/updates Input.tsx
  * 2. Developer opens Storybook
  * 3. Developer verifies: "Does this match Button height/border-radius?"
  * 4. Only then is it merged into the App
- * 
+ *
  * This prevents "Form Symmetry" drift by forcing visual verification
  * before code enters production.
  */
@@ -82,7 +82,7 @@ export const Basic: Story = {
 // 🧪 TEST CASE 2: All Sizes
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-full max-w-md">
+    <div className="flex w-full max-w-md flex-col gap-4">
       <Input size="sm" placeholder="Small input" />
       <Input size="md" placeholder="Medium input (default)" />
       <Input size="lg" placeholder="Large input" />
@@ -94,17 +94,20 @@ export const AllSizes: Story = {
 // This is the most important test - Input + Button MUST align perfectly
 export const FormSymmetry: Story = {
   render: () => (
-    <div className="space-y-6 w-full max-w-md">
+    <div className="w-full max-w-md space-y-6">
       <div>
         <h3 className="mb-2 text-sm font-semibold text-text-primary">
           ✅ Form Symmetry Test (Medium Size)
         </h3>
         <div className="flex gap-2">
           <Input size="md" placeholder="Search..." className="flex-1" />
-          <Btn variant="primary" size="md">Search</Btn>
+          <Btn variant="primary" size="md">
+            Search
+          </Btn>
         </div>
         <p className="mt-2 text-xs text-text-tertiary">
-          Input and Button MUST have same height (h-10) and border-radius (rounded-action)
+          Input and Button MUST have same height (h-10) and border-radius
+          (rounded-action)
         </p>
       </div>
 
@@ -114,11 +117,11 @@ export const FormSymmetry: Story = {
         </h3>
         <div className="flex gap-2">
           <Input size="sm" placeholder="Search..." className="flex-1" />
-          <Btn variant="primary" size="sm">Search</Btn>
+          <Btn variant="primary" size="sm">
+            Search
+          </Btn>
         </div>
-        <p className="mt-2 text-xs text-text-tertiary">
-          Both MUST be h-8
-        </p>
+        <p className="mt-2 text-xs text-text-tertiary">Both MUST be h-8</p>
       </div>
 
       <div>
@@ -127,11 +130,11 @@ export const FormSymmetry: Story = {
         </h3>
         <div className="flex gap-2">
           <Input size="lg" placeholder="Search..." className="flex-1" />
-          <Btn variant="primary" size="lg">Search</Btn>
+          <Btn variant="primary" size="lg">
+            Search
+          </Btn>
         </div>
-        <p className="mt-2 text-xs text-text-tertiary">
-          Both MUST be h-12
-        </p>
+        <p className="mt-2 text-xs text-text-tertiary">Both MUST be h-12</p>
       </div>
     </div>
   ),
@@ -140,7 +143,7 @@ export const FormSymmetry: Story = {
 // 🧪 TEST CASE 4: Error State
 export const ErrorState: Story = {
   render: () => (
-    <div className="space-y-4 w-full max-w-md">
+    <div className="w-full max-w-md space-y-4">
       <Input error placeholder="Invalid email" />
       <Input error value="user@example" />
       <p className="text-xs text-text-tertiary">
@@ -153,7 +156,7 @@ export const ErrorState: Story = {
 // 🧪 TEST CASE 5: Disabled State
 export const DisabledState: Story = {
   render: () => (
-    <div className="space-y-4 w-full max-w-md">
+    <div className="w-full max-w-md space-y-4">
       <Input disabled placeholder="Disabled input" />
       <Input disabled value="Cannot edit" />
     </div>
@@ -163,17 +166,19 @@ export const DisabledState: Story = {
 // 🧪 TEST CASE 6: Real-World Forms
 export const RealWorldForms: Story = {
   render: () => (
-    <div className="space-y-6 w-full max-w-md">
+    <div className="w-full max-w-md space-y-6">
       {/* Login Form */}
-      <div className="space-y-4 p-6 bg-surface-base border border-border-surface-base rounded-surface">
+      <div className="border-border-surface-base space-y-4 rounded-surface border bg-surface-base p-6">
         <h3 className="text-lg font-semibold text-text-primary">Login Form</h3>
         <Input placeholder="Email" type="email" />
         <Input placeholder="Password" type="password" />
-        <Btn variant="primary" className="w-full">Sign In</Btn>
+        <Btn variant="primary" className="w-full">
+          Sign In
+        </Btn>
       </div>
 
       {/* Search Bar */}
-      <div className="space-y-4 p-6 bg-surface-base border border-border-surface-base rounded-surface">
+      <div className="border-border-surface-base space-y-4 rounded-surface border bg-surface-base p-6">
         <h3 className="text-lg font-semibold text-text-primary">Search Bar</h3>
         <div className="flex gap-2">
           <Input placeholder="Search products..." className="flex-1" />
@@ -182,7 +187,7 @@ export const RealWorldForms: Story = {
       </div>
 
       {/* Settings Form */}
-      <div className="space-y-4 p-6 bg-surface-base border border-border-surface-base rounded-surface">
+      <div className="border-border-surface-base space-y-4 rounded-surface border bg-surface-base p-6">
         <h3 className="text-lg font-semibold text-text-primary">Settings</h3>
         <Input placeholder="Display Name" />
         <Input placeholder="Email" type="email" />
@@ -198,30 +203,34 @@ export const RealWorldForms: Story = {
 // 🧪 TEST CASE 7: Before/After Comparison
 export const BeforeAfter: Story = {
   render: () => (
-    <div className="space-y-6 w-full max-w-md">
+    <div className="w-full max-w-md space-y-6">
       <div>
         <h3 className="mb-2 font-semibold text-red-600">❌ Before (Drift)</h3>
-        <div className="flex gap-2 p-4 bg-red-50 rounded border border-red-200">
+        <div className="flex gap-2 rounded border border-red-200 bg-red-50 p-4">
           <input
-            className="h-9 px-3 rounded-md border border-gray-300"
+            className="h-9 rounded-md border border-gray-300 px-3"
             placeholder="Search..."
           />
-          <button className="h-10 px-4 rounded-md bg-green-500 text-white">
+          <button className="h-10 rounded-md bg-green-500 px-4 text-white">
             Search
           </button>
         </div>
-        <code className="mt-2 block text-xs bg-white px-2 py-1 rounded">
+        <code className="mt-2 block rounded bg-white px-2 py-1 text-xs">
           Input: h-9, Button: h-10 → MISALIGNED (Form Symmetry Broken)
         </code>
       </div>
 
       <div>
-        <h3 className="mb-2 font-semibold text-green-600">✅ After (Governed)</h3>
-        <div className="flex gap-2 p-4 bg-green-50 rounded border border-green-200">
+        <h3 className="mb-2 font-semibold text-green-600">
+          ✅ After (Governed)
+        </h3>
+        <div className="flex gap-2 rounded border border-green-200 bg-green-50 p-4">
           <Input size="md" placeholder="Search..." className="flex-1" />
-          <Btn variant="primary" size="md">Search</Btn>
+          <Btn variant="primary" size="md">
+            Search
+          </Btn>
         </div>
-        <code className="mt-2 block text-xs bg-white px-2 py-1 rounded">
+        <code className="mt-2 block rounded bg-white px-2 py-1 text-xs">
           Input: h-10, Button: h-10 → PERFECT ALIGNMENT (Form Symmetry Enforced)
         </code>
       </div>
@@ -232,7 +241,7 @@ export const BeforeAfter: Story = {
 // 🧪 TEST CASE 8: All Variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="space-y-4 w-full max-w-md">
+    <div className="w-full max-w-md space-y-4">
       <Input placeholder="Default input" />
       <Input error placeholder="Error input" />
       <Input disabled placeholder="Disabled input" />

@@ -147,7 +147,9 @@ export default function BioSkinDemoPage() {
       <FieldContextSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        record={selectedRecord as unknown as Record<string, unknown> | undefined}
+        record={
+          selectedRecord as unknown as Record<string, unknown> | undefined
+        }
         schema={PAYMENT_SCHEMA as unknown as ExtendedMetadataField[]}
         fieldMeta={
           selectedRecord

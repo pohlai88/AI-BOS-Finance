@@ -6,63 +6,63 @@ import {
   Activity,
   Menu,
   Wrench, // Added for Setup Companion
-} from 'lucide-react';
-import { useState } from 'react';
-import { useRouterAdapter } from '@/hooks/useRouterAdapter';
-import { MetaSideNav } from '../MetaSideNav';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
-import { SetupCompanion } from '../sys/SetupCompanion';
+} from 'lucide-react'
+import { useState } from 'react'
+import { useRouterAdapter } from '@/hooks/useRouterAdapter'
+import { MetaSideNav } from '../MetaSideNav'
+import { NexusIcon } from '@/components/nexus/NexusIcon'
+import { SetupCompanion } from '../sys/SetupCompanion'
 
 interface MetaAppShellProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function MetaAppShell({ children }: MetaAppShellProps) {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const { pathname, navigate, isActive } = useRouterAdapter();
+  const [isNavOpen, setIsNavOpen] = useState(false)
+  const { pathname, navigate, isActive } = useRouterAdapter()
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-black font-sans text-white selection:bg-emerald-500/30">
       {/* Top Navigation Bar */}
-      <header className="fixed top-0 left-0 right-0 h-16 border-b border-[#1F1F1F] bg-black/80 backdrop-blur-md z-40 flex items-center justify-between px-6">
+      <header className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-[#1F1F1F] bg-black/80 px-6 backdrop-blur-md">
         {/* Left: Brand */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => setIsNavOpen(true)}
-            className="p-2 -ml-2 hover:bg-[#111] rounded-lg transition-colors text-zinc-400 hover:text-white"
+            className="-ml-2 rounded-lg p-2 text-zinc-400 transition-colors hover:bg-[#111] hover:text-white"
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="h-5 w-5" />
           </button>
 
           <div className="h-6 w-[1px] bg-[#1F1F1F]" />
 
           <div
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex cursor-pointer items-center gap-3"
             onClick={() => navigate('/dashboard')}
           >
             <NexusIcon size="sm" />
-            <span className="font-mono text-sm tracking-widest text-zinc-300 uppercase hidden md:block">
+            <span className="hidden font-mono text-sm uppercase tracking-widest text-zinc-300 md:block">
               Nexus<span className="text-zinc-600">Canon</span>
             </span>
           </div>
         </div>
 
         {/* Center: Quick Nav (Desktop) */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden items-center gap-1 md:flex">
           <NavButton
-            icon={<Home className="w-4 h-4" />}
+            icon={<Home className="h-4 w-4" />}
             label="DASHBOARD"
             active={isActive('/dashboard')}
             onClick={() => navigate('/dashboard')}
           />
           <NavButton
-            icon={<Wrench className="w-4 h-4" />}
+            icon={<Wrench className="h-4 w-4" />}
             label="SETUP"
             active={isActive('/sys-bootloader')}
             onClick={() => navigate('/sys-bootloader')}
           />
           <NavButton
-            icon={<Database className="w-4 h-4" />}
+            icon={<Database className="h-4 w-4" />}
             label="DATA"
             active={pathname.startsWith('/meta-registry')}
             onClick={() => navigate('/meta-registry')}
@@ -71,15 +71,15 @@ export function MetaAppShell({ children }: MetaAppShellProps) {
 
         {/* Right: User / System Status */}
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0A0A0A] border border-[#1F1F1F]">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+          <div className="hidden items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#0A0A0A] px-3 py-1.5 md:flex">
+            <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
               Online
             </span>
           </div>
 
           <div
-            className="h-8 w-8 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 border border-[#333] flex items-center justify-center cursor-pointer hover:border-emerald-500/50 transition-colors"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#333] bg-gradient-to-tr from-zinc-800 to-zinc-700 transition-colors hover:border-emerald-500/50"
             onClick={() => navigate('/sys-profile')}
           >
             <span className="font-mono text-xs text-white">SC</span>
@@ -88,7 +88,7 @@ export function MetaAppShell({ children }: MetaAppShellProps) {
       </header>
 
       {/* Main Content Area */}
-      <main className="pt-16 min-h-screen">{children}</main>
+      <main className="min-h-screen pt-16">{children}</main>
 
       {/* Setup Companion Widget (Bottom Right) */}
       <SetupCompanion />
@@ -96,7 +96,7 @@ export function MetaAppShell({ children }: MetaAppShellProps) {
       {/* Slide-out Navigation */}
       <MetaSideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
     </div>
-  );
+  )
 }
 
 // Helper Component for Top Nav Buttons
@@ -106,25 +106,22 @@ function NavButton({
   active,
   onClick,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  active: boolean;
-  onClick: () => void;
+  icon: React.ReactNode
+  label: string
+  active: boolean
+  onClick: () => void
 }) {
   return (
     <button
       onClick={onClick}
-      className={`
-        flex items-center gap-2 px-4 py-2 rounded-md text-xs font-mono tracking-wider transition-all
-        ${
-          active
-            ? 'bg-[#111] text-emerald-500 border border-[#1F1F1F]'
-            : 'text-zinc-500 hover:text-white hover:bg-[#0A0A0A] border border-transparent'
-        }
-      `}
+      className={`flex items-center gap-2 rounded-md px-4 py-2 font-mono text-xs tracking-wider transition-all ${
+        active
+          ? 'border border-[#1F1F1F] bg-[#111] text-emerald-500'
+          : 'border border-transparent text-zinc-500 hover:bg-[#0A0A0A] hover:text-white'
+      } `}
     >
       {icon}
       <span>{label}</span>
     </button>
-  );
+  )
 }

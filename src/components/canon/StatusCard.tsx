@@ -1,9 +1,9 @@
 /**
  * StatusCard - Canon Component
- * 
+ *
  * Displays status counts with colored styling from SSOT.
  * Built on shadcn/ui Card with Canon status variants.
- * 
+ *
  * @component COMP_StatusCard
  * @version 1.0.0
  * @see REF_037 - Phase 3: Canon Page System
@@ -27,7 +27,7 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
     <Card
       id={cardId}
       className={cn(
-        'p-4 transition-all hover:scale-[1.02] focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
+        'focus-within:ring-nexus-green p-4 transition-all focus-within:ring-2 focus-within:ring-offset-2 hover:scale-[1.02]',
         config.border,
         config.bg,
         className
@@ -36,8 +36,8 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
       aria-labelledby={`${cardId}-label`}
       tabIndex={0}
     >
-      <div className="flex items-center justify-between mb-2">
-        <Icon className={cn('w-5 h-5', config.color)} aria-hidden="true" />
+      <div className="mb-2 flex items-center justify-between">
+        <Icon className={cn('h-5 w-5', config.color)} aria-hidden="true" />
         <span
           className={cn('text-2xl font-bold', config.color)}
           aria-label={`${count} ${config.label.toLowerCase()} pages`}
@@ -47,7 +47,7 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
       </div>
       <span
         id={`${cardId}-label`}
-        className="text-xs font-medium text-nexus-signal/70"
+        className="text-nexus-signal/70 text-xs font-medium"
       >
         {config.label} Pages
       </span>

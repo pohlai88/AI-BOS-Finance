@@ -3,5 +3,5 @@
 // Centralized export for authentication UI components
 // ============================================================================
 
-export { BeamLine } from './BeamLine';
-export { MechanicalOrchestra } from './MechanicalOrchestra';
+export { BeamLine } from './BeamLine'
+export { MechanicalOrchestra } from './MechanicalOrchestra'

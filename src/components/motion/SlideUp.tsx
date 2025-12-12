@@ -4,15 +4,15 @@
 // Usage: <SlideUp><YourComponent /></SlideUp>
 // ============================================================================
 
-import { motion } from 'motion/react';
-import { ReactNode } from 'react';
+import { motion } from 'motion/react'
+import { ReactNode } from 'react'
 
 interface SlideUpProps {
-  children: ReactNode;
-  duration?: number;
-  delay?: number;
-  distance?: number; // Distance in pixels to slide from
-  className?: string;
+  children: ReactNode
+  duration?: number
+  delay?: number
+  distance?: number // Distance in pixels to slide from
+  className?: string
 }
 
 export const SlideUp = ({
@@ -36,5 +36,5 @@ export const SlideUp = ({
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}

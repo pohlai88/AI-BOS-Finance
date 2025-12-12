@@ -53,10 +53,10 @@ export interface ZodBioObjectProps<TSchema extends z.ZodObject<any>> {
 
 /**
  * ZodBioObject - Renders UI directly from Zod schemas
- * 
+ *
  * This is the "living cell" that self-assembles from DNA (Zod schemas).
  * Feed it a schema and data, and it grows the appropriate UI automatically.
- * 
+ *
  * @example
  * ```tsx
  * const UserSchema = z.object({
@@ -65,7 +65,7 @@ export interface ZodBioObjectProps<TSchema extends z.ZodObject<any>> {
  *   status: z.enum(['active', 'inactive']),
  *   age: z.number().min(18),
  * })
- * 
+ *
  * <ZodBioObject
  *   schema={UserSchema}
  *   data={{ name: 'John', email: 'john@example.com', status: 'active', age: 30 }}
@@ -143,13 +143,16 @@ export interface ZodBioListProps<TSchema extends z.ZodObject<any>> {
   }
   /** Custom cell renderers - Escape hatch for custom columns (e.g., action buttons) */
   customRenderers?: {
-    [fieldName: string]: (value: unknown, record: z.infer<TSchema>) => React.ReactNode
+    [fieldName: string]: (
+      value: unknown,
+      record: z.infer<TSchema>
+    ) => React.ReactNode
   }
 }
 
 /**
  * ZodBioList - Renders a table directly from Zod schemas
- * 
+ *
  * @example
  * ```tsx
  * const UserSchema = z.object({
@@ -158,7 +161,7 @@ export interface ZodBioListProps<TSchema extends z.ZodObject<any>> {
  *   email: z.string().email(),
  *   status: z.enum(['active', 'inactive']),
  * })
- * 
+ *
  * <ZodBioList
  *   schema={UserSchema}
  *   data={users}
@@ -198,7 +201,7 @@ export function ZodBioList<TSchema extends z.ZodObject<any>>({
       Object.entries(customRenderers).map(([fieldName, renderer]) => [
         fieldName,
         (value: unknown, record: Record<string, unknown>) =>
-          renderer(value, record as z.infer<TSchema>)
+          renderer(value, record as z.infer<TSchema>),
       ])
     )
   }, [customRenderers])
@@ -208,7 +211,11 @@ export function ZodBioList<TSchema extends z.ZodObject<any>>({
     <BioList
       schema={fields}
       data={data as Record<string, unknown>[]}
-      onRowClick={onRowClick ? (record) => onRowClick(record as z.infer<TSchema>) : undefined}
+      onRowClick={
+        onRowClick
+          ? (record) => onRowClick(record as z.infer<TSchema>)
+          : undefined
+      }
       rowKey={rowKey}
       isLoading={isLoading}
       className={className}

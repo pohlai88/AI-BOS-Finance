@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { AlertTriangle } from 'lucide-react'
 
 // 🎬 CINEMATIC 8-ACT SEQUENCE
 // Professional animation principles: Anticipation, Ease curves, Depth layers, Color grading, Motion design
@@ -15,107 +15,138 @@ type Stage =
   | 'LAUNCH'
   | 'REENTRY'
   | 'SUNRISE'
-  | 'REVEAL';
+  | 'REVEAL'
 
 export function SchematicBoat() {
-  const [stage, setStage] = useState<Stage>('DISCORD_YELLOW');
-  const [chargeLevel, setChargeLevel] = useState(0);
+  const [stage, setStage] = useState<Stage>('DISCORD_YELLOW')
+  const [chargeLevel, setChargeLevel] = useState(0)
 
   // Get current discord state with escalating intensity
   const getDiscordState = () => {
     if (stage === 'DISCORD_YELLOW')
-      return { color: '#EAB308', label: 'BLAME', shake: 3, drift: 15, vignette: 0.1 };
+      return {
+        color: '#EAB308',
+        label: 'BLAME',
+        shake: 3,
+        drift: 15,
+        vignette: 0.1,
+      }
     if (stage === 'DISCORD_ORANGE')
-      return { color: '#F97316', label: 'ARGUE', shake: 8, drift: 40, vignette: 0.2 };
+      return {
+        color: '#F97316',
+        label: 'ARGUE',
+        shake: 8,
+        drift: 40,
+        vignette: 0.2,
+      }
     if (stage === 'DISCORD_RED')
-      return { color: '#EF4444', label: 'SABOTAGE', shake: 15, drift: 80, vignette: 0.3 };
-    return { color: '#EF4444', label: 'SABOTAGE', shake: 0, drift: 0, vignette: 0 };
-  };
+      return {
+        color: '#EF4444',
+        label: 'SABOTAGE',
+        shake: 15,
+        drift: 80,
+        vignette: 0.3,
+      }
+    return {
+      color: '#EF4444',
+      label: 'SABOTAGE',
+      shake: 0,
+      drift: 0,
+      vignette: 0,
+    }
+  }
 
-  const isDiscord = stage.startsWith('DISCORD');
-  const discordState = getDiscordState();
+  const isDiscord = stage.startsWith('DISCORD')
+  const discordState = getDiscordState()
 
   // --- THE DIRECTOR (Cinematic Timing) ---
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    let t1: NodeJS.Timeout;
-    let t2: NodeJS.Timeout;
-    let t3: NodeJS.Timeout;
-    let t4: NodeJS.Timeout;
-    let t5: NodeJS.Timeout;
-    let t6: NodeJS.Timeout;
-    let t7: NodeJS.Timeout;
-    let t8: NodeJS.Timeout;
-    let t9: NodeJS.Timeout;
-    let t10: NodeJS.Timeout;
+    let interval: NodeJS.Timeout
+    let t1: NodeJS.Timeout
+    let t2: NodeJS.Timeout
+    let t3: NodeJS.Timeout
+    let t4: NodeJS.Timeout
+    let t5: NodeJS.Timeout
+    let t6: NodeJS.Timeout
+    let t7: NodeJS.Timeout
+    let t8: NodeJS.Timeout
+    let t9: NodeJS.Timeout
+    let t10: NodeJS.Timeout
 
     const runSequence = () => {
-      setStage('DISCORD_YELLOW');
-      setChargeLevel(0);
+      setStage('DISCORD_YELLOW')
+      setChargeLevel(0)
 
       // ACT 1a: DISCORD YELLOW (1s)
-      t1 = setTimeout(() => setStage('DISCORD_ORANGE'), 1000);
+      t1 = setTimeout(() => setStage('DISCORD_ORANGE'), 1000)
 
       // ACT 1b: DISCORD ORANGE (1s)
-      t2 = setTimeout(() => setStage('DISCORD_RED'), 2000);
+      t2 = setTimeout(() => setStage('DISCORD_RED'), 2000)
 
       // ACT 1c: DISCORD RED (1s)
-      t3 = setTimeout(() => setStage('DRIFT'), 3000);
+      t3 = setTimeout(() => setStage('DRIFT'), 3000)
 
       // ACT 2: DRIFT (2s - circular recalibration)
-      t4 = setTimeout(() => setStage('SYNC'), 5000);
+      t4 = setTimeout(() => setStage('SYNC'), 5000)
 
       // ACT 3: SYNC (2s - lock confirmation)
       t5 = setTimeout(() => {
-        setStage('CHARGING');
+        setStage('CHARGING')
 
         // ACT 4: CHARGING (smooth charge)
-        let p = 0;
+        let p = 0
         interval = setInterval(() => {
-          p += 2;
-          setChargeLevel(p);
+          p += 2
+          setChargeLevel(p)
           if (p >= 100) {
-            clearInterval(interval);
+            clearInterval(interval)
             // ANTICIPATION before launch
-            setStage('ANTICIPATION');
+            setStage('ANTICIPATION')
           }
-        }, 30);
-      }, 7000);
+        }, 30)
+      }, 7000)
 
       // ACT 4.5: ANTICIPATION (0.3s - boat leans back)
-      t6 = setTimeout(() => setStage('LAUNCH'), 8800);
+      t6 = setTimeout(() => setStage('LAUNCH'), 8800)
 
       // ACT 5: LAUNCH (0.6s - explosive exit)
-      t7 = setTimeout(() => setStage('REENTRY'), 9400);
+      t7 = setTimeout(() => setStage('REENTRY'), 9400)
 
       // ACT 6: REENTRY (0.5s - fast return)
-      t8 = setTimeout(() => setStage('SUNRISE'), 9900);
+      t8 = setTimeout(() => setStage('SUNRISE'), 9900)
 
       // ACT 7: SUNRISE (3.5s - triumphant arrival)
-      t9 = setTimeout(() => setStage('REVEAL'), 13400);
+      t9 = setTimeout(() => setStage('REVEAL'), 13400)
 
       // ACT 8: REVEAL (5s) then RESTART
-      t10 = setTimeout(() => runSequence(), 18400);
-    };
+      t10 = setTimeout(() => runSequence(), 18400)
+    }
 
-    runSequence();
+    runSequence()
 
     return () => {
-      [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10].forEach((t) => clearTimeout(t));
-      if (interval) clearInterval(interval);
-    };
-  }, []);
+      ;[t1, t2, t3, t4, t5, t6, t7, t8, t9, t10].forEach((t) => clearTimeout(t))
+      if (interval) clearInterval(interval)
+    }
+  }, [])
 
   const shakeIntensity =
-    stage === 'CHARGING' ? chargeLevel / 5 : isDiscord ? discordState.shake : 0;
+    stage === 'CHARGING' ? chargeLevel / 5 : isDiscord ? discordState.shake : 0
 
   return (
     <motion.div
-      className="w-full bg-[#050505] border border-[#222] relative overflow-hidden h-[500px] group"
+      className="group relative h-[500px] w-full overflow-hidden border border-[#222] bg-[#050505]"
       animate={
         stage === 'CHARGING' || isDiscord
           ? {
-              x: [0, -shakeIntensity, shakeIntensity, -shakeIntensity, shakeIntensity, 0],
+              x: [
+                0,
+                -shakeIntensity,
+                shakeIntensity,
+                -shakeIntensity,
+                shakeIntensity,
+                0,
+              ],
               y: [
                 0,
                 -shakeIntensity / 2,
@@ -130,16 +161,20 @@ export function SchematicBoat() {
       transition={{ duration: 0.1, repeat: Infinity }}
     >
       {/* COORDINATE GRID OVERLAY */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        <div className="absolute top-2 left-2 text-[8px] font-mono text-[#333]">00.00</div>
-        <div className="absolute top-2 right-2 text-[8px] font-mono text-[#333]">100.00</div>
-        <div className="absolute bottom-2 left-2 text-[8px] font-mono text-[#333] flex items-center gap-1">
-          <div className="w-2 h-2 border-l border-b border-[#333]" />
+      <div className="pointer-events-none absolute inset-0 z-10">
+        <div className="absolute left-2 top-2 font-mono text-[8px] text-[#333]">
+          00.00
+        </div>
+        <div className="absolute right-2 top-2 font-mono text-[8px] text-[#333]">
+          100.00
+        </div>
+        <div className="absolute bottom-2 left-2 flex items-center gap-1 font-mono text-[8px] text-[#333]">
+          <div className="h-2 w-2 border-b border-l border-[#333]" />
           ORIGIN
         </div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-4 h-px bg-[#333]" />
-          <div className="w-px h-4 bg-[#333] absolute top-0 left-1/2 -translate-x-1/2" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="h-px w-4 bg-[#333]" />
+          <div className="absolute left-1/2 top-0 h-4 w-px -translate-x-1/2 bg-[#333]" />
         </div>
       </div>
 
@@ -147,7 +182,7 @@ export function SchematicBoat() {
       <AnimatePresence>
         {!['SUNRISE', 'REVEAL'].includes(stage) && (
           <motion.div
-            className="absolute top-4 right-4 z-20 font-mono text-[10px] space-y-1 text-right"
+            className="absolute right-4 top-4 z-20 space-y-1 text-right font-mono text-[10px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -206,11 +241,11 @@ export function SchematicBoat() {
 
       {/* ENVIRONMENT GRID */}
       <div
-        className="absolute inset-0 perspective-grid opacity-20"
+        className="perspective-grid absolute inset-0 opacity-20"
         style={{ perspective: '500px' }}
       >
         <motion.div
-          className="absolute bottom-0 left-[-50%] w-[200%] h-[200px] bg-[linear-gradient(0deg,transparent_24%,rgba(40,231,162,.3)_25%,rgba(40,231,162,.3)_26%,transparent_27%,transparent_74%,rgba(40,231,162,.3)_75%,rgba(40,231,162,.3)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(40,231,162,.3)_25%,rgba(40,231,162,.3)_26%,transparent_27%,transparent_74%,rgba(40,231,162,.3)_75%,rgba(40,231,162,.3)_76%,transparent_77%,transparent)] bg-[length:50px_50px]"
+          className="absolute bottom-0 left-[-50%] h-[200px] w-[200%] bg-[linear-gradient(0deg,transparent_24%,rgba(40,231,162,.3)_25%,rgba(40,231,162,.3)_26%,transparent_27%,transparent_74%,rgba(40,231,162,.3)_75%,rgba(40,231,162,.3)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(40,231,162,.3)_25%,rgba(40,231,162,.3)_26%,transparent_27%,transparent_74%,rgba(40,231,162,.3)_75%,rgba(40,231,162,.3)_76%,transparent_77%,transparent)] bg-[length:50px_50px]"
           style={{ transform: 'rotateX(60deg)' }}
           animate={{ translateY: [0, 50] }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -224,7 +259,7 @@ export function SchematicBoat() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 border z-30"
+            className="absolute left-1/2 top-12 z-30 flex -translate-x-1/2 items-center gap-2 border px-4 py-2"
             style={{
               color: discordState.color,
               backgroundColor: `${discordState.color}15`,
@@ -232,8 +267,10 @@ export function SchematicBoat() {
             }}
           >
             <AlertTriangle size={16} />
-            <span className="text-xs tracking-widest font-mono">WARNING: {discordState.label}</span>
-            <div className="ml-2 w-20 h-1 bg-black/50 relative overflow-hidden">
+            <span className="font-mono text-xs tracking-widest">
+              WARNING: {discordState.label}
+            </span>
+            <div className="relative ml-2 h-1 w-20 overflow-hidden bg-black/50">
               <motion.div
                 className="h-full"
                 style={{ backgroundColor: discordState.color }}
@@ -253,14 +290,16 @@ export function SchematicBoat() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[#F97316] bg-[#F97316]/10 px-4 py-2 border border-[#F97316] z-30"
+            className="absolute left-1/2 top-12 z-30 flex -translate-x-1/2 items-center gap-2 border border-[#F97316] bg-[#F97316]/10 px-4 py-2 text-[#F97316]"
           >
             <motion.div
-              className="w-2 h-2 bg-[#F97316] rounded-full"
+              className="h-2 w-2 rounded-full bg-[#F97316]"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
             />
-            <span className="text-xs tracking-widest font-mono">RECALIBRATING_ALIGNMENT...</span>
+            <span className="font-mono text-xs tracking-widest">
+              RECALIBRATING_ALIGNMENT...
+            </span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -272,10 +311,10 @@ export function SchematicBoat() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[#28E7A2] bg-[#28E7A2]/10 px-4 py-2 border border-[#28E7A2] z-30"
+            className="absolute left-1/2 top-12 z-30 flex -translate-x-1/2 items-center gap-2 border border-[#28E7A2] bg-[#28E7A2]/10 px-4 py-2 text-[#28E7A2]"
           >
-            <div className="w-2 h-2 bg-[#28E7A2] rounded-full animate-pulse" />
-            <span className="text-xs tracking-widest font-mono">
+            <div className="h-2 w-2 animate-pulse rounded-full bg-[#28E7A2]" />
+            <span className="font-mono text-xs tracking-widest">
               LOCK_CONFIRMED // SYNCHRONIZED
             </span>
           </motion.div>
@@ -286,30 +325,32 @@ export function SchematicBoat() {
       <AnimatePresence>
         {stage === 'CHARGING' && (
           <motion.div
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 w-96 z-40"
+            className="absolute bottom-12 left-1/2 z-40 w-96 -translate-x-1/2"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
           >
             <div className="w-full">
-              <div className="flex justify-between items-end mb-2 font-mono">
+              <div className="mb-2 flex items-end justify-between font-mono">
                 <motion.span
-                  className="text-[#28E7A2] text-xs tracking-widest"
+                  className="text-xs tracking-widest text-[#28E7A2]"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 0.5, repeat: Infinity }}
                 >
                   SYNCHRONIZING...
                 </motion.span>
-                <span className="text-white text-4xl italic">{chargeLevel}%</span>
+                <span className="text-4xl italic text-white">
+                  {chargeLevel}%
+                </span>
               </div>
 
-              <div className="w-full h-4 bg-[#111] border border-[#333] relative overflow-hidden">
+              <div className="relative h-4 w-full overflow-hidden border border-[#333] bg-[#111]">
                 <motion.div
                   className="h-full bg-gradient-to-r from-[#28E7A2] via-white to-[#28E7A2]"
                   style={{ width: `${chargeLevel}%` }}
                 />
                 <motion.div
-                  className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   animate={{ x: ['-100%', '200%'] }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 />
@@ -379,7 +420,12 @@ export function SchematicBoat() {
                   : {}
               }
             >
-              <svg width="900" height="400" viewBox="0 0 900 400" className="overflow-visible">
+              <svg
+                width="900"
+                height="400"
+                viewBox="0 0 900 400"
+                className="overflow-visible"
+              >
                 <defs>
                   <linearGradient id="fadeTrail" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#28E7A2" stopOpacity="0" />
@@ -423,7 +469,10 @@ export function SchematicBoat() {
                         strokeWidth={stage === 'CHARGING' ? '1.5' : '0.5'}
                         strokeOpacity="0.3"
                         animate={{
-                          d: ['M 100 250 Q 400 260 700 250', 'M 100 250 Q 400 240 700 250'],
+                          d: [
+                            'M 100 250 Q 400 260 700 250',
+                            'M 100 250 Q 400 240 700 250',
+                          ],
                         }}
                         transition={{
                           duration: stage === 'SYNC' ? 1 : 0.5,
@@ -614,7 +663,12 @@ export function SchematicBoat() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <svg width="900" height="400" viewBox="0 0 900 400" className="overflow-visible">
+            <svg
+              width="900"
+              height="400"
+              viewBox="0 0 900 400"
+              className="overflow-visible"
+            >
               <g>
                 <path
                   d="M 150 230 L 650 230 L 620 270 L 180 270 Z"
@@ -652,7 +706,7 @@ export function SchematicBoat() {
             >
               {/* Outer atmospheric glow */}
               <motion.div
-                className="absolute w-[300px] h-[300px] rounded-full left-1/2 -translate-x-1/2"
+                className="absolute left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full"
                 style={{
                   background:
                     'radial-gradient(circle, rgba(252,211,77,0.3) 0%, rgba(251,191,36,0.15) 40%, transparent 70%)',
@@ -662,26 +716,35 @@ export function SchematicBoat() {
                   scale: [1, 1.08, 1],
                   opacity: [0.6, 0.8, 0.6],
                 }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
               />
 
               {/* Core sun - reduced size */}
               <motion.div
-                className="absolute w-[120px] h-[120px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 h-[120px] w-[120px] -translate-x-1/2 -translate-y-1/2 rounded-full"
                 style={{
-                  background: 'radial-gradient(circle, #FCD34D 0%, #F59E0B 60%, #D97706 100%)',
+                  background:
+                    'radial-gradient(circle, #FCD34D 0%, #F59E0B 60%, #D97706 100%)',
                   boxShadow:
                     '0 0 40px rgba(252,211,77,0.6), 0 0 80px rgba(245,158,11,0.3), 0 0 120px rgba(217,119,6,0.1)',
                 }}
                 animate={{ scale: [1, 1.03, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
               />
 
               {/* God rays - only upper hemisphere (no downward rays) */}
               {[100, 120, 140, 160, 200, 220, 240, 260, 280].map((angle) => (
                 <motion.div
                   key={angle}
-                  className="absolute w-2 h-[350px] left-1/2 top-1/2"
+                  className="absolute left-1/2 top-1/2 h-[350px] w-2"
                   style={{
                     background:
                       'linear-gradient(to bottom, rgba(252,211,77,0.4), rgba(252,211,77,0.1) 50%, transparent)',
@@ -732,7 +795,8 @@ export function SchematicBoat() {
                   height: `${Math.random() * 60 + 20}px`,
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 60 + 10}%`,
-                  background: 'radial-gradient(circle, rgba(252,211,77,0.1), transparent)',
+                  background:
+                    'radial-gradient(circle, rgba(252,211,77,0.1), transparent)',
                   filter: 'blur(15px)',
                 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -770,7 +834,7 @@ export function SchematicBoat() {
                 {[...Array(5)].map((_, i) => (
                   <motion.div
                     key={`trail-${i}`}
-                    className="absolute top-1/2 left-1/2 -translate-y-1/2"
+                    className="absolute left-1/2 top-1/2 -translate-y-1/2"
                     initial={{ x: 400 - i * 80, opacity: 0.4 - i * 0.08 }}
                     animate={{ x: -200, opacity: 0 }}
                     transition={{ duration: 0.8, delay: i * 0.05 }}
@@ -788,15 +852,40 @@ export function SchematicBoat() {
                 ))}
               </motion.div>
 
-              <svg width="900" height="400" viewBox="0 0 900 400" className="overflow-visible">
+              <svg
+                width="900"
+                height="400"
+                viewBox="0 0 900 400"
+                className="overflow-visible"
+              >
                 {/* Water reflection - golden shimmer */}
                 <motion.g transform="translate(0, 310)" opacity="0.3">
-                  <ellipse cx="400" cy="0" rx="250" ry="20" fill="url(#waterReflection)" />
+                  <ellipse
+                    cx="400"
+                    cy="0"
+                    rx="250"
+                    ry="20"
+                    fill="url(#waterReflection)"
+                  />
                   <defs>
-                    <linearGradient id="waterReflection" x1="0" y1="0" x2="1" y2="0">
+                    <linearGradient
+                      id="waterReflection"
+                      x1="0"
+                      y1="0"
+                      x2="1"
+                      y2="0"
+                    >
                       <stop offset="0%" stopColor="transparent" />
-                      <stop offset="30%" stopColor="#FCD34D" stopOpacity="0.3" />
-                      <stop offset="70%" stopColor="#FCD34D" stopOpacity="0.3" />
+                      <stop
+                        offset="30%"
+                        stopColor="#FCD34D"
+                        stopOpacity="0.3"
+                      />
+                      <stop
+                        offset="70%"
+                        stopColor="#FCD34D"
+                        stopOpacity="0.3"
+                      />
                       <stop offset="100%" stopColor="transparent" />
                     </linearGradient>
                   </defs>
@@ -813,8 +902,15 @@ export function SchematicBoat() {
                       strokeWidth={2 - i * 0.4}
                       strokeOpacity={0.5 - i * 0.1}
                       animate={{
-                        d: ['M 700 250 Q 400 258 100 250', 'M 700 250 Q 400 242 100 250'],
-                        strokeOpacity: [0.5 - i * 0.1, 0.3 - i * 0.1, 0.5 - i * 0.1],
+                        d: [
+                          'M 700 250 Q 400 258 100 250',
+                          'M 700 250 Q 400 242 100 250',
+                        ],
+                        strokeOpacity: [
+                          0.5 - i * 0.1,
+                          0.3 - i * 0.1,
+                          0.5 - i * 0.1,
+                        ],
                       }}
                       transition={{
                         duration: 1.2,
@@ -829,7 +925,14 @@ export function SchematicBoat() {
                 {/* HULL - REVERSED with shadow */}
                 <g filter="drop-shadow(0 8px 12px rgba(0,0,0,0.3))">
                   {/* Shadow underneath */}
-                  <ellipse cx="400" cy="285" rx="200" ry="8" fill="rgba(0,0,0,0.2)" opacity="0.5" />
+                  <ellipse
+                    cx="400"
+                    cy="285"
+                    rx="200"
+                    ry="8"
+                    fill="rgba(0,0,0,0.2)"
+                    opacity="0.5"
+                  />
 
                   <path
                     d="M 650 230 L 150 230 L 180 270 L 620 270 Z"
@@ -876,7 +979,11 @@ export function SchematicBoat() {
                       stroke="#FBBF24"
                       strokeWidth="2"
                       animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
                     />
                   </g>
 
@@ -886,12 +993,19 @@ export function SchematicBoat() {
                     cy="220"
                     r="3"
                     fill="#FFF"
-                    style={{ filter: 'drop-shadow(0 0 8px #FCD34D) drop-shadow(0 0 4px #FFF)' }}
+                    style={{
+                      filter:
+                        'drop-shadow(0 0 8px #FCD34D) drop-shadow(0 0 4px #FFF)',
+                    }}
                     animate={{
                       opacity: [1, 0.7, 1],
                       scale: [1, 1.3, 1],
                     }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
                   />
 
                   {/* CREW - Celebrating with cascading wave animation */}
@@ -1009,7 +1123,7 @@ export function SchematicBoat() {
 
             {/* Ambient golden color grading - cinematic warmth */}
             <motion.div
-              className="absolute inset-0 pointer-events-none mix-blend-screen"
+              className="pointer-events-none absolute inset-0 mix-blend-screen"
               style={{
                 background:
                   'radial-gradient(ellipse 60% 50% at 50% 25%, rgba(252,211,77,0.15) 0%, transparent 70%)',
@@ -1021,7 +1135,7 @@ export function SchematicBoat() {
 
             {/* Vignette for depth */}
             <motion.div
-              className="absolute inset-0 pointer-events-none"
+              className="pointer-events-none absolute inset-0"
               style={{
                 background:
                   'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%)',
@@ -1038,22 +1152,26 @@ export function SchematicBoat() {
       <AnimatePresence>
         {stage === 'REVEAL' && (
           <motion.div
-            className="absolute inset-0 flex items-center justify-center bg-[#050505]/95 z-50"
+            className="absolute inset-0 z-50 flex items-center justify-center bg-[#050505]/95"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <div className="text-center space-y-6 px-8">
-              <motion.div initial={{ y: 20 }} animate={{ y: 0 }} transition={{ delay: 0.3 }}>
-                <h3 className="text-5xl md:text-7xl text-white leading-tight mb-4">
+            <div className="space-y-6 px-8 text-center">
+              <motion.div
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <h3 className="mb-4 text-5xl leading-tight text-white md:text-7xl">
                   Stop the shouting.
                   <br />
                   Start the thriving.
                 </h3>
-                <div className="flex items-center justify-center gap-4 text-3xl md:text-4xl text-[#28E7A2]">
+                <div className="flex items-center justify-center gap-4 text-3xl text-[#28E7A2] md:text-4xl">
                   <span>ONE direction.</span>
-                  <div className="w-1 h-10 bg-[#28E7A2]" />
+                  <div className="h-10 w-1 bg-[#28E7A2]" />
                   <span>ONE destiny.</span>
                 </div>
               </motion.div>
@@ -1064,11 +1182,11 @@ export function SchematicBoat() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
               >
-                <div className="w-3 h-3 bg-[#28E7A2] rounded-full animate-pulse" />
-                <span className="text-sm font-mono text-[#666] uppercase tracking-widest">
+                <div className="h-3 w-3 animate-pulse rounded-full bg-[#28E7A2]" />
+                <span className="font-mono text-sm uppercase tracking-widest text-[#666]">
                   Synchronized Commitment
                 </span>
-                <div className="w-3 h-3 bg-[#28E7A2] rounded-full animate-pulse" />
+                <div className="h-3 w-3 animate-pulse rounded-full bg-[#28E7A2]" />
               </motion.div>
 
               <motion.div
@@ -1078,12 +1196,12 @@ export function SchematicBoat() {
                 transition={{ delay: 1.2, duration: 0.8 }}
               >
                 <div className="h-px w-32 bg-gradient-to-r from-transparent to-[#28E7A2]" />
-                <div className="w-2 h-2 border border-[#28E7A2] rotate-45" />
+                <div className="h-2 w-2 rotate-45 border border-[#28E7A2]" />
                 <div className="h-px w-32 bg-gradient-to-l from-transparent to-[#28E7A2]" />
               </motion.div>
 
               <motion.div
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] font-mono text-[#444]"
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] text-[#444]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2 }}
@@ -1095,7 +1213,7 @@ export function SchematicBoat() {
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 }
 
 // Anime Rower Component
@@ -1105,10 +1223,10 @@ function AnimeRower({
   stage,
   discordColor,
 }: {
-  x: number;
-  index: number;
-  stage: Stage;
-  discordColor: string;
+  x: number
+  index: number
+  stage: Stage
+  discordColor: string
 }) {
   const chaosRotation = [
     [20, -10, 30],
@@ -1116,36 +1234,50 @@ function AnimeRower({
     [10, 40, 0],
     [-40, -10, -20],
     [30, 0, -10],
-  ][index % 5];
+  ][index % 5]
 
-  const syncRotation = [30, -30, 30];
-  const chargeRotation = [45, 45, 45];
+  const syncRotation = [30, -30, 30]
+  const chargeRotation = [45, 45, 45]
 
   const getRotation = () => {
-    if (stage.startsWith('DISCORD')) return chaosRotation;
-    if (stage === 'CHARGING') return chargeRotation;
-    if (stage === 'LAUNCH' || stage === 'REENTRY') return [60];
-    return syncRotation;
-  };
+    if (stage.startsWith('DISCORD')) return chaosRotation
+    if (stage === 'CHARGING') return chargeRotation
+    if (stage === 'LAUNCH' || stage === 'REENTRY') return [60]
+    return syncRotation
+  }
 
   const getColor = () => {
-    if (stage.startsWith('DISCORD')) return discordColor;
-    if (stage === 'SYNC') return '#28E7A2';
-    if (stage === 'CHARGING') return '#FFF';
-    if (stage === 'DRIFT') return '#F97316';
-    return '#28E7A2';
-  };
+    if (stage.startsWith('DISCORD')) return discordColor
+    if (stage === 'SYNC') return '#28E7A2'
+    if (stage === 'CHARGING') return '#FFF'
+    if (stage === 'DRIFT') return '#F97316'
+    return '#28E7A2'
+  }
 
   const getDuration = () => {
-    if (stage.startsWith('DISCORD')) return 0.5 + Math.random();
-    if (stage === 'CHARGING') return 0.1;
-    return 1;
-  };
+    if (stage.startsWith('DISCORD')) return 0.5 + Math.random()
+    if (stage === 'CHARGING') return 0.1
+    return 1
+  }
 
   return (
     <g>
-      <line x1={x} y1="200" x2={x} y2="170" stroke={getColor()} strokeWidth="2" />
-      <circle cx={x} cy="170" r="8" fill="#000" stroke={getColor()} strokeWidth="2" />
+      <line
+        x1={x}
+        y1="200"
+        x2={x}
+        y2="170"
+        stroke={getColor()}
+        strokeWidth="2"
+      />
+      <circle
+        cx={x}
+        cy="170"
+        r="8"
+        fill="#000"
+        stroke={getColor()}
+        strokeWidth="2"
+      />
       <motion.line
         x1={x}
         y1="180"
@@ -1164,5 +1296,5 @@ function AnimeRower({
         style={{ transformOrigin: `${x}px 180px` }}
       />
     </g>
-  );
+  )
 }

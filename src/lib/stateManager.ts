@@ -3,8 +3,8 @@
 // Figma Best Practice: Persist user state across sessions like Linear/Notion
 // ============================================================================
 
-import { useEffect, useState, useCallback } from 'react';
-import { useRouterAdapter } from '@/hooks/useRouterAdapter';
+import { useEffect, useState, useCallback } from 'react'
+import { useRouterAdapter } from '@/hooks/useRouterAdapter'
 
 // ============================================================================
 // URL STATE MANAGEMENT
@@ -18,43 +18,47 @@ export function useUrlState<T>(
   key: string,
   defaultValue: T,
   serialize: (value: T) => string = JSON.stringify,
-  deserialize: (value: string) => T = JSON.parse,
+  deserialize: (value: string) => T = JSON.parse
 ): [T, (value: T) => void] {
-  const { searchParams, setSearchParams } = useRouterAdapter();
+  const { searchParams, setSearchParams } = useRouterAdapter()
 
   // Get initial value from URL or use default
   const getInitialValue = (): T => {
-    const urlValue = searchParams.get(key);
+    const urlValue = searchParams.get(key)
     if (urlValue) {
       try {
-        return deserialize(urlValue);
+        return deserialize(urlValue)
       } catch {
-        return defaultValue;
+        return defaultValue
       }
     }
-    return defaultValue;
-  };
+    return defaultValue
+  }
 
-  const [state, setState] = useState<T>(getInitialValue);
+  const [state, setState] = useState<T>(getInitialValue)
 
   // Update URL when state changes
   const updateState = (newValue: T) => {
-    setState(newValue);
+    setState(newValue)
 
-    const newSearchParams = new URLSearchParams(searchParams);
+    const newSearchParams = new URLSearchParams(searchParams)
 
-    if (newValue === defaultValue || newValue === null || newValue === undefined) {
+    if (
+      newValue === defaultValue ||
+      newValue === null ||
+      newValue === undefined
+    ) {
       // Remove from URL if default value
-      newSearchParams.delete(key);
+      newSearchParams.delete(key)
     } else {
       // Add/update in URL
-      newSearchParams.set(key, serialize(newValue));
+      newSearchParams.set(key, serialize(newValue))
     }
 
-    setSearchParams(newSearchParams, { replace: true });
-  };
+    setSearchParams(newSearchParams, { replace: true })
+  }
 
-  return [state, updateState];
+  return [state, updateState]
 }
 
 // ============================================================================
@@ -62,8 +66,8 @@ export function useUrlState<T>(
 // ============================================================================
 
 interface StorageOptions {
-  ttl?: number; // Time to live in milliseconds
-  namespace?: string; // Prefix for keys
+  ttl?: number // Time to live in milliseconds
+  namespace?: string // Prefix for keys
 }
 
 /**
@@ -73,55 +77,55 @@ interface StorageOptions {
 export function useLocalStorage<T>(
   key: string,
   defaultValue: T,
-  options: StorageOptions = {},
+  options: StorageOptions = {}
 ): [T, (value: T) => void, () => void] {
-  const { ttl, namespace = 'nexuscanon' } = options;
-  const fullKey = `${namespace}:${key}`;
+  const { ttl, namespace = 'nexuscanon' } = options
+  const fullKey = `${namespace}:${key}`
 
   // Get initial value from localStorage
   const getInitialValue = (): T => {
     try {
-      const item = localStorage.getItem(fullKey);
-      if (!item) return defaultValue;
+      const item = localStorage.getItem(fullKey)
+      if (!item) return defaultValue
 
-      const parsed = JSON.parse(item);
+      const parsed = JSON.parse(item)
 
       // Check expiration if TTL set
       if (ttl && parsed.expiry && Date.now() > parsed.expiry) {
-        localStorage.removeItem(fullKey);
-        return defaultValue;
+        localStorage.removeItem(fullKey)
+        return defaultValue
       }
 
-      return parsed.value ?? defaultValue;
+      return parsed.value ?? defaultValue
     } catch {
-      return defaultValue;
+      return defaultValue
     }
-  };
+  }
 
-  const [state, setState] = useState<T>(getInitialValue);
+  const [state, setState] = useState<T>(getInitialValue)
 
   // Update localStorage when state changes
   const updateState = (newValue: T) => {
-    setState(newValue);
+    setState(newValue)
 
     try {
       const item = {
         value: newValue,
         expiry: ttl ? Date.now() + ttl : null,
-      };
-      localStorage.setItem(fullKey, JSON.stringify(item));
+      }
+      localStorage.setItem(fullKey, JSON.stringify(item))
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      console.error('Failed to save to localStorage:', error)
     }
-  };
+  }
 
   // Clear specific key
   const clearState = () => {
-    setState(defaultValue);
-    localStorage.removeItem(fullKey);
-  };
+    setState(defaultValue)
+    localStorage.removeItem(fullKey)
+  }
 
-  return [state, updateState, clearState];
+  return [state, updateState, clearState]
 }
 
 // ============================================================================
@@ -129,14 +133,14 @@ export function useLocalStorage<T>(
 // ============================================================================
 
 export interface RecentPage {
-  path: string;
-  title: string;
-  code: string;
-  timestamp: number;
+  path: string
+  title: string
+  code: string
+  timestamp: number
 }
 
-const RECENT_PAGES_KEY = 'recent-pages';
-const MAX_RECENT_PAGES = 10;
+const RECENT_PAGES_KEY = 'recent-pages'
+const MAX_RECENT_PAGES = 10
 
 /**
  * Track recently visited META pages
@@ -146,35 +150,35 @@ export function useRecentPages() {
   const [recentPages, setRecentPages] = useLocalStorage<RecentPage[]>(
     RECENT_PAGES_KEY,
     [],
-    { ttl: 7 * 24 * 60 * 60 * 1000 }, // 7 days
-  );
+    { ttl: 7 * 24 * 60 * 60 * 1000 } // 7 days
+  )
 
   const addRecentPage = useCallback(
     (page: Omit<RecentPage, 'timestamp'>) => {
       const newPage: RecentPage = {
         ...page,
         timestamp: Date.now(),
-      };
+      }
 
       setRecentPages((prevPages) => {
         // Remove if already exists, then add to front
-        const filtered = prevPages.filter((p) => p.path !== page.path);
-        const updated = [newPage, ...filtered].slice(0, MAX_RECENT_PAGES);
-        return updated;
-      });
+        const filtered = prevPages.filter((p) => p.path !== page.path)
+        const updated = [newPage, ...filtered].slice(0, MAX_RECENT_PAGES)
+        return updated
+      })
     },
-    [setRecentPages],
-  );
+    [setRecentPages]
+  )
 
   const clearRecentPages = useCallback(() => {
-    setRecentPages([]);
-  }, [setRecentPages]);
+    setRecentPages([])
+  }, [setRecentPages])
 
   return {
     recentPages,
     addRecentPage,
     clearRecentPages,
-  };
+  }
 }
 
 // ============================================================================
@@ -183,16 +187,16 @@ export function useRecentPages() {
 
 export interface UserPreferences {
   // Table preferences
-  tableDensity: 'comfortable' | 'compact';
-  defaultPageSize: number;
+  tableDensity: 'comfortable' | 'compact'
+  defaultPageSize: number
 
   // UI preferences
-  sideNavCollapsed: boolean;
-  theme: 'dark' | 'light'; // Future-proof
+  sideNavCollapsed: boolean
+  theme: 'dark' | 'light' // Future-proof
 
   // Feature flags
-  enableKeyboardShortcuts: boolean;
-  enableAnimations: boolean;
+  enableKeyboardShortcuts: boolean
+  enableAnimations: boolean
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -202,35 +206,36 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   theme: 'dark',
   enableKeyboardShortcuts: true,
   enableAnimations: true,
-};
+}
 
 /**
  * Manage user preferences
  * Like Figma: UI settings persist across sessions
  */
 export function useUserPreferences() {
-  const [preferences, setPreferences, clearPreferences] = useLocalStorage<UserPreferences>(
-    'user-preferences',
-    DEFAULT_PREFERENCES,
-  );
+  const [preferences, setPreferences, clearPreferences] =
+    useLocalStorage<UserPreferences>('user-preferences', DEFAULT_PREFERENCES)
 
-  const updatePreference = <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => {
+  const updatePreference = <K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K]
+  ) => {
     setPreferences({
       ...preferences,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const resetPreferences = () => {
-    setPreferences(DEFAULT_PREFERENCES);
-  };
+    setPreferences(DEFAULT_PREFERENCES)
+  }
 
   return {
     preferences,
     updatePreference,
     resetPreferences,
     clearPreferences,
-  };
+  }
 }
 
 // ============================================================================
@@ -250,28 +255,28 @@ export function useScrollRestoration(key: string) {
         JSON.stringify({
           x: window.scrollX,
           y: window.scrollY,
-        }),
-      );
-    };
+        })
+      )
+    }
 
     // Restore scroll position on mount
-    const savedPosition = sessionStorage.getItem(`scroll:${key}`);
+    const savedPosition = sessionStorage.getItem(`scroll:${key}`)
     if (savedPosition) {
       try {
-        const { x, y } = JSON.parse(savedPosition);
-        window.scrollTo(x, y);
+        const { x, y } = JSON.parse(savedPosition)
+        window.scrollTo(x, y)
       } catch {
         // Ignore invalid data
       }
     }
 
     // Save on scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [key]);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [key])
 }
 
 // ============================================================================
@@ -283,9 +288,12 @@ export function useScrollRestoration(key: string) {
  * Like Linear: Clicking issue -> URL updates -> shareable
  */
 export function useSelectedItem(defaultId: string | null = null) {
-  const [selectedId, setSelectedId] = useUrlState<string | null>('selected', defaultId);
+  const [selectedId, setSelectedId] = useUrlState<string | null>(
+    'selected',
+    defaultId
+  )
 
-  return [selectedId, setSelectedId] as const;
+  return [selectedId, setSelectedId] as const
 }
 
 // ============================================================================
@@ -293,10 +301,10 @@ export function useSelectedItem(defaultId: string | null = null) {
 // ============================================================================
 
 export interface FilterState {
-  search: string;
-  tags: string[];
-  status: string[];
-  dateRange: [string, string] | null;
+  search: string
+  tags: string[]
+  status: string[]
+  dateRange: [string, string] | null
 }
 
 /**
@@ -310,20 +318,23 @@ export function useFilterState(defaultFilters: Partial<FilterState> = {}) {
     status: [],
     dateRange: null,
     ...defaultFilters,
-  };
+  }
 
-  const [filters, setFilters] = useUrlState<FilterState>('filters', defaults);
+  const [filters, setFilters] = useUrlState<FilterState>('filters', defaults)
 
-  const updateFilter = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
+  const updateFilter = <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K]
+  ) => {
     setFilters({
       ...filters,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const clearFilters = () => {
-    setFilters(defaults);
-  };
+    setFilters(defaults)
+  }
 
   const hasActiveFilters = () => {
     return (
@@ -331,15 +342,15 @@ export function useFilterState(defaultFilters: Partial<FilterState> = {}) {
       filters.tags.length > 0 ||
       filters.status.length > 0 ||
       filters.dateRange !== null
-    );
-  };
+    )
+  }
 
   return {
     filters,
     updateFilter,
     clearFilters,
     hasActiveFilters,
-  };
+  }
 }
 
 // ============================================================================
@@ -352,20 +363,20 @@ export function useFilterState(defaultFilters: Partial<FilterState> = {}) {
  */
 export function clearAllAppState() {
   // Clear all localStorage items with nexuscanon prefix
-  const keys = Object.keys(localStorage);
+  const keys = Object.keys(localStorage)
   keys.forEach((key) => {
     if (key.startsWith('nexuscanon:')) {
-      localStorage.removeItem(key);
+      localStorage.removeItem(key)
     }
-  });
+  })
 
   // Clear sessionStorage scroll positions
-  const sessionKeys = Object.keys(sessionStorage);
+  const sessionKeys = Object.keys(sessionStorage)
   sessionKeys.forEach((key) => {
     if (key.startsWith('scroll:')) {
-      sessionStorage.removeItem(key);
+      sessionStorage.removeItem(key)
     }
-  });
+  })
 
-  console.log('✅ All app state cleared');
+  console.log('✅ All app state cleared')
 }

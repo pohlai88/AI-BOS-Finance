@@ -3,5 +3,5 @@
 // Centralized export for lightweight animation wrappers
 // ============================================================================
 
-export { FadeIn } from './FadeIn';
-export { SlideUp } from './SlideUp';
+export { FadeIn } from './FadeIn'
+export { SlideUp } from './SlideUp'

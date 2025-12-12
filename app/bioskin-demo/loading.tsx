@@ -41,7 +41,10 @@ export default function BioSkinDemoLoading() {
         <div className="space-y-2">
           <div className="h-10 w-full animate-pulse rounded-action bg-surface-flat" />
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-12 w-full animate-pulse rounded-action bg-surface-flat" />
+            <div
+              key={i}
+              className="h-12 w-full animate-pulse rounded-action bg-surface-flat"
+            />
           ))}
         </div>
       </Surface>

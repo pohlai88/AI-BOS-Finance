@@ -1,9 +1,9 @@
-import * as React from "react"
+import * as React from 'react'
 import { cn } from '../lib/utils'
 
 /**
  * 🛡️ The Allowed Variants (No "Large-Green-Dot" allowed)
- * 
+ *
  * StatusDot is a specialized component for status indicator dots.
  * It uses the same governed status tokens as Badge.
  */
@@ -30,15 +30,15 @@ interface StatusDotProps extends React.ComponentProps<'span'> {
 
 /**
  * StatusDot Component - Status Indicator Enforcement
- * 
+ *
  * 🛡️ Governance: This component ENFORCES the status system for dots.
  * Developers CANNOT use hardcoded colors like `bg-emerald-500`.
  * They MUST use StatusDot for all status indicator dots.
- * 
+ *
  * This replaces hardcoded dots like:
  * ❌ <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
  * ✅ <StatusDot variant="success" size="md" />
- * 
+ *
  * Changing status tokens in globals.css updates ALL dots automatically.
  */
 export const StatusDot = ({
@@ -47,26 +47,25 @@ export const StatusDot = ({
   className,
   ...props
 }: StatusDotProps) => {
-
   // 🔒 LOCKED: Variant styles use governed colors (status-success/warning/error/neutral)
   const variants = {
-    success: "bg-status-success",
-    warning: "bg-status-warning",
-    error: "bg-status-error",
-    neutral: "bg-status-neutral",
+    success: 'bg-status-success',
+    warning: 'bg-status-warning',
+    error: 'bg-status-error',
+    neutral: 'bg-status-neutral',
   }
 
   // 🔒 LOCKED: Dot sizes
   const sizes = {
-    sm: "h-2 w-2",
-    md: "h-2.5 w-2.5",
-    lg: "h-3 w-3",
+    sm: 'h-2 w-2',
+    md: 'h-2.5 w-2.5',
+    lg: 'h-3 w-3',
   }
 
   return (
     <span
       className={cn(
-        "rounded-full inline-block",
+        'inline-block rounded-full',
         variants[variant],
         sizes[size],
         className

@@ -1,39 +1,39 @@
 export interface LynxMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-  structuredResponse?: StructuredResponse;
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+  structuredResponse?: StructuredResponse
 }
 
 export interface StructuredResponse {
-  directAnswer: string;
+  directAnswer: string
   canonBasis: {
-    title: string;
-    items: { id: string; name: string; type: string }[];
-    summary: string;
-  };
+    title: string
+    items: { id: string; name: string; type: string }[]
+    summary: string
+  }
   standards: {
-    primary: string;
-    supporting: string[];
-    internal: string;
-  };
+    primary: string
+    supporting: string[]
+    internal: string
+  }
   evidence: {
-    summary: string;
-    stats: { label: string; value: string; color?: string }[];
-  };
+    summary: string
+    stats: { label: string; value: string; color?: string }[]
+  }
   siloDiagnosis?: {
-    nature: 'HIDDEN' | 'UNKNOWN' | 'INTENTIONAL' | 'COMMUNICATION';
-    confidence: string;
-    vector: string;
-    description: string;
-  };
+    nature: 'HIDDEN' | 'UNKNOWN' | 'INTENTIONAL' | 'COMMUNICATION'
+    confidence: string
+    vector: string
+    description: string
+  }
   risk: {
-    types: string[];
-    impact: string;
-  };
-  nextSteps: string[];
-  links: { label: string; type: string }[];
+    types: string[]
+    impact: string
+  }
+  nextSteps: string[]
+  links: { label: string; type: string }[]
 }
 
 // NEW SCENARIO: The "Silent CAPEX Boost" (The CFO Trap)
@@ -41,7 +41,8 @@ export const mockLynxHistory: LynxMessage[] = [
   {
     id: 'msg_01',
     role: 'user',
-    content: 'Why is our EBITDA 12% higher than forecast this month? Did we sell more?',
+    content:
+      'Why is our EBITDA 12% higher than forecast this month? Did we sell more?',
     timestamp: '10:42 AM',
   },
   {
@@ -55,8 +56,16 @@ export const mockLynxHistory: LynxMessage[] = [
       canonBasis: {
         title: 'Canon Violation Detected',
         items: [
-          { id: 'CPX-SFT-001', name: 'Capitalization of Intangibles', type: 'rule' },
-          { id: 'EVID-LNK-099', name: 'Timesheet Linkage Requirement', type: 'rule' },
+          {
+            id: 'CPX-SFT-001',
+            name: 'Capitalization of Intangibles',
+            type: 'rule',
+          },
+          {
+            id: 'EVID-LNK-099',
+            name: 'Timesheet Linkage Requirement',
+            type: 'rule',
+          },
         ],
         summary:
           'Canon CPX-SFT-001 strictly requires R&D timesheets to justify capitalizing software costs. Journal #J-9942 has ZERO linked timesheets.',
@@ -69,9 +78,17 @@ export const mockLynxHistory: LynxMessage[] = [
       evidence: {
         summary: 'I traced the lineage of Journal #J-9942:',
         stats: [
-          { label: 'Reclassified Amount', value: '$2,400,000', color: '#FBBF24' },
+          {
+            label: 'Reclassified Amount',
+            value: '$2,400,000',
+            color: '#FBBF24',
+          },
           { label: 'Linked Evidence', value: '0 Timesheets', color: '#EF4444' },
-          { label: 'EBITDA Impact', value: '+12.4% (Artificial)', color: '#EF4444' },
+          {
+            label: 'EBITDA Impact',
+            value: '+12.4% (Artificial)',
+            color: '#EF4444',
+          },
         ],
       },
       siloDiagnosis: {
@@ -98,11 +115,27 @@ export const mockLynxHistory: LynxMessage[] = [
       ],
     },
   },
-];
+]
 
 export const mockLynxPresets = [
-  { id: 'q1', text: "Scan for 'Profit Smoothing' adjustments.", category: 'Risk Radar' },
-  { id: 'q2', text: 'Show me unlinked Capitalized Interest.', category: 'Health Scan' },
-  { id: 'q3', text: 'Explain the variance in Q4 T&E expenses.', category: 'Risk Radar' },
-  { id: 'q4', text: "Audit my 'Suspense Account' usage.", category: 'Audit Trail' },
-];
+  {
+    id: 'q1',
+    text: "Scan for 'Profit Smoothing' adjustments.",
+    category: 'Risk Radar',
+  },
+  {
+    id: 'q2',
+    text: 'Show me unlinked Capitalized Interest.',
+    category: 'Health Scan',
+  },
+  {
+    id: 'q3',
+    text: 'Explain the variance in Q4 T&E expenses.',
+    category: 'Risk Radar',
+  },
+  {
+    id: 'q4',
+    text: "Audit my 'Suspense Account' usage.",
+    category: 'Audit Trail',
+  },
+]

@@ -4,12 +4,12 @@
 // The "Proteins" layer - Governed atomic building blocks
 // 🛡️ GOVERNANCE: Only uses design tokens (no hardcoded colors)
 // ============================================================================
-// 
+//
 // This package is COMPLETELY SELF-CONTAINED:
 // - lib/utils.ts: The "Brain" (cn utility)
 // - atoms/: Governed atomic components (Surface, Txt, Btn, Input, StatusDot)
 // - primitives/: Radix UI wrappers (Badge, Card, Dialog, ScrollArea, etc.)
-// 
+//
 // All components follow the "Biological Monorepo" architecture:
 // - DNA (Schemas) → C-DataLogic
 // - Proteins (Atoms) → @aibos/ui (this package)

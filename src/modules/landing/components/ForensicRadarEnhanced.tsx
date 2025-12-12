@@ -1,10 +1,10 @@
-import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 /**
  * ForensicRadarEnhanced - ULTRA HIGH-FIDELITY Cinematic Radar
  * Target Quality: 98%+ match to reference image
- * 
+ *
  * Enhancements over base version:
  * - More sophisticated world map with actual continents
  * - Dynamic particle trails
@@ -15,31 +15,31 @@ import { useEffect, useState } from 'react';
  */
 
 interface ParticleData {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  opacity: number;
-  delay: number;
-  angle: number;
-  distance: number;
+  id: number
+  x: number
+  y: number
+  size: number
+  opacity: number
+  delay: number
+  angle: number
+  distance: number
 }
 
 export const ForensicRadarEnhanced = () => {
-  const [particles, setParticles] = useState<ParticleData[]>([]);
-  const [scanAngle, setScanAngle] = useState(0);
+  const [particles, setParticles] = useState<ParticleData[]>([])
+  const [scanAngle, setScanAngle] = useState(0)
 
   // Generate particles on mount
   useEffect(() => {
     const generateParticles = () => {
-      const newParticles: ParticleData[] = [];
-      const particleCount = 60;
+      const newParticles: ParticleData[] = []
+      const particleCount = 60
 
       for (let i = 0; i < particleCount; i++) {
-        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.4;
-        const distance = 60 + Math.random() * 170;
-        const x = 250 + Math.cos(angle) * distance;
-        const y = 250 + Math.sin(angle) * distance;
+        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.4
+        const distance = 60 + Math.random() * 170
+        const x = 250 + Math.cos(angle) * distance
+        const y = 250 + Math.sin(angle) * distance
 
         newParticles.push({
           id: i,
@@ -50,23 +50,23 @@ export const ForensicRadarEnhanced = () => {
           delay: Math.random() * 3,
           angle,
           distance,
-        });
+        })
       }
 
-      setParticles(newParticles);
-    };
+      setParticles(newParticles)
+    }
 
-    generateParticles();
-  }, []);
+    generateParticles()
+  }, [])
 
   // Track scan angle for intersection effects
   useEffect(() => {
     const interval = setInterval(() => {
-      setScanAngle((prev) => (prev + 1) % 360);
-    }, 14); // ~5 second rotation
+      setScanAngle((prev) => (prev + 1) % 360)
+    }, 14) // ~5 second rotation
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval)
+  }, [])
 
   // Simplified but recognizable world continents
   const continents = `
@@ -74,15 +74,15 @@ export const ForensicRadarEnhanced = () => {
     M 170,255 C 175,250 180,252 185,250 C 190,248 195,250 198,255 C 200,260 198,265 195,268 C 192,271 187,273 182,271 C 177,269 172,267 170,262 C 168,257 168,258 170,255 Z
     M 240,200 C 245,195 250,193 255,195 C 260,197 265,195 270,197 C 275,199 278,202 280,207 C 282,212 280,217 275,220 C 270,223 265,221 260,223 C 255,225 250,223 245,221 C 240,219 235,217 233,212 C 231,207 233,205 240,200 Z
     M 310,245 C 315,243 320,245 323,248 C 326,251 325,256 322,260 C 319,264 314,266 310,264 C 306,262 303,258 303,253 C 303,248 305,247 310,245 Z
-  `;
+  `
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative flex h-full w-full items-center justify-center">
       <svg
         width="540"
         height="540"
         viewBox="0 0 540 540"
-        className="max-w-full h-auto"
+        className="h-auto max-w-full"
       >
         {/* SVG Definitions */}
         <defs>
@@ -102,7 +102,13 @@ export const ForensicRadarEnhanced = () => {
           </filter>
 
           {/* Intense Glow */}
-          <filter id="intenseGlow" x="-100%" y="-100%" width="300%" height="300%">
+          <filter
+            id="intenseGlow"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
             <feGaussianBlur stdDeviation="10" result="blur" />
             <feColorMatrix
               in="blur"
@@ -160,8 +166,8 @@ export const ForensicRadarEnhanced = () => {
           { r: 51, opacity: 0.12, width: 0.8 },
           { r: 102, opacity: 0.18, width: 0.9 },
           { r: 153, opacity: 0.24, width: 1.0 },
-          { r: 204, opacity: 0.30, width: 1.1 },
-          { r: 255, opacity: 0.40, width: 1.3 },
+          { r: 204, opacity: 0.3, width: 1.1 },
+          { r: 255, opacity: 0.4, width: 1.3 },
         ].map((ring, index) => (
           <circle
             key={`ring-${index}`}
@@ -178,14 +184,14 @@ export const ForensicRadarEnhanced = () => {
 
         {/* Radial Tick Marks (72 ticks, every 5 degrees) */}
         {Array.from({ length: 72 }).map((_, i) => {
-          const angle = (i * 5 * Math.PI) / 180 - Math.PI / 2; // Start from top
-          const isMajor = i % 6 === 0; // Every 30 degrees
-          const innerRadius = 247;
-          const outerRadius = isMajor ? 259 : 253;
-          const x1 = 270 + innerRadius * Math.cos(angle);
-          const y1 = 270 + innerRadius * Math.sin(angle);
-          const x2 = 270 + outerRadius * Math.cos(angle);
-          const y2 = 270 + outerRadius * Math.sin(angle);
+          const angle = (i * 5 * Math.PI) / 180 - Math.PI / 2 // Start from top
+          const isMajor = i % 6 === 0 // Every 30 degrees
+          const innerRadius = 247
+          const outerRadius = isMajor ? 259 : 253
+          const x1 = 270 + innerRadius * Math.cos(angle)
+          const y1 = 270 + innerRadius * Math.sin(angle)
+          const x2 = 270 + outerRadius * Math.cos(angle)
+          const y2 = 270 + outerRadius * Math.sin(angle)
 
           return (
             <line
@@ -199,7 +205,7 @@ export const ForensicRadarEnhanced = () => {
               opacity={isMajor ? 0.8 : 0.35}
               filter={isMajor ? 'url(#softGlow)' : undefined}
             />
-          );
+          )
         })}
 
         {/* World Map Continents */}
@@ -229,7 +235,11 @@ export const ForensicRadarEnhanced = () => {
               fill="#00FFFF"
               opacity={particle.opacity}
               animate={{
-                opacity: [particle.opacity, particle.opacity * 0.3, particle.opacity],
+                opacity: [
+                  particle.opacity,
+                  particle.opacity * 0.3,
+                  particle.opacity,
+                ],
                 r: [particle.size, particle.size * 1.4, particle.size],
               }}
               transition={{
@@ -301,15 +311,22 @@ export const ForensicRadarEnhanced = () => {
           />
 
           {/* End Point Bright Glow */}
-          <circle cx="525" cy="270" r="6" fill="#00FFFF" opacity="0.7" filter="url(#intenseGlow)" />
+          <circle
+            cx="525"
+            cy="270"
+            r="6"
+            fill="#00FFFF"
+            opacity="0.7"
+            filter="url(#intenseGlow)"
+          />
           <circle cx="525" cy="270" r="3" fill="#FFFFFF" opacity="0.95" />
         </motion.g>
 
         {/* Ring Intersection Glows (where beam would cross) */}
         {[51, 102, 153, 204, 255].map((radius, index) => {
-          const intersectAngle = (scanAngle * Math.PI) / 180;
-          const x = 270 + radius * Math.cos(intersectAngle);
-          const y = 270 + radius * Math.sin(intersectAngle);
+          const intersectAngle = (scanAngle * Math.PI) / 180
+          const x = 270 + radius * Math.cos(intersectAngle)
+          const y = 270 + radius * Math.sin(intersectAngle)
 
           return (
             <motion.circle
@@ -331,7 +348,7 @@ export const ForensicRadarEnhanced = () => {
               }}
               filter="url(#intenseGlow)"
             />
-          );
+          )
         })}
 
         {/* Center Core (Pulsing) */}
@@ -377,7 +394,7 @@ export const ForensicRadarEnhanced = () => {
 
         {/* Scanline Artifacts (Horizontal lines for realism) */}
         {Array.from({ length: 8 }).map((_, i) => {
-          const y = 50 + i * 60;
+          const y = 50 + i * 60
           return (
             <motion.line
               key={`scanline-${i}`}
@@ -397,9 +414,9 @@ export const ForensicRadarEnhanced = () => {
                 ease: 'easeInOut',
               }}
             />
-          );
+          )
         })}
       </svg>
     </div>
-  );
-};
+  )
+}

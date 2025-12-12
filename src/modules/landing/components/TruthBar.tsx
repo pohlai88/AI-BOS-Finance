@@ -4,27 +4,27 @@
 // Features: Thinking State, Logic Trace Visualization, Glass Box Output
 // ============================================================================
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
+import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import {
   Search,
-  Loader2, 
-  CheckCircle, 
-  XCircle, 
+  Loader2,
+  CheckCircle,
+  XCircle,
   AlertTriangle,
   ChevronRight,
   Zap,
-  GitBranch
-} from 'lucide-react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
-import { 
-  runAudit, 
-  TRANSACTION_STREAM, 
-  type Transaction, 
+  GitBranch,
+} from 'lucide-react'
+import { NexusIcon } from '@/components/nexus/NexusIcon'
+import {
+  runAudit,
+  TRANSACTION_STREAM,
+  type Transaction,
   type Verdict,
-  type TraceStep 
-} from './GovernanceEngine';
-import { cn } from '@/lib/utils';
+  type TraceStep,
+} from './GovernanceEngine'
+import { cn } from '@/lib/utils'
 
 // --- THINKING MESSAGES (builds trust) ---
 const THINKING_PHASES = [
@@ -34,11 +34,17 @@ const THINKING_PHASES = [
   'Checking IFRS 15 compliance...',
   'Evaluating materiality thresholds...',
   'Computing verdict...',
-];
+]
 
 // --- THE LOGIC TRACE VISUALIZER ---
-const LogicTraceViz = ({ trace, isExpanded }: { trace: TraceStep[]; isExpanded: boolean }) => {
-  if (!isExpanded || trace.length === 0) return null;
+const LogicTraceViz = ({
+  trace,
+  isExpanded,
+}: {
+  trace: TraceStep[]
+  isExpanded: boolean
+}) => {
+  if (!isExpanded || trace.length === 0) return null
 
   return (
     <motion.div
@@ -48,19 +54,19 @@ const LogicTraceViz = ({ trace, isExpanded }: { trace: TraceStep[]; isExpanded: 
       transition={{ duration: 0.3 }}
       className="overflow-hidden"
     >
-      <div className="pt-4 border-t border-nexus-structure mt-4">
-        <div className="flex items-center gap-2 mb-3">
-          <GitBranch className="w-3 h-3 text-nexus-green" />
-          <span className="text-[10px] font-mono text-nexus-noise uppercase tracking-widest">
+      <div className="border-nexus-structure mt-4 border-t pt-4">
+        <div className="mb-3 flex items-center gap-2">
+          <GitBranch className="text-nexus-green h-3 w-3" />
+          <span className="text-nexus-noise font-mono text-[10px] uppercase tracking-widest">
             Logic Traversal Path
           </span>
         </div>
-        
+
         {/* THE PROOF PATH - Visual Flow */}
-        <div className="relative pl-4 space-y-1">
+        <div className="relative space-y-1 pl-4">
           {/* Vertical Connection Line */}
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-nexus-structure" />
-          
+          <div className="bg-nexus-structure absolute bottom-2 left-[7px] top-2 w-px" />
+
           {trace.map((step, i) => (
             <motion.div
               key={i}
@@ -70,39 +76,42 @@ const LogicTraceViz = ({ trace, isExpanded }: { trace: TraceStep[]; isExpanded: 
               className="relative flex items-start gap-3 py-1"
             >
               {/* Node Indicator */}
-              <div 
+              <div
                 className={cn(
-                  "w-3 h-3 rounded-full border-2 flex-shrink-0 z-10 bg-nexus-void",
-                  step.result === 'pass' && "border-nexus-green",
-                  step.result === 'fail' && "border-red-500",
-                  step.result === 'skip' && "border-nexus-noise",
-                  step.result === 'apply' && "border-yellow-500"
+                  'bg-nexus-void z-10 h-3 w-3 flex-shrink-0 rounded-full border-2',
+                  step.result === 'pass' && 'border-nexus-green',
+                  step.result === 'fail' && 'border-red-500',
+                  step.result === 'skip' && 'border-nexus-noise',
+                  step.result === 'apply' && 'border-yellow-500'
                 )}
               />
-              
+
               {/* Step Content */}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-mono text-nexus-structure uppercase">
+                  <span className="text-nexus-structure font-mono text-[9px] uppercase">
                     {step.node.split('::').pop()}
                   </span>
-                  <span className="text-[9px] font-mono text-nexus-structure">
+                  <span className="text-nexus-structure font-mono text-[9px]">
                     {step.timestamp.toFixed(2)}ms
                   </span>
                 </div>
-                <p className="text-[11px] text-nexus-signal truncate">
+                <p className="text-nexus-signal truncate text-[11px]">
                   {step.description}
                 </p>
               </div>
-              
+
               {/* Result Badge */}
-              <span className={cn(
-                "text-[8px] font-mono uppercase px-1.5 py-0.5 rounded flex-shrink-0",
-                step.result === 'pass' && "bg-nexus-green/10 text-nexus-green",
-                step.result === 'fail' && "bg-red-500/10 text-red-400",
-                step.result === 'skip' && "bg-nexus-subtle text-nexus-noise",
-                step.result === 'apply' && "bg-yellow-500/10 text-yellow-400"
-              )}>
+              <span
+                className={cn(
+                  'flex-shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] uppercase',
+                  step.result === 'pass' &&
+                    'bg-nexus-green/10 text-nexus-green',
+                  step.result === 'fail' && 'bg-red-500/10 text-red-400',
+                  step.result === 'skip' && 'bg-nexus-subtle text-nexus-noise',
+                  step.result === 'apply' && 'bg-yellow-500/10 text-yellow-400'
+                )}
+              >
                 {step.result}
               </span>
             </motion.div>
@@ -110,184 +119,204 @@ const LogicTraceViz = ({ trace, isExpanded }: { trace: TraceStep[]; isExpanded: 
         </div>
       </div>
     </motion.div>
-  );
-};
+  )
+}
 
 // --- THE VERDICT CARD ---
 const VerdictCard = ({ verdict }: { verdict: Verdict }) => {
-  const [showTrace, setShowTrace] = useState(false);
-  
+  const [showTrace, setShowTrace] = useState(false)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-nexus-matter border border-nexus-structure p-6"
+      className="bg-nexus-matter border-nexus-structure border p-6"
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {verdict.riskLevel === 'APPROVED' && (
-            <div className="w-8 h-8 rounded bg-nexus-green/10 flex items-center justify-center">
-              <CheckCircle className="w-4 h-4 text-nexus-green" />
+            <div className="bg-nexus-green/10 flex h-8 w-8 items-center justify-center rounded">
+              <CheckCircle className="text-nexus-green h-4 w-4" />
             </div>
           )}
           {verdict.riskLevel === 'WARNING' && (
-            <div className="w-8 h-8 rounded bg-yellow-500/10 flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4 text-yellow-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-yellow-500/10">
+              <AlertTriangle className="h-4 w-4 text-yellow-400" />
             </div>
           )}
           {verdict.riskLevel === 'CRITICAL' && (
-            <div className="w-8 h-8 rounded bg-red-500/10 flex items-center justify-center">
-              <XCircle className="w-4 h-4 text-red-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-red-500/10">
+              <XCircle className="h-4 w-4 text-red-400" />
             </div>
           )}
           <div>
-            <div className="text-white font-medium">Verdict: {verdict.riskLevel}</div>
-            <div className="text-[10px] font-mono text-nexus-noise">
+            <div className="font-medium text-white">
+              Verdict: {verdict.riskLevel}
+            </div>
+            <div className="text-nexus-noise font-mono text-[10px]">
               Processed in {verdict.processingTimeMs.toFixed(2)}ms
             </div>
           </div>
         </div>
-        
+
         {/* Toggle Trace Button */}
         <button
           onClick={() => setShowTrace(!showTrace)}
           className={cn(
-            "flex items-center gap-1 px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider border transition-all",
-            showTrace 
-              ? "border-nexus-green text-nexus-green bg-nexus-green/5" 
-              : "border-nexus-structure text-nexus-noise hover:border-nexus-green hover:text-nexus-green"
+            'flex items-center gap-1 border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-all',
+            showTrace
+              ? 'border-nexus-green text-nexus-green bg-nexus-green/5'
+              : 'border-nexus-structure text-nexus-noise hover:border-nexus-green hover:text-nexus-green'
           )}
         >
-          <GitBranch className="w-3 h-3" />
+          <GitBranch className="h-3 w-3" />
           {showTrace ? 'Hide Proof' : 'Show Proof'}
         </button>
       </div>
-      
+
       {/* Rule Results */}
-      <div className="space-y-2 mb-4">
+      <div className="mb-4 space-y-2">
         {verdict.details.map((rule) => (
-          <div 
+          <div
             key={rule.ruleId}
             className={cn(
-              "flex items-center gap-3 p-3 border",
-              rule.result.status === 'pass' && "border-nexus-green/20 bg-nexus-green/5",
-              rule.result.status === 'warning' && "border-yellow-500/20 bg-yellow-500/5",
-              rule.result.status === 'fail' && "border-red-500/20 bg-red-500/5"
+              'flex items-center gap-3 border p-3',
+              rule.result.status === 'pass' &&
+                'border-nexus-green/20 bg-nexus-green/5',
+              rule.result.status === 'warning' &&
+                'border-yellow-500/20 bg-yellow-500/5',
+              rule.result.status === 'fail' && 'border-red-500/20 bg-red-500/5'
             )}
           >
-            {rule.result.status === 'pass' && <CheckCircle className="w-4 h-4 text-nexus-green flex-shrink-0" />}
-            {rule.result.status === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-400 flex-shrink-0" />}
-            {rule.result.status === 'fail' && <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />}
-            
-            <div className="flex-1 min-w-0">
+            {rule.result.status === 'pass' && (
+              <CheckCircle className="text-nexus-green h-4 w-4 flex-shrink-0" />
+            )}
+            {rule.result.status === 'warning' && (
+              <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-400" />
+            )}
+            {rule.result.status === 'fail' && (
+              <XCircle className="h-4 w-4 flex-shrink-0 text-red-400" />
+            )}
+
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-white font-medium">{rule.ruleName}</span>
-                <span className="text-[9px] font-mono text-nexus-structure">{rule.standard}</span>
+                <span className="text-xs font-medium text-white">
+                  {rule.ruleName}
+                </span>
+                <span className="text-nexus-structure font-mono text-[9px]">
+                  {rule.standard}
+                </span>
               </div>
-              <p className="text-[11px] text-nexus-noise truncate">{rule.result.msg}</p>
+              <p className="text-nexus-noise truncate text-[11px]">
+                {rule.result.msg}
+              </p>
             </div>
           </div>
         ))}
       </div>
-      
+
       {/* THE GLASS BOX - Logic Trace */}
       <AnimatePresence>
         <LogicTraceViz trace={verdict.logicTrace} isExpanded={showTrace} />
       </AnimatePresence>
     </motion.div>
-  );
-};
+  )
+}
 
 // --- THE MAIN TRUTH BAR COMPONENT ---
 export const TruthBar = () => {
-  const [query, setQuery] = useState('');
-  const [isThinking, setIsThinking] = useState(false);
-  const [thinkingPhase, setThinkingPhase] = useState(0);
-  const [verdict, setVerdict] = useState<Verdict | null>(null);
-  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [query, setQuery] = useState('')
+  const [isThinking, setIsThinking] = useState(false)
+  const [thinkingPhase, setThinkingPhase] = useState(0)
+  const [verdict, setVerdict] = useState<Verdict | null>(null)
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null)
 
   // Simulate "thinking" animation
   useEffect(() => {
-    if (!isThinking) return;
-    
+    if (!isThinking) return
+
     const interval = setInterval(() => {
       setThinkingPhase((p) => {
         if (p >= THINKING_PHASES.length - 1) {
-          clearInterval(interval);
-          return p;
+          clearInterval(interval)
+          return p
         }
-        return p + 1;
-      });
-    }, 200);
-    
-    return () => clearInterval(interval);
-  }, [isThinking]);
+        return p + 1
+      })
+    }, 200)
+
+    return () => clearInterval(interval)
+  }, [isThinking])
 
   const handleAnalyze = useCallback((tx: Transaction) => {
-    setSelectedTx(tx);
-    setVerdict(null);
-    setIsThinking(true);
-    setThinkingPhase(0);
-    
+    setSelectedTx(tx)
+    setVerdict(null)
+    setIsThinking(true)
+    setThinkingPhase(0)
+
     // Simulate processing delay for UX
-    setTimeout(() => {
-      const result = runAudit(tx);
-      setVerdict(result);
-      setIsThinking(false);
-    }, THINKING_PHASES.length * 200 + 100);
-  }, []);
+    setTimeout(
+      () => {
+        const result = runAudit(tx)
+        setVerdict(result)
+        setIsThinking(false)
+      },
+      THINKING_PHASES.length * 200 + 100
+    )
+  }, [])
 
   // Quick-select a transaction by ID
   const handleQuickSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     const found = TRANSACTION_STREAM.find(
-      tx => tx.id.toLowerCase().includes(query.toLowerCase()) ||
-            tx.vendor.toLowerCase().includes(query.toLowerCase())
-    );
+      (tx) =>
+        tx.id.toLowerCase().includes(query.toLowerCase()) ||
+        tx.vendor.toLowerCase().includes(query.toLowerCase())
+    )
     if (found) {
-      handleAnalyze(found);
+      handleAnalyze(found)
     }
-  };
+  }
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
       {/* THE SEARCH BAR */}
       <div className="relative">
         <form onSubmit={handleQuickSearch}>
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-nexus-noise" />
+            <Search className="text-nexus-noise absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search transaction ID or vendor name..."
-              className="w-full h-14 bg-nexus-matter border border-nexus-structure pl-12 pr-32 text-white font-mono placeholder:text-nexus-structure focus:border-nexus-green focus:outline-none transition-colors"
+              className="bg-nexus-matter border-nexus-structure placeholder:text-nexus-structure focus:border-nexus-green h-14 w-full border pl-12 pr-32 font-mono text-white transition-colors focus:outline-none"
             />
             <button
               type="submit"
               disabled={isThinking}
               className={cn(
-                "absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all",
-                "border border-nexus-green text-nexus-green hover:bg-nexus-green hover:text-nexus-void",
-                isThinking && "opacity-50 cursor-not-allowed"
+                'absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all',
+                'border-nexus-green text-nexus-green hover:bg-nexus-green hover:text-nexus-void border',
+                isThinking && 'cursor-not-allowed opacity-50'
               )}
             >
               {isThinking ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <span className="flex items-center gap-2">
-                  <Zap className="w-3 h-3" />
+                  <Zap className="h-3 w-3" />
                   Analyze
                 </span>
               )}
             </button>
           </div>
         </form>
-        
+
         {/* Sample Transactions Quick Select */}
         <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-2">
-          <span className="text-[10px] font-mono text-nexus-structure uppercase tracking-wider flex-shrink-0">
+          <span className="text-nexus-structure flex-shrink-0 font-mono text-[10px] uppercase tracking-wider">
             Sample Data:
           </span>
           {TRANSACTION_STREAM.slice(0, 4).map((tx) => (
@@ -296,10 +325,10 @@ export const TruthBar = () => {
               onClick={() => handleAnalyze(tx)}
               disabled={isThinking}
               className={cn(
-                "px-3 py-1.5 text-[10px] font-mono border transition-all flex-shrink-0",
+                'flex-shrink-0 border px-3 py-1.5 font-mono text-[10px] transition-all',
                 selectedTx?.id === tx.id
-                  ? "border-nexus-green text-nexus-green bg-nexus-green/5"
-                  : "border-nexus-structure text-nexus-noise hover:border-nexus-subtle hover:text-nexus-signal"
+                  ? 'border-nexus-green text-nexus-green bg-nexus-green/5'
+                  : 'border-nexus-structure text-nexus-noise hover:border-nexus-subtle hover:text-nexus-signal'
               )}
             >
               {tx.id} • {tx.vendor.split(' ')[0]}
@@ -315,31 +344,33 @@ export const TruthBar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-nexus-matter border border-nexus-structure p-6"
+            className="bg-nexus-matter border-nexus-structure border p-6"
           >
             <div className="flex items-center gap-4">
-              <Loader2 className="w-5 h-5 text-nexus-green animate-spin" />
+              <Loader2 className="text-nexus-green h-5 w-5 animate-spin" />
               <div>
-                <div className="text-white text-sm font-medium">Processing Transaction</div>
-                <motion.div 
+                <div className="text-sm font-medium text-white">
+                  Processing Transaction
+                </div>
+                <motion.div
                   key={thinkingPhase}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-[11px] font-mono text-nexus-green"
+                  className="text-nexus-green font-mono text-[11px]"
                 >
                   {THINKING_PHASES[thinkingPhase]}
                 </motion.div>
               </div>
             </div>
-            
+
             {/* Progress Steps */}
             <div className="mt-4 flex gap-1">
               {THINKING_PHASES.map((_, i) => (
                 <div
                   key={i}
                   className={cn(
-                    "h-1 flex-1 transition-all duration-200",
-                    i <= thinkingPhase ? "bg-nexus-green" : "bg-nexus-structure"
+                    'h-1 flex-1 transition-all duration-200',
+                    i <= thinkingPhase ? 'bg-nexus-green' : 'bg-nexus-structure'
                   )}
                 />
               ))}
@@ -350,25 +381,25 @@ export const TruthBar = () => {
 
       {/* THE VERDICT */}
       <AnimatePresence>
-        {verdict && !isThinking && (
-          <VerdictCard verdict={verdict} />
-        )}
+        {verdict && !isThinking && <VerdictCard verdict={verdict} />}
       </AnimatePresence>
-      
+
       {/* Initial State */}
       {!verdict && !isThinking && (
-        <div className="bg-nexus-matter/50 border border-dashed border-nexus-structure p-8 text-center">
-          <div className="flex justify-center mb-4">
+        <div className="bg-nexus-matter/50 border-nexus-structure border border-dashed p-8 text-center">
+          <div className="mb-4 flex justify-center">
             <NexusIcon size="lg" animated />
           </div>
-          <div className="text-nexus-signal mb-1">Select a Transaction to Analyze</div>
-          <p className="text-[11px] text-nexus-noise max-w-md mx-auto">
-            Click any sample transaction above or search by ID/vendor name. 
-            The Truth Engine will traverse all regulatory rules and show you the exact logic path.
+          <div className="text-nexus-signal mb-1">
+            Select a Transaction to Analyze
+          </div>
+          <p className="text-nexus-noise mx-auto max-w-md text-[11px]">
+            Click any sample transaction above or search by ID/vendor name. The
+            Truth Engine will traverse all regulatory rules and show you the
+            exact logic path.
           </p>
         </div>
       )}
     </div>
-  );
-};
-
+  )
+}

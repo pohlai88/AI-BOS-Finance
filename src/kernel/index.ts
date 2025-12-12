@@ -6,10 +6,9 @@
 // ============================================================================
 
 // Schema Column Generator - The Holy Grail
-export { 
+export {
   generateColumnsFromSchema,
   STATUS_PRESETS,
   type MetadataType,
   type MetadataField,
-} from './SchemaColumnGenerator';
-
+} from './SchemaColumnGenerator'

@@ -4,11 +4,11 @@
 // Enforces Guidelines.md Section III (1px borders, forensic aesthetic)
 // ============================================================================
 
-import { ReactNode } from 'react';
-import { LucideIcon } from 'lucide-react';
-import { NexusCard } from './NexusCard';
-import { NexusBadge } from './NexusBadge';
-import { Save, CheckCircle2, RotateCcw } from 'lucide-react';
+import { ReactNode } from 'react'
+import { LucideIcon } from 'lucide-react'
+import { NexusCard } from './NexusCard'
+import { NexusBadge } from './NexusBadge'
+import { Save, CheckCircle2, RotateCcw } from 'lucide-react'
 
 // ============================================================================
 // DESIGN TOKENS - Machine-Enforceable
@@ -48,7 +48,7 @@ const CARD_TOKENS = {
       padding: 'px-5 py-2.5',
     },
   },
-} as const;
+} as const
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -56,37 +56,37 @@ const CARD_TOKENS = {
 
 export interface CardSectionProps {
   // Header
-  icon?: LucideIcon;
-  title: string;
-  subtitle?: string;
-  badge?: ReactNode;
-  headerActions?: ReactNode;
+  icon?: LucideIcon
+  title: string
+  subtitle?: string
+  badge?: ReactNode
+  headerActions?: ReactNode
 
   // Body
-  children: ReactNode;
-  bodyClassName?: string;
-  scrollable?: boolean;
+  children: ReactNode
+  bodyClassName?: string
+  scrollable?: boolean
 
   // Footer
-  footerLeft?: ReactNode;
-  footerRight?: ReactNode;
+  footerLeft?: ReactNode
+  footerRight?: ReactNode
 
   // Save State
-  onSave?: () => void;
-  onRevert?: () => void;
+  onSave?: () => void
+  onRevert?: () => void
   saveState?: {
-    isSaving: boolean;
-    saveSuccess: boolean;
-    hasChanges: boolean;
-  };
+    isSaving: boolean
+    saveSuccess: boolean
+    hasChanges: boolean
+  }
 
   // Layout
-  className?: string;
-  compact?: boolean;
-  height?: string; // e.g., 'h-[400px]'
+  className?: string
+  compact?: boolean
+  height?: string // e.g., 'h-[400px]'
 
   // Dirty Indicator
-  showDirtyIndicator?: boolean;
+  showDirtyIndicator?: boolean
 }
 
 // ============================================================================
@@ -94,55 +94,55 @@ export interface CardSectionProps {
 // ============================================================================
 
 interface SaveButtonProps {
-  onClick: () => void;
-  disabled: boolean;
-  isSaving: boolean;
-  saveSuccess: boolean;
-  hasChanges: boolean;
+  onClick: () => void
+  disabled: boolean
+  isSaving: boolean
+  saveSuccess: boolean
+  hasChanges: boolean
 }
 
-function SaveButton({ onClick, disabled, isSaving, saveSuccess, hasChanges }: SaveButtonProps) {
+function SaveButton({
+  onClick,
+  disabled,
+  isSaving,
+  saveSuccess,
+  hasChanges,
+}: SaveButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`
-        relative h-8 px-3 font-mono text-[9px] uppercase tracking-[0.15em]
-        border transition-all duration-200
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 
-        focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]
-        ${
-          hasChanges && !isSaving
-            ? 'bg-[#0A0A0A] border-emerald-500/40 text-emerald-500 hover:bg-emerald-950/20 hover:border-emerald-500'
-            : 'bg-[#050505] border-[#1F1F1F] text-zinc-700 cursor-not-allowed'
-        }
-      `}
+      className={`relative h-8 border px-3 font-mono text-[9px] uppercase tracking-[0.15em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] ${
+        hasChanges && !isSaving
+          ? 'border-emerald-500/40 bg-[#0A0A0A] text-emerald-500 hover:border-emerald-500 hover:bg-emerald-950/20'
+          : 'cursor-not-allowed border-[#1F1F1F] bg-[#050505] text-zinc-700'
+      } `}
     >
       {/* Top micro-glow when active */}
       {hasChanges && !isSaving && (
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+        <div className="absolute left-0 right-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
       )}
 
       <div className="flex items-center gap-1.5">
         {isSaving ? (
           <>
-            <div className="w-2.5 h-2.5 border border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <div className="h-2.5 w-2.5 animate-spin rounded-full border border-emerald-500 border-t-transparent" />
             <span>Saving</span>
           </>
         ) : saveSuccess ? (
           <>
-            <CheckCircle2 className="w-2.5 h-2.5" />
+            <CheckCircle2 className="h-2.5 w-2.5" />
             <span>Saved</span>
           </>
         ) : (
           <>
-            <Save className="w-2.5 h-2.5" />
+            <Save className="h-2.5 w-2.5" />
             <span>Save</span>
           </>
         )}
       </div>
     </button>
-  );
+  )
 }
 
 // ============================================================================
@@ -168,35 +168,23 @@ export function CardSection({
   height,
   showDirtyIndicator = true,
 }: CardSectionProps) {
-  const tokens = compact ? CARD_TOKENS.compactMode : CARD_TOKENS;
+  const tokens = compact ? CARD_TOKENS.compactMode : CARD_TOKENS
 
   return (
     <NexusCard
-      className={`
-        p-0 relative overflow-hidden flex flex-col
-        ${height || ''}
-        ${className}
-      `}
+      className={`relative flex flex-col overflow-hidden p-0 ${height || ''} ${className} `}
     >
       {/* ================================================================ */}
       {/* HEADER */}
       {/* ================================================================ */}
       <div
-        className={`
-        flex items-center justify-between flex-shrink-0
-        ${tokens.header.border}
-        ${tokens.header.padding}
-        ${CARD_TOKENS.header.glow}
-      `}
+        className={`flex flex-shrink-0 items-center justify-between ${tokens.header.border} ${tokens.header.padding} ${CARD_TOKENS.header.glow} `}
       >
         <div className="flex items-center gap-3">
           {/* Icon */}
           {Icon && (
             <div
-              className={`
-              ${tokens.header.iconPadding}
-              bg-[#050505] border border-[#1F1F1F] text-zinc-500
-            `}
+              className={` ${tokens.header.iconPadding} border border-[#1F1F1F] bg-[#050505] text-zinc-500`}
             >
               <Icon className={tokens.header.iconSize} />
             </div>
@@ -207,15 +195,21 @@ export function CardSection({
             {/* Dirty Indicator */}
             {showDirtyIndicator && saveState.hasChanges && (
               <div
-                className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"
+                className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"
                 aria-label="Unsaved changes"
               />
             )}
 
             <div>
-              <h2 className={`tracking-tight text-white ${compact ? 'text-sm' : ''}`}>{title}</h2>
+              <h2
+                className={`tracking-tight text-white ${compact ? 'text-sm' : ''}`}
+              >
+                {title}
+              </h2>
               {subtitle && (
-                <p className="text-[10px] font-mono text-zinc-600 tracking-[0.1em]">{subtitle}</p>
+                <p className="font-mono text-[10px] tracking-[0.1em] text-zinc-600">
+                  {subtitle}
+                </p>
               )}
             </div>
           </div>
@@ -225,18 +219,16 @@ export function CardSection({
         </div>
 
         {/* Header Actions */}
-        {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
+        {headerActions && (
+          <div className="flex items-center gap-2">{headerActions}</div>
+        )}
       </div>
 
       {/* ================================================================ */}
       {/* BODY */}
       {/* ================================================================ */}
       <div
-        className={`
-          flex-1
-          ${scrollable ? 'overflow-y-auto' : 'overflow-hidden'}
-          ${bodyClassName || tokens.body.padding}
-        `}
+        className={`flex-1 ${scrollable ? 'overflow-y-auto' : 'overflow-hidden'} ${bodyClassName || tokens.body.padding} `}
       >
         {children}
       </div>
@@ -246,12 +238,7 @@ export function CardSection({
       {/* ================================================================ */}
       {(footerLeft || footerRight || onSave) && (
         <div
-          className={`
-          flex items-center justify-between flex-shrink-0
-          ${tokens.footer.border}
-          ${tokens.footer.background}
-          ${tokens.footer.padding}
-        `}
+          className={`flex flex-shrink-0 items-center justify-between ${tokens.footer.border} ${tokens.footer.background} ${tokens.footer.padding} `}
         >
           {/* Left Actions */}
           <div className="flex items-center gap-2">{footerLeft}</div>
@@ -262,16 +249,9 @@ export function CardSection({
             {onRevert && saveState.hasChanges && (
               <button
                 onClick={onRevert}
-                className={`
-                  h-8 px-3 font-mono text-[9px] uppercase tracking-[0.15em]
-                  border border-[#1F1F1F] text-zinc-500 
-                  hover:border-amber-900/40 hover:text-amber-500 
-                  transition-colors bg-[#050505]
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 
-                  focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]
-                `}
+                className={`h-8 border border-[#1F1F1F] bg-[#050505] px-3 font-mono text-[9px] uppercase tracking-[0.15em] text-zinc-500 transition-colors hover:border-amber-900/40 hover:text-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]`}
               >
-                <RotateCcw className="w-2.5 h-2.5 inline mr-1" />
+                <RotateCcw className="mr-1 inline h-2.5 w-2.5" />
                 Discard
               </button>
             )}
@@ -293,5 +273,5 @@ export function CardSection({
         </div>
       )}
     </NexusCard>
-  );
+  )
 }

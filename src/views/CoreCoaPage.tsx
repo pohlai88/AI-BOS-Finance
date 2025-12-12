@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { MetaAppShell } from '../components/shell/MetaAppShell';
-import { MetaPageHeader } from '../components/MetaPageHeader';
-import { PageAuditTrail, PageAuditData } from '../components/PageAuditTrail';
-import { Card } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
+import { useState } from 'react'
+import { MetaAppShell } from '../components/shell/MetaAppShell'
+import { MetaPageHeader } from '../components/MetaPageHeader'
+import { PageAuditTrail, PageAuditData } from '../components/PageAuditTrail'
+import { Card } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
 import {
   FolderTree,
   ChevronRight,
@@ -16,8 +16,8 @@ import {
   Search,
   Filter,
   Download,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 
 // ============================================================================
 // CORE_01 - MASTER CHART OF ACCOUNTS
@@ -25,19 +25,19 @@ import { motion, AnimatePresence } from 'motion/react';
 // ============================================================================
 
 // --- TYPES ---
-type AccountType = 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
-type AccountStatus = 'ACTIVE' | 'ARCHIVED' | 'SYSTEM_LOCKED';
+type AccountType = 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE'
+type AccountStatus = 'ACTIVE' | 'ARCHIVED' | 'SYSTEM_LOCKED'
 
 interface AccountNode {
-  id: string;
-  code: string;
-  name: string;
-  type: AccountType;
-  level: number;
-  status: AccountStatus;
-  balance?: string;
-  children?: AccountNode[];
-  expanded?: boolean;
+  id: string
+  code: string
+  name: string
+  type: AccountType
+  level: number
+  status: AccountStatus
+  balance?: string
+  children?: AccountNode[]
+  expanded?: boolean
 }
 
 // --- MOCK DATA (Forensic Standard) ---
@@ -180,7 +180,7 @@ const INITIAL_COA: AccountNode[] = [
     expanded: false,
     children: [],
   },
-];
+]
 
 // --- COMPONENTS ---
 
@@ -191,57 +191,58 @@ const TypeBadge = ({ type }: { type: AccountType }) => {
     EQUITY: 'text-blue-500 bg-blue-500/10 border-blue-500/20',
     REVENUE: 'text-purple-500 bg-purple-500/10 border-purple-500/20',
     EXPENSE: 'text-rose-500 bg-rose-500/10 border-rose-500/20',
-  };
+  }
 
   return (
     <span
-      className={`text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border ${styles[type]}`}
+      className={`rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${styles[type]}`}
     >
       {type}
     </span>
-  );
-};
+  )
+}
 
 const AccountRow = ({
   node,
   level,
   onToggle,
 }: {
-  node: AccountNode;
-  level: number;
-  onToggle: (id: string) => void;
+  node: AccountNode
+  level: number
+  onToggle: (id: string) => void
 }) => {
-  const hasChildren = node.children && node.children.length > 0;
-  const isLocked = node.status === 'SYSTEM_LOCKED';
+  const hasChildren = node.children && node.children.length > 0
+  const isLocked = node.status === 'SYSTEM_LOCKED'
 
   return (
     <div className="group relative">
       {/* Connector Lines (Visual Physics) */}
       {level > 0 && (
         <div
-          className="absolute top-0 bottom-0 border-l border-[#1F1F1F] group-hover:border-zinc-700 transition-colors"
+          className="absolute bottom-0 top-0 border-l border-[#1F1F1F] transition-colors group-hover:border-zinc-700"
           style={{ left: `${level * 24 - 12}px` }}
         />
       )}
 
       <div
-        className={`
-          flex items-center h-10 px-4 border-b border-[#1F1F1F] transition-colors
-          ${level === 0 ? 'bg-[#0F0F0F]' : 'bg-black hover:bg-[#0A0A0A]'}
-        `}
+        className={`flex h-10 items-center border-b border-[#1F1F1F] px-4 transition-colors ${level === 0 ? 'bg-[#0F0F0F]' : 'bg-black hover:bg-[#0A0A0A]'} `}
         style={{ paddingLeft: `${level * 24 + 16}px` }}
       >
         {/* Expand/Collapse */}
         <button
           onClick={() => hasChildren && onToggle(node.id)}
-          className={`w-4 h-4 mr-2 flex items-center justify-center text-zinc-500 hover:text-white transition-colors ${!hasChildren && 'invisible'}`}
+          className={`mr-2 flex h-4 w-4 items-center justify-center text-zinc-500 transition-colors hover:text-white ${!hasChildren && 'invisible'}`}
         >
-          {node.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          {node.expanded ? (
+            <ChevronDown size={14} />
+          ) : (
+            <ChevronRight size={14} />
+          )}
         </button>
 
         {/* Code */}
         <span
-          className={`font-mono text-xs mr-4 ${level === 0 ? 'font-bold text-white' : 'text-zinc-400'}`}
+          className={`mr-4 font-mono text-xs ${level === 0 ? 'font-bold text-white' : 'text-zinc-400'}`}
         >
           {node.code}
         </span>
@@ -254,18 +255,18 @@ const AccountRow = ({
         </span>
 
         {/* Metadata Columns */}
-        <div className="flex items-center gap-6 mr-4">
+        <div className="mr-4 flex items-center gap-6">
           <TypeBadge type={node.type} />
 
           <div className="w-24 text-right font-mono text-xs text-zinc-400">
             {node.balance || '-'}
           </div>
 
-          <div className="w-8 flex justify-center">
+          <div className="flex w-8 justify-center">
             {isLocked && <Lock size={12} className="text-zinc-600" />}
           </div>
 
-          <div className="w-8 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex w-8 justify-center opacity-0 transition-opacity group-hover:opacity-100">
             <button className="text-zinc-500 hover:text-white">
               <MoreHorizontal size={14} />
             </button>
@@ -283,35 +284,40 @@ const AccountRow = ({
             className="overflow-hidden"
           >
             {node.children.map((child) => (
-              <AccountRow key={child.id} node={child} level={level + 1} onToggle={onToggle} />
+              <AccountRow
+                key={child.id}
+                node={child}
+                level={level + 1}
+                onToggle={onToggle}
+              />
             ))}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  );
-};
+  )
+}
 
 export function CoreCoaPage() {
-  const [coaData, setCoaData] = useState(INITIAL_COA);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [coaData, setCoaData] = useState(INITIAL_COA)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Recursive toggle function
   const toggleNode = (data: AccountNode[], id: string): AccountNode[] => {
     return data.map((node) => {
       if (node.id === id) {
-        return { ...node, expanded: !node.expanded };
+        return { ...node, expanded: !node.expanded }
       }
       if (node.children) {
-        return { ...node, children: toggleNode(node.children, id) };
+        return { ...node, children: toggleNode(node.children, id) }
       }
-      return node;
-    });
-  };
+      return node
+    })
+  }
 
   const handleToggle = (id: string) => {
-    setCoaData((prev) => toggleNode(prev, id));
-  };
+    setCoaData((prev) => toggleNode(prev, id))
+  }
 
   const auditData: PageAuditData = {
     pageCode: 'CORE_01',
@@ -321,11 +327,11 @@ export function CoreCoaPage() {
     validator: 'CFO_OFFICE',
     classification: 'RESTRICTED',
     recentChanges: [],
-  };
+  }
 
   return (
     <MetaAppShell>
-      <div className="px-6 py-8 md:px-12 md:py-12 max-w-[1400px] mx-auto">
+      <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-12 md:py-12">
         <MetaPageHeader
           variant="default"
           code="CORE_01"
@@ -335,13 +341,13 @@ export function CoreCoaPage() {
         />
 
         {/* Toolbar */}
-        <div className="mt-8 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 flex-1 max-w-md">
+        <div className="mb-6 mt-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div className="flex max-w-md flex-1 items-center gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
               <Input
                 placeholder="Search by code or name..."
-                className="pl-9 bg-black border-[#1F1F1F] focus:border-emerald-500 h-10 text-sm font-mono"
+                className="h-10 border-[#1F1F1F] bg-black pl-9 font-mono text-sm focus:border-emerald-500"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -350,7 +356,7 @@ export function CoreCoaPage() {
               variant="outline"
               className="border-[#1F1F1F] bg-black text-zinc-400 hover:text-white"
             >
-              <Filter className="w-4 h-4 mr-2" /> Filter
+              <Filter className="mr-2 h-4 w-4" /> Filter
             </Button>
           </div>
 
@@ -359,22 +365,22 @@ export function CoreCoaPage() {
               variant="outline"
               className="border-[#1F1F1F] bg-black text-zinc-400 hover:text-white"
             >
-              <Download className="w-4 h-4 mr-2" /> Export
+              <Download className="mr-2 h-4 w-4" /> Export
             </Button>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white">
-              <Plus className="w-4 h-4 mr-2" /> New Account
+            <Button className="bg-emerald-600 text-white hover:bg-emerald-500">
+              <Plus className="mr-2 h-4 w-4" /> New Account
             </Button>
           </div>
         </div>
 
         {/* Tree Table */}
-        <Card className="bg-[#0A0A0A] border-[#1F1F1F] overflow-hidden">
+        <Card className="overflow-hidden border-[#1F1F1F] bg-[#0A0A0A]">
           {/* Table Header */}
-          <div className="flex items-center h-10 px-4 border-b border-[#1F1F1F] bg-[#111] text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-            <div className="w-4 mr-2"></div>
+          <div className="flex h-10 items-center border-b border-[#1F1F1F] bg-[#111] px-4 font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+            <div className="mr-2 w-4"></div>
             <div className="mr-4 w-12">Code</div>
             <div className="flex-1">Account Name</div>
-            <div className="flex items-center gap-6 mr-4">
+            <div className="mr-4 flex items-center gap-6">
               <div className="w-16">Type</div>
               <div className="w-24 text-right">Balance</div>
               <div className="w-8 text-center">Sys</div>
@@ -386,13 +392,18 @@ export function CoreCoaPage() {
           <div className="overflow-x-auto">
             <div className="min-w-[800px]">
               {coaData.map((node) => (
-                <AccountRow key={node.id} node={node} level={0} onToggle={handleToggle} />
+                <AccountRow
+                  key={node.id}
+                  node={node}
+                  level={0}
+                  onToggle={handleToggle}
+                />
               ))}
             </div>
           </div>
 
           {/* Footer / Pagination Stub */}
-          <div className="h-8 bg-[#0F0F0F] border-t border-[#1F1F1F] flex items-center justify-between px-4 text-[10px] font-mono text-zinc-600">
+          <div className="flex h-8 items-center justify-between border-t border-[#1F1F1F] bg-[#0F0F0F] px-4 font-mono text-[10px] text-zinc-600">
             <span>SHOWING ALL ACCOUNTS</span>
             <span>SYNCED: JUST NOW</span>
           </div>
@@ -400,5 +411,5 @@ export function CoreCoaPage() {
       </div>
       <PageAuditTrail data={auditData} />
     </MetaAppShell>
-  );
+  )
 }

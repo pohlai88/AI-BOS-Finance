@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { NexusCard } from './NexusCard';
-import { ShieldCheck } from 'lucide-react';
-import { NexusButton } from './NexusButton';
+import type { Meta, StoryObj } from '@storybook/react'
+import { NexusCard } from './NexusCard'
+import { ShieldCheck } from 'lucide-react'
+import { NexusButton } from './NexusButton'
 
 // 1. Define the Component Metadata
 const meta = {
@@ -17,10 +17,10 @@ const meta = {
       options: ['default', 'glass', 'alert'],
     },
   },
-} satisfies Meta<typeof NexusCard>;
+} satisfies Meta<typeof NexusCard>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // 2. The "Default" Contract
 export const Default: Story = {
@@ -28,13 +28,15 @@ export const Default: Story = {
     title: 'SYSTEM_STATUS',
     children: (
       <div className="space-y-2">
-        <div className="text-2xl text-white font-mono tracking-tighter">OPERATIONAL</div>
-        <div className="text-xs text-nexus-noise font-mono">Uptime: 99.99%</div>
+        <div className="font-mono text-2xl tracking-tighter text-white">
+          OPERATIONAL
+        </div>
+        <div className="text-nexus-noise font-mono text-xs">Uptime: 99.99%</div>
       </div>
     ),
     variant: 'default',
   },
-};
+}
 
 // 3. The "Glass" Variant (Used in Landing Page)
 export const GlassPanel: Story = {
@@ -42,7 +44,7 @@ export const GlassPanel: Story = {
     title: 'STABILITY_SIMULATION',
     variant: 'glass',
     children: (
-      <div className="p-4 text-nexus-green font-mono text-xs">
+      <div className="text-nexus-green p-4 font-mono text-xs">
         // Glass effect active. Background blurred.
       </div>
     ),
@@ -50,7 +52,7 @@ export const GlassPanel: Story = {
   parameters: {
     backgrounds: { default: 'nexus-matter' }, // Easier to see glass on gray
   },
-};
+}
 
 // 4. The "Alert" Variant (Used for critical failures)
 export const AlertState: Story = {
@@ -59,7 +61,7 @@ export const AlertState: Story = {
     variant: 'alert',
     children: (
       <div className="flex items-center gap-4 text-red-500">
-        <ShieldCheck className="w-8 h-8" />
+        <ShieldCheck className="h-8 w-8" />
         <div>
           <div className="font-bold">UNAUTHORIZED ACCESS</div>
           <div className="text-xs opacity-80">IP: 192.168.1.X</div>
@@ -67,20 +69,21 @@ export const AlertState: Story = {
       </div>
     ),
   },
-};
+}
 
 // 5. Complex Composition (Action Button Header)
 export const WithActionHeader: Story = {
   args: {
     title: 'ACTIVITY_LOG',
     action: (
-      <NexusButton variant="secondary" className="h-6 text-[10px] px-2">
+      <NexusButton variant="secondary" className="h-6 px-2 text-[10px]">
         EXPORT CSV
       </NexusButton>
     ),
     children: (
-      <div className="text-nexus-noise text-xs font-mono">&gt; No recent activity detected.</div>
+      <div className="text-nexus-noise font-mono text-xs">
+        &gt; No recent activity detected.
+      </div>
     ),
   },
-};
-
+}

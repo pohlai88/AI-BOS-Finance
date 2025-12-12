@@ -4,26 +4,26 @@
 // Prevents self-approval and enforces role-based approval thresholds
 // ============================================================================
 
-import { useMemo } from 'react';
-import { PAYMENT_CONFIG, type Payment } from '../data';
+import { useMemo } from 'react'
+import { PAYMENT_CONFIG, type Payment } from '../data'
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-export type ApproverRole = 'clerk' | 'manager' | 'vp' | 'cfo' | 'group_cfo';
+export type ApproverRole = 'clerk' | 'manager' | 'vp' | 'cfo' | 'group_cfo'
 
 export interface SoDCheckResult {
-  allowed: boolean;
-  violation: 'self_approval' | 'insufficient_role' | null;
-  message: string | null;
-  requiredRole: ApproverRole;
+  allowed: boolean
+  violation: 'self_approval' | 'insufficient_role' | null
+  message: string | null
+  requiredRole: ApproverRole
 }
 
 export interface CurrentUser {
-  id: string;
-  name: string;
-  role: ApproverRole;
+  id: string
+  name: string
+  role: ApproverRole
 }
 
 // ============================================================================
@@ -36,7 +36,7 @@ const ROLE_HIERARCHY: Record<ApproverRole, number> = {
   vp: 3,
   cfo: 4,
   group_cfo: 5,
-};
+}
 
 // ============================================================================
 // RULE_PAY_01: SOD CHECK FUNCTION
@@ -44,61 +44,64 @@ const ROLE_HIERARCHY: Record<ApproverRole, number> = {
 
 export function checkSoD(
   payment: Payment,
-  currentUser: CurrentUser,
+  currentUser: CurrentUser
 ): SoDCheckResult {
-  const { approval_thresholds, sod_rules } = PAYMENT_CONFIG;
-  
+  const { approval_thresholds, sod_rules } = PAYMENT_CONFIG
+
   // Rule 1: Self-approval check
-  if (sod_rules.self_approval_blocked && payment.requestor_id === currentUser.id) {
+  if (
+    sod_rules.self_approval_blocked &&
+    payment.requestor_id === currentUser.id
+  ) {
     return {
       allowed: false,
       violation: 'self_approval',
       message: 'You cannot approve your own payment request',
       requiredRole: getRequiredRole(payment.amount),
-    };
+    }
   }
-  
+
   // Rule 2: Amount-based role check
-  const requiredRole = getRequiredRole(payment.amount);
-  const userLevel = ROLE_HIERARCHY[currentUser.role];
-  const requiredLevel = ROLE_HIERARCHY[requiredRole];
-  
+  const requiredRole = getRequiredRole(payment.amount)
+  const userLevel = ROLE_HIERARCHY[currentUser.role]
+  const requiredLevel = ROLE_HIERARCHY[requiredRole]
+
   if (userLevel < requiredLevel) {
     return {
       allowed: false,
       violation: 'insufficient_role',
       message: `Amount requires ${formatRole(requiredRole)} approval`,
       requiredRole,
-    };
+    }
   }
-  
+
   return {
     allowed: true,
     violation: null,
     message: null,
     requiredRole,
-  };
+  }
 }
 
 /**
  * Determine required approval role based on amount
  */
 function getRequiredRole(amount: number): ApproverRole {
-  const { approval_thresholds } = PAYMENT_CONFIG;
-  
+  const { approval_thresholds } = PAYMENT_CONFIG
+
   if (amount < approval_thresholds.auto_approve) {
-    return 'clerk';
+    return 'clerk'
   }
   if (amount < approval_thresholds.manager_required) {
-    return 'clerk';
+    return 'clerk'
   }
   if (amount < approval_thresholds.vp_required) {
-    return 'manager';
+    return 'manager'
   }
   if (amount < approval_thresholds.cfo_required) {
-    return 'vp';
+    return 'vp'
   }
-  return 'cfo';
+  return 'cfo'
 }
 
 /**
@@ -111,8 +114,8 @@ function formatRole(role: ApproverRole): string {
     vp: 'VP',
     cfo: 'CFO',
     group_cfo: 'Group CFO',
-  };
-  return roleNames[role];
+  }
+  return roleNames[role]
 }
 
 // ============================================================================
@@ -121,11 +124,10 @@ function formatRole(role: ApproverRole): string {
 
 export function useSoDCheck(
   payment: Payment | null,
-  currentUser: CurrentUser,
+  currentUser: CurrentUser
 ): SoDCheckResult | null {
   return useMemo(() => {
-    if (!payment) return null;
-    return checkSoD(payment, currentUser);
-  }, [payment, currentUser]);
+    if (!payment) return null
+    return checkSoD(payment, currentUser)
+  }, [payment, currentUser])
 }
-

@@ -25,7 +25,7 @@ export default function BioSkinDemoError({
   return (
     <div className="min-h-screen bg-surface-flat p-8">
       <Surface variant="base" className="p-8">
-        <div className="text-center space-y-4">
+        <div className="space-y-4 text-center">
           <Txt variant="h1" className="text-status-error">
             Something went wrong!
           </Txt>
@@ -33,7 +33,7 @@ export default function BioSkinDemoError({
             {error.message || 'An unexpected error occurred'}
           </Txt>
           {error.digest && (
-            <Txt variant="small" className="text-text-tertiary font-mono">
+            <Txt variant="small" className="font-mono text-text-tertiary">
               Error ID: {error.digest}
             </Txt>
           )}

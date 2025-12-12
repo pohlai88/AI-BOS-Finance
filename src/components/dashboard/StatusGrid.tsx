@@ -1,23 +1,30 @@
-import { ArrowUpRight, Activity, Shield, Users, Database } from 'lucide-react';
-import { NexusCard } from '@/components/nexus/NexusCard';
-import { cn } from '@/lib/utils';
+import { ArrowUpRight, Activity, Shield, Users, Database } from 'lucide-react'
+import { NexusCard } from '@/components/nexus/NexusCard'
+import { cn } from '@/lib/utils'
 
 interface StatusCardProps {
-  label: string;
-  value: string;
-  trend?: string;
-  trendDirection?: 'up' | 'down' | 'neutral';
-  icon: React.ElementType;
-  code: string;
+  label: string
+  value: string
+  trend?: string
+  trendDirection?: 'up' | 'down' | 'neutral'
+  icon: React.ElementType
+  code: string
 }
 
-const StatusCard = ({ label, value, trend, trendDirection, icon: Icon, code }: StatusCardProps) => (
+const StatusCard = ({
+  label,
+  value,
+  trend,
+  trendDirection,
+  icon: Icon,
+  code,
+}: StatusCardProps) => (
   <NexusCard className="h-full p-0">
-    <div className="p-5 flex flex-col h-full justify-between">
+    <div className="flex h-full flex-col justify-between p-5">
       {/* Header: Icon + Code */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-1.5 rounded-sm bg-nexus-void border border-nexus-structure text-nexus-noise group-hover:text-nexus-green transition-colors">
+          <div className="bg-nexus-void border-nexus-structure text-nexus-noise group-hover:text-nexus-green rounded-sm border p-1.5 transition-colors">
             <Icon size={14} />
           </div>
           <span className="nexus-label">{code}</span>
@@ -27,10 +34,10 @@ const StatusCard = ({ label, value, trend, trendDirection, icon: Icon, code }: S
         {trend && (
           <div
             className={cn(
-              'flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 border',
+              'flex items-center gap-1 border px-1.5 py-0.5 font-mono text-[10px]',
               trendDirection === 'up'
                 ? 'text-nexus-green border-nexus-green/20 bg-nexus-green/5'
-                : 'text-nexus-noise border-nexus-structure bg-nexus-void',
+                : 'text-nexus-noise border-nexus-structure bg-nexus-void'
             )}
           >
             {trend}
@@ -41,12 +48,14 @@ const StatusCard = ({ label, value, trend, trendDirection, icon: Icon, code }: S
 
       {/* Value Block */}
       <div>
-        <div className="text-2xl font-medium tracking-tighter text-nexus-signal mb-1">{value}</div>
-        <div className="text-xs text-nexus-noise font-mono">{label}</div>
+        <div className="text-nexus-signal mb-1 text-2xl font-medium tracking-tighter">
+          {value}
+        </div>
+        <div className="text-nexus-noise font-mono text-xs">{label}</div>
       </div>
     </div>
   </NexusCard>
-);
+)
 
 export function StatusGrid() {
   const metrics = [
@@ -82,13 +91,13 @@ export function StatusGrid() {
       icon: Users,
       code: 'AUT_02',
     },
-  ] as const;
+  ] as const
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric) => (
         <StatusCard key={metric.code} {...metric} />
       ))}
     </div>
-  );
+  )
 }

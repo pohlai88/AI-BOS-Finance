@@ -12,11 +12,23 @@ import { z } from 'zod'
 // ENUMS
 // ============================================================================
 
-export const PaymentStatusEnum = z.enum(['draft', 'pending', 'approved', 'rejected', 'paid'])
+export const PaymentStatusEnum = z.enum([
+  'draft',
+  'pending',
+  'approved',
+  'rejected',
+  'paid',
+])
 export const PaymentMethodEnum = z.enum(['wire', 'ach', 'check', 'card'])
 export const TransactionTypeEnum = z.enum(['external', 'intercompany'])
 export const EliminationStatusEnum = z.enum(['matched', 'unmatched', 'n/a'])
-export const FunctionalClusterEnum = z.enum(['utilities', 'logistics', 'professional', 'intercompany', 'other'])
+export const FunctionalClusterEnum = z.enum([
+  'utilities',
+  'logistics',
+  'professional',
+  'intercompany',
+  'other',
+])
 
 // ============================================================================
 // MANIFEST SCHEMA
@@ -57,7 +69,10 @@ export const PaymentSchema = z.object({
 
   // Observability
   risk_score: z.number().min(0).max(100).describe('Risk score (0-100)'),
-  deviation: z.number().optional().describe('Deviation from historical average'),
+  deviation: z
+    .number()
+    .optional()
+    .describe('Deviation from historical average'),
 
   // Audit Trail
   requested_by: z.string().describe('Requestor name'),

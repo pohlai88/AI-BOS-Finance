@@ -5,8 +5,8 @@
 // No external assets. Pure computational artistry.
 // ============================================================================
 
-import { motion } from 'motion/react';
-import { useMemo } from 'react';
+import { motion } from 'motion/react'
+import { useMemo } from 'react'
 
 // --- UTILITY: POLAR TO CARTESIAN CONVERSION ---
 // Aerospace-grade coordinate mathematics
@@ -14,14 +14,14 @@ const polarToCartesian = (
   centerX: number,
   centerY: number,
   radius: number,
-  angleInDegrees: number,
+  angleInDegrees: number
 ) => {
-  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0
   return {
     x: centerX + radius * Math.cos(angleInRadians),
     y: centerY + radius * Math.sin(angleInRadians),
-  };
-};
+  }
+}
 
 // --- UTILITY: GENERATE ARC PATH ---
 // Creates smooth circular arcs for gauge backgrounds
@@ -30,13 +30,25 @@ const describeArc = (
   y: number,
   radius: number,
   startAngle: number,
-  endAngle: number,
+  endAngle: number
 ) => {
-  const start = polarToCartesian(x, y, radius, endAngle);
-  const end = polarToCartesian(x, y, radius, startAngle);
-  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-  return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(' ');
-};
+  const start = polarToCartesian(x, y, radius, endAngle)
+  const end = polarToCartesian(x, y, radius, startAngle)
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
+  return [
+    'M',
+    start.x,
+    start.y,
+    'A',
+    radius,
+    radius,
+    0,
+    largeArcFlag,
+    0,
+    end.x,
+    end.y,
+  ].join(' ')
+}
 
 export const MechanicalOrchestra = () => {
   // --- COLOR PALETTE ---
@@ -49,7 +61,7 @@ export const MechanicalOrchestra = () => {
     void: '#000000', // The Void
     structure: '#1F1F1F', // Dark Matter
     grid: '#0F0F0F', // Sub-grid
-  };
+  }
 
   // --- HARMONIC RATIOS ---
   // Mathematical relationships for synchronized motion
@@ -63,7 +75,7 @@ export const MechanicalOrchestra = () => {
     magentaInner: 35, // Orbital inner
     nexus: 30, // Central core
     conductor: 12, // Scanning beam
-  };
+  }
 
   // --- MEMOIZED GEOMETRY ---
   // Pre-calculate all tick marks, scales, and coordinate systems
@@ -72,12 +84,12 @@ export const MechanicalOrchestra = () => {
   const amberTicks = useMemo(
     () =>
       Array.from({ length: 60 }).map((_, i) => {
-        const angle = (i / 60) * 360;
-        const isMajor = i % 5 === 0;
-        const r1 = 120;
-        const r2 = isMajor ? 108 : 113;
-        const start = polarToCartesian(140, 140, r1, angle);
-        const end = polarToCartesian(140, 140, r2, angle);
+        const angle = (i / 60) * 360
+        const isMajor = i % 5 === 0
+        const r1 = 120
+        const r2 = isMajor ? 108 : 113
+        const start = polarToCartesian(140, 140, r1, angle)
+        const end = polarToCartesian(140, 140, r2, angle)
         return {
           x1: start.x,
           y1: start.y,
@@ -85,22 +97,22 @@ export const MechanicalOrchestra = () => {
           y2: end.y,
           isMajor,
           label: isMajor ? (i * 6).toString() : null, // 0, 30, 60...330
-        };
+        }
       }),
-    [],
-  );
+    []
+  )
 
   // AMBER ENGINE: 8 radial spokes (inner mechanism)
   const amberSpokes = useMemo(
     () =>
       Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i / 8) * 360;
-        const inner = polarToCartesian(140, 140, 45, angle);
-        const outer = polarToCartesian(140, 140, 90, angle);
-        return { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y };
+        const angle = (i / 8) * 360
+        const inner = polarToCartesian(140, 140, 45, angle)
+        const outer = polarToCartesian(140, 140, 90, angle)
+        return { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y }
       }),
-    [],
-  );
+    []
+  )
 
   // CYAN PISTON: Measurement scale markings (0-300mm)
   const pistonScale = useMemo(
@@ -110,34 +122,34 @@ export const MechanicalOrchestra = () => {
         isMajor: i % 5 === 0,
         label: i % 5 === 0 ? `${i * 20}` : null,
       })),
-    [],
-  );
+    []
+  )
 
   // MAGENTA ORBITAL: Node positions on outer ring
   const orbitalNodes = useMemo(
     () =>
       Array.from({ length: 12 }).map((_, i) => {
-        const angle = (i / 12) * 360;
-        const pos = polarToCartesian(120, 120, 100, angle);
-        return { cx: pos.x, cy: pos.y };
+        const angle = (i / 12) * 360
+        const pos = polarToCartesian(120, 120, 100, angle)
+        return { cx: pos.x, cy: pos.y }
       }),
-    [],
-  );
+    []
+  )
 
   // MAGENTA ORBITAL: Inner connecting spokes
   const orbitalSpokes = useMemo(
     () =>
       Array.from({ length: 6 }).map((_, i) => {
-        const angle = (i / 6) * 360;
-        const outer = polarToCartesian(120, 120, 70, angle);
-        return { x2: outer.x, y2: outer.y };
+        const angle = (i / 6) * 360
+        const outer = polarToCartesian(120, 120, 70, angle)
+        return { x2: outer.x, y2: outer.y }
       }),
-    [],
-  );
+    []
+  )
 
   return (
     <div
-      className="absolute inset-0 overflow-hidden select-none pointer-events-none"
+      className="pointer-events-none absolute inset-0 select-none overflow-hidden"
       style={{ backgroundColor: COLORS.void }}
     >
       {/* ========================================
@@ -159,7 +171,8 @@ export const MechanicalOrchestra = () => {
       <div
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%)',
+          background:
+            'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%)',
         }}
       />
 
@@ -167,15 +180,36 @@ export const MechanicalOrchestra = () => {
           LAYER 2: SVG ENGINE ROOM
           All machinery rendered here
           ======================================== */}
-      <svg className="absolute inset-0 w-full h-full" style={{ overflow: 'visible' }}>
+      <svg
+        className="absolute inset-0 h-full w-full"
+        style={{ overflow: 'visible' }}
+      >
         {/* --- GLOBAL FILTER DEFINITIONS --- */}
         {/* The "Neo-Glow" Engine: Multi-stage blur for photorealistic bloom */}
         <defs>
           {/* Amber Bloom: Hot core + soft atmospheric haze */}
-          <filter id="bloom-amber" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur-sharp" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur-medium" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur-soft" />
+          <filter
+            id="bloom-amber"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="1.5"
+              result="blur-sharp"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="8"
+              result="blur-medium"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="20"
+              result="blur-soft"
+            />
             <feMerge>
               <feMergeNode in="blur-soft" />
               <feMergeNode in="blur-medium" />
@@ -185,10 +219,28 @@ export const MechanicalOrchestra = () => {
           </filter>
 
           {/* Cyan Bloom: Sharp electric discharge look */}
-          <filter id="bloom-cyan" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" result="blur-tight" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur-medium" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur-wide" />
+          <filter
+            id="bloom-cyan"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="0.5"
+              result="blur-tight"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="4"
+              result="blur-medium"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="12"
+              result="blur-wide"
+            />
             <feMerge>
               <feMergeNode in="blur-wide" />
               <feMergeNode in="blur-medium" />
@@ -198,10 +250,28 @@ export const MechanicalOrchestra = () => {
           </filter>
 
           {/* Magenta Bloom: Ethereal orbital glow */}
-          <filter id="bloom-magenta" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur-core" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur-halo" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="25" result="blur-aura" />
+          <filter
+            id="bloom-magenta"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="2"
+              result="blur-core"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="10"
+              result="blur-halo"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="25"
+              result="blur-aura"
+            />
             <feMerge>
               <feMergeNode in="blur-aura" />
               <feMergeNode in="blur-halo" />
@@ -211,10 +281,28 @@ export const MechanicalOrchestra = () => {
           </filter>
 
           {/* Nexus Bloom: Convergence point brilliance */}
-          <filter id="bloom-nexus" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur-inner" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur-outer" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur-far" />
+          <filter
+            id="bloom-nexus"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="1"
+              result="blur-inner"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="6"
+              result="blur-outer"
+            />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="15"
+              result="blur-far"
+            />
             <feMerge>
               <feMergeNode in="blur-far" />
               <feMergeNode in="blur-outer" />
@@ -259,7 +347,13 @@ export const MechanicalOrchestra = () => {
            ========================================================= */}
         <g transform="translate(120, 140)">
           {/* Volumetric light wash (background) */}
-          <circle cx="140" cy="140" r="160" fill="url(#amber-radial)" opacity="0.4" />
+          <circle
+            cx="140"
+            cy="140"
+            r="160"
+            fill="url(#amber-radial)"
+            opacity="0.4"
+          />
 
           {/* Outer rotating bezel (slow clockwise) */}
           <motion.g
@@ -300,7 +394,12 @@ export const MechanicalOrchestra = () => {
             {amberTicks
               .filter((t) => t.label)
               .map((tick, i) => {
-                const labelPos = polarToCartesian(140, 140, 95, parseInt(tick.label || '0'));
+                const labelPos = polarToCartesian(
+                  140,
+                  140,
+                  95,
+                  parseInt(tick.label || '0')
+                )
                 return (
                   <text
                     key={`label-${i}`}
@@ -318,7 +417,7 @@ export const MechanicalOrchestra = () => {
                   >
                     {tick.label}
                   </text>
-                );
+                )
               })}
           </motion.g>
 
@@ -417,7 +516,14 @@ export const MechanicalOrchestra = () => {
 
           {/* Apply bloom filter to entire assembly */}
           <g filter="url(#bloom-amber)" opacity="0.7">
-            <circle cx="140" cy="140" r="120" stroke={COLORS.amber} strokeWidth="0.5" fill="none" />
+            <circle
+              cx="140"
+              cy="140"
+              r="120"
+              stroke={COLORS.amber}
+              strokeWidth="0.5"
+              fill="none"
+            />
           </g>
         </g>
 
@@ -428,7 +534,14 @@ export const MechanicalOrchestra = () => {
            ========================================================= */}
         <g transform="translate(1050, 180)">
           {/* Volumetric light column */}
-          <ellipse cx="30" cy="150" rx="80" ry="200" fill="url(#cyan-radial)" opacity="0.5" />
+          <ellipse
+            cx="30"
+            cy="150"
+            rx="80"
+            ry="200"
+            fill="url(#cyan-radial)"
+            opacity="0.5"
+          />
 
           {/* Cylinder housing (static frame) */}
           <line
@@ -579,13 +692,34 @@ export const MechanicalOrchestra = () => {
             <circle cx="30" cy="45" r="2" fill={COLORS.cyan} opacity="0.8" />
 
             {/* Motion trail (afterimage effect) */}
-            <rect x="4" y="75" width="52" height="8" fill={`${COLORS.cyan}08`} opacity="0.3" />
+            <rect
+              x="4"
+              y="75"
+              width="52"
+              height="8"
+              fill={`${COLORS.cyan}08`}
+              opacity="0.3"
+            />
           </motion.g>
 
           {/* Apply bloom to entire piston system */}
           <g filter="url(#bloom-cyan)" opacity="0.6">
-            <line x1="0" y1="0" x2="0" y2="300" stroke={COLORS.cyan} strokeWidth="0.5" />
-            <line x1="60" y1="0" x2="60" y2="300" stroke={COLORS.cyan} strokeWidth="0.5" />
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="300"
+              stroke={COLORS.cyan}
+              strokeWidth="0.5"
+            />
+            <line
+              x1="60"
+              y1="0"
+              x2="60"
+              y2="300"
+              stroke={COLORS.cyan}
+              strokeWidth="0.5"
+            />
           </g>
         </g>
 
@@ -596,7 +730,13 @@ export const MechanicalOrchestra = () => {
            ========================================================= */}
         <g transform="translate(580, 600)">
           {/* Volumetric aura */}
-          <circle cx="120" cy="120" r="140" fill="url(#magenta-radial)" opacity="0.5" />
+          <circle
+            cx="120"
+            cy="120"
+            r="140"
+            fill="url(#magenta-radial)"
+            opacity="0.5"
+          />
 
           {/* Outer orbital ring (slow CCW) */}
           <motion.g
@@ -898,14 +1038,14 @@ export const MechanicalOrchestra = () => {
 
       {/* Status Panel - Top Right */}
       <div
-        className="absolute top-8 right-8 font-mono uppercase tracking-widest"
+        className="absolute right-8 top-8 font-mono uppercase tracking-widest"
         style={{
           fontSize: '8px',
           color: '#555555',
           letterSpacing: '0.2em',
         }}
       >
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <motion.div
             style={{
               width: '6px',
@@ -939,7 +1079,9 @@ export const MechanicalOrchestra = () => {
       >
         <div>COORD: [0.0000, 0.0000]</div>
         <div style={{ marginTop: '4px' }}>NEXUSCANON REG-AUTH v1.0</div>
-        <div style={{ marginTop: '2px', color: '#333333' }}>PROCEDURAL RENDER ENGINE</div>
+        <div style={{ marginTop: '2px', color: '#333333' }}>
+          PROCEDURAL RENDER ENGINE
+        </div>
       </div>
 
       {/* Corner Crosshairs (Aerospace HUD style) */}
@@ -959,12 +1101,28 @@ export const MechanicalOrchestra = () => {
           }}
         >
           <svg width="20" height="20" viewBox="0 0 20 20">
-            <line x1="10" y1="0" x2="10" y2="20" stroke="#333333" strokeWidth="0.5" opacity="0.6" />
-            <line x1="0" y1="10" x2="20" y2="10" stroke="#333333" strokeWidth="0.5" opacity="0.6" />
+            <line
+              x1="10"
+              y1="0"
+              x2="10"
+              y2="20"
+              stroke="#333333"
+              strokeWidth="0.5"
+              opacity="0.6"
+            />
+            <line
+              x1="0"
+              y1="10"
+              x2="20"
+              y2="10"
+              stroke="#333333"
+              strokeWidth="0.5"
+              opacity="0.6"
+            />
             <circle cx="10" cy="10" r="1.5" fill="#333333" opacity="0.8" />
           </svg>
         </div>
       ))}
     </div>
-  );
-};
+  )
+}

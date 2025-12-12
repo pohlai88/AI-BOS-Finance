@@ -1,9 +1,9 @@
-import * as React from "react"
+import * as React from 'react'
 import { cn } from '../lib/utils'
 
 /**
  * 🛡️ The Allowed Variants (No "Large-Bold-Blue" allowed)
- * 
+ *
  * These are the ONLY text styles allowed in the system.
  * No arbitrary combinations. No guessing font sizes.
  */
@@ -31,11 +31,11 @@ interface TxtProps extends React.ComponentProps<'p'> {
 
 /**
  * Txt Component - Typography Enforcement Layer
- * 
+ *
  * 🛡️ Governance: This component ENFORCES the typography system.
  * Developers CANNOT use arbitrary text classes like `text-slate-500`.
  * They MUST use one of the defined variants.
- * 
+ *
  * Changing text tokens in globals.css updates ALL text automatically.
  * This is the "Martial Law" for Typography - no drift allowed.
  */
@@ -46,29 +46,27 @@ export const Txt = ({
   children,
   ...props
 }: TxtProps) => {
-
   // 1. Map Variant -> Tag (Semantic HTML)
   // Headings render as their semantic tag, body/subtle/small render as <p>
-  const Component = as || (variant.startsWith('h') ? variant : 'p') as keyof JSX.IntrinsicElements
+  const Component =
+    as ||
+    ((variant.startsWith('h') ? variant : 'p') as keyof JSX.IntrinsicElements)
 
   // 2. Map Variant -> Classes (Visual Law)
   // 🔒 LOCKED: We only use governed colors (text-text-primary/secondary/tertiary)
   // No arbitrary colors allowed. No guessing font sizes.
   const styles = {
-    h1: "text-4xl font-bold tracking-tight text-text-primary",
-    h2: "text-2xl font-semibold tracking-tight text-text-primary",
-    h3: "text-xl font-semibold text-text-primary",
-    h4: "text-lg font-medium text-text-primary",
-    body: "text-base text-text-secondary leading-relaxed",
-    subtle: "text-sm text-text-tertiary",
-    small: "text-xs text-text-tertiary font-medium",
+    h1: 'text-4xl font-bold tracking-tight text-text-primary',
+    h2: 'text-2xl font-semibold tracking-tight text-text-primary',
+    h3: 'text-xl font-semibold text-text-primary',
+    h4: 'text-lg font-medium text-text-primary',
+    body: 'text-base text-text-secondary leading-relaxed',
+    subtle: 'text-sm text-text-tertiary',
+    small: 'text-xs text-text-tertiary font-medium',
   }
 
   return (
-    <Component
-      className={cn(styles[variant], className)}
-      {...props}
-    >
+    <Component className={cn(styles[variant], className)} {...props}>
       {children}
     </Component>
   )

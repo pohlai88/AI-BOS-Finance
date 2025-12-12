@@ -36,7 +36,9 @@ const PaymentSchema = z.object({
   beneficiary: z.string().describe('Recipient name'),
   amount: z.number().min(0).describe('Payment amount'),
   currency: z.string().default('USD'),
-  status: z.enum(['pending', 'approved', 'rejected', 'paid']).describe('Payment status'),
+  status: z
+    .enum(['pending', 'approved', 'rejected', 'paid'])
+    .describe('Payment status'),
   method: z.enum(['wire', 'ach', 'check', 'card']).describe('Payment method'),
   dueDate: z.date().describe('Due date'),
 })
@@ -124,7 +126,7 @@ export function ZodBioDemo() {
           <Txt variant="h2" className="mb-4">
             Example 1: User Management
           </Txt>
-          <Txt variant="small" className="text-text-tertiary mb-4 font-mono">
+          <Txt variant="small" className="mb-4 font-mono text-text-tertiary">
             Schema: UserSchema (name, email, age, status, isVerified, createdAt)
           </Txt>
 
@@ -174,8 +176,9 @@ export function ZodBioDemo() {
           <Txt variant="h2" className="mb-4">
             Example 2: Payment Management
           </Txt>
-          <Txt variant="small" className="text-text-tertiary mb-4 font-mono">
-            Schema: PaymentSchema (tx_id, beneficiary, amount, status, method, dueDate)
+          <Txt variant="small" className="mb-4 font-mono text-text-tertiary">
+            Schema: PaymentSchema (tx_id, beneficiary, amount, status, method,
+            dueDate)
           </Txt>
 
           {/* Table - Auto-generated from schema */}
@@ -222,7 +225,10 @@ export function ZodBioDemo() {
       </div>
 
       {/* The Vision */}
-      <Surface variant="base" className="p-6 bg-status-success/10 border-status-success/30">
+      <Surface
+        variant="base"
+        className="bg-status-success/10 border-status-success/30 p-6"
+      >
         <Txt variant="h3" className="mb-4 text-status-success">
           ✨ The Vision: Living Code
         </Txt>
@@ -250,9 +256,10 @@ export function ZodBioDemo() {
 />`}
             </pre>
           </div>
-          <Txt variant="small" className="text-text-tertiary mt-4">
-            The UI grows itself from the schema. Change the schema, and the UI adapts automatically.
-            No manual refactoring needed. The Skin reacts to the DNA.
+          <Txt variant="small" className="mt-4 text-text-tertiary">
+            The UI grows itself from the schema. Change the schema, and the UI
+            adapts automatically. No manual refactoring needed. The Skin reacts
+            to the DNA.
           </Txt>
         </div>
       </Surface>

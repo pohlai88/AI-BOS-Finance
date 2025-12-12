@@ -15,7 +15,7 @@ export {
   type EliminationStatus,
   type FunctionalCluster,
   type Manifest,
-} from './paymentSchema';
+} from './paymentSchema'
 
 // Mock Data
 export {
@@ -24,7 +24,7 @@ export {
   getPaymentsByEntity,
   getPaymentsByCluster,
   aggregateFunctionalClusters,
-} from './paymentSchema';
+} from './paymentSchema'
 
 // Treasury Context
 export {
@@ -42,5 +42,4 @@ export {
   getGroupTreasurySummary,
   canAffordPayment,
   getICPositionsForEntity,
-} from './treasuryData';
-
+} from './treasuryData'

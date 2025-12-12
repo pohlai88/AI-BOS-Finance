@@ -1,24 +1,24 @@
 export interface HealthModule {
-  id: string;
-  name: string;
-  score: number;
-  status: 'Governed' | 'Watch' | 'Exposed';
-  keyIssue: string;
+  id: string
+  name: string
+  score: number
+  status: 'Governed' | 'Watch' | 'Exposed'
+  keyIssue: string
   subScores: {
-    ifrs: number;
-    tax: number;
-    controls: number;
-  };
-  issues: HealthIssue[];
+    ifrs: number
+    tax: number
+    controls: number
+  }
+  issues: HealthIssue[]
 }
 
 export interface HealthIssue {
-  id: string;
-  summary: string;
-  severity: 'Critical' | 'Major' | 'Minor';
-  source: 'IFRS' | 'Tax' | 'SOC2' | 'Internal';
-  impact: string;
-  canonId?: string;
+  id: string
+  summary: string
+  severity: 'Critical' | 'Major' | 'Minor'
+  source: 'IFRS' | 'Tax' | 'SOC2' | 'Internal'
+  impact: string
+  canonId?: string
 }
 
 export const mockHealthModules: HealthModule[] = [
@@ -146,7 +146,7 @@ export const mockHealthModules: HealthModule[] = [
       },
     ],
   },
-];
+]
 
 export const overallHealthStats = {
   score: 74,
@@ -155,4 +155,4 @@ export const overallHealthStats = {
   ifrs: 72,
   soc2: 65,
   internal: 80,
-};
+}

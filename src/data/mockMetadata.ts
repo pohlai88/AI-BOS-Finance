@@ -3,7 +3,7 @@
 // Sample data for development and testing
 // ============================================================================
 
-import type { MetadataRecord, AuditEntry } from '../types/metadata';
+import type { MetadataRecord, AuditEntry } from '../types/metadata'
 
 /**
  * Mock Metadata Records
@@ -46,8 +46,12 @@ export const mockMetadataRecords: MetadataRecord[] = [
     approval_required: true,
     last_certified: '2024-12-01',
     recertification_due: '2025-06-01',
-    errors_if_wrong: 'Revenue recognition errors, audit failures, vendor payment disputes',
-    common_misuses: ['Using cancelled POs in reports', 'Ignoring multi-currency conversion'],
+    errors_if_wrong:
+      'Revenue recognition errors, audit failures, vendor payment disputes',
+    common_misuses: [
+      'Using cancelled POs in reports',
+      'Ignoring multi-currency conversion',
+    ],
     created_at: '2023-11-15T10:30:00Z',
     updated_at: '2024-12-07T14:23:00Z',
     created_by: 'alice.chen@nexuscanon.io',
@@ -83,14 +87,22 @@ export const mockMetadataRecords: MetadataRecord[] = [
     default_behaviour: 'New invoices default to UNPAID status',
     default_interpretation: 'Null payment date means invoice is outstanding',
     upstream_src: 'Salesforce_Billing_Cloud',
-    downstream_use: ['Revenue_Reports', 'Cash_Flow_Forecast', 'Collections_Dashboard'],
+    downstream_use: [
+      'Revenue_Reports',
+      'Cash_Flow_Forecast',
+      'Collections_Dashboard',
+    ],
     related_terms: ['DS-8821', 'DS-1092'],
     compliance_tags: ['SOX', 'GAAP', 'IFRS'],
     approval_required: true,
     last_certified: '2024-11-20',
     recertification_due: '2025-05-20',
-    errors_if_wrong: 'Revenue misstatement, cash flow errors, customer disputes',
-    common_misuses: ['Including cancelled invoices in revenue', 'Ignoring partial payments'],
+    errors_if_wrong:
+      'Revenue misstatement, cash flow errors, customer disputes',
+    common_misuses: [
+      'Including cancelled invoices in revenue',
+      'Ignoring partial payments',
+    ],
     created_at: '2023-08-22T09:15:00Z',
     updated_at: '2024-12-05T09:14:00Z',
     created_by: 'bob.smith@nexuscanon.io',
@@ -122,9 +134,14 @@ export const mockMetadataRecords: MetadataRecord[] = [
     format_pattern: undefined,
     valid_values: ['DEBIT', 'CREDIT', 'TRANSFER', 'ADJUSTMENT'],
     example_values: ['TXN-2024-12-07-0001234', 'TXN-2024-12-07-0001235'],
-    edge_cases: ['Zero-amount transactions', 'Failed reversals', 'Cross-border fees'],
+    edge_cases: [
+      'Zero-amount transactions',
+      'Failed reversals',
+      'Cross-border fees',
+    ],
     default_behaviour: 'All transactions are immutable after creation',
-    default_interpretation: 'Missing transaction = system failure, requires investigation',
+    default_interpretation:
+      'Missing transaction = system failure, requires investigation',
     upstream_src: 'Stripe_Payment_Gateway',
     downstream_use: ['General_Ledger', 'Risk_Monitoring', 'Fraud_Detection'],
     related_terms: ['DS-4429', 'DS-8821'],
@@ -132,8 +149,12 @@ export const mockMetadataRecords: MetadataRecord[] = [
     approval_required: false,
     last_certified: '2024-12-01',
     recertification_due: '2025-06-01',
-    errors_if_wrong: 'Financial statement errors, compliance violations, fraud exposure',
-    common_misuses: ['Modifying transaction records', 'Ignoring failed transactions'],
+    errors_if_wrong:
+      'Financial statement errors, compliance violations, fraud exposure',
+    common_misuses: [
+      'Modifying transaction records',
+      'Ignoring failed transactions',
+    ],
     created_at: '2023-05-10T14:00:00Z',
     updated_at: '2024-12-01T16:45:00Z',
     created_by: 'carol.johnson@nexuscanon.io',
@@ -169,13 +190,18 @@ export const mockMetadataRecords: MetadataRecord[] = [
     default_behaviour: 'New customers default to ACTIVE status',
     default_interpretation: 'Null contact info requires manual verification',
     upstream_src: 'Salesforce_CRM_Cloud',
-    downstream_use: ['Marketing_Campaigns', 'Sales_Pipeline', 'Support_Tickets'],
+    downstream_use: [
+      'Marketing_Campaigns',
+      'Sales_Pipeline',
+      'Support_Tickets',
+    ],
     related_terms: ['DS-4429', 'DS-8821'],
     compliance_tags: ['GDPR', 'CCPA'],
     approval_required: true,
     last_certified: '2024-10-15',
     recertification_due: '2025-04-15',
-    errors_if_wrong: 'Privacy violations, marketing errors, customer service failures',
+    errors_if_wrong:
+      'Privacy violations, marketing errors, customer service failures',
     common_misuses: ['Using inactive records', 'Ignoring duplicate detection'],
     created_at: '2023-07-01T11:00:00Z',
     updated_at: '2024-11-28T11:02:00Z',
@@ -195,10 +221,12 @@ export const mockMetadataRecords: MetadataRecord[] = [
     criticality: 'HIGH',
     data_owner: 'Alice Chen',
     data_steward: 'Bob Smith',
-    definition_short: 'Master product catalog with SKUs, pricing, and inventory',
+    definition_short:
+      'Master product catalog with SKUs, pricing, and inventory',
     definition_full:
       'Complete product information including SKUs, descriptions, pricing tiers, inventory levels, and supplier relationships. Supports multi-channel sales and inventory management.',
-    calculation_logic: 'Effective_Price = Base_Price * (1 - Discount_Rate) + Tax',
+    calculation_logic:
+      'Effective_Price = Base_Price * (1 - Discount_Rate) + Tax',
     source_of_truth: 'NetSuite ERP',
     synonyms: ['SKU Master', 'Product Database', 'Item Registry'],
     data_type_biz: 'OBJECT',
@@ -208,7 +236,11 @@ export const mockMetadataRecords: MetadataRecord[] = [
     format_pattern: '^SKU-[A-Z]{2}-\\d{6}$',
     valid_values: undefined,
     example_values: ['SKU-US-000123', 'SKU-UK-000456'],
-    edge_cases: ['Discontinued products', 'Bundle pricing', 'Regional variations'],
+    edge_cases: [
+      'Discontinued products',
+      'Bundle pricing',
+      'Regional variations',
+    ],
     default_behaviour: 'New products default to INACTIVE until approved',
     default_interpretation: 'Null inventory count triggers reorder alert',
     upstream_src: 'NetSuite_ERP',
@@ -218,14 +250,15 @@ export const mockMetadataRecords: MetadataRecord[] = [
     approval_required: true,
     last_certified: '2024-11-30',
     recertification_due: '2025-05-30',
-    errors_if_wrong: 'Pricing errors, inventory discrepancies, order fulfillment failures',
+    errors_if_wrong:
+      'Pricing errors, inventory discrepancies, order fulfillment failures',
     common_misuses: ['Using discontinued SKUs', 'Ignoring regional pricing'],
     created_at: '2023-09-12T13:45:00Z',
     updated_at: '2024-12-03T10:20:00Z',
     created_by: 'alice.chen@nexuscanon.io',
     updated_by: 'bob.smith@nexuscanon.io',
   },
-];
+]
 
 /**
  * Mock Audit Trail
@@ -280,25 +313,25 @@ export const mockAuditTrail: AuditEntry[] = [
     fields_changed: ['last_certified', 'recertification_due'],
     dict_id: 'DS-4429',
   },
-];
+]
 
 /**
  * Helper function to get metadata by ID
  */
 export function getMetadataById(id: string): MetadataRecord | undefined {
-  return mockMetadataRecords.find((record) => record.dict_id === id);
+  return mockMetadataRecords.find((record) => record.dict_id === id)
 }
 
 /**
  * Helper function to get all metadata records
  */
 export function getAllMetadata(): MetadataRecord[] {
-  return mockMetadataRecords;
+  return mockMetadataRecords
 }
 
 /**
  * Helper function to get audit trail for a specific metadata record
  */
 export function getAuditTrailById(id: string): AuditEntry[] {
-  return mockAuditTrail.filter((entry) => entry.dict_id === id);
+  return mockAuditTrail.filter((entry) => entry.dict_id === id)
 }

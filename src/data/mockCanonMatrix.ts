@@ -1,28 +1,28 @@
 export interface CanonRecord {
-  id: string;
-  name: string;
-  type: 'Group' | 'Transaction' | 'Cell';
-  domain: string;
-  bindable: boolean;
-  primaryStandard: string;
-  supportingFrameworks: string[];
-  internalPolicy: string;
-  maxDepth: number;
-  linkedItems: string;
-  status: 'ACTIVE' | 'DRAFT' | 'DEPRECATED';
-  riskWeight: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
-  description: string;
+  id: string
+  name: string
+  type: 'Group' | 'Transaction' | 'Cell'
+  domain: string
+  bindable: boolean
+  primaryStandard: string
+  supportingFrameworks: string[]
+  internalPolicy: string
+  maxDepth: number
+  linkedItems: string
+  status: 'ACTIVE' | 'DRAFT' | 'DEPRECATED'
+  riskWeight: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW'
+  description: string
   // For inheritance
-  parentId?: string;
-  childrenIds?: string[];
+  parentId?: string
+  childrenIds?: string[]
   // For Usage
   usage: {
-    systems: string[];
-    entities: string[];
-    metadataCount: number;
-    glAccounts: string[];
-    riskSignals: number;
-  };
+    systems: string[]
+    entities: string[]
+    metadataCount: number
+    glAccounts: string[]
+    riskSignals: number
+  }
 }
 
 export const mockCanonRecords: CanonRecord[] = [
@@ -39,7 +39,8 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '12 Ledgers',
     status: 'ACTIVE',
     riskWeight: 'CRITICAL',
-    description: 'Defines what "revenue" means and when it is considered earned across the group.',
+    description:
+      'Defines what "revenue" means and when it is considered earned across the group.',
     childrenIds: ['TL-REV-ANNUAL-001'],
     usage: {
       systems: [],
@@ -111,7 +112,8 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '5 Ledgers',
     status: 'ACTIVE',
     riskWeight: 'MEDIUM',
-    description: 'Global policy for expense categorization, approval limits, and reimbursement.',
+    description:
+      'Global policy for expense categorization, approval limits, and reimbursement.',
     childrenIds: ['TL-EXP-TRAVEL-001'],
     usage: {
       systems: [],
@@ -134,7 +136,8 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '15 Cell Canons',
     status: 'ACTIVE',
     riskWeight: 'MEDIUM',
-    description: 'Rules for booking, substantiating, and reconciling T&E expenses.',
+    description:
+      'Rules for booking, substantiating, and reconciling T&E expenses.',
     parentId: 'GC-EXP-001',
     usage: {
       systems: ['Expensify', 'NetSuite'],
@@ -157,7 +160,8 @@ export const mockCanonRecords: CanonRecord[] = [
     linkedItems: '1 Field',
     status: 'ACTIVE',
     riskWeight: 'CRITICAL',
-    description: 'Mandatory tax code field for all AP/AR transactions in GST jurisdictions.',
+    description:
+      'Mandatory tax code field for all AP/AR transactions in GST jurisdictions.',
     parentId: 'TL-AP-STD-001',
     usage: {
       systems: ['ERP'],
@@ -167,4 +171,4 @@ export const mockCanonRecords: CanonRecord[] = [
       riskSignals: 0,
     },
   },
-];
+]

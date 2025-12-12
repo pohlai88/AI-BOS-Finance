@@ -13,7 +13,7 @@ export const SPACING = {
   cell_gap_sm: 'gap-2',
   cell_gap_md: 'gap-3',
   section_gap: 'gap-4',
-} as const;
+} as const
 
 // 2. TYPOGRAPHY SCALE (Tailwind classes)
 export const TYPOGRAPHY = {
@@ -21,7 +21,7 @@ export const TYPOGRAPHY = {
   label: 'text-xs',
   value: 'text-sm',
   heading: 'text-base',
-} as const;
+} as const
 
 // 3. LETTER SPACING (Tailwind classes)
 export const TRACKING = {
@@ -29,7 +29,7 @@ export const TRACKING = {
   normal: 'tracking-normal',
   tight: 'tracking-[-0.01em]',
   negative: 'tracking-[-0.02em]',
-} as const;
+} as const
 
 // 4. COLOR TOKENS (CSS Variable references)
 export const COLORS = {
@@ -49,7 +49,7 @@ export const COLORS = {
   warning: 'var(--prism-warning)',
   error: 'var(--prism-error)',
   info: 'var(--prism-info)',
-} as const;
+} as const
 
 // 5. INTERACTIVE STATES (Tailwind classes)
 export const STATES = {
@@ -59,7 +59,7 @@ export const STATES = {
   focus:
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--prism-nexus)] focus-visible:ring-offset-0',
   disabled: 'opacity-40 cursor-not-allowed',
-} as const;
+} as const
 
 // 6. DENSITY VARIANTS
 export const DENSITY = {
@@ -81,7 +81,7 @@ export const DENSITY = {
     padding: 'px-4 py-3',
     gap: 'gap-3',
   },
-} as const;
+} as const
 
 // 7. BORDER SYSTEM (Tailwind classes with CSS vars)
 export const BORDERS = {
@@ -91,7 +91,7 @@ export const BORDERS = {
   subtle: 'border-[var(--prism-structure-subtle)]',
   width: 'border',
   width_2: 'border-2',
-} as const;
+} as const
 
 // 8. SHADOW SYSTEM
 export const SHADOWS = {
@@ -100,7 +100,7 @@ export const SHADOWS = {
   sticky_column: 'shadow-[4px_0_12px_rgba(0,0,0,0.4)]',
   tooltip: 'shadow-lg',
   modal: 'shadow-2xl',
-} as const;
+} as const
 
 // 9. Z-INDEX SYSTEM
 export const Z_INDEX = {
@@ -112,7 +112,7 @@ export const Z_INDEX = {
   dropdown: 'z-[70]',
   modal_backdrop: 'z-[80]',
   modal: 'z-[90]',
-} as const;
+} as const
 
 // 10. TRANSITIONS
 export const TRANSITIONS = {
@@ -120,7 +120,7 @@ export const TRANSITIONS = {
   normal: 'transition-all duration-200',
   slow: 'transition-all duration-300',
   colors: 'transition-colors duration-200',
-} as const;
+} as const
 
 // Helper function to combine token classes
-export const combineTokens = (...tokens: string[]) => tokens.join(' ');
+export const combineTokens = (...tokens: string[]) => tokens.join(' ')

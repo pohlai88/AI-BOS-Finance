@@ -11,8 +11,8 @@ import {
   Ban,
   ArrowRightLeft,
   Loader2,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Btn, Txt } from '@aibos/ui'
 
 // ============================================================================
@@ -20,19 +20,19 @@ import { Btn, Txt } from '@aibos/ui'
 // ============================================================================
 
 interface ApprovalActionsProps {
-  paymentId: string;
-  canApprove: boolean;
-  canReject?: boolean;
-  isLoading?: boolean;
-  blockReason?: string;
-  showSettleIC?: boolean;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onSettleIC?: (id: string) => void;
-  approverName?: string;
-  layout?: 'horizontal' | 'vertical';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  paymentId: string
+  canApprove: boolean
+  canReject?: boolean
+  isLoading?: boolean
+  blockReason?: string
+  showSettleIC?: boolean
+  onApprove: (id: string) => void
+  onReject: (id: string) => void
+  onSettleIC?: (id: string) => void
+  approverName?: string
+  layout?: 'horizontal' | 'vertical'
+  size?: 'sm' | 'md' | 'lg'
+  className?: string
 }
 
 // ============================================================================
@@ -55,7 +55,7 @@ const SIZE_CONFIG = {
     icon: 'w-5 h-5',
     footer: 'text-[10px]',
   },
-};
+}
 
 // ============================================================================
 // MAIN COMPONENT
@@ -76,8 +76,8 @@ export function ApprovalActions({
   size = 'md',
   className,
 }: ApprovalActionsProps) {
-  const config = SIZE_CONFIG[size];
-  const isHorizontal = layout === 'horizontal';
+  const config = SIZE_CONFIG[size]
+  const isHorizontal = layout === 'horizontal'
 
   // If IC settlement is needed
   if (showSettleIC) {
@@ -85,7 +85,7 @@ export function ApprovalActions({
       <div className={cn('space-y-3', className)}>
         {/* 🛡️ GOVERNANCE: Uses Txt component for text */}
         <div className="flex items-center justify-center gap-2 py-2">
-          <Ban className="w-4 h-4 text-status-error" />
+          <Ban className="h-4 w-4 text-status-error" />
           <Txt variant="small" className="text-status-error">
             {blockReason || 'Cannot approve - settlement required'}
           </Txt>
@@ -105,15 +105,17 @@ export function ApprovalActions({
           </Btn>
         )}
       </div>
-    );
+    )
   }
 
   return (
     <div className={className}>
-      <div className={cn(
-        'gap-3',
-        isHorizontal ? 'grid grid-cols-2' : 'flex flex-col'
-      )}>
+      <div
+        className={cn(
+          'gap-3',
+          isHorizontal ? 'grid grid-cols-2' : 'flex flex-col'
+        )}
+      >
         {/* 🛡️ GOVERNANCE: Reject Button uses Btn component */}
         <Btn
           variant="secondary"
@@ -129,7 +131,7 @@ export function ApprovalActions({
 
         {/* 🛡️ GOVERNANCE: Approve Button uses Btn component */}
         <Btn
-          variant={canApprove ? "primary" : "secondary"}
+          variant={canApprove ? 'primary' : 'secondary'}
           size={size}
           onClick={() => canApprove && onApprove(paymentId)}
           disabled={!canApprove || isLoading}
@@ -148,20 +150,21 @@ export function ApprovalActions({
       {/* Footer - Who is approving */}
       {/* 🛡️ GOVERNANCE: Uses Txt component */}
       {canApprove && approverName && (
-        <Txt variant="small" className="text-center mt-2 text-text-tertiary">
-          Approving as: <span className="text-text-secondary">{approverName}</span>
+        <Txt variant="small" className="mt-2 text-center text-text-tertiary">
+          Approving as:{' '}
+          <span className="text-text-secondary">{approverName}</span>
         </Txt>
       )}
 
       {/* Block reason message */}
       {/* 🛡️ GOVERNANCE: Uses Txt component with status-error token */}
       {!canApprove && blockReason && (
-        <Txt variant="small" className="text-status-error/70 text-center mt-2">
+        <Txt variant="small" className="mt-2 text-center text-status-error/70">
           {blockReason}
         </Txt>
       )}
     </div>
-  );
+  )
 }
 
 // ============================================================================
@@ -169,14 +172,14 @@ export function ApprovalActions({
 // ============================================================================
 
 interface BatchApprovalButtonProps {
-  clusterName: string;
-  count: number;
-  totalAmount: number;
-  canApprove: boolean;
-  isLoading?: boolean;
-  onApprove: () => void;
-  onReview: () => void;
-  className?: string;
+  clusterName: string
+  count: number
+  totalAmount: number
+  canApprove: boolean
+  isLoading?: boolean
+  onApprove: () => void
+  onReview: () => void
+  className?: string
 }
 
 export function BatchApprovalButton({
@@ -194,7 +197,7 @@ export function BatchApprovalButton({
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(amount)
 
   // 🛡️ GOVERNANCE: Uses Btn component (no fake buttons)
   if (canApprove) {
@@ -205,12 +208,12 @@ export function BatchApprovalButton({
         onClick={onApprove}
         disabled={isLoading}
         loading={isLoading}
-        className={cn("w-full", className)}
+        className={cn('w-full', className)}
       >
-        <CheckCircle2 className="w-4 h-4" />
+        <CheckCircle2 className="h-4 w-4" />
         Approve {count} {clusterName} ({formatCurrency(totalAmount)})
       </Btn>
-    );
+    )
   }
 
   return (
@@ -219,12 +222,14 @@ export function BatchApprovalButton({
       size="md"
       onClick={onReview}
       disabled={isLoading}
-      className={cn("w-full border-status-warning/50 text-status-warning hover:bg-status-warning/10", className)}
+      className={cn(
+        'border-status-warning/50 hover:bg-status-warning/10 w-full text-status-warning',
+        className
+      )}
     >
       Review {count} {clusterName} items
     </Btn>
-  );
+  )
 }
 
-export default ApprovalActions;
-
+export default ApprovalActions

@@ -1,13 +1,13 @@
-import { motion } from 'motion/react';
+import { motion } from 'motion/react'
 
 export const BlackboxRadar = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 max-w-7xl mx-auto">
+    <div className="mx-auto mb-8 grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-2">
       {/* LEFT: THE PANOPTICON WEB - Blackbox Cryptographic Radar */}
       <div className="w-full">
-        <div className="relative w-full aspect-square mx-auto rounded-2xl border border-white/10 bg-[#0A0A0A] p-8 lg:p-12 overflow-hidden">
+        <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0A0A0A] p-8 lg:p-12">
           {/* Radar SVG - CRYPTOGRAPHIC CLARITY */}
-          <svg viewBox="0 0 400 400" className="w-full h-full relative z-10">
+          <svg viewBox="0 0 400 400" className="relative z-10 h-full w-full">
             {/* SHARP GRID LAYER - No blur, 1px crisp vectors */}
             <g>
               {/* Concentric Circles - The Web Structure (SHARP) */}
@@ -58,11 +58,11 @@ export const BlackboxRadar = () => {
                 color: 'rgba(74, 222, 128, 0.5)',
               },
             ].map((pillar, i) => {
-              const rad = (pillar.angle * Math.PI) / 180;
-              const x = 200 + Math.cos(rad) * 200;
-              const y = 200 + Math.sin(rad) * 200;
-              const labelX = 200 + Math.cos(rad) * 230;
-              const labelY = 200 + Math.sin(rad) * 230;
+              const rad = (pillar.angle * Math.PI) / 180
+              const x = 200 + Math.cos(rad) * 200
+              const y = 200 + Math.sin(rad) * 200
+              const labelX = 200 + Math.cos(rad) * 230
+              const labelY = 200 + Math.sin(rad) * 230
               return (
                 <g key={`pillar-${i}`}>
                   <line
@@ -97,7 +97,7 @@ export const BlackboxRadar = () => {
                     {pillar.label}
                   </text>
                 </g>
-              );
+              )
             })}
 
             {/* Coverage Polygon - The Web Shape (SHARP EDGES) */}
@@ -323,9 +323,9 @@ export const BlackboxRadar = () => {
                 delay: 1.5,
               },
             ].map((blip, i) => {
-              const rad = (blip.angle * Math.PI) / 180;
-              const x = 200 + Math.cos(rad) * blip.radius;
-              const y = 200 + Math.sin(rad) * blip.radius;
+              const rad = (blip.angle * Math.PI) / 180
+              const x = 200 + Math.cos(rad) * blip.radius
+              const y = 200 + Math.sin(rad) * blip.radius
 
               const severityColors = {
                 low: {
@@ -344,9 +344,10 @@ export const BlackboxRadar = () => {
                   fill: 'rgba(239, 68, 68, 1)',
                   stroke: 'rgba(239, 68, 68, 1)',
                 },
-              };
+              }
 
-              const color = severityColors[blip.severity as keyof typeof severityColors];
+              const color =
+                severityColors[blip.severity as keyof typeof severityColors]
 
               return (
                 <g key={`blip-${i}`}>
@@ -467,13 +468,13 @@ export const BlackboxRadar = () => {
                     {blip.label}
                   </text>
                 </g>
-              );
+              )
             })}
           </svg>
 
           {/* Radar Label - REBRANDED */}
           <div className="absolute bottom-4 left-4 right-4 text-center">
-            <p className="text-xs font-mono text-white/80 uppercase tracking-widest font-bold">
+            <p className="font-mono text-xs font-bold uppercase tracking-widest text-white/80">
               NexusCanon Risk Telemetry Grid
             </p>
           </div>
@@ -482,21 +483,21 @@ export const BlackboxRadar = () => {
 
       {/* RIGHT: TERMINAL EVENT FEED - System Log */}
       <div className="w-full">
-        <div className="rounded-xl border border-white/10 bg-[#0A0A0A] p-8 h-full flex flex-col min-h-[500px]">
+        <div className="flex h-full min-h-[500px] flex-col rounded-xl border border-white/10 bg-[#0A0A0A] p-8">
           {/* Terminal Header */}
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
+          <div className="mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
             <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="h-3 w-3 rounded-full bg-red-500" />
+              <div className="h-3 w-3 rounded-full bg-yellow-500" />
+              <div className="h-3 w-3 rounded-full bg-green-500" />
             </div>
-            <span className="text-sm font-mono text-white/80 uppercase tracking-widest font-bold">
+            <span className="font-mono text-sm font-bold uppercase tracking-widest text-white/80">
               system.log
             </span>
           </div>
 
           {/* Event Feed - Rolling Log */}
-          <div className="space-y-4 font-mono flex-1">
+          <div className="flex-1 space-y-4 font-mono">
             {[
               {
                 time: '14:32:01',
@@ -554,7 +555,7 @@ export const BlackboxRadar = () => {
                 CRITICAL: 'text-red-400',
                 RESOLVING: 'text-blue-400',
                 SUCCESS: 'text-green-400',
-              };
+              }
 
               const severityBorders = {
                 INFO: 'border-gray-400',
@@ -563,13 +564,16 @@ export const BlackboxRadar = () => {
                 CRITICAL: 'border-red-400',
                 RESOLVING: 'border-blue-400',
                 SUCCESS: 'border-green-400',
-              };
+              }
 
               return (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: event.severity === 'CRITICAL' ? [1, 0.7, 1] : 1, x: 0 }}
+                  animate={{
+                    opacity: event.severity === 'CRITICAL' ? [1, 0.7, 1] : 1,
+                    x: 0,
+                  }}
                   transition={{
                     delay: i * 0.1,
                     opacity: {
@@ -577,38 +581,39 @@ export const BlackboxRadar = () => {
                       repeat: event.severity === 'CRITICAL' ? Infinity : 0,
                     },
                   }}
-                  className={`
-                    p-3 border-l-2 ${severityBorders[event.severity as keyof typeof severityBorders]}
-                    backdrop-blur-sm bg-black/20 rounded-r
-                  `}
+                  className={`border-l-2 p-3 ${severityBorders[event.severity as keyof typeof severityBorders]} rounded-r bg-black/20 backdrop-blur-sm`}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-white/60 min-w-[72px] font-semibold">{event.time}</span>
+                    <span className="min-w-[72px] font-semibold text-white/60">
+                      {event.time}
+                    </span>
                     <span
-                      className={`${severityColors[event.severity as keyof typeof severityColors]} font-bold min-w-[90px]`}
+                      className={`${severityColors[event.severity as keyof typeof severityColors]} min-w-[90px] font-bold`}
                     >
                       [{event.severity}]
                     </span>
-                    <span className="text-white/90 flex-1 leading-relaxed">{event.msg}</span>
+                    <span className="flex-1 leading-relaxed text-white/90">
+                      {event.msg}
+                    </span>
                   </div>
                 </motion.div>
-              );
+              )
             })}
           </div>
 
           {/* Live Indicator */}
-          <div className="flex items-center gap-3 mt-6 pt-5 border-t border-white/10">
+          <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-5">
             <motion.div
-              className="w-2.5 h-2.5 rounded-full bg-green-400"
+              className="h-2.5 w-2.5 rounded-full bg-green-400"
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <span className="text-sm font-mono text-white/80 uppercase tracking-widest font-bold">
+            <span className="font-mono text-sm font-bold uppercase tracking-widest text-white/80">
               Live monitoring active
             </span>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

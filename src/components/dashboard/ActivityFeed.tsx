@@ -1,14 +1,14 @@
-import { ScrollArea, cn } from '@aibos/ui';
-import { Terminal, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { NexusCard } from '@/components/nexus/NexusCard';
+import { ScrollArea, cn } from '@aibos/ui'
+import { Terminal, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { NexusCard } from '@/components/nexus/NexusCard'
 
 interface ActivityItem {
-  id: string;
-  type: 'info' | 'warning' | 'error' | 'success';
-  message: string;
-  timestamp: string;
-  user: string;
-  code: string;
+  id: string
+  type: 'info' | 'warning' | 'error' | 'success'
+  message: string
+  timestamp: string
+  user: string
+  code: string
 }
 
 const mockActivity: ActivityItem[] = [
@@ -60,56 +60,60 @@ const mockActivity: ActivityItem[] = [
     user: 'SYS_DAEMON',
     code: 'BKP_01',
   },
-];
+]
 
 const ActivityRow = ({ item }: { item: ActivityItem }) => {
   const getIcon = () => {
     switch (item.type) {
       case 'success':
-        return <CheckCircle2 size={14} className="text-nexus-green" />;
+        return <CheckCircle2 size={14} className="text-nexus-green" />
       case 'warning':
-        return <AlertCircle size={14} className="text-amber-500" />;
+        return <AlertCircle size={14} className="text-amber-500" />
       case 'error':
-        return <AlertCircle size={14} className="text-red-500" />;
+        return <AlertCircle size={14} className="text-red-500" />
       default:
-        return <Terminal size={14} className="text-nexus-noise" />;
+        return <Terminal size={14} className="text-nexus-noise" />
     }
-  };
+  }
 
   return (
-    <div className="group flex items-center gap-4 p-3 border-b border-nexus-structure last:border-0 hover:bg-nexus-subtle/10 transition-colors text-sm">
-      <div className="w-16 font-mono text-[10px] text-nexus-noise tabular-nums shrink-0">
+    <div className="border-nexus-structure hover:bg-nexus-subtle/10 group flex items-center gap-4 border-b p-3 text-sm transition-colors last:border-0">
+      <div className="text-nexus-noise w-16 shrink-0 font-mono text-[10px] tabular-nums">
         {item.timestamp}
       </div>
-      <div className="shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+      <div className="shrink-0 opacity-70 transition-opacity group-hover:opacity-100">
         {getIcon()}
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 mb-0.5">
-          <span className="font-mono text-[10px] text-nexus-green opacity-80">{item.code}</span>
-          <span className="text-nexus-signal/80 truncate text-xs">{item.message}</span>
+      <div className="min-w-0 flex-1">
+        <div className="mb-0.5 flex items-baseline gap-2">
+          <span className="text-nexus-green font-mono text-[10px] opacity-80">
+            {item.code}
+          </span>
+          <span className="text-nexus-signal/80 truncate text-xs">
+            {item.message}
+          </span>
         </div>
       </div>
-      <div className="shrink-0 font-mono text-[10px] text-nexus-noise px-1.5 py-0.5 border border-nexus-structure rounded-sm">
+      <div className="text-nexus-noise border-nexus-structure shrink-0 rounded-sm border px-1.5 py-0.5 font-mono text-[10px]">
         {item.user}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export function ActivityFeed() {
   return (
     <NexusCard
       title="SYSTEM LOG"
-      className="h-full flex flex-col p-0"
+      className="flex h-full flex-col p-0"
       action={
         <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-nexus-green animate-pulse" />
+          <span className="bg-nexus-green h-1.5 w-1.5 animate-pulse rounded-full" />
           <span className="nexus-label text-nexus-green">LIVE</span>
         </div>
       }
     >
-      <ScrollArea className="flex-1 h-[300px]">
+      <ScrollArea className="h-[300px] flex-1">
         <div className="flex flex-col">
           {mockActivity.map((item) => (
             <ActivityRow key={item.id} item={item} />
@@ -117,5 +121,5 @@ export function ActivityFeed() {
         </div>
       </ScrollArea>
     </NexusCard>
-  );
+  )
 }

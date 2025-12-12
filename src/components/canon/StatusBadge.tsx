@@ -1,9 +1,9 @@
 /**
  * StatusBadge - Canon Component
- * 
+ *
  * Displays status indicators using SSOT from registry.
  * Built on shadcn/ui Badge with Canon-specific variants.
- * 
+ *
  * @component COMP_StatusBadge
  * @version 1.0.0
  * @see REF_037 - Phase 3: Canon Page System
@@ -18,24 +18,22 @@ export interface StatusBadgeProps {
   showIcon?: boolean
 }
 
-export function StatusBadge({ status, className, showIcon = true }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  className,
+  showIcon = true,
+}: StatusBadgeProps) {
   const config = STATUS_CONFIG[status]
   const Icon = config.icon
 
   return (
     <Badge
       variant="outline"
-      className={cn(
-        'gap-1',
-        config.bg,
-        config.color,
-        config.border,
-        className
-      )}
+      className={cn('gap-1', config.bg, config.color, config.border, className)}
       role="status"
       aria-label={`Status: ${config.label}`}
     >
-      {showIcon && <Icon className="w-3 h-3" aria-hidden="true" />}
+      {showIcon && <Icon className="h-3 w-3" aria-hidden="true" />}
       <span>{config.label}</span>
     </Badge>
   )

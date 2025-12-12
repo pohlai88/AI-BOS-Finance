@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { NexusButton } from '../NexusButton';
-import { Download, RefreshCw, Trash2, ArrowRight, Settings } from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react'
+import { NexusButton } from '../NexusButton'
+import { Download, RefreshCw, Trash2, ArrowRight, Settings } from 'lucide-react'
 
 /**
  * # NexusButton
@@ -47,10 +47,10 @@ const meta: Meta<typeof NexusButton> = {
       description: 'Disabled state',
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof NexusButton>;
+export default meta
+type Story = StoryObj<typeof NexusButton>
 
 // ============================================================================
 // STORIES
@@ -61,45 +61,45 @@ export const Primary: Story = {
     variant: 'primary',
     children: 'INITIALIZE',
   },
-};
+}
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'CONFIGURE',
   },
-};
+}
 
 export const Danger: Story = {
   args: {
     variant: 'danger',
     children: 'TERMINATE',
   },
-};
+}
 
 export const WithIcon: Story = {
   args: {
     variant: 'primary',
-    icon: <Download className="w-3 h-3" />,
+    icon: <Download className="h-3 w-3" />,
     children: 'EXPORT',
   },
-};
+}
 
 export const SecondaryWithIcon: Story = {
   args: {
     variant: 'secondary',
-    icon: <RefreshCw className="w-3 h-3" />,
+    icon: <RefreshCw className="h-3 w-3" />,
     children: 'SYNC',
   },
-};
+}
 
 export const DangerWithIcon: Story = {
   args: {
     variant: 'danger',
-    icon: <Trash2 className="w-3 h-3" />,
+    icon: <Trash2 className="h-3 w-3" />,
     children: 'DELETE',
   },
-};
+}
 
 export const Disabled: Story = {
   args: {
@@ -107,20 +107,20 @@ export const Disabled: Story = {
     children: 'PROCESSING...',
     disabled: true,
   },
-};
+}
 
 export const ButtonGroup: Story = {
   render: () => (
     <div className="flex items-center gap-3">
-      <NexusButton variant="secondary" icon={<Settings className="w-3 h-3" />}>
+      <NexusButton variant="secondary" icon={<Settings className="h-3 w-3" />}>
         SETTINGS
       </NexusButton>
-      <NexusButton variant="primary" icon={<ArrowRight className="w-3 h-3" />}>
+      <NexusButton variant="primary" icon={<ArrowRight className="h-3 w-3" />}>
         PROCEED
       </NexusButton>
     </div>
   ),
-};
+}
 
 export const AllVariants: Story = {
   render: () => (
@@ -131,13 +131,16 @@ export const AllVariants: Story = {
         <NexusButton variant="danger">DANGER</NexusButton>
       </div>
       <div className="flex items-center gap-4">
-        <NexusButton variant="primary" icon={<Download className="w-3 h-3" />}>
+        <NexusButton variant="primary" icon={<Download className="h-3 w-3" />}>
           WITH ICON
         </NexusButton>
-        <NexusButton variant="secondary" icon={<RefreshCw className="w-3 h-3" />}>
+        <NexusButton
+          variant="secondary"
+          icon={<RefreshCw className="h-3 w-3" />}
+        >
           WITH ICON
         </NexusButton>
-        <NexusButton variant="danger" icon={<Trash2 className="w-3 h-3" />}>
+        <NexusButton variant="danger" icon={<Trash2 className="h-3 w-3" />}>
           WITH ICON
         </NexusButton>
       </div>
@@ -154,5 +157,4 @@ export const AllVariants: Story = {
       </div>
     </div>
   ),
-};
-
+}

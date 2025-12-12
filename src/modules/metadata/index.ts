@@ -4,4 +4,4 @@
 // The Knowledge Graph - Metadata management and visualization
 // ============================================================================
 
-export * from './components';
+export * from './components'

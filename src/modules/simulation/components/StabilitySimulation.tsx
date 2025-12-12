@@ -4,11 +4,11 @@
 // Data decoupled and passed via config
 // ============================================================================
 
-'use client';
+'use client'
 
-import { useSimulationController } from './useSimulationController';
-import { ForensicHeader, LegacyStack, NexusStack } from './primitives';
-import type { LegacyStackItem, NexusStackItem, SimulationConfig } from './types';
+import { useSimulationController } from './useSimulationController'
+import { ForensicHeader, LegacyStack, NexusStack } from './primitives'
+import type { LegacyStackItem, NexusStackItem, SimulationConfig } from './types'
 
 // --- DEFAULT CONFIGURATION ---
 const DEFAULT_LEGACY_STACK: LegacyStackItem[] = [
@@ -18,7 +18,7 @@ const DEFAULT_LEGACY_STACK: LegacyStackItem[] = [
   { id: 'L04', label: 'ON_PREM_DATABASE', risk: 'LOW' },
   { id: 'L05', label: 'CUSTOM_GL_SCRIPTS', risk: 'CRITICAL' },
   { id: 'L06', label: 'BATCH_PROCESS_DAEMON', risk: 'HIGH' },
-];
+]
 
 const DEFAULT_NEXUS_STACK: NexusStackItem[] = [
   { id: 'N01', label: 'IMMUTABLE_LEDGER', status: 'LOCKED' },
@@ -27,15 +27,15 @@ const DEFAULT_NEXUS_STACK: NexusStackItem[] = [
   { id: 'N04', label: 'ZERO_TRUST_AUTH', status: 'SECURE' },
   { id: 'N05', label: 'AUTO_RECONCILIATION', status: 'OPTIMAL' },
   { id: 'N06', label: 'TAX_COMPLIANCE_BOT', status: 'SYNCED' },
-];
+]
 
 // --- COMPONENT PROPS ---
 interface StabilitySimulationProps {
-  config?: Partial<SimulationConfig>;
-  legacyStack?: LegacyStackItem[];
-  nexusStack?: NexusStackItem[];
-  title?: string;
-  subtitle?: string;
+  config?: Partial<SimulationConfig>
+  legacyStack?: LegacyStackItem[]
+  nexusStack?: NexusStackItem[]
+  title?: string
+  subtitle?: string
 }
 
 // --- MAIN COMPONENT ---
@@ -52,14 +52,18 @@ export default function StabilitySimulation({
     cycleTimeMs: config.cycleTimeMs ?? 2000,
     collapseDelayMs: config.collapseDelayMs ?? 1500,
     autoPlay: true,
-  });
+  })
 
   // Derive status from state
-  const legacyStatus = isCollapsed ? 'FAILED' : shakeLevel !== 'none' ? 'DEGRADING' : 'ACTIVE';
-  const nexusStatus = 'OPTIMAL';
+  const legacyStatus = isCollapsed
+    ? 'FAILED'
+    : shakeLevel !== 'none'
+      ? 'DEGRADING'
+      : 'ACTIVE'
+  const nexusStatus = 'OPTIMAL'
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col items-center">
+    <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
       {/* 1. FORENSIC HEADER */}
       <ForensicHeader
         title={title}
@@ -69,7 +73,7 @@ export default function StabilitySimulation({
       />
 
       {/* 2. THE SIMULATION GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 w-full relative min-h-[500px]">
+      <div className="relative grid min-h-[500px] w-full grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
         {/* LEFT: The Decay (Monolith) */}
         <LegacyStack
           data={legacyStack}
@@ -79,14 +83,11 @@ export default function StabilitySimulation({
         />
 
         {/* RIGHT: The Crystal (Nexus) */}
-        <NexusStack
-          data={nexusStack}
-          stage={stage}
-        />
+        <NexusStack data={nexusStack} stage={stage} />
       </div>
     </div>
-  );
+  )
 }
 
 // Named export for flexibility
-export { StabilitySimulation };
+export { StabilitySimulation }

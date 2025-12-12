@@ -1,9 +1,9 @@
 /**
  * HealthScoreRing - Canon Component
- * 
+ *
  * Displays a circular progress indicator for health scores.
  * Custom SVG-based ring with animated fill.
- * 
+ *
  * @component COMP_HealthScoreRing
  * @version 1.0.0
  * @see REF_037 - Phase 3: Canon Page System
@@ -28,7 +28,7 @@ export function HealthScoreRing({
   score,
   size = 'md',
   className,
-  label = 'Health Score'
+  label = 'Health Score',
 }: HealthScoreRingProps) {
   const sizeConfig = SIZES[size]
   const circumference = 251 // 2 * π * 40
@@ -75,7 +75,7 @@ export function HealthScoreRing({
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <span
-            className={cn('font-bold text-nexus-signal', sizeConfig.text)}
+            className={cn('text-nexus-signal font-bold', sizeConfig.text)}
             aria-hidden="true"
           >
             {score}%
@@ -84,7 +84,10 @@ export function HealthScoreRing({
       </div>
       <span
         id={`${ringId}-label`}
-        className={cn('text-nexus-signal/70 font-medium mt-2', sizeConfig.label)}
+        className={cn(
+          'text-nexus-signal/70 mt-2 font-medium',
+          sizeConfig.label
+        )}
       >
         {label}: {score}%
       </span>

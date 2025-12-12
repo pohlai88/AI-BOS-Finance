@@ -63,8 +63,10 @@ export function introspectZodSchema(
     // Introspect the Zod schema
     const fieldMeta = introspectZodField(key, zodSchema as z.ZodTypeAny, {
       businessTerm: businessTermMap[key] || formatBusinessTerm(key),
-      description: descriptionMap[key] || getZodDescription(zodSchema as z.ZodTypeAny),
-      required: requiredFields.includes(key) || isRequired(zodSchema as z.ZodTypeAny),
+      description:
+        descriptionMap[key] || getZodDescription(zodSchema as z.ZodTypeAny),
+      required:
+        requiredFields.includes(key) || isRequired(zodSchema as z.ZodTypeAny),
       order: fieldOrder[key],
       group: fieldGroups[key],
     })
@@ -202,7 +204,7 @@ function formatBusinessTerm(technicalName: string): string {
     .replace(/([A-Z])/g, ' $1')
     .trim()
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ')
 }
 
@@ -233,7 +235,10 @@ function isRequired(zodSchema: z.ZodTypeAny): boolean {
   return true
 }
 
-function hasRefinement(zodSchema: z.ZodTypeAny, refinementName: string): boolean {
+function hasRefinement(
+  zodSchema: z.ZodTypeAny,
+  refinementName: string
+): boolean {
   const def = zodSchema._def
 
   // Check refinements
@@ -252,14 +257,31 @@ function hasRefinement(zodSchema: z.ZodTypeAny, refinementName: string): boolean
 function isStatusField(enumValues: string[], fieldName: string): boolean {
   const statusKeywords = ['status', 'state', 'stage', 'phase']
   const statusValues = [
-    'pending', 'approved', 'rejected', 'active', 'inactive',
-    'draft', 'published', 'archived', 'locked', 'unlocked',
-    'success', 'error', 'warning', 'info', 'paid', 'unpaid'
+    'pending',
+    'approved',
+    'rejected',
+    'active',
+    'inactive',
+    'draft',
+    'published',
+    'archived',
+    'locked',
+    'unlocked',
+    'success',
+    'error',
+    'warning',
+    'info',
+    'paid',
+    'unpaid',
   ]
 
   const lowerFieldName = fieldName.toLowerCase()
-  const hasStatusKeyword = statusKeywords.some(keyword => lowerFieldName.includes(keyword))
-  const hasStatusValues = enumValues.some(val => statusValues.includes(val.toLowerCase()))
+  const hasStatusKeyword = statusKeywords.some((keyword) =>
+    lowerFieldName.includes(keyword)
+  )
+  const hasStatusValues = enumValues.some((val) =>
+    statusValues.includes(val.toLowerCase())
+  )
 
   return hasStatusKeyword || hasStatusValues
 }
@@ -285,7 +307,7 @@ export function createBioSchema<T extends z.ZodRawShape>(
 
   // Store metadata in a custom property (for later retrieval)
   if (metadata) {
-    ; (schema as any).__bioMetadata = metadata
+    ;(schema as any).__bioMetadata = metadata
   }
 
   return schema

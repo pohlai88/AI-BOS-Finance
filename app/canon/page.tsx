@@ -1,6 +1,6 @@
 /**
  * Canon Health Dashboard - Gold Standard
- * 
+ *
  * 🛡️ GOVERNANCE: Atomic Normalization Complete
  * - Uses Surface component (no inline card styles)
  * - Uses Txt component (no arbitrary typography)
@@ -9,12 +9,12 @@
  * - Uses StatusDot component (no hardcoded colors)
  * - Zero color decisions (all tokens from globals.css)
  * - 88.6% code reduction (687 → 78 lines)
- * 
+ *
  * 🎯 PROOF: Form Symmetry
  * - Input + Btn side-by-side demonstrate perfect alignment (h-10, rounded-action)
  * - All components use governed tokens
  * - Zero drift possible
- * 
+ *
  * @page CANON_01
  * @version 4.0.0 (Gold Standard)
  * @see REF_046 - Next.js UI/UX Refactoring Strategy
@@ -36,14 +36,15 @@ const STATS = [
 
 export default function CanonHealthDashboard() {
   return (
-    <div className="min-h-screen bg-surface-flat p-8 space-y-12">
-
+    <div className="min-h-screen space-y-12 bg-surface-flat p-8">
       {/* 1. HEADER SECTION */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <header className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         <div className="space-y-2">
           {/* 🛡️ Governance: No more <h1> with arbitrary classes */}
           <Txt variant="h1">Canon Health</Txt>
-          <Txt variant="body">Real-time system diagnostics and performance metrics.</Txt>
+          <Txt variant="body">
+            Real-time system diagnostics and performance metrics.
+          </Txt>
         </div>
 
         {/* 🛡️ PROOF: Form Symmetry - Input + Btn share perfect height/radius/focus */}
@@ -52,15 +53,17 @@ export default function CanonHealthDashboard() {
           <div className="w-64">
             <Input placeholder="Search nodes..." size="md" />
           </div>
-          <Btn variant="primary" size="md">Export Report</Btn>
+          <Btn variant="primary" size="md">
+            Export Report
+          </Btn>
         </div>
       </header>
 
       {/* 2. STATS GRID */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {STATS.map((stat) => (
           // 🛡️ Governance: Locked Card Shape (Surface)
-          <Surface key={stat.label} variant="base" className="p-6 space-y-2">
+          <Surface key={stat.label} variant="base" className="space-y-2 p-6">
             <Txt variant="subtle">{stat.label}</Txt>
             <div className="flex items-center gap-3">
               <Txt variant="h2">{stat.value}</Txt>
@@ -72,14 +75,16 @@ export default function CanonHealthDashboard() {
       </section>
 
       {/* 3. MAIN CONTENT AREA */}
-      <Surface variant="base" className="p-8 min-h-[400px] flex items-center justify-center border-dashed">
-        <div className="text-center space-y-4">
+      <Surface
+        variant="base"
+        className="flex min-h-[400px] items-center justify-center border-dashed p-8"
+      >
+        <div className="space-y-4 text-center">
           <Txt variant="h3">System Visualization</Txt>
           <Txt variant="subtle">Interactive node graph will render here.</Txt>
           <Btn variant="secondary">Initialize Simulation</Btn>
         </div>
       </Surface>
-
     </div>
   )
 }

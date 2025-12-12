@@ -6,144 +6,155 @@
 // PATTERN: Uses CSS-only hover dropdown - upgrade to Radix UI for production
 // ============================================================================
 
-import React from 'react';
-import { Settings2, Eye, EyeOff, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { ColumnDef } from './SuperTableHeader';
+import React from 'react'
+import { Settings2, Eye, EyeOff, Check } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import type { ColumnDef } from './SuperTableHeader'
 
 interface ColumnVisibilityMenuProps<T> {
-  columns: ColumnDef<T>[];
-  onToggle: (key: string) => void;
-  className?: string;
+  columns: ColumnDef<T>[]
+  onToggle: (key: string) => void
+  className?: string
 }
 
-export const ColumnVisibilityMenu = <T,>({ 
-  columns, 
+export const ColumnVisibilityMenu = <T,>({
+  columns,
   onToggle,
-  className 
+  className,
 }: ColumnVisibilityMenuProps<T>) => {
-  const visibleCount = columns.filter(col => col.visible !== false).length;
-  const totalCount = columns.length;
+  const visibleCount = columns.filter((col) => col.visible !== false).length
+  const totalCount = columns.length
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn('group relative', className)}>
       {/* Trigger Button */}
-      <button 
+      <button
         className={cn(
-          "flex items-center gap-2 px-3 py-2",
-          "bg-[#111] border border-[#222] rounded",
-          "text-[11px] font-mono text-[#888] uppercase tracking-wider",
-          "hover:bg-[#1A1A1A] hover:border-[#333] hover:text-[#AAA]",
-          "transition-all duration-200"
+          'flex items-center gap-2 px-3 py-2',
+          'rounded border border-[#222] bg-[#111]',
+          'font-mono text-[11px] uppercase tracking-wider text-[#888]',
+          'hover:border-[#333] hover:bg-[#1A1A1A] hover:text-[#AAA]',
+          'transition-all duration-200'
         )}
       >
-        <Settings2 className="w-4 h-4" />
+        <Settings2 className="h-4 w-4" />
         <span className="hidden sm:inline">Columns</span>
-        <span className="text-[#28E7A2]">{visibleCount}/{totalCount}</span>
+        <span className="text-[#28E7A2]">
+          {visibleCount}/{totalCount}
+        </span>
       </button>
-       
+
       {/* Dropdown Panel - CSS-only hover (prefer Radix UI for production) */}
-      <div className={cn(
-        "absolute right-0 top-full mt-1 w-56",
-        "bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg shadow-xl",
-        "hidden group-hover:block z-50",
-        "before:absolute before:-top-2 before:right-4 before:w-3 before:h-3",
-        "before:bg-[#0A0A0A] before:border-l before:border-t before:border-[#1F1F1F]",
-        "before:rotate-45 before:z-[-1]"
-      )}>
+      <div
+        className={cn(
+          'absolute right-0 top-full mt-1 w-56',
+          'rounded-lg border border-[#1F1F1F] bg-[#0A0A0A] shadow-xl',
+          'z-50 hidden group-hover:block',
+          'before:absolute before:-top-2 before:right-4 before:h-3 before:w-3',
+          'before:border-l before:border-t before:border-[#1F1F1F] before:bg-[#0A0A0A]',
+          'before:z-[-1] before:rotate-45'
+        )}
+      >
         {/* Header */}
-        <div className="px-3 py-2 border-b border-[#1F1F1F]">
-          <span className="text-[10px] font-mono text-[#666] uppercase tracking-wider">
+        <div className="border-b border-[#1F1F1F] px-3 py-2">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#666]">
             Toggle Columns
           </span>
         </div>
 
         {/* Column List */}
         <div className="max-h-64 overflow-y-auto py-1">
-          {columns.map(col => {
-            const colKey = String(col.key);
-            const isVisible = col.visible !== false;
+          {columns.map((col) => {
+            const colKey = String(col.key)
+            const isVisible = col.visible !== false
 
             return (
-              <label 
-                key={colKey} 
+              <label
+                key={colKey}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 cursor-pointer",
-                  "hover:bg-[#111] transition-colors",
-                  !isVisible && "opacity-50"
+                  'flex cursor-pointer items-center gap-3 px-3 py-2',
+                  'transition-colors hover:bg-[#111]',
+                  !isVisible && 'opacity-50'
                 )}
               >
                 {/* Custom Checkbox */}
-                <div className={cn(
-                  "w-4 h-4 rounded border flex items-center justify-center",
-                  "transition-colors",
-                  isVisible 
-                    ? "bg-[#28E7A2] border-[#28E7A2]" 
-                    : "bg-transparent border-[#333]"
-                )}>
-                  {isVisible && <Check className="w-3 h-3 text-black" />}
+                <div
+                  className={cn(
+                    'flex h-4 w-4 items-center justify-center rounded border',
+                    'transition-colors',
+                    isVisible
+                      ? 'border-[#28E7A2] bg-[#28E7A2]'
+                      : 'border-[#333] bg-transparent'
+                  )}
+                >
+                  {isVisible && <Check className="h-3 w-3 text-black" />}
                 </div>
 
                 {/* Icon */}
                 {isVisible ? (
-                  <Eye className="w-3.5 h-3.5 text-[#28E7A2]" />
+                  <Eye className="h-3.5 w-3.5 text-[#28E7A2]" />
                 ) : (
-                  <EyeOff className="w-3.5 h-3.5 text-[#444]" />
+                  <EyeOff className="h-3.5 w-3.5 text-[#444]" />
                 )}
 
                 {/* Label */}
-                <span className={cn(
-                  "text-xs font-mono",
-                  isVisible ? "text-white" : "text-[#666]"
-                )}>
+                <span
+                  className={cn(
+                    'font-mono text-xs',
+                    isVisible ? 'text-white' : 'text-[#666]'
+                  )}
+                >
                   {col.header}
                 </span>
 
                 {/* Hidden Actual Checkbox */}
-                <input 
-                  type="checkbox" 
-                  checked={isVisible} 
+                <input
+                  type="checkbox"
+                  checked={isVisible}
                   onChange={() => onToggle(colKey)}
                   className="sr-only"
                 />
               </label>
-            );
+            )
           })}
         </div>
 
         {/* Footer Actions */}
-        <div className="px-3 py-2 border-t border-[#1F1F1F] flex gap-2">
+        <div className="flex gap-2 border-t border-[#1F1F1F] px-3 py-2">
           <button
             className={cn(
-              "flex-1 px-2 py-1.5 text-[10px] font-mono uppercase",
-              "bg-[#111] border border-[#222] rounded",
-              "text-[#666] hover:text-[#28E7A2] hover:border-[#28E7A2]/30",
-              "transition-colors"
+              'flex-1 px-2 py-1.5 font-mono text-[10px] uppercase',
+              'rounded border border-[#222] bg-[#111]',
+              'text-[#666] hover:border-[#28E7A2]/30 hover:text-[#28E7A2]',
+              'transition-colors'
             )}
-            onClick={() => columns.forEach(col => {
-              if (col.visible === false) onToggle(String(col.key));
-            })}
+            onClick={() =>
+              columns.forEach((col) => {
+                if (col.visible === false) onToggle(String(col.key))
+              })
+            }
           >
             Show All
           </button>
           <button
             className={cn(
-              "flex-1 px-2 py-1.5 text-[10px] font-mono uppercase",
-              "bg-[#111] border border-[#222] rounded",
-              "text-[#666] hover:text-[#FF6B6B] hover:border-[#FF6B6B]/30",
-              "transition-colors"
+              'flex-1 px-2 py-1.5 font-mono text-[10px] uppercase',
+              'rounded border border-[#222] bg-[#111]',
+              'text-[#666] hover:border-[#FF6B6B]/30 hover:text-[#FF6B6B]',
+              'transition-colors'
             )}
-            onClick={() => columns.forEach(col => {
-              if (col.visible !== false) onToggle(String(col.key));
-            })}
+            onClick={() =>
+              columns.forEach((col) => {
+                if (col.visible !== false) onToggle(String(col.key))
+              })
+            }
           >
             Hide All
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ColumnVisibilityMenu;
-
+export default ColumnVisibilityMenu
