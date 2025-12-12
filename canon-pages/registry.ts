@@ -183,36 +183,69 @@ export const CANON_REGISTRY: Record<string, CanonPageEntry> = {
       description: 'Core metadata architecture and data dictionary design',
     },
   },
+  'meta/meta-02-god-view': {
+    component: () => import('./META/meta-02-god-view.mdx'),
+    meta: {
+      id: 'META_02',
+      title: 'God View',
+      status: 'DRAFT',
+      version: '0.1.0',
+      lastUpdated: '2025-12-12',
+      description: 'Comprehensive visualization and monitoring system',
+    },
+  },
+  'meta/meta-03-the-prism': {
+    component: () => import('./META/meta-03-the-prism.mdx'),
+    meta: {
+      id: 'META_03',
+      title: 'The Prism',
+      status: 'DRAFT',
+      version: '0.1.0',
+      lastUpdated: '2025-12-12',
+      description: 'Data lineage tracking and visualization',
+    },
+  },
 
   // ============================================================================
   // PAYMENT SERIES - Payment Processing
   // ============================================================================
-  // 'payment/pay-01-payment-hub': {
-  //   component: () => import('./PAYMENT/pay-01-payment-hub.mdx'),
-  //   meta: {
-  //     id: 'PAY_01',
-  //     title: 'Payment Hub',
-  //     status: 'ACTIVE',
-  //     version: '1.0.0',
-  //     lastUpdated: '2025-12-12',
-  //     description: 'Central payment processing and gateway management',
-  //   },
-  // },
+  'payment/pay-01-payment-hub': {
+    component: () => import('./PAYMENT/pay-01-payment-hub.mdx'),
+    meta: {
+      id: 'PAY_01',
+      title: 'Payment Hub',
+      status: 'DRAFT',
+      version: '0.1.0',
+      lastUpdated: '2025-12-12',
+      description: 'Central payment processing and gateway management',
+    },
+  },
 
   // ============================================================================
   // SYSTEM SERIES - System Configuration
   // ============================================================================
-  // 'system/sys-01-bootloader': {
-  //   component: () => import('./SYSTEM/sys-01-bootloader.mdx'),
-  //   meta: {
-  //     id: 'SYS_01',
-  //     title: 'System Bootloader',
-  //     status: 'ACTIVE',
-  //     version: '1.0.0',
-  //     lastUpdated: '2025-12-12',
-  //     description: 'Initial system setup and configuration wizard',
-  //   },
-  // },
+  'system/sys-01-bootloader': {
+    component: () => import('./SYSTEM/sys-01-bootloader.mdx'),
+    meta: {
+      id: 'SYS_01',
+      title: 'System Bootloader',
+      status: 'DRAFT',
+      version: '0.1.0',
+      lastUpdated: '2025-12-12',
+      description: 'Initial system setup and configuration wizard',
+    },
+  },
+  'system/sys-02-organization': {
+    component: () => import('./SYSTEM/sys-02-organization.mdx'),
+    meta: {
+      id: 'SYS_02',
+      title: 'Organization Management',
+      status: 'DRAFT',
+      version: '0.1.0',
+      lastUpdated: '2025-12-12',
+      description: 'Organization entity management and configuration',
+    },
+  },
 }
 
 /**
@@ -244,4 +277,16 @@ export function getCanonSections(): string[] {
  */
 export function getCanonPage(path: string): CanonPageEntry | undefined {
   return CANON_REGISTRY[path]
+}
+
+/**
+ * Get all pages by status
+ */
+export function getCanonPagesByStatus(status: CanonStatus): Array<{ path: string; meta: CanonPageMeta }> {
+  return Object.entries(CANON_REGISTRY)
+    .filter(([_, entry]) => entry.meta.status === status)
+    .map(([key, entry]) => ({
+      path: key,
+      meta: entry.meta,
+    }))
 }

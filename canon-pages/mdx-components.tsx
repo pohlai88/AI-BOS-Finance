@@ -4,7 +4,7 @@
  * Global MDX components for all Canon pages.
  * 
  * Maintenance: Add shared components here, affects all MDX files.
- * Location: mdx-components.tsx (at project root, required by @next/mdx)
+ * Location: canon-pages/mdx-components.tsx
  */
 
 import type { MDXComponents } from 'mdx/types';
@@ -227,6 +227,13 @@ const components: MDXComponents = {
     >
       {children}
     </td>
+  ),
+
+  // Mermaid diagram support
+  mermaid: ({ children, ...props }) => (
+    <div className="mermaid mb-6 bg-nexus-surface p-4 rounded-lg border border-nexus-border/50" {...props}>
+      {children}
+    </div>
   ),
 
   // Images (if using Next.js Image)

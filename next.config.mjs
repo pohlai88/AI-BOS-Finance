@@ -52,6 +52,10 @@ const nextConfig = {
 // Merge MDX config with Next.js config
 const withMDX = createMDX({
   // Add markdown plugins here if needed
+  options: {
+    // Use the MDX components from the canon-pages directory
+    providerImportSource: './canon-pages/mdx-components',
+  },
 })
 
 // Chain plugins: MDX -> Bundle Analyzer

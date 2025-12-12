@@ -6,8 +6,9 @@
     "shadcn": {
       "command": "npx",
       "args": [
+        "--no-install",
         "-y",
-        "shadcn@latest",
+        "shadcn",
         "mcp"
       ]
     },
@@ -15,16 +16,15 @@
       "url": "https://www.shadcn.io/api/mcp"
     },
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=cnlutbuzjqtuicngldak",
-      "headers": {}
+      "url": "https://mcp.supabase.com/mcp?project_ref=cnlutbuzjqtuicngldak"
     },
     "vercel": {
-      "url": "https://mcp.vercel.com",
-      "headers": {}
+      "url": "https://mcp.vercel.com"
     },
     "github": {
       "command": "npx",
       "args": [
+        "--no-install",
         "-y",
         "@modelcontextprotocol/server-github"
       ],
@@ -35,8 +35,9 @@
     "next-devtools": {
       "command": "npx",
       "args": [
+        "--no-install",
         "-y",
-        "next-devtools-mcp@latest"
+        "next-devtools-mcp"
       ],
       "env": {
         "NEXT_MCP_WATCH": "true",
