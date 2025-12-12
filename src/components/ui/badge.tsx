@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -15,6 +15,11 @@ const badgeVariants = cva(
         destructive:
           'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+        // 🛡️ GOVERNANCE: Status variants (token-based)
+        success: 'border-transparent bg-status-success text-status-success-fg',
+        warning: 'border-transparent bg-status-warning text-status-warning-fg',
+        error: 'border-transparent bg-status-error text-status-error-fg',
+        neutral: 'border-transparent bg-status-neutral text-status-neutral-fg',
       },
     },
     defaultVariants: {
