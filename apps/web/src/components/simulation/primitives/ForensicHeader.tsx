@@ -2,6 +2,9 @@
 // FORENSIC HEADER - Terminal-style simulation header
 // ============================================================================
 
+'use client';
+
+import { useId } from 'react';
 import { Activity } from 'lucide-react';
 
 interface ForensicHeaderProps {
@@ -17,13 +20,16 @@ export const ForensicHeader = ({
   legacyStatus = 'DEGRADING',
   nexusStatus = 'OPTIMAL',
 }: ForensicHeaderProps) => {
+  // Use stable ID instead of Math.random() to avoid hydration mismatch
+  const seqId = useId().replace(/:/g, '').toUpperCase().slice(0, 5);
+  
   return (
     <div className="w-full border-b border-nexus-structure pb-8 mb-16 flex justify-between items-end">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-nexus-green/80">
           <Activity className="w-4 h-4 animate-pulse" />
           <span className="text-[10px] font-mono tracking-widest uppercase">
-            Live Simulation // SEQ_ID: {Math.random().toString(36).substring(7).toUpperCase()}
+            Live Simulation // SEQ_ID: {seqId}
           </span>
         </div>
         <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">

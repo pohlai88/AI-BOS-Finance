@@ -1,6 +1,36 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 
+interface Particle {
+  id: number;
+  initialX: number;
+  initialY: number;
+  initialOpacity: number;
+  animateY: number;
+  duration: number;
+}
+
 export const BackgroundGrid = () => {
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Generate particles only on client to avoid hydration mismatch
+    setParticles(
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        initialX: Math.random() * 100,
+        initialY: Math.random() * 100,
+        initialOpacity: Math.random(),
+        animateY: Math.random() * -50,
+        duration: Math.random() * 10 + 10,
+      }))
+    );
+    setMounted(true);
+  }, []);
+
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       {/* 1. The Base Grid (Static) */}
@@ -13,29 +43,31 @@ export const BackgroundGrid = () => {
         transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
       />
 
-      {/* 3. Ambient Particles (Floating Dust) */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-nexus-green/20 rounded-full"
-            initial={{
-              x: `${Math.random() * 100}%`,
-              y: `${Math.random() * 100}%`,
-              opacity: Math.random(),
-            }}
-            animate={{
-              y: [`${Math.random() * 100}%`, `${Math.random() * -50}%`],
-              opacity: [0, 0.5, 0],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
-        ))}
-      </div>
+      {/* 3. Ambient Particles (Floating Dust) - Client-only to avoid hydration */}
+      {mounted && (
+        <div className="absolute inset-0">
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              className="absolute w-1 h-1 bg-nexus-green/20 rounded-full"
+              initial={{
+                x: `${particle.initialX}%`,
+                y: `${particle.initialY}%`,
+                opacity: particle.initialOpacity,
+              }}
+              animate={{
+                y: [`${particle.initialY}%`, `${particle.animateY}%`],
+                opacity: [0, 0.5, 0],
+              }}
+              transition={{
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* 4. Vignette Effect (Depth) */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#000_70%)] opacity-60" />
