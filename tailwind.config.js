@@ -50,6 +50,26 @@ export default {
             border: "rgb(var(--action-secondary-border) / <alpha-value>)",
           },
         },
+        // 🛡️ GOVERNANCE: Status tokens (The Bridge to globals.css)
+        // Usage: bg-status-success / text-status-success-fg
+        status: {
+          success: {
+            DEFAULT: "rgb(var(--status-success) / <alpha-value>)",
+            fg: "rgb(var(--status-success-fg) / <alpha-value>)",
+          },
+          warning: {
+            DEFAULT: "rgb(var(--status-warning) / <alpha-value>)",
+            fg: "rgb(var(--status-warning-fg) / <alpha-value>)",
+          },
+          error: {
+            DEFAULT: "rgb(var(--status-error) / <alpha-value>)",
+            fg: "rgb(var(--status-error-fg) / <alpha-value>)",
+          },
+          neutral: {
+            DEFAULT: "rgb(var(--status-neutral) / <alpha-value>)",
+            fg: "rgb(var(--status-neutral-fg) / <alpha-value>)",
+          },
+        },
         // Legacy semantic color aliases (mapped from CSS variables in globals.css)
         'surface-subtle': 'var(--color-surface-subtle)',
         'surface-card': 'var(--color-surface-card)',
@@ -135,6 +155,9 @@ export default {
         // 🛡️ GOVERNANCE: Action radius token
         // Usage: rounded-action
         action: "var(--radius-action)",
+        // 🛡️ GOVERNANCE: Badge radius token
+        // Usage: rounded-badge
+        badge: "var(--radius-badge)",
         // Legacy radius tokens
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

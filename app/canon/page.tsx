@@ -18,6 +18,7 @@ import React from 'react'
 import { Surface } from "@/components/ui/Surface"
 import { Txt } from "@/components/ui/Txt"
 import { Btn } from "@/components/ui/Btn"
+import { StatusDot } from "@/components/ui/StatusDot"
 
 // 🟢 MOCK DATA (Ideally this moves to a hook later)
 const STATS = [
@@ -52,8 +53,12 @@ export default function CanonHealthDashboard() {
             <Txt variant="subtle">{stat.label}</Txt>
             <div className="flex items-center gap-3">
               <Txt variant="h2">{stat.value}</Txt>
+              {/* 🛡️ Governance: Governed StatusDot (not hardcoded green dot) */}
               {stat.status === 'good' && (
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <StatusDot variant="success" size="md" />
+              )}
+              {stat.status === 'neutral' && (
+                <StatusDot variant="neutral" size="md" />
               )}
             </div>
           </Surface>
