@@ -13,7 +13,7 @@
 /**
  * Canon file types based on directory structure
  */
-export type CanonFileType = 
+export type CanonFileType =
   | 'ADR'   // Architectural Decision Records
   | 'CONT'  // Contracts
   | 'COMP'  // Components
@@ -95,28 +95,6 @@ export const CANON_FILES: Record<string, CanonFile> = {
     status: 'ACTIVE',
   },
 
-  // B-Functional/B-COMP
-  'B-Functional/B-COMP/CANON_DASHBOARD_ACCESSIBILITY.md': {
-    path: 'B-Functional/B-COMP/CANON_DASHBOARD_ACCESSIBILITY.md',
-    type: 'COMP',
-    id: 'COMP_ACCESSIBILITY',
-    title: 'Canon Dashboard Accessibility',
-    status: 'ACTIVE',
-  },
-  'B-Functional/B-COMP/TAILWIND_V4_FIX_COMPLETE.md': {
-    path: 'B-Functional/B-COMP/TAILWIND_V4_FIX_COMPLETE.md',
-    type: 'COMP',
-    id: 'COMP_TAILWIND_FIX',
-    title: 'Tailwind v4 Fix Complete',
-    status: 'ACTIVE',
-  },
-  'B-Functional/B-COMP/TAILWIND_V4_MIGRATION_DIFF.md': {
-    path: 'B-Functional/B-COMP/TAILWIND_V4_MIGRATION_DIFF.md',
-    type: 'COMP',
-    id: 'COMP_TAILWIND_MIGRATION',
-    title: 'Tailwind v4 Migration Diff',
-    status: 'ACTIVE',
-  },
 
   // C-DataLogic/C-POLY
   'C-DataLogic/C-POLY/MCP_ORCHESTRATION_METHOD.md': {
@@ -161,6 +139,48 @@ export const CANON_FILES: Record<string, CanonFile> = {
     status: 'ACTIVE',
     mdxPath: 'meta/meta-02-god-view',
   },
+  'E-Knowledge/E-REF/REF_042_CanonDashboardAccessibility.md': {
+    path: 'E-Knowledge/E-REF/REF_042_CanonDashboardAccessibility.md',
+    type: 'REF',
+    id: 'REF_042',
+    title: 'Canon Dashboard Accessibility',
+    status: 'ACTIVE',
+  },
+  'E-Knowledge/E-REF/REF_043_TailwindV4FixComplete.md': {
+    path: 'E-Knowledge/E-REF/REF_043_TailwindV4FixComplete.md',
+    type: 'REF',
+    id: 'REF_043',
+    title: 'Tailwind v4 Fix Complete',
+    status: 'ACTIVE',
+  },
+  'E-Knowledge/E-REF/REF_044_TailwindV4MigrationDiff.md': {
+    path: 'E-Knowledge/E-REF/REF_044_TailwindV4MigrationDiff.md',
+    type: 'REF',
+    id: 'REF_044',
+    title: 'Tailwind v4 Migration Diff',
+    status: 'ACTIVE',
+  },
+  'E-Knowledge/E-REF/REF_045_FileAccessControl.md': {
+    path: 'E-Knowledge/E-REF/REF_045_FileAccessControl.md',
+    type: 'REF',
+    id: 'REF_045',
+    title: 'File Access Control Strategy',
+    status: 'ACTIVE',
+  },
+  'E-Knowledge/E-REF/REF_046_NextJsRefactoringStrategy.md': {
+    path: 'E-Knowledge/E-REF/REF_046_NextJsRefactoringStrategy.md',
+    type: 'REF',
+    id: 'REF_046',
+    title: 'Next.js UI/UX Refactoring Strategy',
+    status: 'ACTIVE',
+  },
+  'E-Knowledge/E-REF/REF_047_AtomicNormalizationSystem.md': {
+    path: 'E-Knowledge/E-REF/REF_047_AtomicNormalizationSystem.md',
+    type: 'REF',
+    id: 'REF_047',
+    title: 'Atomic Normalization System',
+    status: 'ACTIVE',
+  },
 };
 
 /**
@@ -197,12 +217,12 @@ export function getCanonFilesByStatus(status: CanonStatus): CanonFile[] {
  * Get related canon files based on type and ID pattern
  */
 export function getRelatedCanonFiles(file: CanonFile, limit = 5): CanonFile[] {
-  const related = Object.values(CANON_FILES).filter(f => 
+  const related = Object.values(CANON_FILES).filter(f =>
     f.path !== file.path && (
-      f.type === file.type || 
+      f.type === file.type ||
       f.id.startsWith(file.id.split('_')[0])
     )
   );
-  
+
   return related.slice(0, limit);
 }
