@@ -14,6 +14,7 @@
 |------------|-------|--------|------|
 | **ADR_001_NextJsAppRouter** | [Adoption of Next.js App Router](./ADR_001_NextJsAppRouter.md) | 🟢 Accepted | 2025-12-11 |
 | **ADR_002_CanonSecurity** | [Server-Side Canon Context Verification](./ADR_002_CanonSecurity.md) | 🟢 Accepted | 2025-12-11 |
+| **ADR_003_KernelTechStackDecision** | [Kernel Tech Stack Decision - Hono vs Next.js](./ADR_003_KernelTechStackDecision.md) | 🟢 Accepted | 2025-12-12 |
 
 ---
 

@@ -1,6 +1,14 @@
-# Kernel Tech Stack Decision: Hono vs Next.js
+> **🟢 [ACTIVE]** — Architecture Decision Record  
+> **Canon Code:** ADR_003  
+> **Version:** 1.0.0  
+> **Purpose:** Kernel tech stack decision (Hono vs Next.js)  
+> **Plane:** A — Governance (ADR)  
+> **Date:** 2025-12-12
 
-**Date:** 2025-12-12  
+---
+
+# ADR_003: Kernel Tech Stack Decision - Hono vs Next.js
+
 **Decision:** ✅ **HONO** (Recommended)  
 **Status:** **FINAL**
 
