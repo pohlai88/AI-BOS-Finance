@@ -154,14 +154,14 @@ export const LongContent: Story = {
       <div className="p-6 text-[var(--color-text-primary)] max-w-md">
         <h3 className="text-heading font-semibold mb-2">Stress Test: Long Content</h3>
         <p className="text-body text-[var(--color-text-secondary)]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
           dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
         <p className="text-body text-[var(--color-text-secondary)] mt-4">
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
-          mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit
           voluptatem accusantium doloremque laudantium.
         </p>
       </div>

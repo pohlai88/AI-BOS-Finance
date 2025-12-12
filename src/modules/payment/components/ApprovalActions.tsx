@@ -2,16 +2,19 @@
 // COM_PAY_05: APPROVAL ACTIONS - Approve/Reject Button Group
 // ============================================================================
 // Reusable approval action buttons with SoD and IC validation
+// 🛡️ GOVERNANCE: Uses Btn component (no fake buttons)
 // ============================================================================
 
-import { 
-  CheckCircle2, 
-  XCircle, 
+import {
+  CheckCircle2,
+  XCircle,
   Ban,
   ArrowRightLeft,
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Btn } from '@/components/ui/Btn';
+import { Txt } from '@/components/ui/Txt';
 
 // ============================================================================
 // TYPES
@@ -81,27 +84,26 @@ export function ApprovalActions({
   if (showSettleIC) {
     return (
       <div className={cn('space-y-3', className)}>
-        <div className="flex items-center justify-center gap-2 py-2 text-red-400 text-[11px]">
-          <Ban className="w-4 h-4" />
-          <span>{blockReason || 'Cannot approve - settlement required'}</span>
+        {/* 🛡️ GOVERNANCE: Uses Txt component for text */}
+        <div className="flex items-center justify-center gap-2 py-2">
+          <Ban className="w-4 h-4 text-status-error" />
+          <Txt variant="small" className="text-status-error">
+            {blockReason || 'Cannot approve - settlement required'}
+          </Txt>
         </div>
+        {/* 🛡️ GOVERNANCE: Uses Btn component (no fake button) */}
         {onSettleIC && (
-          <button 
+          <Btn
+            variant="secondary"
+            size={size}
             onClick={() => onSettleIC(paymentId)}
             disabled={isLoading}
-            className={cn(
-              'w-full flex items-center justify-center rounded border border-purple-900/50 text-purple-400 hover:bg-purple-900/10 font-medium transition-all',
-              config.button,
-              isLoading && 'opacity-50 cursor-not-allowed'
-            )}
+            loading={isLoading}
+            className="w-full"
           >
-            {isLoading ? (
-              <Loader2 className={cn(config.icon, 'animate-spin')} />
-            ) : (
-              <ArrowRightLeft className={config.icon} />
-            )}
+            <ArrowRightLeft className={cn(config.icon)} />
             Initiate IC Settlement
-          </button>
+          </Btn>
         )}
       </div>
     );
@@ -113,66 +115,51 @@ export function ApprovalActions({
         'gap-3',
         isHorizontal ? 'grid grid-cols-2' : 'flex flex-col'
       )}>
-        {/* Reject Button */}
-        <button 
+        {/* 🛡️ GOVERNANCE: Reject Button uses Btn component */}
+        <Btn
+          variant="secondary"
+          size={size}
           onClick={() => onReject(paymentId)}
           disabled={isLoading || !canReject}
-          className={cn(
-            'flex items-center justify-center rounded border border-red-900/30 text-red-500 hover:bg-red-900/10 font-medium transition-all',
-            config.button,
-            (isLoading || !canReject) && 'opacity-50 cursor-not-allowed'
-          )}
+          loading={isLoading}
+          className="border-status-error/30 text-status-error hover:bg-status-error/10"
         >
-          {isLoading ? (
-            <Loader2 className={cn(config.icon, 'animate-spin')} />
-          ) : (
-            <XCircle className={config.icon} />
-          )}
+          <XCircle className={cn(config.icon)} />
           Reject
-        </button>
+        </Btn>
 
-        {/* Approve Button */}
-        <button 
+        {/* 🛡️ GOVERNANCE: Approve Button uses Btn component */}
+        <Btn
+          variant={canApprove ? "primary" : "secondary"}
+          size={size}
           onClick={() => canApprove && onApprove(paymentId)}
           disabled={!canApprove || isLoading}
-          className={cn(
-            'flex items-center justify-center rounded font-bold transition-all',
-            config.button,
-            canApprove 
-              ? 'bg-[#28E7A2] text-black hover:bg-[#20b881] shadow-[0_0_15px_rgba(40,231,162,0.3)]'
-              : 'bg-[#1F1F1F] text-[#555] cursor-not-allowed'
-          )}
+          loading={isLoading}
           title={!canApprove ? blockReason : undefined}
         >
-          {isLoading ? (
-            <Loader2 className={cn(config.icon, 'animate-spin')} />
-          ) : !canApprove ? (
-            <Ban className={config.icon} />
+          {!canApprove ? (
+            <Ban className={cn(config.icon)} />
           ) : (
-            <CheckCircle2 className={config.icon} />
+            <CheckCircle2 className={cn(config.icon)} />
           )}
           {canApprove ? 'Approve' : 'Blocked'}
-        </button>
+        </Btn>
       </div>
 
       {/* Footer - Who is approving */}
+      {/* 🛡️ GOVERNANCE: Uses Txt component */}
       {canApprove && approverName && (
-        <p className={cn(
-          'text-[#555] text-center mt-2 font-mono',
-          config.footer
-        )}>
-          Approving as: <span className="text-[#888]">{approverName}</span>
-        </p>
+        <Txt variant="small" className="text-center mt-2 text-text-tertiary">
+          Approving as: <span className="text-text-secondary">{approverName}</span>
+        </Txt>
       )}
 
       {/* Block reason message */}
+      {/* 🛡️ GOVERNANCE: Uses Txt component with status-error token */}
       {!canApprove && blockReason && (
-        <p className={cn(
-          'text-red-400/70 text-center mt-2',
-          config.footer
-        )}>
+        <Txt variant="small" className="text-status-error/70 text-center mt-2">
           {blockReason}
-        </p>
+        </Txt>
       )}
     </div>
   );
@@ -203,46 +190,40 @@ export function BatchApprovalButton({
   onReview,
   className,
 }: BatchApprovalButtonProps) {
-  const formatCurrency = (amount: number) => 
-    new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
     }).format(amount);
 
+  // 🛡️ GOVERNANCE: Uses Btn component (no fake buttons)
   if (canApprove) {
     return (
-      <button
+      <Btn
+        variant="primary"
+        size="md"
         onClick={onApprove}
         disabled={isLoading}
-        className={cn(
-          'w-full flex items-center justify-center gap-2 py-3 rounded bg-[#28E7A2] text-black font-bold text-sm hover:bg-[#20b881] shadow-[0_0_15px_rgba(40,231,162,0.2)] transition-all',
-          isLoading && 'opacity-50 cursor-not-allowed',
-          className
-        )}
+        loading={isLoading}
+        className={cn("w-full", className)}
       >
-        {isLoading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <CheckCircle2 className="w-4 h-4" />
-        )}
+        <CheckCircle2 className="w-4 h-4" />
         Approve {count} {clusterName} ({formatCurrency(totalAmount)})
-      </button>
+      </Btn>
     );
   }
 
   return (
-    <button
+    <Btn
+      variant="secondary"
+      size="md"
       onClick={onReview}
       disabled={isLoading}
-      className={cn(
-        'w-full flex items-center justify-center gap-2 py-3 rounded border border-amber-900/50 text-amber-400 hover:bg-amber-900/10 font-medium text-sm transition-all',
-        isLoading && 'opacity-50 cursor-not-allowed',
-        className
-      )}
+      className={cn("w-full border-status-warning/50 text-status-warning hover:bg-status-warning/10", className)}
     >
       Review {count} {clusterName} items
-    </button>
+    </Btn>
   );
 }
 

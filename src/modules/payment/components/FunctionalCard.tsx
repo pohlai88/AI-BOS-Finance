@@ -3,14 +3,15 @@
 // ============================================================================
 // Visual representation of functional payment clusters
 // Distinguishes: Clean (Green/Approve) vs Anomalies (Yellow/Review)
+// 🛡️ GOVERNANCE: Uses Surface, Txt, Btn, StatusDot components (no hardcoded colors)
 // ============================================================================
 
 import React from 'react';
-import { 
-  Zap, 
-  Truck, 
-  Briefcase, 
-  Building2, 
+import {
+  Zap,
+  Truck,
+  Briefcase,
+  Building2,
   Package,
   CheckCircle2,
   AlertTriangle,
@@ -19,6 +20,10 @@ import {
   ArrowRightLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Surface } from '@/components/ui/Surface';
+import { Txt } from '@/components/ui/Txt';
+import { Btn } from '@/components/ui/Btn';
+import { StatusDot } from '@/components/ui/StatusDot';
 
 // ============================================================================
 // TYPES
@@ -70,62 +75,59 @@ const CLUSTER_COLORS: Record<ClusterType, { bg: string; text: string; border: st
 // MAIN COMPONENT
 // ============================================================================
 
-export function FunctionalCard({ 
-  cluster, 
-  onApprove, 
+export function FunctionalCard({
+  cluster,
+  onApprove,
   onReview,
   onSettle,
   className,
 }: FunctionalCardProps) {
   const Icon = CLUSTER_ICONS[cluster.cluster_id];
   const colors = CLUSTER_COLORS[cluster.cluster_id];
-  
+
   // Format currency
   const formatCurrency = (amount: number) => {
     if (amount >= 1000000) {
-      return new Intl.NumberFormat('en-US', { 
-        style: 'currency', 
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: 'USD',
         notation: 'compact',
         maximumFractionDigits: 1,
       }).format(amount);
     }
-    return new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
     }).format(amount);
   };
 
-  // Status styling
+  // 🛡️ GOVERNANCE: Status styling uses status tokens
   const getStatusStyle = () => {
     switch (cluster.status) {
       case 'clean':
         return {
-          bg: 'bg-emerald-900/10',
-          border: 'border-emerald-800/30',
+          bg: 'bg-status-success/10',
+          border: 'border-status-success/30',
           icon: CheckCircle2,
-          iconColor: 'text-emerald-400',
+          variant: 'success' as const,
           text: 'CLEAN',
-          textColor: 'text-emerald-400',
         };
       case 'anomalies':
         return {
-          bg: 'bg-amber-900/10',
-          border: 'border-amber-800/30',
+          bg: 'bg-status-warning/10',
+          border: 'border-status-warning/30',
           icon: AlertTriangle,
-          iconColor: 'text-amber-400',
+          variant: 'warning' as const,
           text: `${cluster.anomaly_count} ANOMAL${cluster.anomaly_count === 1 ? 'Y' : 'IES'}`,
-          textColor: 'text-amber-400',
         };
       case 'blocked':
         return {
-          bg: 'bg-red-900/10',
-          border: 'border-red-800/30',
+          bg: 'bg-status-error/10',
+          border: 'border-status-error/30',
           icon: Ban,
-          iconColor: 'text-red-400',
+          variant: 'error' as const,
           text: 'BLOCKED',
-          textColor: 'text-red-400',
         };
     }
   };
@@ -134,105 +136,111 @@ export function FunctionalCard({
   const StatusIcon = statusStyle.icon;
 
   return (
-    <div className={cn(
-      'flex flex-col bg-[#0A0A0A] border border-[#1F1F1F] rounded overflow-hidden hover:border-[#333] transition-colors',
-      className
-    )}>
+    <Surface variant="base" className={cn('flex flex-col overflow-hidden hover:border-border-surface-base transition-colors', className)}>
       {/* Header */}
-      <div className="p-4 border-b border-[#1F1F1F]">
+      {/* 🛡️ GOVERNANCE: Uses Surface + Txt components */}
+      <Surface variant="flat" className="p-4 border-b">
         <div className="flex items-center gap-3">
-          <div className={cn('p-2 rounded', colors.bg)}>
+          <Surface variant="flat" className={cn('p-2 rounded', colors.bg)}>
             <Icon className={cn('w-5 h-5', colors.text)} />
-          </div>
+          </Surface>
           <div>
-            <h3 className="text-sm font-bold text-white">{cluster.cluster_name}</h3>
-            <p className="text-[10px] text-[#666] font-mono uppercase tracking-wider">
+            <Txt variant="h3">{cluster.cluster_name}</Txt>
+            <Txt variant="small" className="text-text-tertiary font-mono uppercase tracking-wider">
               Global
-            </p>
+            </Txt>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Metrics */}
-      <div className="p-4 border-b border-[#1F1F1F]">
+      {/* 🛡️ GOVERNANCE: Uses Txt component */}
+      <Surface variant="flat" className="p-4 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-[#666]">📄</span>
-            <span className="text-lg font-mono font-bold text-white">
+            <Txt variant="small" className="text-text-tertiary">📄</Txt>
+            <Txt variant="h2" className="font-mono">
               {cluster.invoice_count}
-            </span>
-            <span className="text-[11px] text-[#666]">Invoices</span>
+            </Txt>
+            <Txt variant="small" className="text-text-tertiary">Invoices</Txt>
           </div>
-          
-          <div className="w-px h-4 bg-[#1F1F1F]" />
-          
+
+          <div className="w-px h-4 bg-border-surface-base" />
+
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-[#666]">💰</span>
-            <span className="text-lg font-mono font-bold text-[#28E7A2]">
+            <Txt variant="small" className="text-text-tertiary">💰</Txt>
+            <Txt variant="h2" className="font-mono text-action-primary">
               {formatCurrency(cluster.total_amount)}
-            </span>
+            </Txt>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Status Section */}
-      <div className={cn(
-        'px-4 py-3 border-b border-[#1F1F1F]',
-        statusStyle.bg
-      )}>
+      {/* 🛡️ GOVERNANCE: Uses Surface + StatusDot + Txt components */}
+      <Surface variant="base" className={cn('px-4 py-3 border-b', statusStyle.bg)}>
         <div className="flex items-center gap-2">
-          <StatusIcon className={cn('w-4 h-4', statusStyle.iconColor)} />
-          <span className={cn(
-            'text-[11px] font-mono font-bold uppercase tracking-wider',
-            statusStyle.textColor
+          <StatusDot variant={statusStyle.variant} size="sm" />
+          <Txt variant="small" className={cn(
+            'font-mono font-bold uppercase tracking-wider',
+            statusStyle.variant === 'success' && 'text-status-success',
+            statusStyle.variant === 'warning' && 'text-status-warning',
+            statusStyle.variant === 'error' && 'text-status-error',
           )}>
             Status: {statusStyle.text}
-          </span>
+          </Txt>
         </div>
         {cluster.block_reason && (
-          <p className="text-[10px] text-[#888] mt-1 pl-6">
+          <Txt variant="small" className="text-text-secondary mt-1 pl-6">
             {cluster.block_reason}
-          </p>
+          </Txt>
         )}
         {cluster.status === 'clean' && (
-          <p className="text-[10px] text-[#666] mt-1 pl-6">
+          <Txt variant="small" className="text-text-tertiary mt-1 pl-6">
             0 Anomalies found.
-          </p>
+          </Txt>
         )}
-      </div>
+      </Surface>
 
       {/* Action Button */}
+      {/* 🛡️ GOVERNANCE: Uses Btn component */}
       <div className="p-4 mt-auto">
         {cluster.cluster_id === 'intercompany' ? (
           // Special IC settlement action
-          <button
+          <Btn
+            variant="secondary"
+            size="md"
             onClick={() => onSettle?.(cluster.cluster_id)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded border border-purple-900/50 text-purple-400 hover:bg-purple-900/10 font-medium text-sm transition-all"
+            className="w-full"
           >
             <ArrowRightLeft className="w-4 h-4" />
             Settle IC
-          </button>
+          </Btn>
         ) : cluster.can_batch_approve ? (
           // Clean - can batch approve
-          <button
+          <Btn
+            variant="primary"
+            size="md"
             onClick={() => onApprove(cluster.cluster_id)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded bg-[#28E7A2] text-black font-bold text-sm hover:bg-[#20b881] shadow-[0_0_15px_rgba(40,231,162,0.2)] transition-all"
+            className="w-full"
           >
             <CheckCircle2 className="w-4 h-4" />
             Approve Batch
-          </button>
+          </Btn>
         ) : (
           // Anomalies - must review
-          <button
+          <Btn
+            variant="secondary"
+            size="md"
             onClick={() => onReview(cluster.cluster_id)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded border border-amber-900/50 text-amber-400 hover:bg-amber-900/10 font-medium text-sm transition-all"
+            className="w-full border-status-warning/50 text-status-warning hover:bg-status-warning/10"
           >
             <Search className="w-4 h-4" />
             Review Risks
-          </button>
+          </Btn>
         )}
       </div>
-    </div>
+    </Surface>
   );
 }
 

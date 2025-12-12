@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare": "husky",
     "dev": "next dev",
     "dev:vite": "vite",
     "dev:backend": "cds watch",
@@ -12,6 +13,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint src --fix",
+    "lint:drift": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -42,7 +44,12 @@
     "canon:cleanup-and-regenerate": "tsx canon/D-Operations/D-TOOL/TOOL_16_ComprehensiveCanonCleanup.ts",
     "canon:validate-dtool": "tsx canon/D-Operations/D-TOOL/TOOL_17_ValidateDTOOLFiles.ts",
     "canon:validate-compliance": "tsx canon/D-Operations/D-TOOL/TOOL_18_ValidateCanonCompliance.ts",
-    "canon:sync-figma-tokens": "tsx canon/D-Operations/D-TOOL/TOOL_26_SyncFigmaTokens.ts"
+    "canon:sync-figma-tokens": "tsx canon/D-Operations/D-TOOL/TOOL_26_SyncFigmaTokens.ts",
+    "canon:promote": "tsx canon/D-Operations/D-TOOL/TOOL_29_PromoteUnauditedToCanon.ts",
+    "canon:list-staging": "tsx canon/D-Operations/D-TOOL/TOOL_29_PromoteUnauditedToCanon.ts",
+    "canon:archive-tools": "tsx canon/D-Operations/D-TOOL/TOOL_30_ArchiveOneTimeTools.ts",
+    "canon:validate-access": "tsx canon/D-Operations/D-TOOL/TOOL_31_ValidateFileAccess.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@cap-js/sqlite": "^2.1.0",
@@ -132,7 +139,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "eslint-plugin-storybook": "^10.1.5",
+    "husky": "^9.1.7",
     "jsdom": "^27.3.0",
+    "lint-staged": "^16.2.7",
     "mcp-remote": "^0.1.31",
     "next-devtools-mcp": "^0.3.6",
     "playwright": "^1.57.0",
@@ -147,6 +156,11 @@
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.49.0",
     "vitest": "^4.0.15"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --max-warnings 0"
+    ]
   },
   "overrides": {
     "@modelcontextprotocol/sdk": "^1.24.3"

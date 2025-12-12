@@ -1,0 +1,226 @@
+[
+  {
+    "id": "figma-push",
+    "name": "Figma Push",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Pushes data to Figma"
+  },
+  {
+    "id": "figma-sync",
+    "name": "Figma Sync",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Syncs Figma design data"
+  },
+  {
+    "id": "sync-canon",
+    "name": "Sync Canon",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Syncs canon registry"
+  },
+  {
+    "id": "sync-readme",
+    "name": "Sync Readme",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Syncs README files"
+  },
+  {
+    "id": "TOOL_03_CheckGovernanceStamps",
+    "name": "Check Governance Stamps",
+    "category": "validation",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Validates governance stamps in files"
+  },
+  {
+    "id": "TOOL_04_ValidateCursorRules",
+    "name": "Validate Cursor Rules",
+    "category": "validation",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Validates Cursor IDE rules"
+  },
+  {
+    "id": "TOOL_14_ValidateSEALFormat",
+    "name": "Validate SEAL Format",
+    "category": "validation",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Validates SEAL format compliance"
+  },
+  {
+    "id": "TOOL_17_ValidateDTOOLFiles",
+    "name": "Validate D-TOOL Files",
+    "category": "validation",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Validates D-TOOL directory structure"
+  },
+  {
+    "id": "TOOL_18_ValidateCanonCompliance",
+    "name": "Validate Canon Compliance",
+    "category": "validation",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Validates overall Canon compliance"
+  },
+  {
+    "id": "TOOL_24_GenerateCanonPageWrapper",
+    "name": "Generate Canon Page Wrapper",
+    "category": "utility",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Generates page wrappers for canon-pages"
+  },
+  {
+    "id": "TOOL_26_SyncFigmaTokens",
+    "name": "Sync Figma Tokens",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Syncs design tokens from Figma"
+  },
+  {
+    "id": "TOOL_27_SyncCanonPages",
+    "name": "Sync Canon Pages",
+    "category": "sync",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Syncs canon files to canon-pages"
+  },
+  {
+    "id": "TOOL_29_PromoteUnauditedToCanon",
+    "name": "Promote Unaudited to Canon",
+    "category": "utility",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Promotes files from unaudited to canon"
+  },
+  {
+    "id": "TOOL_30_ArchiveOneTimeTools",
+    "name": "TOOL_30_ArchiveOneTimeTools",
+    "category": "utility",
+    "oneTimeUse": false,
+    "status": "active",
+    "description": "Tool file"
+  },
+  {
+    "id": "TOOL_05_MigrateCanonPlanes",
+    "name": "Migrate Canon Planes",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time migration to new plane structure"
+  },
+  {
+    "id": "TOOL_06_RenameArchive",
+    "name": "Rename Archive",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time archive renaming"
+  },
+  {
+    "id": "TOOL_07_CleanupAnalysisFiles",
+    "name": "Cleanup Analysis Files",
+    "category": "cleanup",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time cleanup of analysis files"
+  },
+  {
+    "id": "TOOL_08_RelocateDocumentation",
+    "name": "Relocate Documentation",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time documentation relocation"
+  },
+  {
+    "id": "TOOL_09_RelocateScripts",
+    "name": "Relocate Scripts",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time script relocation"
+  },
+  {
+    "id": "TOOL_10_OptimizeIdentityContract",
+    "name": "Optimize Identity Contract",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time contract optimization"
+  },
+  {
+    "id": "TOOL_11_RelocateSSOT",
+    "name": "Relocate SSOT",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time SSOT relocation"
+  },
+  {
+    "id": "TOOL_12_ConsolidateSSOT",
+    "name": "Consolidate SSOT",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time SSOT consolidation"
+  },
+  {
+    "id": "TOOL_13_GenerateReadmeHeaders",
+    "name": "Generate Readme Headers",
+    "category": "utility",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time readme header generation"
+  },
+  {
+    "id": "TOOL_15_GenerateSubdirectoryReadmes",
+    "name": "Generate Subdirectory Readmes",
+    "category": "utility",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time subdirectory readme generation"
+  },
+  {
+    "id": "TOOL_16_ComprehensiveCanonCleanup",
+    "name": "Comprehensive Canon Cleanup",
+    "category": "cleanup",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time comprehensive cleanup"
+  },
+  {
+    "id": "TOOL_23_RenameCanonFiles",
+    "name": "Rename Canon Files",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time file renaming"
+  },
+  {
+    "id": "TOOL_25_MigrateViteEnvVars",
+    "name": "Migrate Vite Env Vars",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time Vite migration"
+  },
+  {
+    "id": "TOOL_28_CanonRefactorAutomation",
+    "name": "Canon Refactor Automation",
+    "category": "migration",
+    "oneTimeUse": true,
+    "status": "archived",
+    "description": "One-time refactoring automation"
+  }
+]

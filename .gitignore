@@ -159,6 +159,13 @@ src/data/figma/figma-raw.json
 # pnpm-lock.yaml
 
 # ============================================================================
+# Staging Documentation (Pre-Canon Review)
+# ============================================================================
+# Files in .staging-docs/ are NOT tracked by Git
+# They must be reviewed and promoted to canon/ before committing
+.staging-docs/
+
+# ============================================================================
 # Misc
 # ============================================================================
 *.pem

@@ -188,6 +188,13 @@ export const CANON_FILES: Record<string, CanonFile> = {
     title: 'Refactoring Audit & Evaluation',
     status: 'ACTIVE',
   },
+  'E-Knowledge/E-REF/REF_049_NextJsBestPractices.md': {
+    path: 'E-Knowledge/E-REF/REF_049_NextJsBestPractices.md',
+    type: 'REF',
+    id: 'REF_049',
+    title: 'Next.js Best Practices',
+    status: 'ACTIVE',
+  },
 };
 
 /**

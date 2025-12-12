@@ -11,17 +11,24 @@ import prettierConfig from 'eslint-config-prettier';
 // Canon Identity Contract - Local ESLint Rules
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const canonRules = require('./eslint-local-rules.js');
+const canonRules = require('./eslint-local-rules.cjs');
 
 export default tseslint.config(
   // Base configs
   js.configs.recommended,
   ...tseslint.configs.recommended,
   prettierConfig,
-  
+
   // Main config for source files
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: [
+      'src/**/*.{ts,tsx}',
+      'app/**/*.{ts,tsx}',
+      // Future monorepo support
+      'apps/**/app/**/*.{ts,tsx}',
+      'apps/**/src/**/*.{ts,tsx}',
+      'packages/**/src/**/*.{ts,tsx}',
+    ],
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -29,6 +36,9 @@ export default tseslint.config(
       'canon': {
         rules: {
           'require-page-meta': canonRules['require-page-meta'],
+          'no-raw-colors': canonRules['no-raw-colors'],
+          'no-inline-style-colors': canonRules['no-inline-style-colors'],
+          'no-svg-hardcoded-colors': canonRules['no-svg-hardcoded-colors'],
         },
       },
     },
@@ -47,12 +57,34 @@ export default tseslint.config(
       // Prettier integration
       'prettier/prettier': 'warn',
 
-      // Tailwind Governance: Ban arbitrary values
-      // Enforces use of semantic tokens (bg-surface-card) instead of magic numbers (bg-[#0A0A0A])
-      // Note: Requires eslint-plugin-tailwindcss (install if needed)
+      // 🛡️ Drift Police: Ban hardcoded colors
+      'canon/no-raw-colors': 'error',
     },
   },
-  
+
+  // 🛡️ Drift Police: Apply to all UI code paths (repo-wide coverage)
+  {
+    files: [
+      'app/**/*.{ts,tsx}',
+      'src/**/*.{ts,tsx}',
+      // Future monorepo support
+      'apps/**/app/**/*.{ts,tsx}',
+      'apps/**/src/**/*.{ts,tsx}',
+      'packages/**/src/**/*.{ts,tsx}',
+    ],
+    ignores: [
+      // Escape hatch: Legacy/migration folders (quarantined drift)
+      '**/__legacy__/**',
+      '**/migration__/**',
+      '**/__migration__/**',
+    ],
+    rules: {
+      'canon/no-raw-colors': 'error',
+      'canon/no-inline-style-colors': 'error',
+      'canon/no-svg-hardcoded-colors': 'error',
+    },
+  },
+
   // Tailwind Governance: Ban arbitrary values in all files
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
@@ -66,7 +98,7 @@ export default tseslint.config(
       // ✅ className="p-4" → Correct (standard Tailwind spacing)
     },
   },
-  
+
   // Canon Identity Contract - Enforce PAGE_META in canonical pages
   {
     files: [
@@ -78,12 +110,12 @@ export default tseslint.config(
       'canon/require-page-meta': 'error',
     },
   },
-  
+
   // Ignore patterns
   {
     ignores: ['dist/', 'node_modules/', '*.config.js', '*.config.ts'],
   },
-  
+
   storybook.configs["flat/recommended"]
 );
 

@@ -44,9 +44,10 @@ export const LegacyBlock = memo(
         }}
         className={cn(
           'w-full h-14 flex items-center justify-between px-4 border mb-1',
-          'bg-[#111] border-[#333] text-nexus-noise',
+          'bg-surface-flat border-border-surface-base text-text-tertiary',
           'will-change-transform',
-          isShaking && 'border-red-500/50 text-red-400 bg-red-950/10',
+          // 🛡️ GOVERNANCE: Uses status-error tokens instead of hardcoded red colors
+          isShaking && 'border-status-error/50 text-status-error bg-status-error/10',
         )}
       >
         <div className="flex items-center gap-3">
@@ -55,18 +56,20 @@ export const LegacyBlock = memo(
         </div>
 
         <div className="flex items-center gap-2">
+          {/* 🛡️ GOVERNANCE: Risk badges use status tokens instead of hardcoded colors */}
           <span
             className={cn(
               'text-[8px] font-mono uppercase px-1.5 py-0.5 border',
-              data.risk === 'CRITICAL' && 'border-red-500/50 text-red-400',
-              data.risk === 'HIGH' && 'border-orange-500/50 text-orange-400',
-              data.risk === 'MODERATE' && 'border-yellow-500/50 text-yellow-400',
-              data.risk === 'LOW' && 'border-nexus-structure text-nexus-noise',
+              data.risk === 'CRITICAL' && 'border-status-error/50 text-status-error',
+              data.risk === 'HIGH' && 'border-status-warning/50 text-status-warning',
+              data.risk === 'MODERATE' && 'border-status-warning/50 text-status-warning',
+              data.risk === 'LOW' && 'border-border-surface-base text-text-tertiary',
             )}
           >
             {data.risk}
           </span>
-          {isShaking && <AlertTriangle className="w-3 h-3 text-red-500 animate-pulse" />}
+          {/* 🛡️ GOVERNANCE: Alert icon uses status-error token */}
+          {isShaking && <AlertTriangle className="w-3 h-3 text-status-error animate-pulse" />}
         </div>
       </motion.div>
     );
@@ -335,23 +338,25 @@ export const CollapsedRubble = memo(function CollapsedRubble() {
         className="text-center space-y-3"
       >
         {/* Glitch lines - simplified */}
+        {/* 🛡️ GOVERNANCE: Uses status-error tokens instead of hardcoded red colors */}
         <div className="absolute inset-0 flex flex-col justify-center gap-1 opacity-30">
-          <div className="h-[2px] bg-red-500/50 w-[70%] ml-[10%]" />
-          <div className="h-[2px] bg-red-500/50 w-[80%] ml-[5%]" />
-          <div className="h-[2px] bg-red-500/50 w-[60%] ml-[15%]" />
-          <div className="h-[2px] bg-red-500/50 w-[75%] ml-[8%]" />
-          <div className="h-[2px] bg-red-500/50 w-[65%] ml-[12%]" />
+          <div className="h-[2px] bg-status-error/50 w-[70%] ml-[10%]" />
+          <div className="h-[2px] bg-status-error/50 w-[80%] ml-[5%]" />
+          <div className="h-[2px] bg-status-error/50 w-[60%] ml-[15%]" />
+          <div className="h-[2px] bg-status-error/50 w-[75%] ml-[8%]" />
+          <div className="h-[2px] bg-status-error/50 w-[65%] ml-[12%]" />
         </div>
 
-        <div className="inline-block px-3 py-1 border border-red-500/50 bg-red-950/30 text-red-500 text-[10px] font-mono tracking-widest uppercase">
+        <div className="inline-block px-3 py-1 border border-status-error/50 bg-status-error/30 text-status-error text-[10px] font-mono tracking-widest uppercase">
           SYSTEM FAILURE DETECTED
         </div>
-        <p className="text-[10px] text-nexus-noise font-mono">Rebooting legacy kernel...</p>
+        <p className="text-[10px] text-text-tertiary font-mono">Rebooting legacy kernel...</p>
 
+        {/* 🛡️ GOVERNANCE: Status dots use status-error token */}
         <div className="flex justify-center gap-1">
-          <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse" />
-          <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-          <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+          <div className="w-1 h-1 bg-status-error rounded-full animate-pulse" />
+          <div className="w-1 h-1 bg-status-error rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <div className="w-1 h-1 bg-status-error rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
         </div>
       </motion.div>
     </motion.div>

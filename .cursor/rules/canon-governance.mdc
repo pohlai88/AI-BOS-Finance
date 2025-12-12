@@ -70,7 +70,38 @@ export const COMPONENT_META = {
 } as const satisfies ComponentMeta;
 ```
 
+## File Creation Workflow
+
+### ⚠️ CRITICAL: Staging Documentation First
+
+**ALL new documentation files MUST be created in `.staging-docs/` first, NOT directly in `canon/` or root.**
+
+**Workflow:**
+1. **Create file in `.staging-docs/`** (mirroring canon structure directly at root)
+   - Example: `.staging-docs/A-Governance/A-ADR/ADR_003_NewDecision.md`
+2. **Developer reviews and approves**
+3. **Promote to canon:** `npm run canon:promote <file-path>`
+4. **File is now governed by Canon rules**
+
+**Why:**
+- Prevents root directory clutter
+- Ensures review before Canon governance applies
+- Files in `.staging-docs/` are NOT tracked by Git
+- Files in `.staging-docs/` are NOT validated by Canon
+
+**Directory Mapping:**
+```
+.staging-docs/A-Governance/A-ADR/  →  canon/A-Governance/A-ADR/
+.staging-docs/B-Functional/B-COMP/ →  canon/B-Functional/B-COMP/
+.staging-docs/C-DataLogic/C-SCH/   →  canon/C-DataLogic/C-SCH/
+.staging-docs/D-Operations/D-TOOL/ →  canon/D-Operations/D-TOOL/
+.staging-docs/E-Knowledge/E-REF/    →  canon/E-Knowledge/E-REF/
+```
+
 ## Forbidden Patterns
+- ❌ **NEVER create files directly in `canon/` directory** - use `.staging-docs/` first
+- ❌ **NEVER create documentation files at project root** - use `.staging-docs/` instead
+- ❌ **NEVER write files outside `src/` directory** - only `src/` is writable (see `file-access-control.mdc`)
 - ❌ Never trust client-side `CanonContext` - always verify server-side
 - ❌ Never import raw `@tanstack/react-table` - use `TBLM01` or `TBLL01`
 - ❌ Never create pages in `canon-pages/` without `PAGE_META`
@@ -85,3 +116,31 @@ packages/ui/canon/    # COMP_* implementations
 scripts/              # TOOL_* scripts
 knowledge/            # SPEC_*, REF_*
 ```
+
+## D-TOOL Directory Rules (Strengthened)
+
+### Tool Classification
+- **Every tool MUST be classified** in `tool-metadata.json`
+- **Categories:** `migration` | `cleanup` | `validation` | `sync` | `utility`
+- **Status:** `active` | `archived` | `deprecated`
+
+### Archive Policy
+- ✅ **One-time tools** (migrations, cleanups) → Archive after completion
+- ✅ **Maximum 15-20 active tools** in D-TOOL directory
+- ✅ **Archived tools** go to `canon/D-Operations/D-TOOL/.archive/`
+- ❌ **Never keep one-time tools** in active directory after completion
+
+### Tool Naming
+- **Pattern:** `TOOL_{NUMBER}_{Purpose}.ts`
+- **Examples:** `TOOL_18_ValidateCanonCompliance.ts`, `TOOL_30_ArchiveOneTimeTools.ts`
+
+### Archive Management
+```bash
+# Archive one-time tools
+npm run canon:archive-tools
+
+# View archived tools
+ls canon/D-Operations/D-TOOL/.archive/
+```
+
+**See:** `REF_041_CanonDirectoryCleanupStrategy.md` for full details

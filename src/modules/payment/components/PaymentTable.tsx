@@ -9,8 +9,8 @@ import React, { useMemo } from 'react';
 import { SuperTable } from '@/components/metadata/SuperTable';
 import { generateColumnsFromSchema } from '@/kernel';
 import { cn } from '@/lib/utils';
-import { 
-  PAYMENT_SCHEMA, 
+import {
+  PAYMENT_SCHEMA,
   type Payment,
   type PaymentStatus,
   type FunctionalCluster,
@@ -35,20 +35,21 @@ interface PaymentTableProps {
 
 function getRowClassName(payment: Payment): string {
   const classes: string[] = [];
-  
+
+  // 🛡️ GOVERNANCE: Uses status tokens instead of hardcoded colors
   // IC Unmatched - Red highlight
   if (payment.tx_type === 'intercompany' && payment.elimination_status === 'unmatched') {
-    classes.push('bg-red-900/5 hover:bg-red-900/10');
+    classes.push('bg-status-error/5 hover:bg-status-error/10');
   }
-  
+
   // High risk - Amber subtle
   else if (payment.risk_score > 80) {
-    classes.push('bg-amber-900/5 hover:bg-amber-900/10');
+    classes.push('bg-status-warning/5 hover:bg-status-warning/10');
   }
-  
+
   // Overdue - Red subtle
   else if (new Date(payment.due_date) < new Date() && payment.status === 'pending') {
-    classes.push('bg-red-900/5 hover:bg-red-900/10');
+    classes.push('bg-status-error/5 hover:bg-status-error/10');
   }
 
   return classes.join(' ');
@@ -58,8 +59,8 @@ function getRowClassName(payment: Payment): string {
 // MAIN COMPONENT
 // ============================================================================
 
-export function PaymentTable({ 
-  payments, 
+export function PaymentTable({
+  payments,
   selectedId,
   onRowClick,
   filterStatus = 'all',
@@ -68,19 +69,19 @@ export function PaymentTable({
 }: PaymentTableProps) {
   // Generate columns from schema
   const columns = useMemo(() => generateColumnsFromSchema<Payment>(PAYMENT_SCHEMA), []);
-  
+
   // Filter payments
   const filteredPayments = useMemo(() => {
     let result = [...payments];
-    
+
     if (filterStatus !== 'all') {
       result = result.filter(p => p.status === filterStatus);
     }
-    
+
     if (filterCluster !== 'all') {
       result = result.filter(p => p.functional_cluster === filterCluster);
     }
-    
+
     return result;
   }, [payments, filterStatus, filterCluster]);
 
@@ -98,7 +99,8 @@ export function PaymentTable({
         enableGlobalFilter={true}
         rowClassName={(row) => cn(
           getRowClassName(row),
-          row.id === selectedId && 'ring-1 ring-[#28E7A2] ring-inset'
+          // 🛡️ GOVERNANCE: Uses action-primary token instead of hardcoded hex
+          row.id === selectedId && 'ring-1 ring-action-primary ring-inset'
         )}
       />
     </div>

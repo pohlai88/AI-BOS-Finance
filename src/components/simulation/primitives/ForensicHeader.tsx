@@ -3,6 +3,7 @@
 // ============================================================================
 
 import { Activity } from 'lucide-react';
+import { StatusDot } from '@/components/ui/StatusDot';
 
 interface ForensicHeaderProps {
   title?: string;
@@ -36,13 +37,14 @@ export const ForensicHeader = ({
           System Integrity Monitor
         </div>
         <div className="flex gap-4">
+          {/* 🛡️ GOVERNANCE: Uses StatusDot component for status indicators */}
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-xs font-mono text-red-400">LEGACY: {legacyStatus}</span>
+            <StatusDot variant="error" size="sm" className="animate-pulse" />
+            <span className="text-xs font-mono text-status-error">LEGACY: {legacyStatus}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-nexus-green" />
-            <span className="text-xs font-mono text-nexus-green">NEXUS: {nexusStatus}</span>
+            <StatusDot variant="success" size="sm" />
+            <span className="text-xs font-mono text-status-success">NEXUS: {nexusStatus}</span>
           </div>
         </div>
       </div>

@@ -47,9 +47,17 @@
     --status-neutral: 52 152 219;     /* #3498DB (matches --color-status-info) */
     --status-neutral-fg: 255 255 255; /* White text on blue */
 
+    /* 🟢 Input Tokens (The "What") - RGB format for opacity control */
+    /* These define intent: Input = Data entry field, must match Button height/border-radius */
+    --input-border: 226 232 240;   /* Slate-200 (light mode) - matches action-secondary-border */
+    --input-bg: 255 255 255;       /* White (light mode) - matches action-secondary */
+    --input-text: 15 23 42;        /* Slate-900 (light mode) - matches action-secondary-fg */
+    --input-placeholder: 148 163 184; /* Slate-400 (light mode) - matches text-tertiary */
+    --input-ring: 40 231 162;      /* Nexus Green - matches action-primary for focus ring */
+
     /* 🟢 Radius Tokens */
     --radius-surface: 1rem;       /* 16px (rounded-2xl) */
-    --radius-action: 0.5rem;      /* 8px (rounded-md) */
+    --radius-action: 0.5rem;      /* 8px (rounded-md) - Used by Button AND Input for form symmetry */
     --radius-badge: 0.375rem;     /* 6px (rounded-md) */
   }
 
@@ -89,6 +97,13 @@
     --status-error-fg: 255 255 255;   /* White text (same as light mode) */
     --status-neutral: 52 152 219;      /* #3498DB (same as light mode) */
     --status-neutral-fg: 255 255 255; /* White text (same as light mode) */
+
+    /* 🌑 Input Overrides (Dark Mode) */
+    --input-border: 63 63 70;          /* Zinc-700 (dark mode) - matches action-secondary-border */
+    --input-bg: 31 31 31;              /* #1F1F1F (dark mode) - matches action-secondary */
+    --input-text: 255 255 255;         /* White (dark mode) - matches action-secondary-fg */
+    --input-placeholder: 102 102 102;   /* #666666 (dark mode) - matches text-tertiary */
+    --input-ring: 40 231 162;          /* Nexus Green (same as light mode) - matches action-primary */
   }
 }
 

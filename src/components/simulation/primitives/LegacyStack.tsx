@@ -20,18 +20,19 @@ export const LegacyStack = ({ data, stage, shakeLevel, isCollapsed }: LegacyStac
       <div className="absolute inset-0 border border-nexus-structure/30 bg-[linear-gradient(45deg,transparent_25%,rgba(255,0,0,0.02)_50%,transparent_75%,transparent_100%)] bg-[length:4px_4px]" />
 
       {/* Terminal Warning Overlay */}
+      {/* 🛡️ GOVERNANCE: Uses status-error tokens instead of hardcoded red colors */}
       <AnimatePresence>
         {shakeLevel !== 'none' && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-0 left-0 right-0 p-4 border-b border-red-500/20 bg-red-900/10 backdrop-blur-sm z-20 flex justify-between items-center"
+            className="absolute top-0 left-0 right-0 p-4 border-b border-status-error/20 bg-status-error/10 backdrop-blur-sm z-20 flex justify-between items-center"
           >
-            <span className="text-[10px] font-mono text-red-500 animate-pulse">
+            <span className="text-[10px] font-mono text-status-error animate-pulse">
               ⚠ WARNING: STRUCTURAL FAILURE IMMINENT
             </span>
-            <span className="text-[10px] font-mono text-red-500">
+            <span className="text-[10px] font-mono text-status-error">
               ERR_CODE_0x{stage.toString(16).toUpperCase()}F
             </span>
           </motion.div>
@@ -43,9 +44,9 @@ export const LegacyStack = ({ data, stage, shakeLevel, isCollapsed }: LegacyStac
         {!isCollapsed ? (
           <AnimatePresence mode="popLayout">
             {data.slice(0, stage).map((block) => (
-              <LegacyBlock 
-                key={block.id} 
-                data={block} 
+              <LegacyBlock
+                key={block.id}
+                data={block}
                 shakeLevel={shakeLevel}
               />
             ))}

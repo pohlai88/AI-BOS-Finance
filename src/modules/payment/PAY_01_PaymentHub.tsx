@@ -4,6 +4,7 @@
 // Document ID: DOC_PAY_01 | Version: 2.0
 // The Group Controller's Financial Terminal
 // Philosophy: "Observability First, Action Second."
+// 🛡️ GOVERNANCE: Uses Surface, Txt, Btn, StatusDot components (no hardcoded colors)
 // ============================================================================
 // FEATURES:
 // - Tab 1: Functional View (Efficiency) - Batch cluster approval
@@ -13,9 +14,9 @@
 // ============================================================================
 
 import React, { useState, useMemo } from 'react';
-import { 
-  Clock, 
-  CheckCircle2, 
+import {
+  Clock,
+  CheckCircle2,
   Filter,
   Download,
   Plus,
@@ -25,9 +26,13 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Surface } from '@/components/ui/Surface';
+import { Txt } from '@/components/ui/Txt';
+import { Btn } from '@/components/ui/Btn';
+import { StatusDot } from '@/components/ui/StatusDot';
 
 // Components
-import { 
+import {
   AuditSidebar,
   TreasuryHeader,
   FunctionalCardGrid,
@@ -35,7 +40,7 @@ import {
 } from './components';
 
 // Data & Hooks
-import { 
+import {
   MOCK_PAYMENTS,
   PAYMENT_CONFIG,
   TREASURY_DATA,
@@ -65,11 +70,11 @@ export function PAY01PaymentHub() {
   // ═══════════════════════════════════════════════════════════════════════════
   // STATE
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   const [viewMode, setViewMode] = useState<ViewMode>('entity');
   const [filterMode, setFilterMode] = useState<FilterMode>('pending');
   const [selectedEntityId, setSelectedEntityId] = useState('hq');
-  
+
   // Payment approval with all governance rules
   const {
     payments,
@@ -99,14 +104,14 @@ export function PAY01PaymentHub() {
   // ═══════════════════════════════════════════════════════════════════════════
   // DERIVED STATE
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   const filteredPayments = useMemo(() => {
     let result = [...payments];
-    
+
     if (filterMode === 'pending') {
       result = result.filter(p => p.status === 'pending');
     }
-    
+
     // In Entity View, filter by selected entity
     if (viewMode === 'entity') {
       const entityName = TREASURY_DATA[selectedEntityId]?.entity_name;
@@ -114,14 +119,14 @@ export function PAY01PaymentHub() {
         result = result.filter(p => p.entity === entityName);
       }
     }
-    
+
     return result;
   }, [payments, filterMode, viewMode, selectedEntityId]);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // HANDLERS
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   const handleApprove = (id: string) => {
     const result = approvePayment(id);
     if (result.success) {
@@ -148,13 +153,13 @@ export function PAY01PaymentHub() {
   const handleBatchApprove = async (clusterId: string) => {
     const cluster = clusters.find(c => c.cluster_id === clusterId);
     if (!cluster) return;
-    
+
     toast.loading(`Approving ${cluster.invoice_count} payments...`, {
       id: `batch-${clusterId}`,
     });
-    
+
     const result = await executeBatchApproval(clusterId as FunctionalCluster);
-    
+
     if (result.success) {
       toast.success('Batch approved', {
         id: `batch-${clusterId}`,
@@ -187,10 +192,10 @@ export function PAY01PaymentHub() {
   // ═══════════════════════════════════════════════════════════════════════════
   // HELPERS
   // ═══════════════════════════════════════════════════════════════════════════
-  
-  const formatCurrency = (amount: number) => 
-    new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
+
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: 'USD',
       notation: amount > 100000 ? 'compact' : 'standard',
       maximumFractionDigits: amount > 100000 ? 1 : 0,
@@ -199,184 +204,212 @@ export function PAY01PaymentHub() {
   // ═══════════════════════════════════════════════════════════════════════════
   // RENDER
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   return (
-    <div className="h-screen bg-[#050505] flex flex-col overflow-hidden">
-      
+    <div className="h-screen bg-surface-base flex flex-col overflow-hidden">
+
       {/* ================================================================ */}
       {/* HEADER BAR */}
       {/* ================================================================ */}
-      <header className="h-16 border-b border-[#1F1F1F] flex items-center justify-between px-6 bg-[#0A0A0A] shrink-0">
+      {/* 🛡️ GOVERNANCE: Uses Surface + Txt + Btn + StatusDot components */}
+      <Surface variant="flat" className="h-16 border-b flex items-center justify-between px-6 shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-[#28E7A2] font-mono">PAY_01</span>
-            <span className="text-[#333]">/</span>
+          <Txt variant="h1" className="flex items-center gap-2">
+            <span className="text-action-primary font-mono">PAY_01</span>
+            <span className="text-text-tertiary">/</span>
             <span>Payment Hub</span>
-          </h1>
-          <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-[#1F1F1F] rounded text-[10px] font-mono text-gray-500">
-            {PAYMENT_CONFIG.tenant}
-          </div>
+          </Txt>
+          <Surface variant="flat" className="hidden md:flex items-center gap-1 px-2 py-1 rounded">
+            <Txt variant="small" className="font-mono text-text-tertiary">
+              {PAYMENT_CONFIG.tenant}
+            </Txt>
+          </Surface>
         </div>
-        
+
         {/* Quick Stats */}
         <div className="flex items-center gap-6">
-          <div className="hidden lg:flex items-center gap-4 text-sm">
+          <div className="hidden lg:flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-500" />
-              <span className="text-gray-500">Pending:</span>
-              <span className="text-white font-mono">{formatCurrency(stats.pendingAmount)}</span>
-              <span className="text-amber-500 text-xs">({stats.pending})</span>
+              <StatusDot variant="warning" size="sm" />
+              <Txt variant="body" className="text-text-tertiary">Pending:</Txt>
+              <Txt variant="body" className="font-mono">{formatCurrency(stats.pendingAmount)}</Txt>
+              <Txt variant="small" className="text-status-warning">({stats.pending})</Txt>
             </div>
-            <div className="w-px h-4 bg-[#333]" />
+            <div className="w-px h-4 bg-border-surface-base" />
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-              <span className="text-gray-500">Approved:</span>
-              <span className="text-[#28E7A2] font-mono">{formatCurrency(stats.approvedAmount)}</span>
+              <StatusDot variant="success" size="sm" />
+              <Txt variant="body" className="text-text-tertiary">Approved:</Txt>
+              <Txt variant="body" className="text-action-primary font-mono">
+                {formatCurrency(stats.approvedAmount)}
+              </Txt>
             </div>
           </div>
-          
+
           {/* Actions */}
+          {/* 🛡️ GOVERNANCE: Uses Btn component */}
           <div className="flex items-center gap-2">
-            <button 
-              className="p-2 hover:bg-[#1F1F1F] rounded text-gray-500 hover:text-white transition-colors"
+            <Btn
+              variant="secondary"
+              size="sm"
               title="Refresh"
             >
               <RefreshCw className="w-4 h-4" />
-            </button>
-            <button 
-              className="p-2 hover:bg-[#1F1F1F] rounded text-gray-500 hover:text-white transition-colors"
+            </Btn>
+            <Btn
+              variant="secondary"
+              size="sm"
               title="Export"
             >
               <Download className="w-4 h-4" />
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#28E7A2] text-black font-bold text-sm rounded hover:bg-[#20b881] transition-colors">
+            </Btn>
+            <Btn variant="primary" size="md">
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">New Payment</span>
-            </button>
+            </Btn>
           </div>
         </div>
-      </header>
+      </Surface>
 
       {/* ================================================================ */}
       {/* TAB NAVIGATION */}
       {/* ================================================================ */}
-      <div className="border-b border-[#1F1F1F] bg-[#0A0A0A] shrink-0">
+      {/* 🛡️ GOVERNANCE: Uses Surface + Txt + Btn components */}
+      <Surface variant="flat" className="border-b shrink-0">
         <div className="flex items-center justify-between px-6">
           {/* View Tabs */}
           <div className="flex">
-            <button
+            <Btn
+              variant="ghost"
+              size="md"
               onClick={() => setViewMode('functional')}
               className={cn(
-                'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all',
+                'flex items-center gap-2 border-b-2 rounded-none',
                 viewMode === 'functional'
-                  ? 'border-[#28E7A2] text-white'
-                  : 'border-transparent text-gray-500 hover:text-white'
+                  ? 'border-action-primary text-text-primary'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary'
               )}
             >
               <Zap className="w-4 h-4" />
               Functional View
-              <span className={cn(
-                'ml-1 px-1.5 py-0.5 text-[9px] font-mono rounded',
-                viewMode === 'functional' ? 'bg-[#28E7A2]/20 text-[#28E7A2]' : 'bg-[#1F1F1F] text-gray-600'
+              <Surface variant={viewMode === 'functional' ? 'base' : 'flat'} className={cn(
+                'ml-1 px-1.5 py-0.5 rounded',
+                viewMode === 'functional' && 'bg-action-primary/20'
               )}>
-                BATCH
-              </span>
-            </button>
-            <button
+                <Txt variant="small" className={cn(
+                  'font-mono',
+                  viewMode === 'functional' ? 'text-action-primary' : 'text-text-tertiary'
+                )}>
+                  BATCH
+                </Txt>
+              </Surface>
+            </Btn>
+            <Btn
+              variant="ghost"
+              size="md"
               onClick={() => setViewMode('entity')}
               className={cn(
-                'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all',
+                'flex items-center gap-2 border-b-2 rounded-none',
                 viewMode === 'entity'
-                  ? 'border-[#28E7A2] text-white'
-                  : 'border-transparent text-gray-500 hover:text-white'
+                  ? 'border-action-primary text-text-primary'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary'
               )}
             >
               <Building2 className="w-4 h-4" />
               Entity View
-              <span className={cn(
-                'ml-1 px-1.5 py-0.5 text-[9px] font-mono rounded',
-                viewMode === 'entity' ? 'bg-[#28E7A2]/20 text-[#28E7A2]' : 'bg-[#1F1F1F] text-gray-600'
+              <Surface variant={viewMode === 'entity' ? 'base' : 'flat'} className={cn(
+                'ml-1 px-1.5 py-0.5 rounded',
+                viewMode === 'entity' && 'bg-action-primary/20'
               )}>
-                DETAIL
-              </span>
-            </button>
+                <Txt variant="small" className={cn(
+                  'font-mono',
+                  viewMode === 'entity' ? 'text-action-primary' : 'text-text-tertiary'
+                )}>
+                  DETAIL
+                </Txt>
+              </Surface>
+            </Btn>
           </div>
 
           {/* Filter Toggle */}
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
-            <div className="flex bg-[#1F1F1F] rounded p-0.5">
-              <button
+            <Filter className="w-4 h-4 text-text-tertiary" />
+            <Surface variant="flat" className="flex rounded p-0.5">
+              <Btn
+                variant="ghost"
+                size="sm"
                 onClick={() => setFilterMode('pending')}
                 className={cn(
-                  'px-3 py-1.5 text-xs font-mono rounded transition-all',
-                  filterMode === 'pending' 
-                    ? 'bg-amber-500/20 text-amber-400' 
-                    : 'text-gray-500 hover:text-white'
+                  'font-mono rounded',
+                  filterMode === 'pending'
+                    ? 'bg-status-warning/20 text-status-warning'
+                    : 'text-text-tertiary hover:text-text-primary'
                 )}
               >
                 My Queue ({stats.pending})
-              </button>
-              <button
+              </Btn>
+              <Btn
+                variant="ghost"
+                size="sm"
                 onClick={() => setFilterMode('all')}
                 className={cn(
-                  'px-3 py-1.5 text-xs font-mono rounded transition-all',
-                  filterMode === 'all' 
-                    ? 'bg-[#28E7A2]/20 text-[#28E7A2]' 
-                    : 'text-gray-500 hover:text-white'
+                  'font-mono rounded',
+                  filterMode === 'all'
+                    ? 'bg-action-primary/20 text-action-primary'
+                    : 'text-text-tertiary hover:text-text-primary'
                 )}
               >
                 All Payments ({stats.total})
-              </button>
-            </div>
+              </Btn>
+            </Surface>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* ================================================================ */}
       {/* MAIN CONTENT AREA */}
       {/* ================================================================ */}
       <div className="flex-1 flex overflow-hidden">
-        
+
         {/* LEFT/MAIN: Content (75% when sidebar open, 100% when closed) */}
         <div className={cn(
           'flex-1 flex flex-col min-w-0 transition-all duration-300',
           selectedId ? 'lg:w-3/4' : 'w-full'
         )}>
-          
+
           {/* ════════════════════════════════════════════════════════════ */}
           {/* TAB 1: FUNCTIONAL VIEW */}
           {/* ════════════════════════════════════════════════════════════ */}
+          {/* 🛡️ GOVERNANCE: Uses Surface + Txt components */}
           {viewMode === 'functional' && (
             <div className="flex-1 p-6 overflow-y-auto">
               <div className="mb-4">
-                <h2 className="text-lg font-bold text-white mb-1">Batch Processing</h2>
-                <p className="text-sm text-gray-500">
+                <Txt variant="h2" className="mb-1">Batch Processing</Txt>
+                <Txt variant="body" className="text-text-tertiary">
                   Approve clean clusters in bulk. Anomalies require individual review.
-                </p>
+                </Txt>
               </div>
-              
+
               <FunctionalCardGrid
                 clusters={clusters}
                 onApprove={handleBatchApprove}
                 onReview={handleReviewCluster}
                 onSettle={handleSettleIC}
               />
-              
+
               {batchState.isProcessing && (
-                <div className="mt-4 p-4 bg-[#1F1F1F] rounded border border-amber-900/30">
+                <Surface variant="flat" className="mt-4 p-4 border-status-warning/30">
                   <div className="flex items-center gap-3">
-                    <RefreshCw className="w-4 h-4 text-amber-400 animate-spin" />
+                    <RefreshCw className="w-4 h-4 text-status-warning animate-spin" />
                     <div>
-                      <p className="text-sm text-white font-medium">
+                      <Txt variant="body" className="font-medium">
                         Processing batch approval...
-                      </p>
-                      <p className="text-xs text-gray-500">
+                      </Txt>
+                      <Txt variant="small" className="text-text-tertiary">
                         {batchState.processedCount} / {batchState.totalCount} payments
-                      </p>
+                      </Txt>
                     </div>
                   </div>
-                </div>
+                </Surface>
               )}
             </div>
           )}
@@ -384,16 +417,17 @@ export function PAY01PaymentHub() {
           {/* ════════════════════════════════════════════════════════════ */}
           {/* TAB 2: ENTITY VIEW */}
           {/* ════════════════════════════════════════════════════════════ */}
+          {/* 🛡️ GOVERNANCE: Uses Surface component */}
           {viewMode === 'entity' && (
             <>
               {/* Treasury Header */}
-              <div className="p-4 bg-[#050505] border-b border-[#1F1F1F] shrink-0">
+              <Surface variant="base" className="p-4 border-b shrink-0">
                 <TreasuryHeader
                   selectedEntityId={selectedEntityId}
                   onEntityChange={setSelectedEntityId}
                 />
-              </div>
-              
+              </Surface>
+
               {/* Payment Table */}
               <div className="flex-1 p-4 overflow-hidden">
                 <PaymentTable
@@ -407,13 +441,14 @@ export function PAY01PaymentHub() {
         </div>
 
         {/* RIGHT: AUDIT SIDEBAR (25% or hidden) */}
-        <div className={cn(
-          'hidden lg:block border-l border-[#1F1F1F] bg-[#0A0A0A] transition-all duration-300 ease-in-out',
-          selectedId 
-            ? 'w-[400px] translate-x-0 opacity-100' 
+        {/* 🛡️ GOVERNANCE: Uses Surface component */}
+        <Surface variant="flat" className={cn(
+          'hidden lg:block border-l transition-all duration-300 ease-in-out',
+          selectedId
+            ? 'w-[400px] translate-x-0 opacity-100'
             : 'w-0 translate-x-full opacity-0 overflow-hidden'
         )}>
-          <AuditSidebar 
+          <AuditSidebar
             payment={selectedPayment}
             currentUserId={currentUser.id}
             onClose={() => selectPayment(null)}
@@ -421,18 +456,18 @@ export function PAY01PaymentHub() {
             onReject={handleReject}
             onSettleIC={handleSettleIC}
           />
-        </div>
+        </Surface>
       </div>
 
       {/* MOBILE: Slide-over Drawer */}
       {selectedId && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => selectPayment(null)}
           />
           <div className="relative ml-auto w-full max-w-md h-full shadow-2xl">
-            <AuditSidebar 
+            <AuditSidebar
               payment={selectedPayment}
               currentUserId={currentUser.id}
               onClose={() => selectPayment(null)}
