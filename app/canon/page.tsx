@@ -48,6 +48,7 @@ import { Separator } from '@/components/ui/separator'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Surface } from '@/components/ui/Surface'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
@@ -162,9 +163,9 @@ function StatusCard({
           <p className="text-label text-[#A1A1AA]">{label}</p>
           <p className={cn('text-heading font-semibold tabular-nums font-mono tracking-[-0.02em]', nano.color)}>{count}</p>
         </div>
-        <div className="p-3 bg-black/40 rounded-md border border-[#262626] ring-1 ring-white/10">
+        <Surface variant="flat" className="p-3">
           <Icon className={cn('w-5 h-5', nano.color)} aria-hidden="true" />
-        </div>
+        </Surface>
       </CardContent>
     </Card>
   )
