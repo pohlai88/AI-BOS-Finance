@@ -24,6 +24,8 @@ export { ColumnVisibilitySelector } from './ColumnVisibilitySelector';
 export { FlexibleFilterBar } from './FlexibleFilterBar';
 export { DetailDrawer } from './DetailDrawer';
 export { CanonDetailPanel } from './CanonDetailPanel';
+export { FieldContextSidebar } from './FieldContextSidebar';
+export { MetadataFieldSidebar } from './MetadataFieldSidebar';
 
 // Governance Forms
 export { MetadataRequestForm } from './MetadataRequestForm';
