@@ -15,6 +15,7 @@ import type {
   FieldContextResponse,
   EntityContextResponse,
 } from '@aibos/schemas/kernel';
+import * as MetadataService from '../services/metadata.service.js';
 
 export const metadataRoutes = new Hono();
 
@@ -45,16 +46,13 @@ metadataRoutes.get('/fields/search', async (c) => {
 metadataRoutes.get('/fields/:dict_id', async (c) => {
   const dictId = c.req.param('dict_id');
 
-  // TODO: Implement actual database query via MetadataService
-  // For now, return mock response
-  return c.json({
-    dict_id: dictId,
-    business_term: 'Mock Field',
-    technical_name: 'mock_field',
-    version: '1.0.0',
-    definition_full: 'This is a mock field definition',
-    // ... (full MetadataRecord structure)
-  } as MetadataFieldResponse);
+  const field = await MetadataService.getFieldById(dictId);
+  
+  if (!field) {
+    return c.json({ error: 'Field not found' }, 404);
+  }
+
+  return c.json(field);
 });
 
 /**
@@ -64,22 +62,19 @@ metadataRoutes.get('/fields/:dict_id', async (c) => {
 metadataRoutes.get('/context/field/:dict_id', async (c) => {
   const dictId = c.req.param('dict_id');
 
-  // TODO: Implement actual database query via MetadataService
-  // For now, return mock response
+  const context = await MetadataService.getFieldContext(dictId);
+  
+  if (!context.field) {
+    return c.json({ error: 'Field not found' }, 404);
+  }
+
   return c.json({
-    field: {
-      dict_id: dictId,
-      business_term: 'Mock Field',
-      definition_full: 'Mock definition',
-    },
-    lineage_summary: {
-      upstream_count: 0,
-      downstream_count: 0,
-      critical_paths: [],
-    },
+    field: context.field,
+    lineage_summary: context.lineageSummary,
     ai_suggestions: [],
     quality_signals: {
-      completeness_score: 0.8,
+      completeness_score: 0.8, // TODO: Calculate from field data
+      anomalies: [],
     },
   } as FieldContextResponse);
 });
@@ -120,10 +115,14 @@ metadataRoutes.get('/entities', async (c) => {
   const domain = c.req.query('domain');
   const entityType = c.req.query('type');
 
-  // TODO: Implement actual database query
+  const { entities, total } = await MetadataService.getEntities({
+    domain: domain || undefined,
+    entityType: entityType || undefined,
+  });
+
   return c.json({
-    entities: [],
-    total: 0,
+    entities,
+    total,
   });
 });
 
@@ -149,9 +148,14 @@ metadataRoutes.get('/mappings/lookup', async (c) => {
   const field = c.req.query('field');
   const system = c.req.query('system');
 
-  // TODO: Implement actual database query
+  if (!field) {
+    return c.json({ error: 'field parameter is required' }, 400);
+  }
+
+  const mapping = await MetadataService.lookupMapping(field, system || undefined);
+
   return c.json({
-    mapping: null,
+    mapping: mapping || null,
   });
 });
 

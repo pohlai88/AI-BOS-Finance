@@ -95,7 +95,7 @@ export const EntityContextResponseSchema = z.object({
   }).optional(),
   compliance_status: z.object({
     standards: z.array(z.string()).default([]), // e.g., ["MFRS", "IFRS", "GDPR"]
-    control_status: z.record(z.enum(['compliant', 'non-compliant', 'unknown'])).optional(),
+    control_status: z.record(z.string(), z.enum(['compliant', 'non-compliant', 'unknown'])).optional(),
   }).optional(),
 });
 
@@ -160,7 +160,7 @@ export const LineageRegisterNodeRequestSchema = z.object({
   system: z.string().optional(),
   domain: z.string().optional(),
   criticality: z.enum(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']).optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type LineageRegisterNodeRequest = z.infer<typeof LineageRegisterNodeRequestSchema>;
@@ -174,7 +174,7 @@ export const LineageRegisterEdgeRequestSchema = z.object({
   to_node_id: z.string().min(1),
   relationship: z.enum(['depends_on', 'produces', 'transforms', 'read', 'write']),
   frequency: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type LineageRegisterEdgeRequest = z.infer<typeof LineageRegisterEdgeRequestSchema>;
@@ -200,7 +200,7 @@ export const PolicyCheckRequestSchema = z.object({
     id: z.string().min(1),
   }),
   intent: z.string().optional(), // Human-readable intent for audit
-  context: z.record(z.unknown()).optional(),
+  context: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type PolicyCheckRequest = z.infer<typeof PolicyCheckRequestSchema>;
@@ -229,7 +229,7 @@ export const ChangeRequestCreateRequestSchema = z.object({
   entity_id: z.string().min(1),
   entity_type: z.enum(['field', 'entity', 'table', 'schema', 'policy']),
   change_type: z.enum(['create', 'update', 'delete', 'migrate']),
-  proposed_change: z.record(z.unknown()), // Flexible change payload
+  proposed_change: z.record(z.string(), z.unknown()), // Flexible change payload
   rationale: z.string().optional(),
   impact_assessment: z.string().optional(),
   requested_by: z.string().min(1), // User ID
@@ -333,7 +333,7 @@ export const OrchestraValidateRequestSchema = z.object({
       tools: z.array(z.string()).default([]),
       max_autonomy_tier: z.number().int().min(0).max(3),
     })).default([]),
-    policies: z.record(z.unknown()).optional(),
+    policies: z.record(z.string(), z.unknown()).optional(),
   }),
 });
 

@@ -201,7 +201,7 @@ export const MdmLineageNodeSchema = z.object({
   system: z.string().optional(),
   domain: z.string().optional(),
   criticality: CriticalitySchema.optional(),
-  metadata: z.record(z.unknown()).optional(), // JSONB flexible metadata
+  metadata: z.record(z.string(), z.unknown()).optional(), // JSONB flexible metadata
   created_at: z.string().datetime().optional(),
 });
 
@@ -218,7 +218,7 @@ export const MdmLineageEdgeSchema = z.object({
   relationship: RelationshipTypeSchema,
   frequency: z.string().optional(), // e.g., "daily", "real-time"
   last_observed_at: z.string().datetime().optional(),
-  metadata: z.record(z.unknown()).optional(), // JSONB flexible metadata
+  metadata: z.record(z.string(), z.unknown()).optional(), // JSONB flexible metadata
   created_at: z.string().datetime().optional(),
 });
 
@@ -232,7 +232,7 @@ export const MdmNamingPolicySchema = z.object({
   policy_id: z.string().min(1),
   tier: z.number().int().min(0).max(3), // Autonomy tier (0-3)
   allowed_actions: z.array(z.enum(['read', 'write', 'delete', 'export'])).default([]),
-  constraints: z.record(z.unknown()).optional(), // JSONB flexible constraints
+  constraints: z.record(z.string(), z.unknown()).optional(), // JSONB flexible constraints
   created_at: z.string().datetime().optional(),
 });
 

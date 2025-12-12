@@ -7,10 +7,14 @@
  * @see PRD_KERNEL_01_AIBOS_KERNEL.md
  */
 
+// Load environment variables
+import 'dotenv/config';
+
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
+import { checkDatabaseHealth } from './db/index.js';
 
 // Import routes
 import { metadataRoutes } from './routes/metadata.js';
@@ -44,6 +48,27 @@ app.get('/health', (c) => {
     service: 'aibos-kernel',
     uptime: process.uptime(),
   });
+});
+
+// Database health check
+app.get('/health/db', async (c) => {
+  const dbHealth = await checkDatabaseHealth();
+  
+  if (dbHealth.status === 'healthy') {
+    return c.json({
+      status: 'healthy',
+      service: 'aibos-kernel',
+      database: 'connected',
+      latency: `${dbHealth.latency}ms`,
+    });
+  } else {
+    return c.json({
+      status: 'unhealthy',
+      service: 'aibos-kernel',
+      database: 'disconnected',
+      error: dbHealth.error,
+    }, 503);
+  }
 });
 
 // Mount route handlers
