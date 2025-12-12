@@ -19,6 +19,7 @@ export interface StatCardProps {
   label: string
   valueClassName?: string
   className?: string
+  'aria-label'?: string
 }
 
 export function StatCard({ 
@@ -26,20 +27,39 @@ export function StatCard({
   value, 
   label, 
   valueClassName,
-  className 
+  className,
+  'aria-label': ariaLabel
 }: StatCardProps) {
+  const cardId = `stat-card-${label.toLowerCase().replace(/\s+/g, '-')}`
+  
   return (
     <Card 
+      id={cardId}
       className={cn(
-        'border-nexus-border/30 bg-nexus-surface/10 p-4 text-center',
+        'border-nexus-border/30 bg-nexus-surface/10 p-4 text-center focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
         className
       )}
+      role="region"
+      aria-labelledby={`${cardId}-label`}
+      aria-label={ariaLabel}
+      tabIndex={0}
     >
-      <Icon className="w-5 h-5 text-nexus-signal/40 mx-auto mb-2" />
-      <div className={cn('text-xl font-bold text-nexus-signal', valueClassName)}>
+      <Icon 
+        className="w-5 h-5 text-nexus-signal/60 mx-auto mb-2" 
+        aria-hidden="true"
+      />
+      <div 
+        className={cn('text-xl font-bold text-nexus-signal', valueClassName)}
+        aria-hidden="true"
+      >
         {value}
       </div>
-      <div className="text-xs text-nexus-signal/50">{label}</div>
+      <div 
+        id={`${cardId}-label`}
+        className="text-xs font-medium text-nexus-signal/70 mt-1"
+      >
+        {label}
+      </div>
     </Card>
   )
 }

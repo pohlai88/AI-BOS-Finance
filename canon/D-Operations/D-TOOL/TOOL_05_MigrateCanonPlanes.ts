@@ -13,20 +13,9 @@
  * Safety: Creates backup before migration
  */
 
-import { existsSync, mkdirSync, readdirSync, statSync, renameSync, copyFileSync, rmSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from 'fs';
 import { join, dirname, basename, relative } from 'path';
-import { execSync } from 'child_process';
-
 const ROOT = process.cwd();
-
-interface MigrationStep {
-  name: string;
-  execute: () => void;
-  rollback?: () => void;
-}
-
-const steps: MigrationStep[] = [];
-const rollbackSteps: (() => void)[] = [];
 
 // --- Utility Functions ---
 
@@ -48,12 +37,6 @@ function moveFile(src: string, dest: string) {
   ensureDir(dirname(dest));
   renameSync(src, dest);
   console.log(`  ✓ Moved: ${relative(ROOT, src)} → ${relative(ROOT, dest)}`);
-}
-
-function copyFile(src: string, dest: string) {
-  ensureDir(dirname(dest));
-  copyFileSync(src, dest);
-  console.log(`  ✓ Copied: ${relative(ROOT, src)} → ${relative(ROOT, dest)}`);
 }
 
 function findFiles(dir: string, pattern: RegExp): string[] {

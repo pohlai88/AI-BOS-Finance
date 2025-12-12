@@ -3,82 +3,169 @@
 @tailwind utilities;
 
 /* ============================================================================
-   NEXUSCANON DESIGN TOKENS - FORENSIC ARCHITECTURE
-   Dark-first, WCAG 2.2 AAA compliant
+   🎨 FIGMA MCP -> TAILWIND THEME MAP
+   Design Tokens as Native CSS Variables
+   Changing these updates the entire app automatically.
    ============================================================================ */
 
 :root {
-  /* Core Palette - The Forensic Void */
-  --nexus-void: #0a0a0a;       /* Primary background - near black */
-  --nexus-matter: #111111;     /* Secondary background */
-  --nexus-structure: #1a1a1a;  /* Borders, dividers */
-  --nexus-subtle: #262626;     /* Subtle backgrounds */
-  --nexus-signal: #a3a3a3;     /* Primary text */
-  --nexus-noise: #737373;      /* Secondary text */
-  --nexus-green: #22c55e;      /* Accent - forensic green (max 5%) */
+  /* --- COLORS (Semantic) --- */
+  /* figma.token: color.background */
+  --color-background: #0A0A0A;
+  /* figma.token: color.foreground */
+  --color-foreground: #FFFFFF;
+  
+  /* figma.token: surface.subtle */
+  --color-surface-subtle: #1F1F1F;
+  /* figma.token: surface.card */
+  --color-surface-card: #0A0A0A;
+  /* figma.token: surface.hover */
+  --color-surface-hover: #050505;
+  /* figma.token: surface.nested */
+  --color-surface-nested: #050505;
 
-  /* Typography */
+  /* "Signal" tokens (The Nexus Brand) */
+  /* figma.token: brand.primary */
+  --color-primary: #28E7A2;       /* Nexus Green */
+  /* figma.token: brand.primary.foreground */
+  --color-primary-fg: #000000;
+  /* figma.token: brand.primary.hover */
+  --color-primary-hover: #2DF5B0;
+  /* figma.token: brand.primary.muted */
+  --color-primary-muted: #1DB87F;
+  
+  /* figma.token: text.muted */
+  --color-muted: #888888;
+  /* figma.token: text.muted.fg */
+  --color-muted-fg: #A3A3A3;
+  /* figma.token: text.muted.foreground */
+  --color-muted-foreground: #888888;
+  
+  /* figma.token: border.default */
+  --color-border-default: #1F1F1F;
+  /* figma.token: border.subtle */
+  --color-border-subtle: #111111;
+  /* figma.token: border.active */
+  --color-border-active: #28E7A2;
+  /* figma.token: border.emphasis */
+  --color-border-emphasis: #333333;
+
+  /* Status Colors */
+  /* figma.token: status.success */
+  --color-status-success: #28E7A2;
+  /* figma.token: status.warning */
+  --color-status-warning: #F5A623;
+  /* figma.token: status.danger */
+  --color-status-danger: #E74C3C;
+  /* figma.token: status.info */
+  --color-status-info: #3498DB;
+
+  /* Text Hierarchy */
+  /* figma.token: text.primary */
+  --color-text-primary: #FFFFFF;
+  /* figma.token: text.secondary */
+  --color-text-secondary: #888888;
+  /* figma.token: text.tertiary */
+  --color-text-tertiary: #666666;
+  /* figma.token: text.disabled */
+  --color-text-disabled: #444444;
+
+  /* --- SPACING (Governance - 4px Grid) --- */
+  /* Enforces 4px grid. Bans arbitrary pixel values. */
+  /* figma.token: spacing.layout.xs */
+  --spacing-layout-xs: 0.5rem;    /* 8px */
+  /* figma.token: spacing.layout.sm */
+  --spacing-layout-sm: 1rem;      /* 16px */
+  /* figma.token: spacing.layout.md */
+  --spacing-layout-md: 1.5rem;    /* 24px */
+  /* figma.token: spacing.layout.lg */
+  --spacing-layout-lg: 2rem;      /* 32px */
+  /* figma.token: spacing.layout.xl */
+  --spacing-layout-xl: 4rem;      /* 64px */
+  /* figma.token: spacing.layout.2xl */
+  --spacing-layout-2xl: 7.5rem;   /* 120px */
+  /* figma.token: spacing.layout.3xl */
+  --spacing-layout-3xl: 15rem;    /* 240px */
+
+  /* Component spacing */
+  /* figma.token: spacing.card.gap */
+  --spacing-card-gap: 1.5rem;     /* 24px */
+  /* figma.token: spacing.card.px */
+  --spacing-card-px: 1.5rem;      /* 24px */
+  /* figma.token: spacing.card.py */
+  --spacing-card-py: 1rem;        /* 16px */
+
+  /* --- TYPOGRAPHY (Hierarchy) --- */
+  /* figma.token: text.display */
+  --text-display: 3rem;           /* h1 - 48px */
+  /* figma.token: text.heading */
+  --text-heading: 2rem;           /* h2 - 32px */
+  /* figma.token: text.subheading */
+  --text-subheading: 1.5rem;      /* h3 - 24px */
+  /* figma.token: text.body */
+  --text-body: 1rem;              /* p - 16px */
+  /* figma.token: text.small */
+  --text-small: 0.875rem;         /* sm - 14px */
+  /* figma.token: text.label */
+  --text-label: 0.6875rem;        /* label - 11px */
+  /* figma.token: text.micro */
+  --text-micro: 0.625rem;         /* micro - 10px */
+  
   --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-jetbrains: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Shadcn/ui compatibility */
-  --background: var(--nexus-void);
-  --foreground: var(--nexus-signal);
-  --card: var(--nexus-matter);
-  --card-foreground: var(--nexus-signal);
-  --popover: var(--nexus-matter);
-  --popover-foreground: var(--nexus-signal);
-  --primary: var(--nexus-green);
-  --primary-foreground: var(--nexus-void);
-  --secondary: var(--nexus-subtle);
-  --secondary-foreground: var(--nexus-signal);
-  --muted: var(--nexus-structure);
-  --muted-foreground: var(--nexus-noise);
-  --accent: var(--nexus-subtle);
-  --accent-foreground: var(--nexus-signal);
+  /* Letter spacing (tracking) */
+  /* figma.token: tracking.tight */
+  --tracking-tight: -0.04em;
+  /* figma.token: tracking.normal */
+  --tracking-normal: 0;
+  /* figma.token: tracking.wide */
+  --tracking-wide: 0.1em;
+  /* figma.token: tracking.wider */
+  --tracking-wider: 0.15em;
+  /* figma.token: tracking.widest */
+  --tracking-widest: 0.2em;
+
+  /* Shadcn/ui compatibility (legacy) */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --card: var(--color-surface-card);
+  --card-foreground: var(--color-foreground);
+  --popover: var(--color-surface-card);
+  --popover-foreground: var(--color-foreground);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-fg);
+  --secondary: var(--color-surface-subtle);
+  --secondary-foreground: var(--color-foreground);
+  --muted: var(--color-surface-subtle);
+  --muted-foreground: var(--color-muted);
+  --accent: var(--color-surface-subtle);
+  --accent-foreground: var(--color-foreground);
   --destructive: #ef4444;
   --destructive-foreground: #fafafa;
-  --border: var(--nexus-structure);
-  --input: var(--nexus-structure);
-  --ring: var(--nexus-green);
+  --border: var(--color-border-default);
+  --input: var(--color-border-default);
+  --ring: var(--color-primary);
+  /* figma.token: radius.none */
   --radius: 0px; /* Sharp corners for forensic aesthetic */
 }
 
-/* Base Styles */
-* {
-  border-color: var(--border);
-}
+/* ============================================================================
+   🧱 BASE STYLES
+   ============================================================================ */
 
-body {
-  background-color: var(--nexus-void);
-  color: var(--nexus-signal);
-  font-family: var(--font-inter);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 
-/* Typography Classes */
-.nexus-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Card Component */
-.nexus-card {
-  background-color: var(--nexus-matter);
-  border: 1px solid var(--nexus-structure);
-  padding: 1.5rem;
-}
-
-/* Headline Tracking */
-.tracking-headline {
-  letter-spacing: -0.04em;
-}
-
-.tracking-micro {
-  letter-spacing: 0.12em;
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-inter);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* ============================================================================

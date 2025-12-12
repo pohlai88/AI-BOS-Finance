@@ -261,7 +261,6 @@ async function main() {
   executeRelocation(plan);
   
   // Show summary
-  const moved = plan.filter(p => p.status === 'moved');
   const needsReview = plan.filter(p => p.status === 'skipped' && !shouldKeepInRoot(basename(p.file)));
   
   if (needsReview.length > 0) {

@@ -201,7 +201,7 @@ class FigmaPush {
    * Create nodes in FigJam using Figma API
    * Note: Figma API has limitations for creating nodes. This uses a simplified approach.
    */
-  async createFigJamNodes(mindmap: MindmapNode, parentNodeId?: string): Promise<void> {
+  async createFigJamNodes(mindmap: MindmapNode, _parentNodeId?: string): Promise<void> {      
     console.log(`📝 Creating node: ${mindmap.name}`);
 
     // Note: Figma API doesn't directly support creating FigJam nodes via REST API
@@ -251,7 +251,7 @@ class FigmaPush {
       code += `${indent(level)}${node.name.replace(/\s+/g, '_').toLowerCase()}.y = ${level * 100};\n\n`;
 
       if (node.children) {
-        node.children.forEach((child, index) => {
+        node.children.forEach((child, _index) => {
           code += generateNodeCode(child, level + 1);
         });
       }
@@ -323,7 +323,7 @@ ${generateNodeCode(mindmap)}
 
 // CLI argument parsing
 const args = process.argv.slice(2);
-const getArg = (key: string, defaultValue?: string): string | undefined => {
+const getArg = (key: string, defaultValue: string = ''): string => {
   const arg = args.find((a) => a.startsWith(`--${key}=`));
   return arg ? arg.split('=')[1] : defaultValue;
 };
@@ -331,7 +331,7 @@ const getArg = (key: string, defaultValue?: string): string | undefined => {
 // Main execution
 const main = async () => {
   const fileKey = getArg('file-key', process.env.FIGMA_FILE_KEY || 'w0bI6UKGtkTUwzhMGMhs93');
-  const nodeId = getArg('node-id', process.env.FIGMA_NODE_ID);
+  const nodeId = getArg('node-id', process.env.FIGMA_NODE_ID || '');
   const clearExisting = getArg('clear-existing', 'false') === 'true';
   const layout = (getArg('layout', 'mindmap') as 'mindmap' | 'hierarchical' | 'radial') || 'mindmap';
 

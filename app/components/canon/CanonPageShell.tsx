@@ -10,7 +10,7 @@
  * Design: Uses NexusCanon design tokens for consistency.
  */
 
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 // Note: Path will be @/canon/registry/canon-pages in Next.js with proper tsconfig
 // Using relative path for now, will be updated during Next.js migration
 import type { CanonPageInfo } from '../../../canon/registry/canon-pages';

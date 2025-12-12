@@ -1,3 +1,48 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "Figma": {
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "shadcn-community": {
+      "url": "https://www.shadcn.io/api/mcp"
+    },
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=cnlutbuzjqtuicngldak",
+      "headers": {}
+    },
+    "vercel": {
+      "url": "https://mcp.vercel.com",
+      "headers": {}
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_TOKEN}"
+      }
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "next-devtools-mcp@latest"
+      ],
+      "env": {
+        "NEXT_MCP_WATCH": "true",
+        "NEXT_MCP_TRACK_CHANGES": "true",
+        "NEXT_MCP_LOG_UPDATES": "true"
+      }
+    }
+  }
 }

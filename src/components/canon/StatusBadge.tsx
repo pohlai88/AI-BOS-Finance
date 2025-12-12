@@ -33,9 +33,11 @@ export function StatusBadge({ status, className, showIcon = true }: StatusBadgeP
         config.border,
         className
       )}
+      role="status"
+      aria-label={`Status: ${config.label}`}
     >
-      {showIcon && <Icon className="w-3 h-3" />}
-      {config.label}
+      {showIcon && <Icon className="w-3 h-3" aria-hidden="true" />}
+      <span>{config.label}</span>
     </Badge>
   )
 }

@@ -27,14 +27,6 @@ interface FigmaSyncConfig {
   includeMetadata: boolean;
 }
 
-interface FigmaNode {
-  id: string;
-  name: string;
-  type: string;
-  children?: FigmaNode[];
-  [key: string]: any;
-}
-
 class FigmaSync {
   private apiToken: string;
   private config: FigmaSyncConfig;
@@ -234,7 +226,7 @@ export type ${filename.charAt(0).toUpperCase() + filename.slice(1)}Type = typeof
 
 // CLI argument parsing
 const args = process.argv.slice(2);
-const getArg = (key: string, defaultValue?: string): string | undefined => {
+const getArg = (key: string, defaultValue: string = ''): string => {
   const arg = args.find((a) => a.startsWith(`--${key}=`));
   return arg ? arg.split('=')[1] : defaultValue;
 };
@@ -242,7 +234,7 @@ const getArg = (key: string, defaultValue?: string): string | undefined => {
 // Main execution
 const main = async () => {
   const fileKey = getArg('file-key', process.env.FIGMA_FILE_KEY || 'w0bI6UKGtkTUwzhMGMhs93');
-  const nodeId = getArg('node-id', process.env.FIGMA_NODE_ID);
+  const nodeId = getArg('node-id', process.env.FIGMA_NODE_ID || '');
   const outputDir = getArg('output-dir', 'src/data/figma');
   const outputFormat = (getArg('format', 'both') as 'json' | 'typescript' | 'both') || 'both';
   const includeImages = getArg('include-images', 'false') === 'true';

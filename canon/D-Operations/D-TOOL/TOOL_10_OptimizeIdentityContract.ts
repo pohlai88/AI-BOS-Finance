@@ -10,7 +10,7 @@
  */
 
 import { existsSync, renameSync, mkdirSync, readdirSync, statSync } from 'fs';
-import { join, relative, basename } from 'path';
+import { join, relative } from 'path';
 
 const ROOT = process.cwd();
 const IDENTITY_CONTRACT_DIR = join(ROOT, '.identity_contract');

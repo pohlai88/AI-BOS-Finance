@@ -9,7 +9,7 @@
  *   npm run canon:validate-seal
  */
 
-import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
+import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join, relative, basename, extname } from 'path';
 
 const ROOT = process.cwd();

@@ -11,7 +11,7 @@
  *   npm run canon:consolidate-ssot
  */
 
-import { existsSync, readFileSync, writeFileSync, renameSync, unlinkSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, unlinkSync } from 'fs';
 import { join, relative } from 'path';
 
 const ROOT = process.cwd();
@@ -21,7 +21,6 @@ const SSOT_SOURCE = join(A_CONT_DIR, 'CANON_IDENTITY_CONTRACT_v2.2.0.md');
 const STUB_FILE = join(A_CONT_DIR, 'CONT_01_CanonIdentity.md');
 const SSOT_DEST = join(A_CONT_DIR, 'CONT_01_CanonIdentity.md');
 const LEGACY_README = join(A_CONT_DIR, 'README_IDENTITY_CONTRACT.md');
-const README_FILE = join(A_CONT_DIR, 'README.md');
 
 // Files that reference the SSOT
 const FILES_TO_UPDATE = [
@@ -183,11 +182,7 @@ function updateReferences(): void {
       const originalContent = content;
       
       for (const pattern of fileInfo.patterns) {
-        if (pattern.old instanceof RegExp) {
-          content = content.replace(pattern.old, pattern.new);
-        } else {
-          content = content.replace(new RegExp(pattern.old.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), pattern.new);
-        }
+        content = content.replace(pattern.old, pattern.new);
       }
       
       if (content !== originalContent) {

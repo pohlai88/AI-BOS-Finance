@@ -33,13 +33,22 @@ export function HealthScoreRing({
   const sizeConfig = SIZES[size]
   const circumference = 251 // 2 * π * 40
   const strokeDasharray = `${score * 2.51} ${circumference}`
+  const ringId = `health-score-ring-${size}`
 
   return (
-    <div className={cn('flex flex-col items-center', className)}>
+    <div 
+      className={cn('flex flex-col items-center', className)}
+      role="img"
+      aria-labelledby={`${ringId}-label`}
+      aria-valuenow={score}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
       <div className={cn('relative', sizeConfig.ring)}>
         <svg 
           className={cn(sizeConfig.ring, '-rotate-90')} 
           viewBox="0 0 100 100"
+          aria-hidden="true"
         >
           {/* Background ring */}
           <circle
@@ -65,13 +74,19 @@ export function HealthScoreRing({
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={cn('font-bold text-nexus-signal', sizeConfig.text)}>
+          <span 
+            className={cn('font-bold text-nexus-signal', sizeConfig.text)}
+            aria-hidden="true"
+          >
             {score}%
           </span>
         </div>
       </div>
-      <span className={cn('text-nexus-signal/50 mt-2', sizeConfig.label)}>
-        {label}
+      <span 
+        id={`${ringId}-label`}
+        className={cn('text-nexus-signal/70 font-medium mt-2', sizeConfig.label)}
+      >
+        {label}: {score}%
       </span>
     </div>
   )

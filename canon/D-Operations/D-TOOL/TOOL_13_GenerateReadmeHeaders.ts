@@ -9,8 +9,8 @@
  *   npm run canon:generate-readme-headers
  */
 
-import { existsSync, readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
-import { join, relative, basename, dirname } from 'path';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { join, relative, basename } from 'path';
 
 const ROOT = process.cwd();
 const CANON_DIR = join(ROOT, 'canon');

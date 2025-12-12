@@ -67,15 +67,6 @@ interface RuleFile {
   warnings: string[];
 }
 
-interface ValidationResult {
-  files: RuleFile[];
-  totalFiles: number;
-  totalLines: number;
-  errors: number;
-  warnings: number;
-  passed: boolean;
-}
-
 // ============================================================================
 // FUNCTIONS
 // ============================================================================

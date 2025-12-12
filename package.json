@@ -39,7 +39,8 @@
     "canon:generate-subdirectory-readmes": "tsx canon/D-Operations/D-TOOL/TOOL_15_GenerateSubdirectoryReadmes.ts",
     "canon:cleanup-and-regenerate": "tsx canon/D-Operations/D-TOOL/TOOL_16_ComprehensiveCanonCleanup.ts",
     "canon:validate-dtool": "tsx canon/D-Operations/D-TOOL/TOOL_17_ValidateDTOOLFiles.ts",
-    "canon:validate-compliance": "tsx canon/D-Operations/D-TOOL/TOOL_18_ValidateCanonCompliance.ts"
+    "canon:validate-compliance": "tsx canon/D-Operations/D-TOOL/TOOL_18_ValidateCanonCompliance.ts",
+    "canon:sync-figma-tokens": "tsx canon/D-Operations/D-TOOL/TOOL_26_SyncFigmaTokens.ts"
   },
   "dependencies": {
     "@cap-js/sqlite": "^2.1.0",

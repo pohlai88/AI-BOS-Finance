@@ -4,22 +4,27 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        // === THE NEXUS BRIDGE ===
-        // Maps Tailwind classes (bg-nexus-void) to CSS variables (var(--nexus-void))
-        nexus: {
-          void: "var(--nexus-void)",
-          matter: "var(--nexus-matter)",
-          structure: "var(--nexus-structure)",
-          subtle: "var(--nexus-subtle)",
-          signal: "var(--nexus-signal)",
-          noise: "var(--nexus-noise)",
-          green: "var(--nexus-green)",
-        },
-        // Shadcn/ui standard mappings
+        // Semantic color aliases (mapped from CSS variables in globals.css)
+        'surface-subtle': 'var(--color-surface-subtle)',
+        'surface-card': 'var(--color-surface-card)',
+        'surface-hover': 'var(--color-surface-hover)',
+        'surface-nested': 'var(--color-surface-nested)',
+        'border-default': 'var(--color-border-default)',
+        'border-subtle': 'var(--color-border-subtle)',
+        'border-active': 'var(--color-border-active)',
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-tertiary': 'var(--color-text-tertiary)',
+        'status-success': 'var(--color-status-success)',
+        'status-warning': 'var(--color-status-warning)',
+        'status-danger': 'var(--color-status-danger)',
+        'status-info': 'var(--color-status-info)',
+        // Shadcn/ui standard mappings (legacy compatibility)
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
@@ -54,27 +59,41 @@ export default {
           foreground: "var(--card-foreground)",
         },
       },
-      fontFamily: {
-        sans: ["var(--font-inter)"],
-        mono: ["var(--font-mono)"],
+      spacing: {
+        // Semantic spacing aliases (4px grid enforcement)
+        'layout-xs': 'var(--spacing-layout-xs)',   // 8px
+        'layout-sm': 'var(--spacing-layout-sm)',   // 16px
+        'layout-md': 'var(--spacing-layout-md)',   // 24px
+        'layout-lg': 'var(--spacing-layout-lg)',   // 32px
+        'layout-xl': 'var(--spacing-layout-xl)',   // 64px
+        'layout-2xl': 'var(--spacing-layout-2xl)', // 120px
+        'layout-3xl': 'var(--spacing-layout-3xl)', // 240px
+        'card-gap': 'var(--spacing-card-gap)',     // 24px
+      },
+      fontSize: {
+        'display': ['var(--text-display)', { lineHeight: '1.2', letterSpacing: 'var(--tracking-tight)' }],
+        'heading': ['var(--text-heading)', { lineHeight: '1.3', letterSpacing: 'var(--tracking-tight)' }],
+        'subheading': ['var(--text-subheading)', { lineHeight: '1.4', letterSpacing: 'var(--tracking-normal)' }],
+        'body': ['var(--text-body)', { lineHeight: '1.5', letterSpacing: 'var(--tracking-normal)' }],
+        'small': ['var(--text-small)', { lineHeight: '1.5', letterSpacing: 'var(--tracking-normal)' }],
+        'label': ['var(--text-label)', { lineHeight: '1.4', letterSpacing: 'var(--tracking-wide)' }],
+        'micro': ['var(--text-micro)', { lineHeight: '1.4', letterSpacing: 'var(--tracking-wider)' }],
       },
       letterSpacing: {
-        // OPTICAL TYPOGRAPHY - Fortune 500 Grade
-        tighter: "-0.04em",  // Headlines (6xl+)
-        tight: "-0.02em",    // Subheads (3xl-5xl)
-        normal: "-0.01em",   // Body text (crisp)
-        wide: "0.02em",      // Small text
-        widest: "0.08em",    // ALL CAPS LABELS
-        headline: "-0.04em", // Alias for tighter
-        micro: "0.12em",     // Tiny labels
+        'tight': 'var(--tracking-tight)',
+        'normal': 'var(--tracking-normal)',
+        'wide': 'var(--tracking-wide)',
+        'wider': 'var(--tracking-wider)',
+        'widest': 'var(--tracking-widest)',
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+        mono: ["var(--font-jetbrains)"],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      spacing: {
-        120: "120px",
       },
     },
   },

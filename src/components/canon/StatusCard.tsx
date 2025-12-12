@@ -22,21 +22,36 @@ export interface StatusCardProps {
 export function StatusCard({ status, count, className }: StatusCardProps) {
   const config = STATUS_CONFIG[status]
   const Icon = config.icon
+  const cardId = `status-card-${status.toLowerCase()}`
 
   return (
     <Card 
+      id={cardId}
       className={cn(
-        'p-4 transition-all hover:scale-[1.02]',
+        'p-4 transition-all hover:scale-[1.02] focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
         config.border,
         config.bg,
         className
       )}
+      role="region"
+      aria-labelledby={`${cardId}-label`}
+      tabIndex={0}
     >
       <div className="flex items-center justify-between mb-2">
-        <Icon className={cn('w-5 h-5', config.color)} />
-        <span className={cn('text-2xl font-bold', config.color)}>{count}</span>
+        <Icon className={cn('w-5 h-5', config.color)} aria-hidden="true" />
+        <span 
+          className={cn('text-2xl font-bold', config.color)}
+          aria-label={`${count} ${config.label.toLowerCase()} pages`}
+        >
+          {count}
+        </span>
       </div>
-      <span className="text-xs text-nexus-signal/60">{config.label} Pages</span>
+      <span 
+        id={`${cardId}-label`}
+        className="text-xs font-medium text-nexus-signal/70"
+      >
+        {config.label} Pages
+      </span>
     </Card>
   )
 }

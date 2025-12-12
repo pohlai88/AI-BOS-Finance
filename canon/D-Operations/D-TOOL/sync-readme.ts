@@ -46,7 +46,7 @@ function extractContractMetadata(contractPath: string): ContractMetadata {
   return {
     version,
     status,
-    lastUpdated,
+    lastUpdated: finalLastUpdated,
     changelog,
   };
 }

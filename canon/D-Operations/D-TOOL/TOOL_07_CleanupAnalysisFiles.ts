@@ -10,8 +10,8 @@
  *   npm run canon:cleanup-analysis
  */
 
-import { existsSync, unlinkSync, readdirSync } from 'fs';
-import { join, basename } from 'path';
+import { existsSync, unlinkSync } from 'fs';
+import { join } from 'path';
 
 const ROOT = process.cwd();
 

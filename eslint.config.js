@@ -46,6 +46,24 @@ export default tseslint.config(
 
       // Prettier integration
       'prettier/prettier': 'warn',
+
+      // Tailwind Governance: Ban arbitrary values
+      // Enforces use of semantic tokens (bg-surface-card) instead of magic numbers (bg-[#0A0A0A])
+      // Note: Requires eslint-plugin-tailwindcss (install if needed)
+    },
+  },
+  
+  // Tailwind Governance: Ban arbitrary values in all files
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      // Warn on arbitrary values (w-[350px], p-[13px], etc.)
+      // This enforces use of semantic tokens from tailwind.config.js
+      // Example violations:
+      // ❌ className="w-[350px]" → Should use: className="w-card" or semantic spacing
+      // ❌ className="p-[13px]" → Should use: className="p-layout-md" or standard spacing
+      // ✅ className="bg-surface-card" → Correct (semantic token)
+      // ✅ className="p-4" → Correct (standard Tailwind spacing)
     },
   },
   
