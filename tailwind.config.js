@@ -28,6 +28,14 @@ export default {
           subtle: 'var(--color-border-subtle)',
           active: 'var(--color-border-active)',
         },
+        // 🛡️ GOVERNANCE: Text tokens (The Bridge to globals.css)
+        // Usage: text-text-primary / text-text-secondary / text-text-tertiary
+        text: {
+          primary: "rgb(var(--text-primary) / <alpha-value>)",
+          secondary: "rgb(var(--text-secondary) / <alpha-value>)",
+          tertiary: "rgb(var(--text-tertiary) / <alpha-value>)",
+          inverse: "rgb(var(--text-inverse) / <alpha-value>)",
+        },
         // Legacy semantic color aliases (mapped from CSS variables in globals.css)
         'surface-subtle': 'var(--color-surface-subtle)',
         'surface-card': 'var(--color-surface-card)',

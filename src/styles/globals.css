@@ -19,6 +19,13 @@
     --border-base: 226 232 240;   /* Slate-200 (light mode) */
     --border-flat: 241 245 249;   /* Slate-100 (light mode) */
 
+    /* 🟢 Typography Tokens (The "What") - RGB format for opacity control */
+    /* These define intent: Primary = High Contrast, Secondary = Readable, Tertiary = Subtle */
+    --text-primary: 15 23 42;      /* Slate-900 (Headings/Important - light mode) */
+    --text-secondary: 71 85 105;  /* Slate-600 (Body text - light mode) */
+    --text-tertiary: 148 163 184; /* Slate-400 (Captions/Icons - light mode) */
+    --text-inverse: 255 255 255;  /* White (On dark backgrounds) */
+
     /* 🟢 Radius Tokens */
     --radius-surface: 1rem;       /* 16px (rounded-2xl) */
   }
@@ -30,6 +37,13 @@
     --surface-flat: 31 31 31;     /* #1F1F1F (current --color-surface-subtle) */
     --border-base: 31 31 31;      /* #1F1F1F (current --color-border-default) */
     --border-flat: 31 31 31;      /* #1F1F1F (current --color-border-default) */
+
+    /* 🌑 Typography Overrides (Dark Mode) */
+    /* Matching existing dark theme: #FFFFFF primary, #888888 secondary, #666666 tertiary */
+    --text-primary: 255 255 255;  /* #FFFFFF (Zinc-100 equivalent - current --color-text-primary) */
+    --text-secondary: 136 136 136;/* #888888 (Zinc-400 equivalent - current --color-text-secondary) */
+    --text-tertiary: 102 102 102; /* #666666 (Zinc-600 equivalent - current --color-text-tertiary) */
+    --text-inverse: 10 10 10;     /* #0A0A0A (Zinc-900 - for text on light surfaces) */
   }
 }
 
