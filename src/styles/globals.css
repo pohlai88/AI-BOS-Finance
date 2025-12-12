@@ -24,6 +24,21 @@
   /* figma.token: surface.nested */
   --color-surface-nested: #050505;
 
+  /* Surface Component Tokens (The Constitution) */
+  /* These define WHAT a Surface does, not what it looks like */
+  /* figma.token: surface.base */
+  --surface-base-bg: var(--color-surface-card);
+  --surface-base-border: var(--color-border-default);
+  --surface-base-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  /* figma.token: surface.flat */
+  --surface-flat-bg: var(--color-surface-subtle);
+  --surface-flat-border: transparent;
+  --surface-flat-shadow: none;
+  /* figma.token: surface.ghost */
+  --surface-ghost-bg: transparent;
+  --surface-ghost-border: transparent;
+  --surface-ghost-shadow: none;
+
   /* "Signal" tokens (The Nexus Brand) */
   /* figma.token: brand.primary */
   --color-primary: #28E7A2;       /* Nexus Green */
@@ -148,6 +163,10 @@
   --ring: var(--color-primary);
   /* figma.token: radius.none */
   --radius: 0px; /* Sharp corners for forensic aesthetic */
+  
+  /* Surface Component Shape (Locked) */
+  /* figma.token: surface.radius */
+  --surface-radius: 1rem; /* 16px - locked rounded-2xl equivalent */
 }
 
 /* ============================================================================

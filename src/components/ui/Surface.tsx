@@ -1,34 +1,71 @@
+import * as React from 'react'
 import { cn } from "@/lib/utils"
 
-interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
-  // 'base' is your standard white card
-  // 'flat' is for grey backgrounds
+interface SurfaceProps extends React.ComponentProps<'div'> {
+  /**
+   * Surface variant - defines the visual intent, not the color
+   * - 'base': Standard card surface (elevated, with border)
+   * - 'flat': Subtle panel surface (no elevation, minimal border)
+   * - 'ghost': Transparent surface (no background, no border)
+   */
   variant?: 'base' | 'flat' | 'ghost'
   children: React.ReactNode
 }
 
-export const Surface = ({ 
-  variant = 'base', 
-  className, 
-  children, 
-  ...props 
+/**
+ * Surface Component - The Atomic Building Block
+ * 
+ * 🛡️ Governance: This component OBEYS the tokens defined in globals.css.
+ * It does NOT choose colors. It only applies the "Constitution" (tokens).
+ * 
+ * Changing --surface-* variables in globals.css updates ALL Surfaces.
+ * This is the "Single Source of Truth" pattern.
+ */
+export const Surface = ({
+  variant = 'base',
+  className,
+  children,
+  ...props
 }: SurfaceProps) => {
   
-  // These are your "Locked" designs. 
-  // If you change the shadow here, it changes EVERYWHERE.
+  // 🛡️ THE LAW: These variants reference CSS variables (The Constitution)
+  // If you change the token in globals.css, it changes EVERYWHERE.
   const variants = {
-    base: "bg-white border border-slate-200 shadow-sm", 
-    flat: "bg-slate-50 border border-transparent",
-    ghost: "bg-transparent border-transparent",
+    base: "border shadow-sm",
+    flat: "border-transparent",
+    ghost: "border-transparent bg-transparent",
+  }
+
+  // Apply background and border colors via CSS variables
+  const variantStyles = {
+    base: {
+      backgroundColor: 'var(--surface-base-bg)',
+      borderColor: 'var(--surface-base-border)',
+      boxShadow: 'var(--surface-base-shadow)',
+    },
+    flat: {
+      backgroundColor: 'var(--surface-flat-bg)',
+      borderColor: 'var(--surface-flat-border)',
+      boxShadow: 'var(--surface-flat-shadow)',
+    },
+    ghost: {
+      backgroundColor: 'var(--surface-ghost-bg)',
+      borderColor: 'var(--surface-ghost-border)',
+      boxShadow: 'var(--surface-ghost-shadow)',
+    },
   }
 
   return (
-    <div 
+    <div
       className={cn(
-        "rounded-2xl transition-all", // The shape is now locked
-        variants[variant], 
+        "border transition-all", // Base styles
+        variants[variant], // Variant-specific classes
         className
-      )} 
+      )}
+      style={{
+        borderRadius: 'var(--surface-radius)', // Locked shape from Constitution
+        ...variantStyles[variant], // Apply token-based styles
+      }}
       {...props}
     >
       {children}
