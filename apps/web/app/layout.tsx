@@ -20,6 +20,16 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'NexusCanon | Forensic Architecture',
   description: 'Forensic metadata architecture and governance system',
+  openGraph: {
+    title: 'NexusCanon | Forensic Architecture',
+    description: 'Forensic metadata architecture and governance system',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NexusCanon',
+    description: 'Forensic metadata architecture and governance system',
+  },
 }
 
 export default function RootLayout({

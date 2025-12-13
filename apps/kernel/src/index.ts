@@ -17,8 +17,12 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load root .env.local first (shared secrets), then app-level .env.local if exists
-config({ path: resolve(__dirname, '../../../.env.local') });
+// Load environment files in order (later files override earlier ones):
+// 1. Root .env (fallback)
+// 2. Root .env.local (preferred, gitignored)
+// 3. App-level .env.local (app-specific override)
+config({ path: resolve(__dirname, '../../../.env') }); // Fallback to .env
+config({ path: resolve(__dirname, '../../../.env.local') }); // Preferred .env.local
 config({ path: resolve(__dirname, '../.env.local') }); // App-level override (optional)
 
 import { Hono } from 'hono';
@@ -64,7 +68,7 @@ app.get('/health', (c) => {
 // Database health check
 app.get('/health/db', async (c) => {
   const dbHealth = await checkDatabaseHealth();
-  
+
   if (dbHealth.status === 'healthy') {
     return c.json({
       status: 'healthy',

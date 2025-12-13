@@ -9,12 +9,23 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  
+
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    // Add domains if using external images
+    // domains: ['example.com'],
+  },
+
   // ⚠️ CRITICAL: Do NOT use output: 'export' if you need rewrites/proxy
   // Static exports cannot support server-side rewrites
   // Use default output (Node.js server) for rewrites
   // output: 'export', // ❌ REMOVED - conflicts with rewrites
-  
+
   // Proxy configuration (replaces Vite proxy)
   // ⚠️ Requires Node.js server (cannot use with output: 'export')
   async rewrites() {
@@ -22,6 +33,33 @@ const nextConfig = {
       {
         source: '/odata/:path*',
         destination: 'http://localhost:4004/odata/:path*',
+      },
+    ]
+  },
+
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
       },
     ]
   },

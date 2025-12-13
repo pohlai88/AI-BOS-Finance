@@ -1,12 +1,8 @@
 {
-  "name": "nexuscanon-t60",
+  "name": "aibos-finance",
   "version": "2.4.1",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

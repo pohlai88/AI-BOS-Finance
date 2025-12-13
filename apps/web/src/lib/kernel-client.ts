@@ -32,11 +32,13 @@ function getKernelUrl(): string {
 }
 
 /**
- * Base fetch wrapper with error handling
+ * Base fetch wrapper with error handling and Next.js caching
  */
 async function kernelFetch<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit & {
+    next?: { revalidate?: number | false }
+  }
 ): Promise<T> {
   const baseUrl = getKernelUrl();
   const url = `${baseUrl}${endpoint}`;
@@ -47,6 +49,10 @@ async function kernelFetch<T>(
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
+      },
+      next: {
+        // Cache for 60 seconds by default, or use provided revalidate
+        revalidate: options?.next?.revalidate ?? 60,
       },
     });
 
@@ -78,7 +84,7 @@ export async function searchMetadataFields(
   request: MetadataSearchRequest
 ): Promise<MetadataSearchResponse> {
   const params = new URLSearchParams();
-  
+
   if (request.q) params.append('q', request.q);
   if (request.domain) params.append('domain', request.domain);
   if (request.entity_group) params.append('entity_group', request.entity_group);
@@ -269,11 +275,11 @@ export const kernelClient = {
   getEntityFields,
   lookupMapping,
   suggestMappings,
-  
+
   // Lineage
   getLineageGraph,
   getImpactReport,
-  
+
   // Health
   checkKernelHealth,
   checkKernelDatabaseHealth,
