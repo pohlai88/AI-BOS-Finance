@@ -7,14 +7,14 @@
 
 import React, { useMemo } from 'react'
 import { SuperTable } from '@/modules/metadata/components/SuperTable'
-import { generateColumnsFromSchema } from '@/kernel'
-import { cn } from '@/lib/utils'
+import { generateColumnsFromSchema } from '@/modules/metadata/kernel'
+import { cn } from '@aibos/ui'
 import {
   PAYMENT_SCHEMA,
   type Payment,
   type PaymentStatus,
   type FunctionalCluster,
-} from '../data'
+} from '../mock-data''
 
 // ============================================================================
 // TYPES
@@ -36,7 +36,7 @@ interface PaymentTableProps {
 function getRowClassName(payment: Payment): string {
   const classes: string[] = []
 
-  // 🛡️ GOVERNANCE: Uses status tokens instead of hardcoded colors
+  // ðŸ›¡ï¸ GOVERNANCE: Uses status tokens instead of hardcoded colors
   // IC Unmatched - Red highlight
   if (
     payment.tx_type === 'intercompany' &&
@@ -109,7 +109,7 @@ export function PaymentTable({
         rowClassName={(row) =>
           cn(
             getRowClassName(row),
-            // 🛡️ GOVERNANCE: Uses action-primary token instead of hardcoded hex
+            // ðŸ›¡ï¸ GOVERNANCE: Uses action-primary token instead of hardcoded hex
             row.id === selectedId && 'ring-1 ring-action-primary ring-inset'
           )
         }

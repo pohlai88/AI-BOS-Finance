@@ -31,3 +31,6 @@ export * from './primitives/dialog'
 export * from './primitives/scroll-area'
 export * from './primitives/separator'
 export * from './primitives/popover'
+
+// 4. Molecules (Functional Component Groups)
+export * from './molecules'

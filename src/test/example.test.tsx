@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 // Utility function test
 describe('cn utility', () => {

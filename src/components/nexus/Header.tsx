@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NexusIcon } from '@/components/nexus/NexusIcon'
 import { NexusButton } from '@/components/nexus/NexusButton'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 export const Header = ({
   onGetStarted,

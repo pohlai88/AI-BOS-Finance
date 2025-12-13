@@ -8,7 +8,7 @@
 
 import React from 'react'
 import { Settings2, Eye, EyeOff, Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import type { ColumnDef } from './SuperTableHeader'
 
 interface ColumnVisibilityMenuProps<T> {

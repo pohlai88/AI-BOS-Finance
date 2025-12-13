@@ -8,7 +8,7 @@
 // - Changes here propagate to all payment views
 // ============================================================================
 
-import { MetadataField, STATUS_PRESETS } from '@/kernel'
+import { MetadataField, STATUS_PRESETS } from '@/modules/metadata/kernel'
 
 // ============================================================================
 // 1. THE GOVERNED SCHEMA

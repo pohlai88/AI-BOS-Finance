@@ -23,7 +23,7 @@ import {
   Trash2,
   Save,
 } from 'lucide-react'
-import { MetadataRecord } from '../../types/metadata'
+import { MetadataRecord } from '@/modules/metadata/types/metadata'
 import { RouterLink } from '@/hooks/useRouterAdapter'
 import clsx from 'clsx'
 // DND-KIT Imports for Drag and Drop
@@ -447,7 +447,7 @@ const LayoutRenderer = ({
           className={clsx(
             'transition-all duration-300',
             isEditing &&
-              'rounded-lg border border-dashed border-[#333] bg-[#0A0A0A] p-4'
+            'rounded-lg border border-dashed border-[#333] bg-[#0A0A0A] p-4'
           )}
         >
           {/* Section Header */}

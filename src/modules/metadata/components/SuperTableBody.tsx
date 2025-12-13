@@ -9,7 +9,7 @@
 
 import React from 'react'
 import { Inbox, Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import type { ColumnDef } from './SuperTableHeader'
 
 interface SuperTableBodyProps<T> {

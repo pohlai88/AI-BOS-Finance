@@ -13,7 +13,7 @@ import { SuperTableBody } from './SuperTableBody'
 import { SuperTablePagination } from './SuperTablePagination'
 import { ColumnVisibilityMenu } from './ColumnVisibilityMenu'
 import { Search, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 // ============================================================================
 // TYPES

@@ -9,7 +9,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { Settings2, Check, Eye, EyeOff } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import type { ColumnDef } from './SuperTableHeader'
 
 interface ColumnVisibilitySelectorProps<T> {

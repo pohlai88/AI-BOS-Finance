@@ -6,7 +6,7 @@
 // ============================================================================
 
 import { useMemo } from 'react'
-import { PAYMENT_CONFIG, type Payment, type Manifest } from '../data'
+import { PAYMENT_CONFIG, type Payment, type Manifest } from '../mock-data''
 
 // ============================================================================
 // TYPES
@@ -129,10 +129,10 @@ export function useDocumentValidation(
 
 export function getDocumentIcon(type: DocumentType): string {
   const icons: Record<DocumentType, string> = {
-    invoice: '📄',
-    receipt: '🧾',
-    contract: '📝',
-    po: '📋',
+    invoice: 'ðŸ“„',
+    receipt: 'ðŸ§¾',
+    contract: 'ðŸ“',
+    po: 'ðŸ“‹',
   }
   return icons[type]
 }
@@ -150,14 +150,14 @@ export function getDocumentStatusSummary(payment: Payment): {
 
   if (validation.isComplete) {
     return {
-      icon: '✅',
+      icon: 'âœ…',
       text: `${validation.completionRatio} docs`,
       status: 'complete',
     }
   }
 
   return {
-    icon: '⚠️',
+    icon: 'âš ï¸',
     text: `${validation.completionRatio} docs`,
     status: validation.missing.length > 1 ? 'incomplete' : 'warning',
   }

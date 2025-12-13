@@ -104,3 +104,6 @@ export {
 
 // Page (Sprint 4)
 export { PAY01PaymentHub } from './PAY_01_PaymentHub'
+
+// Views (Organ Transplant Migration)
+export { default as PaymentHubPage } from './views/PaymentHubPage'

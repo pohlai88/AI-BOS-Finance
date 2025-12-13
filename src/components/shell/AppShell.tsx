@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Search, Database, Settings as SettingsIcon } from 'lucide-react'
 import { useRouterAdapter } from '@/hooks/useRouterAdapter'
 import { NexusIcon } from '@/components/nexus/NexusIcon'
-import { CommandPalette } from '../landing/CommandPalette'
+import { MetaCommandPalette } from './MetaCommandPalette'
 import { MiniSidebar } from './MiniSidebar'
 import { AppFooter } from './AppFooter'
 
@@ -97,7 +97,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       {/* GLOBAL COMMAND PALETTE */}
-      <CommandPalette
+      <MetaCommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
       />

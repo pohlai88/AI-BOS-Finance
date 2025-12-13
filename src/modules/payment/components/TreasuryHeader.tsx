@@ -3,7 +3,7 @@
 // ============================================================================
 // Group CFO needs to see subsidiary liquidity at a glance
 // without logging into 15 different bank portals.
-// 🛡️ GOVERNANCE: Uses Surface, Txt, StatusDot components (no hardcoded colors)
+// ðŸ›¡ï¸ GOVERNANCE: Uses Surface, Txt, StatusDot components (no hardcoded colors)
 // ============================================================================
 
 import React from 'react'
@@ -19,14 +19,14 @@ import {
   CheckCircle2,
   RefreshCw,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { Surface, Txt, StatusDot, Btn } from '@aibos/ui'
 import {
   TREASURY_DATA,
   ENTITY_OPTIONS,
   type TreasuryContext,
   type EntityOption,
-} from '../data'
+} from '../mock-data''
 
 // ============================================================================
 // TYPES
@@ -59,7 +59,7 @@ function EntitySelector({
 
   return (
     <div className="relative">
-      {/* 🛡️ GOVERNANCE: Uses Surface + StatusDot + Txt components */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + StatusDot + Txt components */}
       <Surface
         variant="flat"
         className="hover:border-border-surface-base flex min-w-[220px] cursor-pointer items-center gap-2 border px-3 py-2 transition-colors"
@@ -95,7 +95,7 @@ function EntitySelector({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          {/* 🛡️ GOVERNANCE: Uses Surface component for dropdown */}
+          {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface component for dropdown */}
           <Surface
             variant="base"
             className="absolute left-0 top-full z-50 mt-1 w-full overflow-hidden shadow-lg"
@@ -110,7 +110,7 @@ function EntitySelector({
                   setIsOpen(false)
                 }}
               >
-                {/* 🛡️ GOVERNANCE: Uses StatusDot component */}
+                {/* ðŸ›¡ï¸ GOVERNANCE: Uses StatusDot component */}
                 <StatusDot
                   variant={
                     option.cash_status === 'healthy'
@@ -162,7 +162,7 @@ function MetricCard({
   status = 'neutral',
   trend,
 }: MetricCardProps) {
-  // 🛡️ GOVERNANCE: Maps status to StatusDot variants
+  // ðŸ›¡ï¸ GOVERNANCE: Maps status to StatusDot variants
   const statusVariant =
     status === 'positive'
       ? 'success'
@@ -174,7 +174,7 @@ function MetricCard({
 
   return (
     <div className="border-border-surface-base flex items-center gap-3 border-r px-4 py-3 last:border-r-0">
-      {/* 🛡️ GOVERNANCE: Uses Surface + StatusDot for icon background */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + StatusDot for icon background */}
       <Surface
         variant="flat"
         className={cn(
@@ -196,7 +196,7 @@ function MetricCard({
       </Surface>
       <div>
         <div className="flex items-center gap-1.5">
-          {/* 🛡️ GOVERNANCE: Uses Txt component */}
+          {/* ðŸ›¡ï¸ GOVERNANCE: Uses Txt component */}
           <Txt
             variant="h3"
             className={cn(
@@ -217,7 +217,7 @@ function MetricCard({
             ))}
         </div>
         <div className="flex items-center gap-2">
-          {/* 🛡️ GOVERNANCE: Uses Txt component */}
+          {/* ðŸ›¡ï¸ GOVERNANCE: Uses Txt component */}
           <Txt
             variant="small"
             className="font-mono uppercase tracking-wider text-text-tertiary"
@@ -321,7 +321,7 @@ export function TreasuryHeader({
   return (
     <Surface variant="base" className={cn('overflow-hidden', className)}>
       {/* Top Row: Entity Selector + Bank Info */}
-      {/* 🛡️ GOVERNANCE: Uses Surface component */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface component */}
       <Surface
         variant="flat"
         className="flex items-center justify-between border-b px-4 py-3"
@@ -341,7 +341,7 @@ export function TreasuryHeader({
             />
           </div>
 
-          {/* 🛡️ GOVERNANCE: Uses Txt component */}
+          {/* ðŸ›¡ï¸ GOVERNANCE: Uses Txt component */}
           <div className="flex items-center gap-2">
             <Txt variant="small" className="font-mono text-text-tertiary">
               Bank:
@@ -363,7 +363,7 @@ export function TreasuryHeader({
               minute: '2-digit',
             })}
           </Txt>
-          {/* 🛡️ GOVERNANCE: Uses Btn component */}
+          {/* ðŸ›¡ï¸ GOVERNANCE: Uses Btn component */}
           {onRefresh && (
             <Btn variant="secondary" size="sm" onClick={onRefresh}>
               <RefreshCw className="h-4 w-4" />
@@ -379,7 +379,7 @@ export function TreasuryHeader({
           icon={Wallet}
           label="Cash"
           value={formatCurrency(treasury.cash_balance, true)}
-          subValue={treasury.cash_status === 'critical' ? '⚠️ LOW' : undefined}
+          subValue={treasury.cash_status === 'critical' ? 'âš ï¸ LOW' : undefined}
           status={cashStatus}
         />
 
@@ -422,7 +422,7 @@ export function TreasuryHeader({
         />
 
         {/* Pending Actions */}
-        {/* 🛡️ GOVERNANCE: Uses StatusDot + Txt components */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses StatusDot + Txt components */}
         {treasury.pending_payments_count > 0 && (
           <div className="ml-auto flex items-center gap-2 px-4 py-3">
             <StatusDot variant="warning" size="sm" />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 export interface OrbitingCirclesProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string

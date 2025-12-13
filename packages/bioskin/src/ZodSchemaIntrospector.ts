@@ -8,7 +8,7 @@
 
 import { z } from 'zod'
 import type { ExtendedMetadataField } from './types'
-import type { MetadataType } from '@/kernel'
+import type { MetadataType } from '@/modules/metadata/kernel'
 
 // Re-export for convenience
 export type { ExtendedMetadataField, MetadataType }
@@ -307,7 +307,7 @@ export function createBioSchema<T extends z.ZodRawShape>(
 
   // Store metadata in a custom property (for later retrieval)
   if (metadata) {
-    ;(schema as any).__bioMetadata = metadata
+    ; (schema as any).__bioMetadata = metadata
   }
 
   return schema

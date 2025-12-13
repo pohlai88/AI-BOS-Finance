@@ -5,7 +5,7 @@
 // 🛡️ GOVERNANCE: Exported types ensure type safety across BioSkin
 // ============================================================================
 
-import type { MetadataField } from '@/kernel'
+import type { MetadataField } from '@/modules/metadata/kernel'
 import type { z } from 'zod'
 
 // ============================================================================

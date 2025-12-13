@@ -31,7 +31,7 @@ import type {
   SystemAnnouncement,
   ConfigurationGap,
   SystemHealthMetric,
-} from '../../types/system'
+} from '@/modules/system/types/system'
 
 interface MissionControlProps {
   announcements: SystemAnnouncement[]

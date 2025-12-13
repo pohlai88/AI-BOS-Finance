@@ -1,3 +1,3 @@
-// Re-export utils from the canonical location
+// Re-export utils from the canonical location (@aibos/ui)
 // This file exists for shadcn/ui component compatibility
-export { cn } from '@/lib/utils'
+export { cn } from '@aibos/ui'

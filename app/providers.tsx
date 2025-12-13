@@ -1,6 +1,6 @@
 'use client'
 
-import { SysConfigProvider } from '@/context/SysConfigContext'
+import { SysConfigProvider } from '@/modules/system'
 import { RouterAdapterProvider } from '@/hooks/useRouterAdapter'
 import { Toaster } from 'sonner'
 

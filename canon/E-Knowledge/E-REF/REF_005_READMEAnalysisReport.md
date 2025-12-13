@@ -348,7 +348,7 @@ taskkill /PID <PID> /F  # Windows
 - **Architecture Decision Records:** [ADRs](./canon/A-Governance/A-ADR/README.md)
 - **Design System:** [Storybook](http://localhost:6006)
 - **API Documentation:** [Backend Docs](./srv/README.md)
-- **Developer Guide:** [Developer Handoff](./src/docs/04-guides/developer-handoff.md)
+- **Developer Guide:** [Developer Handoff](./REF_092_DeveloperHandoff.md)
 - **Figma Integration:** [Figma Sync Setup](./canon/E-Knowledge/E-REF/FIGMA_SYNC_SETUP.md)
 ```
 

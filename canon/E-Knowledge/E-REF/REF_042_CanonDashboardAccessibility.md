@@ -355,7 +355,7 @@ npm run test:a11y
 
 ### Design System
 - [Nexus Design Variables (globals.css)](../src/styles/globals.css)
-- [Accessibility Standards](../src/docs/02-design-system/DESIGN_SYSTEM.md#11-accessibility-standards)
+- [Accessibility Standards](./REF_075_DesignSystem.md#11-accessibility-standards)
 
 ---
 

@@ -354,7 +354,7 @@ export default function Page() {
    ```
 
 3. **Known files to update:**
-   - `src/docs/04-guides/developer-handoff.md` (line 418)
+   - `canon/E-Knowledge/E-REF/REF_092_DeveloperHandoff.md` (line 418)
    - Any other files using `import.meta.env.VITE_*`
 
 4. **Alternative (temporary):** If you want to keep `VITE_` prefix temporarily, add to `next.config.mjs`:

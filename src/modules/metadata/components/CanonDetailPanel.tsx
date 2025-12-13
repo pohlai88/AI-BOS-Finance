@@ -1,5 +1,5 @@
 import React from 'react'
-import { CanonRecord } from '../../data/mockCanonMatrix'
+import { CanonRecord } from '../../mock-data'/mockCanonMatrix'
 import {
   ArrowDown,
   Shield,
@@ -190,7 +190,7 @@ export function CanonDetailPanel({ record, onClose }: CanonDetailPanelProps) {
                     <div className="font-mono text-xs text-[#28E7A2]">
                       {record.usage.glAccounts.length > 0
                         ? record.usage.glAccounts.join(', ')
-                        : '—'}
+                        : 'â€”'}
                     </div>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouterAdapter } from '@/hooks/useRouterAdapter'
-import { useSysConfig } from '../../context/SysConfigContext'
+import { useSysConfig } from '@/modules/system'
 import {
   Check,
   ChevronUp,
@@ -155,19 +155,17 @@ export function SetupCompanion() {
               <button
                 key={task.id}
                 onClick={() => navigate(task.route)}
-                className={` ${task.span} group relative rounded-xl border p-3 text-left transition-all ${
-                  task.status === 'completed'
+                className={` ${task.span} group relative rounded-xl border p-3 text-left transition-all ${task.status === 'completed'
                     ? 'border-[#1F1F1F] bg-[#111] opacity-60'
                     : 'border-zinc-800 bg-[#0F0F0F] hover:border-zinc-600 hover:bg-[#151515]'
-                } `}
+                  } `}
               >
                 {/* Completion Checkmark */}
                 <div
-                  className={`absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full border transition-colors ${
-                    task.status === 'completed'
+                  className={`absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full border transition-colors ${task.status === 'completed'
                       ? 'border-emerald-500 bg-emerald-500 text-black'
                       : 'border-zinc-700 bg-transparent text-transparent'
-                  }`}
+                    }`}
                 >
                   <Check className="h-3 w-3" />
                 </div>
@@ -223,11 +221,10 @@ export function SetupCompanion() {
             <button
               disabled={!isAllDone}
               onClick={() => navigate('/dashboard')}
-              className={`flex w-full items-center justify-center gap-2 rounded-lg border py-3 text-xs font-bold tracking-widest transition-all ${
-                isAllDone
+              className={`flex w-full items-center justify-center gap-2 rounded-lg border py-3 text-xs font-bold tracking-widest transition-all ${isAllDone
                   ? 'border-emerald-500 bg-emerald-600 text-white shadow-lg shadow-emerald-900/20 hover:bg-emerald-500'
                   : 'cursor-not-allowed border-zinc-800 bg-zinc-900 text-zinc-600'
-              } `}
+                } `}
             >
               {isAllDone ? 'INITIALIZE SYSTEM' : 'COMPLETE SETUP TO START'}
               {isAllDone && <ArrowRight className="h-3 w-3" />}

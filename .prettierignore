@@ -1,5 +1,23 @@
+# Dependencies
 node_modules
-dist
 package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs
+dist
+.next
+.vercel
+.turbo
+build-storybook
+coverage
+
+# Documentation
 *.md
 
+# Minified files
+*.min.js
+*.min.css
+
+# Storybook
+.storybook

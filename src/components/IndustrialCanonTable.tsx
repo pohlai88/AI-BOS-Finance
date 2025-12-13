@@ -1,5 +1,5 @@
 import React from 'react'
-import { IndustrialCanonRecord } from '../data/industrialCanon'
+import { IndustrialCanonRecord } from '../mock-data'/industrialCanon'
 
 interface IndustrialCanonTableProps {
   data: IndustrialCanonRecord[]

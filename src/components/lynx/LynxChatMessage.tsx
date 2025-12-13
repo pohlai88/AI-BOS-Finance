@@ -12,7 +12,7 @@ import {
   Users,
   Server,
 } from 'lucide-react'
-import { LynxMessage } from '../../data/mockLynxData'
+import { LynxMessage } from '../../mock-data'/mockLynxData'
 import { LynxIcon } from '../icons/LynxIcon'
 
 interface LynxChatMessageProps {
@@ -309,7 +309,7 @@ export function LynxChatMessage({ message }: LynxChatMessageProps) {
                 {data.canonBasis.items.map((item) => (
                   <li key={item.id} className="flex items-start gap-2">
                     <span className="mt-0.5 font-mono text-[10px] text-[#28E7A2]">
-                      ►
+                      â–º
                     </span>
                     <div>
                       <span className="block font-mono text-xs text-[#EEE]">

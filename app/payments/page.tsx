@@ -10,8 +10,8 @@
  * @see REF_039_RouteMigrationStrategy.md
  */
 
-import PAY01PaymentHubPage from '@/views/PAY_01_PaymentHubPage'
+import { PaymentHubPage } from '@/modules/payment'
 
 export default function PaymentsPage() {
-  return <PAY01PaymentHubPage />
+  return <PaymentHubPage />
 }

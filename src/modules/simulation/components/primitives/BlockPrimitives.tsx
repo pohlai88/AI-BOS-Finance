@@ -6,7 +6,7 @@
 import { forwardRef, memo } from 'react'
 import { motion } from 'motion/react'
 import { Terminal, AlertTriangle, Lock, Hexagon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import type { LegacyStackItem, NexusStackItem, ShakeLevel } from '../types'
 
 // ============================================================================

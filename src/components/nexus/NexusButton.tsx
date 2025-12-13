@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { ButtonHTMLAttributes, ReactNode } from 'react'
 
 interface NexusButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

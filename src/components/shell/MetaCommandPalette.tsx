@@ -21,7 +21,7 @@ import {
   Star,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useRecentPages, type RecentPage } from '../../lib/stateManager'
+import { useRecentPages, type RecentPage } from './hooks/useRecentPages'
 
 interface CommandPaletteProps {
   isOpen: boolean
@@ -295,11 +295,10 @@ export function MetaCommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     key={cmd.id}
                     onClick={cmd.action}
                     onMouseEnter={() => setSelectedIndex(index)}
-                    className={`flex w-full items-center gap-4 border-b border-[#1F1F1F] px-4 py-3 transition-all ${
-                      isSelected
-                        ? 'border-l-2 border-l-[#28E7A2] bg-[#0D1510]'
-                        : 'hover:bg-[#0A0A0A]'
-                    } `}
+                    className={`flex w-full items-center gap-4 border-b border-[#1F1F1F] px-4 py-3 transition-all ${isSelected
+                      ? 'border-l-2 border-l-[#28E7A2] bg-[#0D1510]'
+                      : 'hover:bg-[#0A0A0A]'
+                      } `}
                   >
                     {/* Icon */}
                     <div

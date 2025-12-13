@@ -18,8 +18,8 @@ import {
   FileText,
   Send,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { MetadataType } from '@/kernel'
+import { cn } from '@aibos/ui'
+import type { MetadataType } from '@/modules/metadata/kernel'
 
 // ============================================================================
 // TYPES

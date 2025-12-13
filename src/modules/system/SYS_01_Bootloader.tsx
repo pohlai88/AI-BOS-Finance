@@ -25,7 +25,7 @@ import {
   Cpu,
   Server,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 // ============================================================================
 // 1. SYSTEM CONFIG SCHEMA

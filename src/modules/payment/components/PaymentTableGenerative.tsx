@@ -3,7 +3,7 @@
 // ============================================================================
 // This is the "Living Cell" version - UI grows from Zod schema
 // Replaces the hardcoded PaymentTable with ZodBioList
-// 🛡️ GOVERNANCE: Uses ZodBioList (which uses BioSkin atoms)
+// ðŸ›¡ï¸ GOVERNANCE: Uses ZodBioList (which uses BioSkin atoms)
 // ============================================================================
 
 'use client'
@@ -15,7 +15,7 @@ import {
   PaymentSchema,
   PaymentIntrospectionOptions,
 } from '../schemas/PaymentZodSchema'
-import type { Payment } from '../data/paymentSchema'
+import type { Payment } from '../mock-data'/paymentSchema'
 
 // ============================================================================
 // TYPES - Derived from Schema (Single Source of Truth)

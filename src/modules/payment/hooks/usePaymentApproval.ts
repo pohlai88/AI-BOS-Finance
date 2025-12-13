@@ -6,7 +6,7 @@
 // ============================================================================
 
 import { useMemo, useCallback, useState } from 'react'
-import type { Payment, PaymentStatus } from '../data'
+import type { Payment, PaymentStatus } from '../mock-data''
 import {
   checkSoD,
   type CurrentUser,

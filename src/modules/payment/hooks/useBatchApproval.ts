@@ -12,7 +12,7 @@ import {
   aggregateFunctionalClusters,
   type Payment,
   type FunctionalCluster,
-} from '../data'
+} from '../mock-data''
 import type { FunctionalClusterData } from '../components/FunctionalCard'
 
 // ============================================================================

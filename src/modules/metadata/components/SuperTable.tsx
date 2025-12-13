@@ -34,7 +34,7 @@ import {
   Check,
 } from 'lucide-react'
 import { NexusCard } from '@/components/nexus/NexusCard'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 // ============================================================================
 // TYPES

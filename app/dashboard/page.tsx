@@ -11,7 +11,7 @@
  * @see REF_039_RouteMigrationStrategy.md - Wave 3
  */
 
-import { MetadataGodView } from '@/views/META_02_MetadataGodView'
+import { MetadataGodView } from '@/modules/metadata'
 
 export default function DashboardPage() {
   return <MetadataGodView />

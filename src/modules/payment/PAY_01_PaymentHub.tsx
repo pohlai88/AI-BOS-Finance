@@ -24,7 +24,7 @@ import {
   Zap,
   Building2,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { toast } from 'sonner'
 import { Surface, Txt, Btn, StatusDot } from '@aibos/ui'
 

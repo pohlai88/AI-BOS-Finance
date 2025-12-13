@@ -16,7 +16,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 interface SuperTablePaginationProps {
   // Current State

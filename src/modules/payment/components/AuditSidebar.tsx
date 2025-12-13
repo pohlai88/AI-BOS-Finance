@@ -3,7 +3,7 @@
 // ============================================================================
 // The "Wow" feature - Answers WHO/WHAT/WHEN/WHERE/HOW at a glance
 // Conditionally shows Intercompany Context when tx_type = 'intercompany'
-// 🛡️ GOVERNANCE: Uses Surface, Txt, Btn, StatusDot components (no hardcoded colors)
+// ðŸ›¡ï¸ GOVERNANCE: Uses Surface, Txt, Btn, StatusDot components (no hardcoded colors)
 // ============================================================================
 
 import React from 'react'
@@ -24,10 +24,10 @@ import {
   ArrowRightLeft,
   Ban,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { Surface, Txt, Btn, StatusDot } from '@aibos/ui'
-import type { Payment } from '../data'
-import { PAYMENT_CONFIG } from '../data'
+import type { Payment } from '../mock-data''
+import { PAYMENT_CONFIG } from '../mock-data''
 
 // ============================================================================
 // TYPES
@@ -53,7 +53,7 @@ interface AuditSectionProps {
   children: React.ReactNode
 }
 
-// 🛡️ GOVERNANCE: Uses Txt component
+// ðŸ›¡ï¸ GOVERNANCE: Uses Txt component
 const AuditSection = ({
   icon: Icon,
   title,
@@ -84,7 +84,7 @@ interface DetailRowProps {
   warning?: boolean
 }
 
-// 🛡️ GOVERNANCE: Uses Txt component
+// ðŸ›¡ï¸ GOVERNANCE: Uses Txt component
 const DetailRow = ({
   label,
   value,
@@ -124,7 +124,7 @@ export function AuditSidebar({
   onSettleIC,
 }: AuditSidebarProps) {
   // Empty state
-  // 🛡️ GOVERNANCE: Uses Surface + Txt components
+  // ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt components
   if (!payment) {
     return (
       <Surface
@@ -193,7 +193,7 @@ export function AuditSidebar({
       {/* ================================================================ */}
       {/* HEADER - Payment Summary */}
       {/* ================================================================ */}
-      {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
       <Surface variant="flat" className="shrink-0 border-b p-5">
         <div className="mb-3 flex items-start justify-between">
           <div>
@@ -269,8 +269,8 @@ export function AuditSidebar({
       {/* SCROLLABLE CONTENT - 4W1H Sections */}
       {/* ================================================================ */}
       <div className="flex-1 space-y-1 overflow-y-auto p-5">
-        {/* 🛡️ GOVERNANCE ALERT (High Risk) */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+        {/* ðŸ›¡ï¸ GOVERNANCE ALERT (High Risk) */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
         {isHighRisk && (
           <Surface
             variant="base"
@@ -311,8 +311,8 @@ export function AuditSidebar({
           </Surface>
         )}
 
-        {/* ⚠️ SOD VIOLATION WARNING */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+        {/* âš ï¸ SOD VIOLATION WARNING */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
         {isSoDViolation && isPending && (
           <Surface
             variant="base"
@@ -330,8 +330,8 @@ export function AuditSidebar({
           </Surface>
         )}
 
-        {/* ⏰ OVERDUE WARNING */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+        {/* â° OVERDUE WARNING */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
         {isOverdue && isPending && (
           <Surface
             variant="base"
@@ -349,8 +349,8 @@ export function AuditSidebar({
           </Surface>
         )}
 
-        {/* 📄 MISSING DOCS WARNING */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+        {/* ðŸ“„ MISSING DOCS WARNING */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
         {isDocsMissing && isPending && (
           <Surface
             variant="base"
@@ -369,10 +369,10 @@ export function AuditSidebar({
           </Surface>
         )}
 
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* ⚖️ INTERCOMPANY CONTEXT (Conditional - Purple Theme) */}
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* âš–ï¸ INTERCOMPANY CONTEXT (Conditional - Purple Theme) */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
         {isIC && (
           <Surface
             variant="base"
@@ -391,7 +391,7 @@ export function AuditSidebar({
             <div className="space-y-2">
               <DetailRow
                 label="Route"
-                value={`${payment.entity} → ${payment.counterparty_entity || 'Unknown'}`}
+                value={`${payment.entity} â†’ ${payment.counterparty_entity || 'Unknown'}`}
               />
 
               <div className="flex items-center justify-between">
@@ -440,7 +440,7 @@ export function AuditSidebar({
           </Surface>
         )}
 
-        {/* 📋 WHAT */}
+        {/* ðŸ“‹ WHAT */}
         <AuditSection
           icon={ClipboardList}
           title="What"
@@ -464,7 +464,7 @@ export function AuditSidebar({
           />
         </AuditSection>
 
-        {/* 👤 WHO */}
+        {/* ðŸ‘¤ WHO */}
         <AuditSection icon={User} title="Who" iconColor="text-purple-400">
           <DetailRow label="Requested By" value={payment.requested_by} />
           {payment.approved_by ? (
@@ -490,7 +490,7 @@ export function AuditSidebar({
           )}
         </AuditSection>
 
-        {/* 🕐 WHEN */}
+        {/* ðŸ• WHEN */}
         <AuditSection icon={Calendar} title="When" iconColor="text-amber-400">
           <DetailRow
             label="Created"
@@ -514,14 +514,14 @@ export function AuditSidebar({
           />
         </AuditSection>
 
-        {/* 📍 WHERE */}
+        {/* ðŸ“ WHERE */}
         <AuditSection icon={MapPin} title="Where" iconColor="text-emerald-400">
           <DetailRow label="Entity" value={payment.entity} />
           <DetailRow label="Cost Center" value={payment.cost_center} mono />
           <DetailRow label="GL Account" value={payment.gl_account} mono />
         </AuditSection>
 
-        {/* ⚙️ HOW */}
+        {/* âš™ï¸ HOW */}
         <AuditSection icon={CreditCard} title="How" iconColor="text-pink-400">
           <DetailRow
             label="Payment Method"
@@ -531,8 +531,8 @@ export function AuditSidebar({
           <DetailRow label="Currency" value={payment.currency} mono />
         </AuditSection>
 
-        {/* 📎 LINKED MANIFESTS */}
-        {/* 🛡️ GOVERNANCE: Uses Surface + Txt + Btn components */}
+        {/* ðŸ“Ž LINKED MANIFESTS */}
+        {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + Btn components */}
         {payment.manifests && payment.manifests.length > 0 && (
           <div className="pt-4">
             <div className="mb-3 flex items-center gap-2">
@@ -572,7 +572,7 @@ export function AuditSidebar({
                       {manifest.label}
                     </Txt>
                     <Txt variant="small" className="text-text-tertiary">
-                      {manifest.type.toUpperCase()} • {manifest.file_size}
+                      {manifest.type.toUpperCase()} â€¢ {manifest.file_size}
                     </Txt>
                   </div>
                   <ExternalLink className="h-3.5 w-3.5 text-text-tertiary" />
@@ -586,7 +586,7 @@ export function AuditSidebar({
       {/* ================================================================ */}
       {/* ACTION FOOTER */}
       {/* ================================================================ */}
-      {/* 🛡️ GOVERNANCE: Uses Surface + Btn + Txt components */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Btn + Txt components */}
       {isPending && (
         <Surface variant="flat" className="shrink-0 border-t p-4">
           {/* IC Unmatched - Special Action */}
@@ -652,7 +652,7 @@ export function AuditSidebar({
       )}
 
       {/* Historical View for non-pending */}
-      {/* 🛡️ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
+      {/* ðŸ›¡ï¸ GOVERNANCE: Uses Surface + Txt + StatusDot components */}
       {!isPending && (
         <Surface variant="flat" className="shrink-0 border-t p-4">
           <Surface

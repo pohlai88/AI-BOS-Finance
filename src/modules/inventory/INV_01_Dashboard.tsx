@@ -13,7 +13,7 @@ import {
   generateColumnsFromSchema,
   MetadataField,
   STATUS_PRESETS,
-} from '@/kernel'
+} from '@/modules/metadata/kernel'
 import {
   Package,
   Warehouse,
@@ -23,7 +23,7 @@ import {
   Download,
   RefreshCw,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 // ============================================================================
 // 1. THE BUSINESS CONTRACT (Schema)

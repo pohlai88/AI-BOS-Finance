@@ -19,7 +19,7 @@ import {
   Search,
   ArrowRightLeft,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { Surface, Txt, Btn, StatusDot } from '@aibos/ui'
 
 // ============================================================================

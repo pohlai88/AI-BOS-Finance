@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 interface NexusIconProps {
   size?: 'sm' | 'md' | 'lg'

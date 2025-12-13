@@ -5,7 +5,7 @@
 // ============================================================================
 
 import { useMemo } from 'react'
-import { PAYMENT_CONFIG, type Payment } from '../data'
+import { PAYMENT_CONFIG, type Payment } from '../mock-data''
 
 // ============================================================================
 // TYPES

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Plus, X, Filter, ChevronDown, Check } from 'lucide-react'
 import clsx from 'clsx'
-import { MetadataRecord } from '../../types/metadata'
+import { MetadataRecord } from '@/modules/metadata/types/metadata'
 
 // --- TYPES ---
 

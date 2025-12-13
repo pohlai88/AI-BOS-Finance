@@ -6,7 +6,7 @@
  */
 
 import React, { ComponentPropsWithoutRef, CSSProperties } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 
 interface RippleProps extends ComponentPropsWithoutRef<'div'> {
   mainCircleSize?: number

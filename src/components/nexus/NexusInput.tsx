@@ -1,5 +1,5 @@
 import { InputHTMLAttributes, forwardRef, ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import { Lock } from 'lucide-react'
 
 export interface NexusInputProps extends InputHTMLAttributes<HTMLInputElement> {

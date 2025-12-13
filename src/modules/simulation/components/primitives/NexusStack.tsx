@@ -6,7 +6,7 @@
 import { memo, forwardRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { ShieldCheck, Hexagon, Lock } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@aibos/ui'
 import type { NexusStackItem } from '../types'
 
 // ============================================================================

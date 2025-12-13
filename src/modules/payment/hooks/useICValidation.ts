@@ -11,7 +11,7 @@ import {
   type Payment,
   type ICPosition,
   IC_POSITIONS,
-} from '../data'
+} from '../mock-data''
 
 // ============================================================================
 // TYPES
@@ -102,7 +102,7 @@ export function useICValidation(
 
 export function formatICRoute(payment: Payment): string {
   if (payment.tx_type !== 'intercompany') return ''
-  return `${payment.entity} → ${payment.counterparty_entity || 'Unknown'}`
+  return `${payment.entity} â†’ ${payment.counterparty_entity || 'Unknown'}`
 }
 
 // ============================================================================
