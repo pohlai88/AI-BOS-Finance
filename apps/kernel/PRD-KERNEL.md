@@ -20,28 +20,59 @@ Below is a **complete MVP PRD for your Kernel** (control plane) that you can use
 
 **Summary:** [BUILD_2_COMPLETE.md](./BUILD_2_COMPLETE.md)
 
-### 🚧 Build 3 — IN PLANNING (Identity & Access Management)
+### ✅ Build 3.1 Phase 1 — COMPLETE (IAM Foundation)
 
-**User Management + Authentication + RBAC**
+**User Management + Role Management + Role Assignment**
+
+| Feature | Status | Completion | Documentation |
+|---------|--------|------------|---------------|
+| User Management | ✅ Complete | 100% | [BUILD_3.1_PHASE1_COMPLETE.md](./BUILD_3.1_PHASE1_COMPLETE.md) |
+| Role Management | ✅ Complete | 100% | All tests passing (6/6) |
+| Role Assignment | ✅ Complete | 100% | Health endpoint updated |
+| Multi-tenant Isolation | ✅ Complete | 100% | Audit trail integrated |
+
+**Completed:** 2025-12-14
+
+### 🚧 Build 3.2 — IN PLANNING (JWT Authentication)
+
+**JWT Issuance + Verification + Session Management**
 
 | Feature | Status | Priority | Dependencies |
 |---------|--------|----------|--------------|
-| User Management | 📋 Planned | P0 | Build 2 complete |
-| JWT Authentication | 📋 Planned | P0 | User Management |
-| Role-Based Access Control | 📋 Planned | P0 | JWT + Users |
-| Permission System | 📋 Planned | P1 | RBAC |
-| Session Management | 📋 Planned | P1 | JWT |
+| Password Hashing | 📋 Planned | P0 | Build 3.1 complete |
+| JWT Issuance (Login) | 📋 Planned | P0 | Password Hashing |
+| JWT Verification | 📋 Planned | P0 | JWT Issuance |
+| Session Tracking | 📋 Planned | P1 | JWT Verification |
+| Token Refresh | 📋 Planned | P2 | JWT Verification |
 
-**Target:** Q1 2025 (after Build 2 production testing)
+**Target:** Next session (2-3 hours)
 
-### 🎯 Current Phase: Build 2 → Production Testing
+### 🚧 Build 3.3 — IN PLANNING (RBAC Enforcement)
 
-**Next Steps:**
-1. Integration testing (Gateway + Registry + Events + Audit)
-2. Load testing (concurrent requests, streaming)
-3. Security audit (correlation ID, tenant isolation)
-4. Performance baseline (latency, throughput)
-5. Documentation (API reference, deployment guide)
+**Permission System + Gateway Authorization**
+
+| Feature | Status | Priority | Dependencies |
+|---------|--------|----------|--------------|
+| Permission System | 📋 Planned | P0 | Build 3.2 complete |
+| Role-Permission Mapping | 📋 Planned | P0 | Permission System |
+| Gateway RBAC | 📋 Planned | P0 | JWT Verification |
+| Kernel RBAC | 📋 Planned | P1 | Gateway RBAC |
+
+**Target:** Following session (3-4 hours)
+
+### 🎯 Current Phase: Build 3.1 → Build 3.2 (JWT Authentication)
+
+**Build 3.1 Status:** ✅ COMPLETE
+- All acceptance tests passing (6/6)
+- Health endpoint updated with IAM checks
+- Committed: 7298c50
+
+**Next Steps (Build 3.2):**
+1. Password hashing (bcrypt integration)
+2. JWT issuance (login endpoint)
+3. JWT verification (middleware)
+4. Session tracking (login/logout audit)
+5. Acceptance tests (JWT flow)
 
 ---
 
@@ -338,12 +369,12 @@ Kernel MVP must make the platform **operable** and make Canons **onboardable**.
 
 ---
 
-### 🚧 FR-7 Observability — PARTIAL (Complete in Build 3)
+### ✅ FR-7 Observability — COMPLETE (Build 3.1)
 
 * ✅ Structured logs (console.log with context)
 * ✅ Correlation ID propagation (`x-correlation-id`)
-* ⏳ Basic trace spans (Add in Build 3)
-* ⏳ `/health` endpoint (Add in Build 3)
+* ✅ `/health` endpoint with all subsystem checks (registry, events, audit, IAM)
+* 🔄 Basic trace spans (Add in Build 3.3+)
 * 🔄 Centralized logging (Add in production setup)
 * 🔄 Metrics/dashboards (Add in production setup)
 
@@ -442,16 +473,23 @@ Recommended schema prefix: `kernel_`
 
 ---
 
-### 🚧 Identity / Admin — BUILD 3 (In Planning)
+### 🚧 Identity / Admin — PARTIAL (Build 3.1 Phase 1 Complete, 3.2-3.3 Pending)
 
 | Endpoint | Method | Status | Description |
 |----------|--------|--------|-------------|
-| `/api/kernel/tenants` | POST | 🚧 Build 3 | Create tenant |
-| `/api/kernel/tenants` | GET | 🚧 Build 3 | List tenants |
-| `/api/kernel/users/invite` | POST | 🚧 Build 3 | Invite user |
-| `/api/kernel/roles` | POST | 🚧 Build 3 | Create role |
-| `/api/kernel/roles/{roleId}/assign` | POST | 🚧 Build 3 | Assign role to user |
-| `/api/kernel/auth/login` | POST | 🚧 Build 3 | Login (JWT) or integrate IdP |
+| `/api/kernel/iam/users` | POST | ✅ Build 3.1 | Create user |
+| `/api/kernel/iam/users` | GET | ✅ Build 3.1 | List users |
+| `/api/kernel/iam/roles` | POST | ✅ Build 3.1 | Create role |
+| `/api/kernel/iam/roles` | GET | ✅ Build 3.1 | List roles |
+| `/api/kernel/iam/roles/{roleId}/assign` | POST | ✅ Build 3.1 | Assign role to user |
+| `/api/kernel/auth/login` | POST | 🚧 Build 3.2 | Login (JWT) |
+| `/api/kernel/auth/logout` | POST | 🚧 Build 3.2 | Logout (session invalidation) |
+| `/api/kernel/tenants` | POST | 🚧 Build 3.3 | Create tenant |
+| `/api/kernel/tenants` | GET | 🚧 Build 3.3 | List tenants |
+
+**Build 3.1 Complete:** User & Role management APIs operational  
+**Build 3.2 Target:** JWT authentication & session management  
+**Build 3.3 Target:** RBAC enforcement & tenant management
 
 ---
 
@@ -605,21 +643,70 @@ export async function writeAuditEvent(input: {
 
 ---
 
-## 🚧 Build 3 — IN PLANNING (Identity & Access Management)
+## ✅ Build 3.1 Phase 1 — COMPLETE (2025-12-14)
 
-**User Management + Authentication + RBAC**
+**IAM Foundation (User & Role Management)**
+
+### Phase Completion
+- [x] **Phase 1:** User management (create, list)
+- [x] **Phase 1:** Role management (create, list)
+- [x] **Phase 1:** Role assignment (assign role to user)
+- [x] **Phase 1:** Multi-tenant isolation enforcement
+- [x] **Phase 1:** Audit trail integration
+- [x] **Phase 1:** Acceptance test suite (6/6 passing)
+- [x] **Phase 1:** Health endpoint IAM checks
+
+### Acceptance Criteria
+- [x] User creation works (201 response)
+- [x] Duplicate user rejected (409 EMAIL_EXISTS)
+- [x] Role creation works (201 response)
+- [x] Role assignment works (200 response)
+- [x] Audit trail captures all events
+- [x] Tenant isolation enforced
+- [x] Schema validation works (400 for invalid input)
+- [x] Acceptance tests pass (6/6)
+- [x] Health endpoint includes IAM checks
+- [x] Changes committed to git
+
+### Documentation
+- [x] Completion report: [BUILD_3.1_PHASE1_COMPLETE.md](./BUILD_3.1_PHASE1_COMPLETE.md)
+- [x] Audit report: [BUILD_3.1_AUDIT_REPORT.md](./BUILD_3.1_AUDIT_REPORT.md)
+- [x] Acceptance tests: [__tests__/build-3.1-acceptance.js](./__tests__/build-3.1-acceptance.js)
+
+---
+
+## 🚧 Build 3.2 — IN PLANNING (JWT Authentication)
+
+**JWT Issuance + Verification + Session Management**
 
 Kernel MVP is complete when:
 
-- [ ] A tenant can be created, users invited, roles assigned
-- [ ] JWT issued/verified for authenticated users
-- [ ] RBAC enforcement at Gateway level (policy checks)
-- [ ] Audit trail shows: tenant/user/role creation and at least one deny event
-- [ ] Canons cannot access `kernel_*` tables directly (permission denied)
-- [ ] Gateway JWT verification works (issuer/audience configurable)
-- [ ] Login/logout flow works (sessions tracked)
+- [ ] Password hashing implemented (bcrypt)
+- [ ] Login endpoint works (email + password → JWT)
+- [ ] JWT verification middleware works
+- [ ] JWT contains user_id, tenant_id, roles
+- [ ] Session tracking (login/logout events in audit)
+- [ ] Acceptance tests pass (JWT flow)
+- [ ] Health endpoint JWT checks (optional)
 
-**Target:** Q1 2025 (after Build 2 production testing)
+**Target:** Next session (2-3 hours)
+
+---
+
+## 🚧 Build 3.3 — IN PLANNING (RBAC Enforcement)
+
+**Permission System + Gateway Authorization**
+
+Kernel MVP is complete when:
+
+- [ ] Permission system defined (kernel.* permissions)
+- [ ] Roles mapped to permissions
+- [ ] Gateway RBAC enforcement (policy checks)
+- [ ] Kernel RBAC enforcement (admin endpoints)
+- [ ] Audit trail shows "DENY" events
+- [ ] Acceptance tests pass (RBAC flow)
+
+**Target:** Following session (3-4 hours)
 
 ---
 
