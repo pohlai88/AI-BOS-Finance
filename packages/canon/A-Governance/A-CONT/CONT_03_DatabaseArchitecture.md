@@ -1,6 +1,6 @@
 > **🟡 [DRAFT]** — Pending Certification  
 > **Canon Code:** CONT_03  
-> **Version:** 0.2.1 (Certifiable Patch)  
+> **Version:** 0.2.2 (MVP-Ready)  
 > **Created:** 2025-12-15  
 > **Updated:** 2025-12-15  
 > **Plane:** A — Governance (Contract)  
@@ -9,7 +9,7 @@
 
 ---
 
-# AI-BOS Data Fabric Standard v0.2.1
+# AI-BOS Data Fabric Standard v0.2.2
 
 > **Beyond "Just Postgres" — An Intelligent, Tenant-Aware Data Governance Layer**
 
@@ -72,7 +72,7 @@ We replace the **messy human process**, not the database:
 |----------|----------------|-------------|
 | "Who changed schema and why?" | Git blame + Slack archaeology | Audit trail + migration manifest |
 | "Why is this query slow?" | Manual EXPLAIN analysis | Automatic optimization suggestions |
-| "Can we prove tenant isolation?" | "Trust me" | Driver guard + RLS + tested defense-in-depth |
+| "Can we prove tenant isolation?" | "Trust me" | Application-level guard + schema separation + tests |
 | "Which index should we add?" | DBA tribal knowledge | AI-recommended, shadow-tested |
 
 ### 1.4 Ecosystem Positioning
@@ -122,7 +122,10 @@ Tables are classified as either `TENANT_SCOPED` or `GLOBAL`:
 
 ### 2.3 Logical Sharding by Default
 
-Every query is rewritten to enforce `WHERE tenant_id = $1`. Tenant isolation is **enforced by driver guard, tested via integration tests, and reinforced by RLS policies** (defense-in-depth).
+Every query is rewritten to enforce `WHERE tenant_id = $1`. Tenant isolation is **enforced at the application layer** via the Kernel Adapter, tested via integration tests.
+
+**MVP Isolation Model:** Application-Level (Trusted Kernel Backend)  
+**Future Enhancement:** Database-Level RLS as defense-in-depth (v1.1.0+)
 
 ```typescript
 // What the Cell writes:
@@ -194,7 +197,36 @@ WHERE status = 'pending'
 
 ## 4. Schema Architecture
 
-### 4.1 Schema Hierarchy
+### 4.1 The "Two-Brain" Separation
+
+The Control Plane and Data Plane are designed to be **physically separable**. Today they may share a Postgres cluster; tomorrow they could run on different servers.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                       AI-BOS DATA FABRIC                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────────────────────┐      ┌──────────────────────────┐ │
+│  │     CONTROL PLANE        │      │       DATA PLANE         │ │
+│  │    (Schema: kernel)      │      │    (Schema: finance)     │ │
+│  │                          │      │                          │ │
+│  │   [Users] [Roles]        │  ◄/X/►   [Ledgers] [Journals]   │ │
+│  │   [Routes][Audit]        │      │   [Accounts] [FX Rates]  │ │
+│  │                          │      │                          │ │
+│  │   Owned by: Kernel       │      │   Owned by: Finance Cell │ │
+│  └──────────────────────────┘      └──────────────────────────┘ │
+│             ▲                                    ▲              │
+│             │                                    │              │
+│      Always AI-BOS Managed              AI-BOS OR Tenant BYOS   │
+│                                                                  │
+│   ◄/X/► = NO CROSS-SCHEMA JOINS (API communication only)       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Future-Proofing:** The `kernel` and `finance` schemas could theoretically live on **different physical servers**. This is why cross-schema joins are forbidden — all communication goes through APIs.
+
+### 4.2 Schema Hierarchy (Current: Single Cluster)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -396,26 +428,37 @@ The Canon and API code **never changes** when migrating between providers. Data 
 
 ---
 
-## 8. Finance Schema (Data Plane)
+## 8. Finance Schema (Data Plane) — "The Business Truth"
 
 ### 8.1 Core Tables (MVP)
 
-| Table | Purpose | Key Design |
-|-------|---------|------------|
-| `accounts` | Chart of Accounts + Bank Accounts | `balance_cents` as BIGINT |
-| `fx_rates` | Exchange rates | High precision DECIMAL(20,10) |
-| `transactions` | Payment requests | Status machine |
-| `journal_entries` | GL posting headers | Links to transaction |
-| `journal_lines` | Debit/Credit entries | Double-entry enforced |
+| Table | Purpose | Key Design | CFO Priority |
+|-------|---------|------------|--------------|
+| `accounts` | Chart of Accounts + Bank Accounts | `balance_cents` as BIGINT | High |
+| `fx_rates` | Exchange rates (Market Truth) | High precision DECIMAL(20,10) | **Critical** |
+| `transactions` | Payment requests (Intent) | Status machine | High |
+| `journal_entries` | GL posting headers (System of Record) | Links to transaction | **Critical** |
+| `journal_lines` | Debit/Credit entries (Immutable Truth) | Double-entry enforced | **Critical** |
 
-### 8.2 Design Principles
+### 8.2 System of Record Artifacts
+
+**These tables are what CFOs and auditors care about most:**
+
+| Artifact | Immutability Rule | Audit Requirement |
+|----------|-------------------|-------------------|
+| **`journal_entries`** | Append-only (no UPDATE, no DELETE) | Every entry has `posted_at`, `created_by` |
+| **`journal_lines`** | Append-only (corrections via reversal journal) | Debit = Credit enforced |
+| **`fx_rates`** | Versioned (no overwrite, `valid_from`/`valid_to`) | Rate source tracked |
+
+### 8.3 Design Principles
 
 | Principle | Implementation |
 |-----------|----------------|
 | **Currency Safety** | Store as `BIGINT` (cents) or `DECIMAL`, never `FLOAT` |
-| **Double-Entry** | Sum of debits = Sum of credits (enforced by trigger) |
+| **Double-Entry** | Sum of debits = Sum of credits (enforced by trigger or constraint) |
 | **Immutability** | Journal entries are append-only, corrections via reversal |
 | **Tenant Isolation** | Every table has `tenant_id` with index |
+| **Auditability** | Every table has `created_at`, `created_by` |
 
 ---
 
@@ -462,12 +505,29 @@ Config: 200-299
 | `aibos_readonly` | SELECT only | Reporting, debugging |
 | `aibos_admin` | ALL + CREATE/DROP | Emergency maintenance |
 
-### 10.2 Row-Level Security (RLS)
+### 10.2 Tenant Isolation (MVP: Application-Level)
+
+**For MVP, tenant isolation is enforced at the application layer:**
+
+```typescript
+// Kernel Adapter automatically appends tenant filter
+async function query<T>(sql: string, params: any[], tenantId: string): Promise<T[]> {
+  // Every query is rewritten to enforce tenant isolation
+  const isolatedSql = appendTenantFilter(sql, tenantId);
+  return await pool.query(isolatedSql, [...params, tenantId]);
+}
+```
+
+**Why not RLS for MVP?**
+- RLS requires complex "impersonation" (`SET app.tenant_id = ...`) for every query
+- Adds latency and complexity to connection pooling
+- The Kernel is a **trusted backend** — it controls all data access
+
+**Future (v1.1.0+): RLS as Defense-in-Depth**
 
 ```sql
--- Automatic tenant isolation
+-- Future: Add RLS as secondary enforcement layer
 ALTER TABLE finance.accounts ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY tenant_isolation ON finance.accounts
   USING (tenant_id = current_setting('app.tenant_id')::uuid);
 ```
@@ -505,12 +565,12 @@ REVOKE ALL ON SCHEMA kernel FROM aibos_finance_role;
 
 **Result:** Even if application code attempts a cross-schema join, Postgres will reject it with a permission error.
 
-| Enforcement Layer | Mechanism | Failure Mode |
-|-------------------|-----------|--------------|
-| **Application** | Query analyzer warns | Logged warning |
-| **Driver** | Tenant context guard | Request rejected (400) |
-| **Database** | Role permissions | SQL error (42501) |
-| **Defense-in-Depth** | RLS policies | Row filtered silently |
+| Enforcement Layer | Mechanism | Failure Mode | MVP Status |
+|-------------------|-----------|--------------|------------|
+| **Application** | Query analyzer warns | Logged warning | ✅ Implemented |
+| **Driver** | Tenant context guard | Request rejected (400) | ✅ Implemented |
+| **Database** | Role permissions | SQL error (42501) | ✅ Implemented |
+| **Defense-in-Depth** | RLS policies | Row filtered silently | 🔮 Future (v1.1.0) |
 
 ---
 
@@ -620,11 +680,12 @@ Enable AI agents to orchestrate across the data fabric **via APIs, not cross-sch
 
 ---
 
-**End of Contract CONT_03 v0.2.1**
+**End of Contract CONT_03 v0.2.2**
 
 ---
 
 **Changelog:**
+- v0.2.2: MVP-ready — deferred RLS to v1.1.0, emphasized Application-Level Isolation, added "Two-Brain" physical separation, emphasized System of Record artifacts
 - v0.2.1: Certifiable patch — removed absolute claims, fixed MCP example, added GLOBAL table exception, renamed Zero-Canon-Change Promise, added enforcement mechanism
 - v0.2.0: Strategic update — DGOL positioning, deployment modes, provider portability
 - v0.1.0: Initial draft
@@ -634,3 +695,4 @@ Enable AI agents to orchestrate across the data fabric **via APIs, not cross-sch
 2. Create `PRD-DB-MVP.md` sprint plan
 3. Implement Schema Guardian (basic)
 4. Implement DB role separation per schema
+5. Create finance seed script (`seed-finance.ts`)
