@@ -35,6 +35,7 @@ export interface ResolvedRoute {
   canon_id: string;
   canon_base_url: string;
   forward_path: string;
+  required_permissions: string[]; // Build 3.3: RBAC permissions required
 }
 
 /**
@@ -82,6 +83,7 @@ export async function resolveRoute(
     canon_id: canon.id,
     canon_base_url: canon.base_url,
     forward_path: forwardPath,
+    required_permissions: match.required_permissions || [], // Build 3.3: RBAC permissions
   };
 }
 

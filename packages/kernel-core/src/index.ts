@@ -19,6 +19,7 @@ export * from './domain/registry';
 export * from './domain/event';
 export * from './domain/iam';
 export * from './domain/auth';
+export * from './domain/permission';
 
 // Ports
 export * from './ports/tenantRepo';
@@ -32,6 +33,11 @@ export * from './ports/credentialRepoPort';
 export * from './ports/sessionRepoPort';
 export * from './ports/passwordHasherPort';
 export * from './ports/tokenSignerPort';
+export * from './ports/permissionRepoPort';
+export * from './ports/rolePermissionRepoPort';
+
+// Constants
+export { KERNEL_PERMISSIONS } from './constants/permissions';
 
 // Application (use-cases)
 export { createTenant } from './application/createTenant';
@@ -51,4 +57,6 @@ export { setPassword } from './application/setPassword';
 export { login } from './application/login';
 export { me } from './application/me';
 export { logout } from './application/logout';
+export { authorize } from './application/authorize';
+export { grantPermission } from './application/grantPermission';
 

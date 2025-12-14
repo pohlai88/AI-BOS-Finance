@@ -23,6 +23,7 @@ export type RouteMapping = {
   tenant_id: string;
   route_prefix: string; // normalized, always starts with "/"
   canon_id: string;
+  required_permissions: string[]; // Build 3.3: RBAC permissions required to access this route
   created_at: string; // ISO 8601
 };
 

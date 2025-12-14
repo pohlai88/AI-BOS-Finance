@@ -20,6 +20,8 @@ export { InMemoryUserRepo } from './memory/userRepo.memory';
 export { InMemoryRoleRepo } from './memory/roleRepo.memory';
 export { InMemoryCredentialRepo } from './memory/credentialRepo.memory';
 export { InMemorySessionRepo } from './memory/sessionRepo.memory';
+export { InMemoryPermissionRepo } from './memory/permissionRepo.memory';
+export { InMemoryRolePermissionRepo } from './memory/rolePermissionRepo.memory';
 
 // Auth adapters (bcryptjs, jose)
 export { BcryptPasswordHasher } from './auth/bcryptHasher';

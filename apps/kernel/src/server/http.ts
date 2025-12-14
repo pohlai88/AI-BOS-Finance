@@ -16,7 +16,7 @@ import type { NextRequest } from "next/server";
  * 
  * Note: This runs in Node.js runtime (API routes), so we can use node:crypto
  */
-export function getCorrelationId(req: NextRequest): string {
+export function getCorrelationId(req: NextRequest | Request): string {
   const incoming = req.headers.get("x-correlation-id");
   // Validate incoming ID (prevent injection)
   if (incoming && incoming.length > 0 && incoming.length < 128) {

@@ -36,6 +36,7 @@ export interface CreateRouteInput {
   correlation_id: string;
   route_prefix: string;
   canon_id: string;
+  required_permissions?: string[]; // Build 3.3: RBAC permissions required (default: empty = public)
 }
 
 export async function createRoute(
@@ -70,6 +71,7 @@ export async function createRoute(
     tenant_id: input.tenant_id,
     route_prefix: normalizePrefix(input.route_prefix),
     canon_id: input.canon_id,
+    required_permissions: input.required_permissions || [], // Default: empty = public
   });
 
   // 3. Append audit event for success (immutable)

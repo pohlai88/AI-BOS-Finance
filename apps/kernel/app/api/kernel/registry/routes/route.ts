@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
         correlation_id: correlationId,
         route_prefix: parsed.route_prefix,
         canon_id: parsed.canon_id,
+        required_permissions: parsed.required_permissions || [], // Build 3.3: RBAC permissions
       }
     );
 

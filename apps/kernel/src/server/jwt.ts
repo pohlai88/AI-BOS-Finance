@@ -23,7 +23,7 @@ export type AuthenticatedUser = {
  */
 export async function verifyJWT(req: Request): Promise<AuthenticatedUser> {
   const authHeader = req.headers.get("authorization");
-  
+
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new Error("UNAUTHORIZED");
   }
@@ -31,7 +31,7 @@ export async function verifyJWT(req: Request): Promise<AuthenticatedUser> {
   const token = authHeader.substring(7); // Remove "Bearer " prefix
 
   const c = getKernelContainer();
-  
+
   // Verify JWT
   let payload;
   try {

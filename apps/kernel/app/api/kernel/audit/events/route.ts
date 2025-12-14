@@ -17,6 +17,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { ZodError } from "zod";
 import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
 import { getKernelContainer } from "@/src/server/container";
+import { enforceRBAC, createForbiddenResponse } from "@/src/server/rbac";
 import { AuditQueryFilters, AuditQueryResponse } from "@aibos/contracts";
 import { queryAudit } from "@aibos/kernel-core";
 
@@ -88,7 +89,12 @@ export async function GET(req: NextRequest) {
       status: 200,
       headers: createResponseHeaders(correlationId),
     });
-  } catch (error) {
+  } catch (error: any) {
+    // Handle RBAC denial
+    if (error?.message === "FORBIDDEN") {
+      return createForbiddenResponse(correlationId);
+    }
+
     // Handle validation errors
     if (error instanceof ZodError) {
       return NextResponse.json(

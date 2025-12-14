@@ -22,7 +22,27 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
 import { getKernelContainer } from "@/src/server/container";
-import { resolveRoute } from "@aibos/kernel-core";
+import { verifyJWT } from "@/src/server/jwt";
+import { resolveRoute, authorize } from "@aibos/kernel-core";
+
+/**
+ * Check if error is an authentication/authorization error
+ * Handles both string messages and error objects with code properties
+ */
+function isAuthnError(e: unknown): boolean {
+  if (!e || typeof e !== "object") return false;
+  const anyE = e as any;
+  const code = anyE.code ?? anyE.error?.code;
+  const msg = anyE.message;
+  return (
+    code === "UNAUTHORIZED" ||
+    code === "INVALID_TOKEN" ||
+    code === "SESSION_INVALID" ||
+    msg === "UNAUTHORIZED" ||
+    msg === "INVALID_TOKEN" ||
+    msg === "SESSION_INVALID"
+  );
+}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -128,42 +148,137 @@ async function handleGatewayRequest(
   const timeoutMs = readTimeoutMs();
 
   try {
-    // 1. Validate tenant_id (required for all gateway requests)
-    const tenantId = req.headers.get("x-tenant-id");
-    if (!tenantId) {
-      return jsonError(400, "MISSING_TENANT_ID", "Missing x-tenant-id header", correlationId);
-    }
-
-    // 2. Extract path from catch-all segment
+    // 1. Extract path from catch-all segment
     // Example: /api/gateway/canon/hrm/users → /canon/hrm/users
     const pathSegments = params.path ?? [];
     const gatewayPath = "/" + pathSegments.join("/");
 
-    // 3. Resolve route → Canon via Registry
+    // 2. Resolve route → Canon via Registry
+    // For public routes (no required_permissions), we still need tenant_id from header
+    // For protected routes, tenant_id comes from JWT (enforced below)
+    const headerTenantId = req.headers.get("x-tenant-id");
+
     const container = getKernelContainer();
-    const resolved = await resolveRoute(
+
+    // 3. Check if route requires authentication (has required_permissions)
+    // If yes, verify JWT first to get tenant_id from token (more secure)
+    let tenantId: string;
+    let auth: { user_id: string; tenant_id: string; session_id: string; email: string } | null = null;
+
+    // Try to resolve route first to check if it requires permissions
+    // Note: This requires tenant_id, so we'll use header for initial resolution
+    // but then re-resolve with JWT tenant_id if route is protected
+    if (!headerTenantId) {
+      return jsonError(400, "MISSING_TENANT_ID", "Missing x-tenant-id header", correlationId);
+    }
+
+    let resolved = await resolveRoute(
       { routes: container.routes, canonRegistry: container.canonRegistry },
-      { tenant_id: tenantId, path: gatewayPath }
+      { tenant_id: headerTenantId, path: gatewayPath }
     );
 
     if (!resolved) {
       return jsonError(404, "ROUTE_NOT_FOUND", "No route found for path", correlationId);
     }
 
-    // 4. Build Canon URL with query parameters
+    // 4. Enforce RBAC if required_permissions specified (Build 3.3)
+    // Safely handle undefined required_permissions (legacy routes or domain objects)
+    const requiredPerms = Array.isArray((resolved as any)?.required_permissions)
+      ? (resolved as any).required_permissions
+      : [];
+
+    if (requiredPerms.length > 0) {
+      try {
+        // Verify JWT and get user context (tenant_id from JWT is authoritative)
+        auth = await verifyJWT(req);
+        tenantId = auth.tenant_id; // Use tenant_id from JWT, not header
+
+        // Re-resolve route with JWT tenant_id to prevent tenant boundary bypass
+        resolved = await resolveRoute(
+          { routes: container.routes, canonRegistry: container.canonRegistry },
+          { tenant_id: tenantId, path: gatewayPath }
+        );
+
+        if (!resolved) {
+          return jsonError(404, "ROUTE_NOT_FOUND", "No route found for path", correlationId);
+        }
+
+        // Re-check required_permissions after re-resolution (may have changed)
+        const jwtRequiredPerms = Array.isArray((resolved as any)?.required_permissions)
+          ? (resolved as any).required_permissions
+          : requiredPerms;
+
+        // Check authorization
+        const decision = await authorize(
+          {
+            roles: container.roleRepo,
+            rolePermissions: container.rolePermissionRepo,
+          },
+          {
+            tenant_id: tenantId, // Use JWT tenant_id
+            actor_id: auth.user_id,
+            required_permissions: jwtRequiredPerms,
+            resource: `gateway:${req.method}:${gatewayPath}:${(resolved as any)?.canon_id ?? "unknown"}`,
+          }
+        );
+
+        // If denied, write audit event and return 403
+        if (decision.decision === "DENY") {
+          await container.audit.append({
+            tenant_id: tenantId, // Use JWT tenant_id
+            actor_id: auth.user_id,
+            action: "authz.deny",
+            resource: `gateway:${req.method}:${gatewayPath}:${(resolved as any)?.canon_id ?? "unknown"}`,
+            result: "DENY",
+            correlation_id: correlationId,
+            payload: {
+              required_permissions: jwtRequiredPerms,
+              missing_permissions: decision.missing ?? [],
+            },
+          });
+
+          return NextResponse.json(
+            {
+              ok: false,
+              error: {
+                code: "FORBIDDEN",
+                message: "Insufficient permissions",
+                missing_permissions: decision.missing ?? [],
+              },
+              correlation_id: correlationId,
+            },
+            { status: 403, headers: createResponseHeaders(correlationId) }
+          );
+        }
+      } catch (e: any) {
+        // Handle JWT errors (robust error detection)
+        if (isAuthnError(e)) {
+          return jsonError(401, "UNAUTHORIZED", "Missing or invalid authentication token", correlationId);
+        }
+        // Re-throw other errors
+        throw e;
+      }
+    } else {
+      // Public route - use tenant_id from header
+      tenantId = headerTenantId;
+    }
+
+    // 5. Build Canon URL with query parameters
     const canonUrl = new URL(resolved.forward_path, resolved.canon_base_url);
     canonUrl.search = req.nextUrl.search; // preserve query string exactly
 
-    // 5. Build forward headers (correlation ID + tenant ID + filtered headers)
-    const forwardHeaders = buildForwardHeaders(req.headers, correlationId, tenantId);
+    // 6. Build forward headers (correlation ID + tenant ID + filtered headers)
+    // Use tenant_id from JWT if authenticated, otherwise from header
+    const forwardTenantId = auth?.tenant_id || tenantId;
+    const forwardHeaders = buildForwardHeaders(req.headers, correlationId, forwardTenantId);
 
-    // 6. Read request body for POST/PUT/PATCH (binary safe)
+    // 7. Read request body for POST/PUT/PATCH (binary safe)
     const body =
       method === "POST" || method === "PUT" || method === "PATCH"
         ? await readRequestBody(req)
         : undefined;
 
-    // 7. Forward request with timeout
+    // 8. Forward request with timeout
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -184,7 +299,7 @@ async function handleGatewayRequest(
         createResponseHeaders(correlationId)
       );
 
-      // 9. Stream body back to client (efficient + binary safe)
+      // 10. Stream body back to client (efficient + binary safe)
       return new NextResponse(canonResponse.body, {
         status: canonResponse.status,
         statusText: canonResponse.statusText,

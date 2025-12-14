@@ -83,7 +83,7 @@ async function runTests() {
   console.log('\n🔧 Setup: Creating test user and setting password...');
   testUserEmail = 'jwt-test@example.com';
   testUserPassword = 'SecurePassword123!';
-  
+
   try {
     // Step 1: Create user
     const createRes = await request('POST', '/api/kernel/iam/users', {
@@ -109,7 +109,7 @@ async function runTests() {
         // If list fails (JWT required), we'll try to set password anyway
         console.log('⚠️  Could not list users (JWT may be required), continuing...');
       }
-      
+
       if (!testUserId) {
         // If we couldn't get user ID, try a known test user ID pattern or skip password set
         console.log('⚠️  Could not determine user ID, password may already be set');

@@ -41,6 +41,7 @@ export const CanonListResponse = z.object({
 export const RouteCreateRequest = z.object({
   route_prefix: z.string().min(1).max(128), // e.g. "/canon/hrm"
   canon_id: z.string().uuid(),
+  required_permissions: z.array(z.string()).default([]), // Build 3.3: RBAC permissions required (empty = public)
 });
 
 export const RouteDTO = z.object({
@@ -48,6 +49,7 @@ export const RouteDTO = z.object({
   tenant_id: z.string().uuid(),
   route_prefix: z.string(),
   canon_id: z.string().uuid(),
+  required_permissions: z.array(z.string()), // Build 3.3: RBAC permissions required
   created_at: z.string(), // ISO 8601
 });
 

@@ -10,17 +10,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getKernelContainer } from "@/src/server/container";
 import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
+import { verifyJWT } from "@/src/server/jwt";
+import { enforceRBAC, createForbiddenResponse } from "@/src/server/rbac";
 import { IamRoleCreateSchema, IamListQuerySchema } from "@aibos/contracts";
 import { createRole, listRoles } from "@aibos/kernel-core";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-function requireTenantId(req: NextRequest): string {
-  const tenantId = req.headers.get("x-tenant-id");
-  if (!tenantId) throw new Error("Missing x-tenant-id header");
-  return tenantId;
-}
 
 /**
  * POST /api/kernel/iam/roles
@@ -30,8 +26,19 @@ export async function POST(req: NextRequest) {
   const headers = createResponseHeaders(correlationId);
 
   try {
-    const tenantId = requireTenantId(req);
-    const json = await req.json().catch(() => null);
+    // Note: Role creation bootstrap removed - roles should be created after users exist
+    // This ensures proper RBAC from the start
+    // Enforce RBAC (Build 3.3) - require kernel.iam.role.create permission
+    const auth = await enforceRBAC(req, {
+      required_permissions: ["kernel.iam.role.create"],
+      resource: "role/create",
+    });
+    const tenantId = auth.tenant_id;
+
+    // Parse JSON body (only after RBAC check)
+    const contentType = req.headers.get("content-type") || "";
+    const shouldParseJson = contentType.includes("application/json");
+    const json = shouldParseJson ? await req.json().catch(() => null) : null;
     const parsed = IamRoleCreateSchema.safeParse(json);
 
     if (!parsed.success) {
@@ -49,7 +56,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const c = getKernelContainer();
     const role = await createRole(
       {
         roles: c.roleRepo,
@@ -69,7 +75,29 @@ export async function POST(req: NextRequest) {
       { status: 201, headers }
     );
   } catch (e: any) {
-    const code = e?.message === "ROLE_EXISTS" ? "ROLE_EXISTS" : "INTERNAL_ERROR";
+    const msg = e?.message || "INTERNAL_ERROR";
+
+    // Handle JWT/auth errors
+    if (msg === "UNAUTHORIZED" || msg === "INVALID_TOKEN" || msg === "SESSION_INVALID") {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Missing or invalid authentication token",
+          },
+          correlation_id: correlationId,
+        },
+        { status: 401, headers }
+      );
+    }
+
+    // Handle RBAC denial
+    if (msg === "FORBIDDEN") {
+      return createForbiddenResponse(correlationId);
+    }
+
+    const code = msg === "ROLE_EXISTS" ? "ROLE_EXISTS" : "INTERNAL_ERROR";
     const status = code === "ROLE_EXISTS" ? 409 : 500;
     const message = code === "ROLE_EXISTS"
       ? "Role already exists"
@@ -96,7 +124,9 @@ export async function GET(req: NextRequest) {
   const headers = createResponseHeaders(correlationId);
 
   try {
-    const tenantId = requireTenantId(req);
+    // Enforce RBAC (Build 3.3) - JWT required, but list is allowed for authenticated users
+    const auth = await verifyJWT(req);
+    const tenantId = auth.tenant_id;
     const raw = Object.fromEntries(req.nextUrl.searchParams.entries());
     const parsed = IamListQuerySchema.safeParse(raw);
 

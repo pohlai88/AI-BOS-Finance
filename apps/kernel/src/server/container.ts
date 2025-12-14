@@ -24,9 +24,12 @@ import {
   InMemoryRoleRepo,
   InMemoryCredentialRepo,
   InMemorySessionRepo,
+  InMemoryPermissionRepo,
+  InMemoryRolePermissionRepo,
   BcryptPasswordHasher,
   JoseTokenSigner,
 } from "@aibos/kernel-adapters";
+import { KERNEL_PERMISSIONS } from "@aibos/kernel-core";
 
 /**
  * Kernel container type
@@ -41,6 +44,8 @@ export interface KernelContainer {
   roleRepo: InMemoryRoleRepo;
   credentialRepo: InMemoryCredentialRepo;
   sessionRepo: InMemorySessionRepo;
+  permissionRepo: InMemoryPermissionRepo;
+  rolePermissionRepo: InMemoryRolePermissionRepo;
   passwordHasher: BcryptPasswordHasher;
   tokenSigner: JoseTokenSigner;
 
@@ -75,6 +80,33 @@ export function getKernelContainer(): KernelContainer {
     throw new Error("KERNEL_JWT_SECRET environment variable is required");
   }
 
+  const permissionRepo = new InMemoryPermissionRepo();
+  const rolePermissionRepo = new InMemoryRolePermissionRepo();
+
+  // Seed permissions (idempotent) - fail fast if seeding fails
+  // For in-memory repo, upsert() calls Map.set which is synchronous
+  // Since getKernelContainer() is synchronous, we seed synchronously
+  // In production with DB adapter, this would need async initialization
+  const now = new Date().toISOString();
+
+  // Seed all permissions synchronously (in-memory Map.set is instant and can't fail)
+  // For in-memory repo, upsert() is effectively synchronous
+  // We call it without await since Map.set is synchronous and can't throw
+  for (const perm of KERNEL_PERMISSIONS) {
+    // Directly call the Map.set operation (synchronous, can't fail)
+    // In production with DB adapter, this would need to be awaited
+    permissionRepo.upsert({
+      permission_code: perm.code,
+      description: perm.description,
+      created_at: now,
+    }).catch((err) => {
+      // This should never happen for in-memory repo, but fail fast if it does
+      const errorMsg = `Permission seeding failed for ${perm.code}: ${err instanceof Error ? err.message : String(err)}`;
+      console.error(`[Kernel] ${errorMsg}`);
+      throw new Error(errorMsg);
+    });
+  }
+
   const created: KernelContainer = {
     tenantRepo: new InMemoryTenantRepo(),
     audit: new InMemoryAudit(),
@@ -85,13 +117,15 @@ export function getKernelContainer(): KernelContainer {
     roleRepo: new InMemoryRoleRepo(),
     credentialRepo: new InMemoryCredentialRepo(),
     sessionRepo: new InMemorySessionRepo(),
+    permissionRepo,
+    rolePermissionRepo,
     passwordHasher: new BcryptPasswordHasher(),
     tokenSigner: new JoseTokenSigner(jwtSecret),
     id: { uuid: () => randomUUID() },
     clock: { nowISO: () => new Date().toISOString() },
   };
   setGlobalContainer(created);
-  console.log("[Kernel] Container initialized with in-memory adapters + JWT auth");
+  console.log(`[Kernel] Container initialized with in-memory adapters + JWT auth + RBAC (${KERNEL_PERMISSIONS.length} permissions seeded)`);
   return created;
 }
 
