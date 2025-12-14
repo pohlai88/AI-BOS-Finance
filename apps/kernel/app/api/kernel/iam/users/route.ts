@@ -50,27 +50,50 @@ export async function POST(req: NextRequest) {
       }
       tenantId = headerTenantId;
     } else {
-      // Bootstrap denied - check if it's because tenant is already bootstrapped
-      // If so, require RBAC. Otherwise, return bootstrap error.
-      if (bootstrapCheck.reason?.includes("already bootstrapped")) {
-        // Tenant already bootstrapped - require RBAC
-        auth = await enforceRBAC(req, {
-          required_permissions: ["kernel.iam.user.create"],
-          resource: "user/create",
+      // Bootstrap denied - check if tenant is already bootstrapped
+      // If tenant has users, require RBAC (even if bootstrap key was invalid/missing)
+      const headerTenantId = req.headers.get("x-tenant-id");
+      if (headerTenantId) {
+        const c = getKernelContainer();
+        const existingUsers = await c.userRepo.list({
+          tenant_id: headerTenantId,
+          limit: 1,
+          offset: 0,
         });
-        tenantId = auth.tenant_id;
+        
+        if (existingUsers.total > 0) {
+          // Tenant already bootstrapped - require RBAC (ignore bootstrap key)
+          auth = await enforceRBAC(req, {
+            required_permissions: ["kernel.iam.user.create"],
+            resource: "user/create",
+          });
+          tenantId = auth.tenant_id;
+        } else {
+          // Tenant not bootstrapped but bootstrap denied - return error
+          return NextResponse.json(
+            {
+              ok: false,
+              error: {
+                code: "BOOTSTRAP_DENIED",
+                message: bootstrapCheck.reason || "Bootstrap access denied",
+              },
+              correlation_id: correlationId,
+            },
+            { status: 403, headers }
+          );
+        }
       } else {
-        // Bootstrap denied for other reasons (invalid key, missing tenant, etc.)
+        // Missing tenant ID - return error
         return NextResponse.json(
           {
             ok: false,
             error: {
-              code: "BOOTSTRAP_DENIED",
-              message: bootstrapCheck.reason || "Bootstrap access denied",
+              code: "MISSING_TENANT_ID",
+              message: "Missing x-tenant-id header",
             },
             correlation_id: correlationId,
           },
-          { status: 403, headers }
+          { status: 400, headers }
         );
       }
     }

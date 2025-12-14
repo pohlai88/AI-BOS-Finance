@@ -21,7 +21,8 @@ let adminRoleId;
 let basicRoleId;
 let adminToken;
 let basicToken;
-let testTenantId = "test-tenant-rbac";
+// Use unique tenant ID per test run to avoid state persistence issues with in-memory repos
+let testTenantId = `test-tenant-rbac-${Date.now()}`;
 
 async function request(method, path, body, token, useBootstrap = false) {
   const url = `${BASE_URL}${path}`;

@@ -110,7 +110,7 @@ export async function POST(
       );
     }
 
-    // Use existing container instance (c already declared above)
+    const c = getKernelContainer();
     const result = await setPassword(
       {
         users: c.userRepo,
