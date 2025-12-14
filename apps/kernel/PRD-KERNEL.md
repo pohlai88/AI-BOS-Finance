@@ -817,6 +817,276 @@ export async function writeAuditEvent(input: {
 
 ---
 
+## 12) Post-MVP Backlog
+
+### Type Generation Strategy: Database → Zod → Kernel Types → Canons
+
+**Status:** 📋 **Planned for Post-MVP**
+
+**Priority:** High (Architectural Foundation)
+
+**Rationale:**
+- Auto-generated types ensure compile-time safety matches database reality
+- Zod schemas provide runtime validation at API boundaries
+- Kernel exports types for Canon consumption (governance compliance)
+- Prevents type drift and ensures consistency across the system
+
+**Architecture Flow:**
+```
+Database Schema (PostgreSQL - Source of Truth)
+    ↓ [Auto-Generate Types]
+TypeScript Types (Compile-time Safety)
+    ↓ [Generate Zod Schemas]
+Zod Schemas (Runtime Validation + API Contracts)
+    ↓ [Export from Kernel Core]
+Kernel Exports (@aibos/kernel-core/db/types & /db/schemas)
+    ↓ [Canons Import & Use]
+Canon Usage (Guaranteed Consistency)
+```
+
+**Implementation Plan:**
+
+#### Phase 1: Generate Types from Database Schema
+- [ ] Add type generation tool (`pg-typed` or custom script)
+- [ ] Create `scripts/generate-db-types.ts`
+- [ ] Generate TypeScript interfaces from PostgreSQL schema
+- [ ] Output: `apps/kernel/src/db/generated/types.ts`
+- **Interim (Sprint 1):** ✅ Manual types in `packages/kernel-core/src/db/schema.types.ts`
+
+#### Phase 2: Generate Zod Schemas from Types
+- [ ] Create `scripts/generate-zod-schemas.ts`
+- [ ] Auto-generate Zod schemas from TypeScript types
+- [ ] Output: `apps/kernel/src/db/generated/schemas.ts`
+- [ ] Ensure schemas satisfy type constraints (`satisfies z.ZodType<T>`)
+
+#### Phase 3: Export from Kernel Core
+- [x] Create `packages/kernel-core/src/db/types.ts` → ✅ Done as `schema.types.ts`
+- [ ] Create `packages/kernel-core/src/db/schemas.ts` (pending Phase 2)
+- [x] Export types and schemas for Canon consumption → ✅ Exported via `index.ts`
+- [x] Update `packages/kernel-core/package.json` exports → ✅ No changes needed (re-exports work)
+- [x] Create `packages/kernel-core/src/constants/system.ts` → ✅ SYSTEM_TENANT_ID, TABLES, COLUMNS
+
+#### Phase 4: Update Canon Integration Guide
+- [ ] Document how Canons import Kernel types
+- [ ] Provide examples of runtime validation (Zod)
+- [ ] Show compile-time type safety usage
+- [ ] Update `docs/canon-integration-guide.md`
+
+**Benefits:**
+- ✅ **Single Source of Truth:** Database schema → Types → Schemas
+- ✅ **Compile-time + Runtime Safety:** TypeScript + Zod double protection
+- ✅ **Canon Consistency:** All Canons use same Kernel-provided types
+- ✅ **API Contract Enforcement:** Zod validates API boundaries
+- ✅ **Governance Compliance:** Matches Canon Identity (CONT_01) - Kernel provides contracts
+
+**Current State (Sprint 1 - Interim SSOT Layer):**
+- ✅ Manual type annotations in SQL adapters
+- ✅ Zod schemas in `@aibos/contracts` (API boundaries)
+- ✅ **NEW:** `packages/kernel-core/src/constants/system.ts` - SYSTEM_TENANT_ID, NULL_UUID, TABLES, COLUMNS
+- ✅ **NEW:** `packages/kernel-core/src/db/schema.types.ts` - Db*Row interfaces derived from SQL migrations
+- ✅ **NEW:** `@aibos/kernel-core` exports types/constants for Canon consumption
+- ⚠️ Types manually maintained (can drift if SQL changes without updating types)
+- ⚠️ No auto-generation yet
+
+**Target State (Post-MVP):**
+- ✅ Auto-generated types from DB schema
+- ✅ Auto-generated Zod schemas from types
+- ✅ Kernel exports types for Canons
+- ✅ Full type safety + runtime validation
+- ✅ Canon consistency guaranteed
+
+**Documentation:** See `apps/kernel/docs/type-generation-strategy.md` for detailed implementation guide.
+
+**Related:**
+- Matches PRD goal: "Schema-first contract SSOT"
+- Aligns with Canon Identity governance (CONT_01)
+- Supports Kernel as type provider to Canons
+
+---
+
+### Canon Resilience Pattern (Cell-Based Architecture)
+
+**Status:** 📋 **Decided — Sprint 1 Day 5**
+
+**Decision:** Reference Cell (`cell-payment-hub`) will implement a **Cell-Based Resilience Pattern** for the Finance domain.
+
+**Context:**
+- Kernel is designed as a plug-and-play organ that any system can connect to
+- AI-BOS uses hexagonal lego-style molecular architecture
+- Failures at any level (button to database) should not cascade
+
+**Architecture:**
+```
+┌─────────────┐      ┌─────────────────────────┐
+│   Kernel    │ ───► │   cell-payment-hub      │
+│  (Gateway)  │      │  ┌───────┐ ┌─────────┐ │
+└─────────────┘      │  │gateway│ │processor│ │
+       │             │  └───────┘ └─────────┘ │
+       ▼             │  ┌──────┐              │
+  [Postgres]         │  │ledger│ [Finance]    │
+                     │  └──────┘              │
+                     └─────────────────────────┘
+```
+
+**Cell Health Model:**
+```typescript
+type CellStatus = 'healthy' | 'degraded' | 'unhealthy';
+
+interface HealthResponse {
+  service: string;
+  status: 'healthy' | 'degraded';
+  cells: {
+    gateway: { status: CellStatus; lastChecked: string };    // Payment networks
+    processor: { status: CellStatus; lastChecked: string };  // Logic engine
+    ledger: { status: CellStatus; lastChecked: string };     // Transaction record
+  };
+}
+```
+
+**Key Endpoints:**
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /ping` | Liveness probe (always works) |
+| `GET /health` | Readiness probe with cell-level health |
+| `POST /payments/process` | Process a payment (finance) |
+| `GET /payments/status/:id` | Check payment status |
+| `POST /chaos/fail/:cell` | Chaos: simulate cell failure |
+| `POST /chaos/recover/:cell` | Chaos: recover cell |
+
+**Benefits:**
+- ✅ Demonstrates graceful degradation (Kernel promise)
+- ✅ Template for real Canon implementations
+- ✅ Enables chaos engineering testing
+- ✅ Shows correct `/health` implementation (aggregate status)
+
+**Implementation:** `apps/cell-payment-hub/src/index.ts`
+
+**Composability (Future):**
+```
+canon-accounting/
+├── molecule-accounts-payable/
+│   ├── cell-payment-hub       ← Day 5 (this one)
+│   ├── cell-invoice-matcher   ← Future
+│   └── cell-vendor-ledger     ← Future
+└── molecule-accounts-receivable/
+    ├── cell-invoice-generator
+    └── cell-collection-tracker
+```
+
+---
+
+### Silent Killer Roadmap: Identity-to-Evidence Control Plane
+
+**Status:** 📋 **Strategic Roadmap — Post-MVP v2.0+**
+
+**Vision:** Position AI-BOS Kernel as the **"Identity-to-Evidence Control Plane"** that complements existing IAM solutions (Okta, Auth0, Entra ID) rather than competing with them.
+
+> **Tagline:** *IdP authenticates users. Kernel governs access to Canons, produces evidence, makes integrations deterministic.*
+
+**Market Pain Points Addressed:**
+
+| Pain Point | Current State | Kernel Solution |
+|------------|---------------|-----------------|
+| **Authorization Fragmentation** | Every app implements RBAC differently | Centralized Authorization Fabric |
+| **Vendor Lock-in** | Switching IdP requires rewriting security | Cross-IdP Claim Normalization |
+| **Evidence Fragmentation** | Auditor-ready narratives expensive | Policy Proof Receipts |
+| **Lifecycle Drift** | Permissions drift over time | Permission Drift Radar |
+| **Integration Fatigue** | Onboarding services is unpredictable | Deterministic Cell onboarding |
+
+**Phase 2.0: IAM Bridge + Evidence (Post-MVP)**
+
+| Feature | Description | Priority |
+|---------|-------------|----------|
+| **BYO-IdP Adapter (OIDC)** | Accept tokens from Okta/Auth0/Entra, map to Kernel roles | P0 |
+| **Cross-IdP Claim Normalization** | Portable RBAC — tenants can switch IdPs without rewriting | P0 |
+| **Policy Proof Receipts** | Every allow/deny produces structured audit with reason + required_permissions | P1 |
+| **Evidence Pack Exports** | Auditor-ready compliance bundles (audit + correlation + policy) | P1 |
+| **Access Review Lite (IGA-lite)** | Simple Canon permission attestations (not full SailPoint) | P2 |
+
+**Phase 3.0: Governance Intelligence (Future)**
+
+| Feature | Description | Priority |
+|---------|-------------|----------|
+| **Permission Drift Radar** | Detect when routes/permissions changed but roles weren't updated | P1 |
+| **JIT Step-Up for High-Risk Routes** | Require IdP step-up MFA for critical operations | P2 |
+| **Telemetry-to-Policy Loop** | Risk signals (impossible travel, unusual patterns) trigger step-up | P3 |
+| **JIT Access for AI Agents** | Agents request temporary, scoped permissions for tasks | P3 |
+
+**IAM Bridge Architecture:**
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     IDENTITY PROVIDERS (External)                    │
+│   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐               │
+│   │  Okta   │  │  Auth0  │  │Entra ID │  │Keycloak │               │
+│   └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘               │
+│        └────────────┴─────┬──────┴──────────────┘                   │
+│                    [JWT / OIDC]                                      │
+└───────────────────────────┼──────────────────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                   AI-BOS KERNEL (POLICY ENFORCEMENT POINT)            │
+│                                                                        │
+│   ┌─────────────────────────────────────────────────────────────────┐ │
+│   │ 1. Validate Token (built-in OR delegate to IdP)                  │ │
+│   │ 2. Normalize Claims (Cross-IdP Portability)                      │ │
+│   │ 3. Map to Permissions (RBAC)                                     │ │
+│   │ 4. Check Cell Health (Circuit Breaker)                           │ │
+│   │ 5. Inject Context (x-tenant-id, x-user-sub, x-correlation-id)   │ │
+│   │ 6. Route to Cell (Gateway)                                       │ │
+│   │ 7. Record Policy Proof (Evidence)                                │ │
+│   └─────────────────────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────────┘
+```
+
+**Implementation Interfaces:**
+
+```typescript
+// Phase 2.0: IAM Bridge Port
+interface IAMBridgePort {
+  validateToken(token: string): Promise<IdentityClaims>;
+  syncUser?(externalId: string): Promise<User>;
+  mapRoles?(externalRoles: string[]): Promise<Permission[]>;
+}
+
+// Phase 2.0: Policy Proof
+interface PolicyProof {
+  correlation_id: string;
+  timestamp: string;
+  actor: { sub: string; tenant_id: string };
+  resource: { method: string; path: string; cell: string };
+  decision: 'ALLOWED' | 'DENIED';
+  reason?: 'MISSING_PERMISSION' | 'CELL_UNHEALTHY' | 'RATE_LIMITED';
+  required_permissions: string[];
+  had_permissions: string[];
+}
+
+// Phase 3.0: Permission Drift Detection
+interface DriftReport {
+  route: { method: string; path: string };
+  current_required: string[];
+  role_grants: string[];
+  gap: string[];
+  recommendation: string;
+}
+```
+
+**Unique Differentiators vs Enterprise IAM:**
+
+| Capability | Enterprise IAM | AI-BOS Kernel |
+|------------|----------------|---------------|
+| SSO / MFA | ✅ Core | 🔌 Delegates to IdP |
+| Domain Routing | ❌ None | ✅ Kernel Gateway |
+| Cell Orchestration | ❌ None | ✅ Health model |
+| Event Bus | ❌ None | ✅ Domain events |
+| Chaos Engineering | ❌ None | ✅ Built-in |
+| Schema Governance | ❌ None | ✅ Contract SSOT |
+| Cross-IdP Portability | ❌ None | 🔲 v2.0 |
+| Policy Proof Receipts | ❌ None | 🔲 v2.0 |
+| Permission Drift Radar | ❌ None | 🔲 v2.0 |
+| JIT Agent Access | ❌ None | 🔲 v3.0 |
+
+**Reference:** See `packages/canon/A-Governance/A-CONT/CONT_02_KernelArchitecture.md` Section 8.5 for detailed specifications.
+
 ---
 
 ## Next step (so I can review your code precisely)

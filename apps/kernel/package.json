@@ -1,6 +1,6 @@
 {
   "name": "@aibos/kernel",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,23 +8,34 @@
     "build": "next build",
     "start": "next start --port 3001",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "vitest run tests/integration/full-chain.test.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "seed:happy-path": "tsx scripts/seed-happy-path.ts"
   },
   "dependencies": {
     "@aibos/contracts": "*",
-    "@aibos/kernel-core": "*",
     "@aibos/kernel-adapters": "*",
+    "@aibos/kernel-core": "*",
+    "dotenv": "^16.4.7",
     "next": "^16.0.8",
+    "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "bcryptjs": "^3.0.3",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.8",
-    "typescript": "~5.6.2"
+    "tsx": "^4.19.2",
+    "typescript": "~5.6.2",
+    "vitest": "^4.0.15"
   }
 }

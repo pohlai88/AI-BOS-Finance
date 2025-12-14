@@ -7,6 +7,8 @@
 
 import { NextResponse } from "next/server";
 import { getKernelContainer } from "@/src/server/container";
+import { checkDbConnection } from "@/src/server/db";
+import { SYSTEM_TENANT_ID, NULL_UUID } from "@aibos/kernel-core";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,55 +25,62 @@ export async function GET() {
   const start = performance.now();
 
   try {
+    // Check database connection first
+    const dbStatus = await checkDbConnection()
+      .then(() => ({ status: "up" as const }))
+      .catch((e: Error) => ({ status: "down" as const, error: e.message }));
+
     // Parallel health checks for all subsystems
+    // Uses SSOT constants from @aibos/kernel-core
     // ✅ Read-only checks, no data creation
-    // ✅ Uses isolated tenant_id="system" for non-tenant operations
+    // ✅ Uses isolated system tenant for non-tenant operations
     const [registry, events, audit, users, roles, sessions, credentials] = await Promise.all([
       // Check Registry: Can list canons
       container.canonRegistry
-        .list({ tenant_id: "system" })
+        .list({ tenant_id: SYSTEM_TENANT_ID })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Event Bus: Can list events
       container.eventBus
-        .list("system", 1)
+        .list(SYSTEM_TENANT_ID, 1)
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Audit: Can query audit log
       container.audit
-        .query({ tenant_id: "system", limit: 1, offset: 0 })
+        .query({ tenant_id: SYSTEM_TENANT_ID, limit: 1, offset: 0 })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check IAM Users: Can list users
       container.userRepo
-        .list({ tenant_id: "system", limit: 1, offset: 0 })
+        .list({ tenant_id: SYSTEM_TENANT_ID, limit: 1, offset: 0 })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check IAM Roles: Can list roles
       container.roleRepo
-        .list({ tenant_id: "system", limit: 1, offset: 0 })
+        .list({ tenant_id: SYSTEM_TENANT_ID, limit: 1, offset: 0 })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Auth Sessions: Can check session validity
       container.sessionRepo
-        .isValid({ tenant_id: "system", session_id: "test", now: new Date().toISOString() })
+        .isValid({ tenant_id: SYSTEM_TENANT_ID, session_id: NULL_UUID, now: new Date().toISOString() })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Auth Credentials: Can get credentials
       container.credentialRepo
-        .getByUserId({ tenant_id: "system", user_id: "test" })
+        .getByUserId({ tenant_id: SYSTEM_TENANT_ID, user_id: NULL_UUID })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
     ]);
 
     const duration = Math.round(performance.now() - start);
     const isHealthy =
+      dbStatus.status === "up" &&
       registry.status === "up" &&
       events.status === "up" &&
       audit.status === "up" &&
@@ -87,6 +96,7 @@ export async function GET() {
         timestamp: new Date().toISOString(),
         duration_ms: duration,
         services: {
+          database: dbStatus,
           canonRegistry: registry,
           eventBus: events,
           auditLog: audit,

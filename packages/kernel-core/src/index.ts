@@ -38,6 +38,10 @@ export * from './ports/rolePermissionRepoPort';
 
 // Constants
 export { KERNEL_PERMISSIONS } from './constants/permissions';
+export { SYSTEM_TENANT_ID, NULL_UUID, TABLES, COLUMNS } from './constants/system';
+
+// Database Schema Types (SSOT for adapters)
+export * from './db';
 
 // Application (use-cases)
 export { createTenant } from './application/createTenant';

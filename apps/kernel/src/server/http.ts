@@ -9,19 +9,34 @@ import { randomUUID } from "node:crypto";
 import type { NextRequest } from "next/server";
 
 /**
+ * Strict UUID regex for correlation ID validation (Day 7 Hardening)
+ */
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
  * Extract or generate correlation ID from request
  * 
- * If the client provides x-correlation-id, we use it (for tracing).
+ * If the client provides a valid UUID x-correlation-id, we use it (for tracing).
  * Otherwise, we generate a new UUID.
+ * 
+ * Day 7 Hardening: Strict UUID format enforcement.
+ * Invalid formats are logged and rejected (new UUID generated).
  * 
  * Note: This runs in Node.js runtime (API routes), so we can use node:crypto
  */
 export function getCorrelationId(req: NextRequest | Request): string {
   const incoming = req.headers.get("x-correlation-id");
-  // Validate incoming ID (prevent injection)
-  if (incoming && incoming.length > 0 && incoming.length < 128) {
+
+  // Strict UUID validation (Day 7 Hardening)
+  if (incoming && UUID_REGEX.test(incoming)) {
     return incoming;
   }
+
+  // Log warning if invalid format was provided (observability)
+  if (incoming) {
+    console.warn(`[Correlation] Invalid correlation ID format received: "${incoming.substring(0, 50)}". Regenerating.`);
+  }
+
   return randomUUID();
 }
 
@@ -93,4 +108,32 @@ function getClientIp(req: NextRequest): string | undefined {
 
   // Fallback: req.ip (may not be available in all environments)
   return undefined;
+}
+
+/**
+ * Validate UUID format (uses UUID_REGEX defined at top of file)
+ */
+function isValidUUID(str: string): boolean {
+  return UUID_REGEX.test(str);
+}
+
+/**
+ * Require tenant ID from header and validate UUID format
+ * 
+ * Throws error if missing or invalid format.
+ * Used for bootstrap and public endpoints.
+ */
+export function requireTenantId(req: NextRequest): string {
+  const tenantId = req.headers.get("x-tenant-id");
+
+  if (!tenantId) {
+    throw new Error("MISSING_TENANT_ID");
+  }
+
+  // Validate UUID format (Day 2 requirement)
+  if (!isValidUUID(tenantId)) {
+    throw new Error("INVALID_TENANT_ID_FORMAT");
+  }
+
+  return tenantId;
 }

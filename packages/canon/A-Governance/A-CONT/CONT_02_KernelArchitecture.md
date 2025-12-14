@@ -1,461 +1,631 @@
 > **🟢 [ACTIVE]** — Certified for Production  
 > **Canon Code:** CONT_02  
-> **Version:** 1.0.0  
-> **Certified Date:** 2025-12-11  
+> **Version:** 1.4.0  
+> **Certified Date:** 2025-12-14  
 > **Plane:** A — Governance (Contract)  
 > **Binding Scope:** All AI-BOS / NexusCanon repos  
 > **Authority:** Kernel Architecture & Canon/Molecule/Cell Scaffolding Standard
 
 ---
 
-# AI-BOS / NexusCanon
-## Kernel Architecture & Canon/Molecule/Cell Scaffolding Standard v1.0.0
+# AI-BOS Kernel Architecture
+## The Identity-to-Evidence Control Plane v1.4.0
 
-**Framework:** Next.js 14+ (App Router)  
-**Language:** TypeScript 5.6+  
-**UI Library:** React 18+  
-**Last Updated:** 2025-12-11
+**Infrastructure:** Postgres 15 (Persistence), Docker (Orchestration)  
+**Framework:** Next.js 14+ (App Router), TypeScript 5.6+  
+**Last Updated:** 2025-12-14
 
 ---
 
 ## Document Status
 
-**Version:** 1.0.0  
-**Status:** Production Ready  
-**SSOT:** This document is the **Single Source of Truth (SSOT)** for Kernel Architecture and Canon/Molecule/Cell scaffolding standards.  
-**Derived Documents:** `README.md` is a navigation index derived from this contract.  
-**Framework Target:** Next.js App Router with Kernel control plane architecture  
-**Implementation Status:** Specification Complete
+| Property | Value |
+|----------|-------|
+| **Version** | 1.4.0 |
+| **Status** | Production Ready (MVP Complete) |
+| **SSOT** | Single Source of Truth for Kernel Architecture |
+| **Implementation** | MVP Sprint Complete (Day 6 of 7) |
 
-**Changelog:** 
-- **v1.0.0** - Initial Release (2025-12-11)
-  - ✅ Kernel Constitution defined
-  - ✅ Canon Scaffold Specification defined
-  - ✅ Molecule Scaffold Specification defined
-  - ✅ Cell Scaffold Specification defined
-  - 🟢 **CONT_02 – Execution Version** - Enterprise-grade, Fortune-500 caliber standard
-
----
-
-# AI-BOS / NexusCanon
-## Kernel Architecture & Canon/Molecule/Cell Scaffolding Standard v1.0.0
-
-> **Canon Code:** CONT_02  
-> **Plane:** A — Governance (Contract)  
-> **Binding Scope:** Kernel Architecture, Canon/Molecule/Cell scaffolding standards across all AI-BOS / NexusCanon repos.
-
-**Framework:** Next.js 14+ (App Router)  
-**Language:** TypeScript 5.6+  
-**UI Library:** React 18+  
-**Last Updated:** 2025-12-11
+**Changelog:**
+- **v1.4.0** (2025-12-14) — Silent Killer roadmap: Cross-IdP Normalization, Policy Proof, Permission Drift Radar, Evidence Packs
+- **v1.3.0** (2025-12-14) — Full recomposition with consistent terminology
+- **v1.2.0** (2025-12-14) — AI-OS Vision, PEP architecture, JIT Access roadmap
+- **v1.1.0** (2025-12-14) — MVP Sprint: Postgres, RBAC, Cell resilience
+- **v1.0.0** (2025-12-11) — Initial specification
 
 ---
 
 ## Table of Contents
 
-1. [Kernel Constitution](#1-kernel-constitution)
-2. [Canon Scaffold Specification](#2-canon-scaffold-specification)
-3. [Molecule Scaffold Specification](#3-molecule-scaffold-specification)
-4. [Cell Scaffold Specification](#4-cell-scaffold-specification)
+1. [Executive Summary](#1-executive-summary)
+2. [Terminology](#2-terminology)
+3. [Kernel Constitution](#3-kernel-constitution)
+4. [Canon Specification](#4-canon-specification)
+5. [Molecule Specification](#5-molecule-specification)
+6. [Cell Specification](#6-cell-specification)
+7. [MVP Implementation](#7-mvp-implementation)
+8. [Post-MVP Roadmap](#8-post-mvp-roadmap)
+9. [Compliance](#9-compliance)
 
 ---
 
-## 1. Kernel Constitution
+## 1. Executive Summary
 
-### 1.1 Purpose
+### 1.1 What is the Kernel?
 
-**Kernel = Control Plane (governance + connectivity + evidence).**
+**Kernel is the Operating System for Domain Cells** — not merely an Identity Provider.
 
-It is the rigid LEGO baseplate that makes Canons/Molecules/Cells snap-in safely.
+| Layer | Responsibility | Examples |
+|-------|----------------|----------|
+| **Infrastructure** | Container orchestration, networking | Kubernetes, AWS |
+| **Kernel (AI-OS)** | Identity, routing, audit, resilience | AI-BOS Kernel |
+| **Domain** | Business logic, transactions | Cells, Molecules, Canons |
 
-### 1.2 Non-Negotiable Rules
+### 1.2 The Identity Gap
 
-1. **No Canon talks to another Canon directly.**
-   - All sync traffic goes through **API Gateway**
-   - All async side effects go through **Event Bus**
+> **Traditional IAM (Okta/Auth0):** *"Is this Bob?"*  
+> **AI-BOS Kernel:** *"Bob is calling Payment Hub, but Ledger is degraded. Should I route this?"*
 
-2. **Kernel contains zero business logic.**
-   - Kernel never knows "Payroll" or "Customer"
-   - It only enforces identity, policy, routing, evidence
+| Question | Who Answers | Kernel Component |
+|----------|-------------|------------------|
+| *"Who is this?"* | External IAM OR Kernel | IAM Bridge |
+| *"What can they do?"* | **Kernel** | RBAC Engine |
+| *"Where should this go?"* | **Kernel** | Gateway |
+| *"Is the target healthy?"* | **Kernel** | Registry |
+| *"What happened?"* | **Kernel** | Audit Trail |
 
-3. **Schema-first everywhere.**
-   - Contracts are the SSOT
-   - FE/BE types and validators are generated
+### 1.3 Core Philosophy
 
-4. **Every cross-boundary interaction is via Ports + Contracts.**
-   - No "shared utils" that smuggle domain logic
+> **"Bring Your Own Identity, We Provide the Trust."**
 
-5. **Observability is mandatory, not optional.**
-   - Correlation IDs and structured logs must exist end-to-end
+**Tagline:** AI-BOS Kernel = **"Identity-to-Evidence Control Plane"**
+- IdP authenticates users
+- Kernel governs access to Canons, produces evidence, makes integrations deterministic
 
-### 1.3 Kernel Responsibilities (Must)
+The Kernel federates with external IAMs for **Authentication (AuthN)**, while strictly controlling:
+- **Authorization (AuthZ)** — RBAC/ABAC permission enforcement
+- **Routing** — Cell-aware request routing
+- **Audit** — Forensic domain event logging (with Policy Proof receipts)
+- **Orchestration** — Cell health monitoring
+- **Evidence** — Auditor-ready compliance packs
 
-| Responsibility | Description |
-|----------------|-------------|
-| **Identity & Access (IAM)** | Tenants, users, roles, sessions |
-| **Policy Decision & Enforcement** | RBAC (MVP), policy hooks for ABAC later |
-| **API Gateway** | Single ingress, auth, routing, rate limiting, schema validation |
-| **Service Registry** | Canon catalog (name/version/capabilities/health) |
-| **Event Bus** | Pub/sub with standard envelope |
-| **Audit Evidence** | Immutable audit trail + export/query |
-| **Observability** | Logs + traces + health + dashboards (platform level) |
-| **Governance Metadata** | Metadata registry (your `mdm_meta_*` layer), ownership, versioning |
+### 1.4 The Kernel as Policy Enforcement Point (PEP)
 
-### 1.4 Kernel Forbidden (Must Not)
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     IDENTITY PROVIDERS (Optional)                    │
+│   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐               │
+│   │  Okta   │  │  Auth0  │  │Entra ID │  │Keycloak │               │
+│   └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘               │
+│        └────────────┴─────┬──────┴──────────────┘                   │
+│                    [JWT / OIDC]                                      │
+└───────────────────────────┼──────────────────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                   AI-BOS KERNEL (CONTROL PLANE)                       │
+│                                                                        │
+│   ┌─────────────────────────────────────────────────────────────────┐ │
+│   │ 1. Validate Token (built-in OR delegate to IdP)                  │ │
+│   │ 2. Map to Permissions (RBAC)                                     │ │
+│   │ 3. Check Cell Health (Circuit Breaker)                           │ │
+│   │ 4. Inject Context (x-tenant-id, x-user-sub, x-correlation-id)   │ │
+│   │ 5. Route to Cell (Gateway)                                       │ │
+│   │ 6. Record Audit Trail                                            │ │
+│   └─────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────┬──────────────────────────────────────┘
+                                  ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                        DATA PLANE (CELLS)                              │
+│                                                                        │
+│   ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐      │
+│   │  Payment Hub    │  │  Invoice Match  │  │  Ledger Writer  │      │
+│   └─────────────────┘  └─────────────────┘  └─────────────────┘      │
+│                                                                        │
+│   Cells TRUST Kernel headers — they NEVER validate JWTs              │
+└───────────────────────────────────────────────────────────────────────┘
+```
 
-| Forbidden | Reason |
-|-----------|--------|
-| Payroll computation | Business logic belongs in Canons |
-| CRM journaling logic | Business logic belongs in Canons |
-| GL posting logic | Business logic belongs in Canons |
-| Domain workflows | Business logic belongs in Canons |
-| Domain state machines | Business logic belongs in Canons |
-| Writing Canon data tables | Kernel only reads/writes control plane data |
+### 1.5 Complement, Not Compete
 
-### 1.5 Data Boundary (No Confusion)
+> **AI-BOS products supplement existing tools, not replace them.**
 
-| Boundary | Scope | Enforcement |
-|----------|-------|-------------|
-| **Kernel DB = Control Plane only** | Governance truth: IAM, policies, metadata registry, manifest/canon registry, audit, telemetry summaries | Permissions + ports |
-| **Canon DB = Data Plane** | Business truth: HRM/CRM/Finance transactions and domain records | Permissions + ports |
+| AI-BOS Product | Complements | Does NOT Replace |
+|----------------|-------------|------------------|
+| **LiteMetadata** | Datadog, Splunk | Full observability platforms |
+| **Kernel** | Okta, Auth0, Entra ID | Enterprise IAM |
+| **Cells** | Microservices frameworks | Service mesh (Istio) |
 
-**Note:** Physical deployment may be 1 Postgres with separate schemas; boundaries are enforced by **permissions + ports**, not by "one vs many DBs."
+---
 
-### 1.6 Kernel Minimum Ports (MVP)
+## 2. Terminology
 
-#### Northbound (UI/Admin)
+### 2.1 Hierarchy
 
-| Port | Purpose |
-|------|---------|
-| `KernelAdminPort` | Tenants/users/roles management |
-| `GovernancePort` | Metadata/policies management |
-| `AuditPort` | Query/export audit trails |
-| `ManifestOrRegistryPort` | Register/validate/version Canons |
+```
+Canon (Bounded Context)     → Finance, HRM, CRM
+  └── Molecule (Feature)    → Accounts Payable, Payroll
+       └── Cell (Function)  → Payment Hub, Invoice Matcher
+```
 
-#### East/West (Canon Integration)
+### 2.2 Glossary
 
-| Port | Purpose |
-|------|---------|
-| `AuthzDecisionPort` | Canon asks; Kernel decides authorization |
-| `CanonRegistryPort` | Where/what is Canon (service discovery) |
-| `KernelEventPort` | Publish/subscribe bridge |
+| Term | Definition | Example |
+|------|------------|---------|
+| **Kernel** | The Control Plane. Manages identity, routing, audit. | `apps/kernel/` |
+| **Canon** | A bounded domain context. Contains Molecules. | Finance Canon |
+| **Molecule** | A feature cluster within a Canon. Orchestrates Cells. | Accounts Payable |
+| **Cell** | The atomic unit. Single-purpose, independently deployable. | `cell-payment-hub` |
+| **Gateway** | Kernel's reverse proxy. Routes requests to Cells. | `/api/gateway/*` |
+| **Registry** | Catalog of registered Cells with health status. | `cells` table |
+| **Tenant** | Isolated organizational boundary. All data scoped by `tenant_id`. | Demo Corp |
+| **Correlation ID** | Unique trace ID for request lifecycle. | `x-correlation-id` |
 
-#### Southbound (Infra Adapters)
+### 2.3 Data Boundaries
 
-| Port | Purpose |
-|------|---------|
-| `PersistencePort` | Database abstraction |
-| `QueuePort` | Event bus abstraction |
-| `SecretsConfigPort` | Secrets and configuration management |
-| `NotificationPort` | Optional notification service |
+| Boundary | Owner | Contains | Access |
+|----------|-------|----------|--------|
+| **Control Plane** | Kernel | users, roles, routes, audit | Kernel only |
+| **Data Plane** | Cells | invoices, payments, ledger | Cells only |
 
-### 1.7 Standard Event Envelope (MVP)
+**Rule:** Kernel NEVER touches Cell data. Cells NEVER touch Kernel data.
+
+---
+
+## 3. Kernel Constitution
+
+### 3.1 Non-Negotiable Rules
+
+| # | Rule | Rationale |
+|---|------|-----------|
+| 1 | **Kernel is the PEP** | All authorization flows through Kernel |
+| 2 | **No direct Cell-to-Cell calls** | All traffic via Gateway or Event Bus |
+| 3 | **Cell Health dictates Routing** | Unhealthy Cells are circuit-broken (503) |
+| 4 | **Schema-first everywhere** | Contracts (OpenAPI) are the Law |
+| 5 | **Zero business logic in Kernel** | Kernel doesn't know "Payroll" or "Invoice" |
+| 6 | **Observability is mandatory** | Correlation IDs end-to-end |
+
+### 3.2 Kernel Responsibilities
+
+| Component | Responsibility | MVP Status |
+|-----------|----------------|------------|
+| **IAM** | Users, Roles, Permissions, Sessions | ✅ Complete |
+| **Gateway** | Auth, routing, context injection | ✅ Complete |
+| **Registry** | Cell catalog, health monitoring | ✅ Complete |
+| **Event Bus** | Pub/sub with RBAC enforcement | ✅ Complete |
+| **Audit** | Immutable audit trail | ✅ Complete |
+| **Observability** | Correlation IDs, structured logs | ✅ Complete |
+
+### 3.3 Kernel Ports
+
+| Direction | Port | Purpose |
+|-----------|------|---------|
+| **Northbound** | `KernelAdminPort` | Tenant/user/role management |
+| **Northbound** | `AuditPort` | Query audit trails |
+| **East/West** | `AuthzDecisionPort` | Permission checks |
+| **East/West** | `RegistryPort` | Cell discovery |
+| **East/West** | `EventPort` | Pub/sub bridge |
+| **Southbound** | `PersistencePort` | Database abstraction |
+
+### 3.4 Standard Event Envelope
 
 ```typescript
 interface EventEnvelope {
   tenant_id: string;
   actor_id: string;
-  timestamp: string; // ISO 8601
   correlation_id: string;
-  source: string; // Canon name
+  timestamp: string;       // ISO 8601
+  source: string;          // Cell name
   event_name: string;
   payload: Record<string, unknown>;
-  version: string; // Event schema version
+  version: string;
 }
 ```
 
-### 1.8 MVP Cut-Line (Kernel is "shippable" when)
-
-**Walking Skeleton passes:**
-
-1. ✅ Create tenant
-2. ✅ Invite user
-3. ✅ Assign role
-4. ✅ Request via gateway
-5. ✅ Routed to Hello-Canon
-6. ✅ Event emitted
-7. ✅ Audit trail shows it with correlation_id
-8. ✅ Canon cannot access `kernel_*` schema directly (permission denied)
-
-### 1.9 MVP vs Full Stack (Kernel)
-
-| Capability | MVP (Ship) | Full Stack (Later) |
-|------------|------------|---------------------|
-| **Schema-first** | SSOT schema + generated types/validators/SDK | Multi-version negotiation + compatibility suite |
-| **Gateway** | Auth + routing + validation + basic rate limit | Dev portal, monetization, multi-region policy routing |
-| **Registry** | Static registry + health | Dynamic discovery + mesh integration |
-| **Event bus** | Pub/sub + envelope + basic retries | DLQ, sagas, idempotency keys |
-| **Observability** | Logs+traces+dashboards | SLOs/SLIs, anomaly detection, forensic exports |
-| **Security** | RBAC | ABAC + policy-as-code |
-
 ---
 
-## 2. Canon Scaffold Specification
+## 4. Canon Specification
 
-### 2.1 Canon Definition
+### 4.1 Definition
 
-A **Canon** is a domain engine (HRM/CRM/Finance). It owns **business truth** and exposes capabilities through Kernel governance.
+A **Canon** is a bounded domain context (e.g., Finance, HRM, CRM). It contains Molecules and owns business truth.
 
-### 2.2 Canon Boundary Rules
+### 4.2 Boundary Rules
 
 | Rule | Description |
 |------|-------------|
-| **No Kernel Internals** | Cannot import Kernel internals (only **contracts + generated Kernel client**) |
-| **No Control Plane Writes** | Cannot write Kernel control-plane tables |
-| **Event-Driven Cross-Canon** | Emits domain events; does not cause cross-canon side effects via direct calls |
+| **No Kernel Internals** | Import only contracts + generated clients |
+| **No Control Plane Writes** | Cannot write to Kernel tables |
+| **Event-Driven Cross-Canon** | Side effects via Event Bus, not direct calls |
 
-### 2.3 Canon Required Interfaces (MVP)
+### 4.3 Required Artifacts
 
-| Interface | Purpose | Implementation |
-|-----------|---------|----------------|
-| **Sync** | Exposed via Kernel Gateway routing | REST/GraphQL (your choice) |
-| **Async** | Publishes events to Kernel Event Bus | Standard event envelope |
-| **Health** | `/health` (and optionally `/ready`) | Health check endpoint |
-| **Capability Manifest** | Name, version, endpoints, events, permissions required | Registry entry |
+| Artifact | Purpose |
+|----------|---------|
+| `canon.config.ts` | Identity: name, version, owner |
+| `registry.json` | Service manifest |
+| `permissions.md` | Required permissions |
+| `events.catalog.md` | Events emitted/consumed |
+| `openapi.yaml` | API contracts |
 
-### 2.4 Canon Folder Structure (Suggested)
+### 4.4 Folder Structure
 
 ```
 /canons/{CanonName}/
   canon.config.ts
-  manifest.json (or registry.json for MVP)
-  /api/                 (inbound adapters)
-  /application/         (use-cases)
-  /domain/              (entities, rules)
-  /ports/               (interfaces)
-  /adapters/            (db, queue, external)
-  /events/              (emitters, handlers)
-  /tests/
+  registry.json
+  /molecules/
+  /domain/
+  /events/
 ```
-
-### 2.5 Canon Required Files
-
-| File | Purpose | Required |
-|------|---------|----------|
-| `canon.config.ts` | Name, version, owner, contact, deps | ✅ Yes |
-| `registry.json` (MVP) or `manifest.json` (Full stack) | Service registry entry | ✅ Yes |
-| `permissions.md` | Canon permissions it requests from Kernel | ✅ Yes |
-| `events.catalog.md` | Events emitted/consumed | ✅ Yes |
-| `openapi.yaml` or `schema/*.json` | Contracts SSOT | ✅ Yes |
-
-### 2.6 Canon Required Runtime Behavior (MVP)
-
-#### All Incoming Requests
-
-1. ✅ Validate schema
-2. ✅ Log with `correlation_id`
-3. ✅ Call `AuthzDecisionPort` before sensitive operations
-4. ✅ Emit audit-worthy event for critical actions
-
-#### All Outgoing Calls
-
-1. ✅ Use generated clients from `/packages/contracts` (no ad-hoc fetch)
-
-### 2.7 Canon "Definition of Done" (MVP)
-
-- ✅ Registers in Service Registry (name/version/health ok)
-- ✅ Handles one "golden" endpoint via Gateway
-- ✅ Emits at least one event through Event Bus
-- ✅ Produces traceable logs + correlation_id
-- ✅ Unit tests exist for one core use-case
 
 ---
 
-## 3. Molecule Scaffold Specification
+## 5. Molecule Specification
 
-### 3.1 Molecule Definition
+### 5.1 Definition
 
-A **Molecule** is a coherent feature cluster *inside one Canon* (e.g., Payroll, Recruitment, L&D). It may orchestrate multiple Cells but never crosses Canon boundaries directly.
+A **Molecule** is a feature cluster within a Canon. It orchestrates multiple Cells to deliver a workflow.
 
-### 3.2 Molecule Boundary Rules
+**Example:** Accounts Payable Molecule orchestrates:
+- Invoice Matcher Cell
+- Payment Hub Cell
+- Approval Workflow Cell
+
+### 5.2 Boundary Rules
 
 | Rule | Description |
 |------|-------------|
-| **No Cross-Canon Dependencies** | Molecule cannot depend on another Canon's domain model |
-| **Kernel-Mediated Cross-Canon** | Cross-canon needs must be expressed as:<br/>- A Kernel-mediated sync call (gateway) **or**<br/>- An event subscription (preferred for side effects) |
+| **No Cross-Canon Dependencies** | Cannot import another Canon's domain |
+| **Kernel-Mediated Cross-Canon** | Use Gateway or Event Bus |
 
-### 3.3 Molecule Folder Structure (Suggested)
+### 5.3 Required Artifacts
 
-```
-/canons/{CanonName}/molecules/{MoleculeName}/
-  molecule.config.ts
-  /application/      (orchestrations)
-  /cells/            (atomic units)
-  /domain/            (molecule-level rules)
-  /events/            (molecule-level events)
-  /tests/
-```
-
-### 3.4 Molecule Required Artifacts
-
-| Artifact | Purpose | Required |
-|----------|---------|----------|
-| `molecule.config.ts` | Scope, owners, dependent cells | ✅ Yes |
-| `events.catalog.md` | Events it emits/subscribes | ✅ Yes |
-| `contracts/` | Schemas for molecule APIs or internal commands, if any | ✅ Yes |
-
-### 3.5 Molecule DoD (MVP)
-
-- ✅ At least 2 cells orchestrated OR 1 cell + 1 event flow
-- ✅ Clear inputs/outputs for orchestration
-- ✅ Tests cover orchestration happy path + one failure path
+| Artifact | Purpose |
+|----------|---------|
+| `molecule.config.ts` | Scope, owners, dependent Cells |
+| `events.catalog.md` | Events emitted/subscribed |
+| `/cells/` | Atomic units |
 
 ---
 
-## 4. Cell Scaffold Specification
+## 6. Cell Specification
 
-### 4.1 Cell Definition
+### 6.1 Definition
 
-A **Cell** is the smallest atomic capability with clear boundaries, I/O, and auditability.
+A **Cell** is the atomic unit of deployment. Single-purpose, independently deployable, observable.
 
-**Examples:** "Create Candidate", "Approve Leave", "Compute Payslip Draft"
+**Reference Implementation:** `apps/cell-payment-hub/`
 
-### 4.2 Cell Non-Negotiables
+### 6.2 Non-Negotiables
 
-| Requirement | Description |
+| Requirement | Enforcement |
 |-------------|-------------|
-| **Single Purpose** | One capability |
-| **Deterministic Rules** | No hidden side effects |
-| **Explicit I/O** | Explicit inputs/outputs via contracts |
-| **Event Emission** | Emits events (if side effects) using the standard envelope |
-| **Audit Entries** | Produces audit entries for critical actions |
+| **Health Protocol** | Expose `/ping` (liveness) and `/health` (readiness) |
+| **Trust Model** | NEVER validate JWTs — trust Kernel headers |
+| **Traceability** | Log `x-correlation-id` in every entry |
+| **Graceful Degradation** | Return 503 when internal cells are unhealthy |
 
-### 4.3 Cell Folder Structure (Suggested)
+### 6.3 Required Endpoints
 
-```
-/canons/{CanonName}/molecules/{MoleculeName}/cells/{CellName}/
-  cell.config.ts
-  contract.input.json
-  contract.output.json
-  usecase.ts
-  policy.ts            (required permissions)
-  events.ts            (what it emits)
-  test.spec.ts
-```
+| Endpoint | Purpose | Response |
+|----------|---------|----------|
+| `GET /ping` | Liveness | `{"message": "pong"}` |
+| `GET /health` | Readiness | `CellHealthResponse` |
+| `POST /chaos/fail/:cell` | Simulate failure | Test only |
+| `POST /chaos/recover/:cell` | Recover | Test only |
 
-### 4.4 Cell Required Interfaces
-
-| Interface | Purpose | Format |
-|-----------|---------|--------|
-| **Input Contract** | Schema-first (JSON Schema/OpenAPI component) | JSON Schema or OpenAPI |
-| **Output Contract** | Schema-first | JSON Schema or OpenAPI |
-| **Policy Hook** | Calls Kernel `AuthzDecisionPort` or enforces received decision | TypeScript interface |
-| **Event Hook (optional)** | Publishes event(s) to Event Bus | Standard event envelope |
-
-### 4.5 Cell Execution Template (MVP)
+### 6.4 Health Model
 
 ```typescript
-async function executeCell(input: InputContract): Promise<OutputContract> {
-  // 1. Validate input schema
-  validateInput(input);
-  
-  // 2. Authorize (Kernel decision)
-  const decision = await kernel.authzDecisionPort.check(input.actor_id, input.action);
-  if (!decision.allowed) throw new ForbiddenError();
-  
-  // 3. Execute domain rule(s)
-  const result = await domainRule.execute(input);
-  
-  // 4. Persist to Canon data plane
-  await persistencePort.save(result);
-  
-  // 5. Emit event (if applicable)
-  if (result.requiresEvent) {
-    await eventBus.publish(createEventEnvelope(result));
-  }
-  
-  // 6. Write audit evidence + logs with correlation_id
-  await auditPort.record({
-    correlation_id: input.correlation_id,
-    action: input.action,
-    result: result,
-  });
-  
-  // 7. Return output schema
-  return transformToOutputContract(result);
+type CellStatus = 'healthy' | 'degraded' | 'unhealthy';
+
+interface CellHealthResponse {
+  service: string;
+  status: CellStatus;
+  cells: Record<string, { status: CellStatus; lastChecked: string }>;
+  timestamp: string;
 }
 ```
 
-### 4.6 Cell DoD (MVP)
+### 6.5 Execution Template
 
-- ✅ Input/output schemas exist and are code-generated
-- ✅ One use-case test (happy path) + one policy denial test
-- ✅ Emits at least one structured log containing correlation_id
-- ✅ No direct access to Kernel control-plane tables
+```typescript
+app.post('/payments/process', (req, res) => {
+  // 1. Context (TRUST Kernel headers)
+  const tenant = req.headers['x-tenant-id'];
+  const actor = req.headers['x-user-sub'];
+  const trace = req.headers['x-correlation-id'];
 
----
+  console.log(`[${trace}] ${actor}@${tenant} processing payment`);
 
-## 5. Implementation Checklist
+  // 2. Health Check
+  if (cells.ledger.status === 'unhealthy') {
+    return res.status(503).json({ error: { code: 'LEDGER_DOWN' } });
+  }
 
-### 5.1 Kernel Implementation
+  // 3. Domain Logic
+  const result = processPayment(req.body, tenant);
 
-- [ ] API Gateway with auth + routing + validation
-- [ ] Service Registry (static MVP)
-- [ ] Event Bus (pub/sub with standard envelope)
-- [ ] IAM (tenants, users, roles, sessions)
-- [ ] Policy Decision Port (RBAC MVP)
-- [ ] Audit Evidence system
-- [ ] Observability (logs + traces + health)
-- [ ] Governance Metadata registry
+  // 4. Response
+  res.json({ status: 'PROCESSED', data: result, trace: { correlation_id: trace } });
+});
+```
 
-### 5.2 Canon Implementation
+### 6.6 Folder Structure
 
-- [ ] Canon config file (`canon.config.ts`)
-- [ ] Registry entry (`registry.json`)
-- [ ] Permissions manifest (`permissions.md`)
-- [ ] Events catalog (`events.catalog.md`)
-- [ ] API contracts (OpenAPI or JSON Schema)
-- [ ] Health endpoint (`/health`)
-- [ ] One "golden" endpoint via Gateway
-- [ ] Event emission to Event Bus
-- [ ] Unit tests for one core use-case
-
-### 5.3 Molecule Implementation
-
-- [ ] Molecule config file (`molecule.config.ts`)
-- [ ] Events catalog (`events.catalog.md`)
-- [ ] At least 2 cells orchestrated OR 1 cell + 1 event flow
-- [ ] Tests covering orchestration happy path + failure path
-
-### 5.4 Cell Implementation
-
-- [ ] Cell config file (`cell.config.ts`)
-- [ ] Input contract (JSON Schema/OpenAPI)
-- [ ] Output contract (JSON Schema/OpenAPI)
-- [ ] Policy hook implementation
-- [ ] Use-case implementation
-- [ ] Event emission (if applicable)
-- [ ] One use-case test (happy path)
-- [ ] One policy denial test
+```
+/apps/cell-{name}/
+  Dockerfile
+  package.json
+  src/
+    index.ts          # Entry point
+    cells/            # Internal health units
+    domain/           # Business logic
+```
 
 ---
 
-## 6. References
+## 7. MVP Implementation
 
-- **CONT_01:** Canon Identity & Cell Registration Standard
-- **Kernel Architecture:** See Section 1 (Kernel Constitution)
-- **Canon Architecture:** See Section 2 (Canon Scaffold Specification)
-- **Molecule Architecture:** See Section 3 (Molecule Scaffold Specification)
-- **Cell Architecture:** See Section 4 (Cell Scaffold Specification)
+### 7.1 Status
+
+| Gate | Requirement | Status |
+|------|-------------|--------|
+| 1 | Create tenant | ✅ |
+| 2 | Create user with password | ✅ |
+| 3 | Assign role with permissions | ✅ |
+| 4 | Login and receive JWT | ✅ |
+| 5 | Route request via Gateway | ✅ |
+| 6 | Cell receives context headers | ✅ |
+| 7 | Publish event with RBAC | ✅ |
+| 8 | Query audit trail | ✅ |
+| 9 | E2E tests pass | ✅ |
+
+### 7.2 Artifacts
+
+| Artifact | Location | Purpose |
+|----------|----------|---------|
+| `apps/kernel/` | Next.js app | Control Plane |
+| `apps/cell-payment-hub/` | Express app | Reference Cell |
+| `packages/kernel-core/` | Library | Ports + types |
+| `packages/kernel-adapters/` | Library | SQL adapters |
+| `packages/contracts/` | Library | Zod schemas |
+
+### 7.3 Database Schema
+
+| Table | Purpose |
+|-------|---------|
+| `tenants` | Multi-tenant isolation |
+| `users` | Identity + credentials |
+| `roles` | Role definitions |
+| `permissions` | Permission definitions |
+| `role_permissions` | Role → Permission mapping |
+| `user_roles` | User → Role mapping |
+| `sessions` | Active sessions |
+| `cells` | Cell registry |
+| `routes` | Gateway routing rules |
+| `events` | Event bus messages |
+| `audit_events` | Immutable audit trail |
+
+### 7.4 Quick Start
+
+```bash
+# 1. Start stack (Kernel + Postgres + Payment Hub)
+docker-compose up -d
+
+# 2. Seed demo data
+pnpm seed:happy-path
+
+# 3. Login
+TOKEN=$(curl -s -X POST http://localhost:3001/api/kernel/iam/login \
+  -H "x-tenant-id: 11111111-1111-1111-1111-111111111111" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@demo.local","password":"password123"}' | jq -r .token)
+
+# 4. Process payment via Gateway
+curl -X POST http://localhost:3001/api/gateway/payments/process \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 100, "currency": "USD", "beneficiary": "Acme Corp"}'
+```
 
 ---
 
-## 7. Compliance
+## 8. Post-MVP Roadmap
 
-All Canons, Molecules, and Cells must comply with:
+### 8.1 Evolution Phases
 
-1. **CONT_01** - Canon Identity & Cell Registration Standard
-2. **CONT_02** - This document (Kernel Architecture & Scaffolding)
-3. Kernel boundary rules (Section 1.2)
-4. Canon boundary rules (Section 2.2)
-5. Molecule boundary rules (Section 3.2)
-6. Cell non-negotiables (Section 4.2)
+| Phase | Description | Status |
+|-------|-------------|--------|
+| **v1.0 (MVP)** | Built-in IAM, RBAC, Gateway, Audit | ✅ Complete |
+| **v2.0** | IAM Bridge: Okta, Auth0, Entra ID adapters | 🔲 Planned |
+| **v3.0** | JIT Access: AI Agents request scoped permissions | 🔲 Future |
+
+### 8.2 IAM Bridge Adapters
+
+```typescript
+interface IAMBridgePort {
+  validateToken(token: string): Promise<IdentityClaims>;
+  syncUser?(externalId: string): Promise<User>;
+  mapRoles?(externalRoles: string[]): Promise<Permission[]>;
+}
+
+// Planned adapters
+class OktaAdapter implements IAMBridgePort { /* ... */ }
+class Auth0Adapter implements IAMBridgePort { /* ... */ }
+class EntraIDAdapter implements IAMBridgePort { /* ... */ }
+```
+
+### 8.3 JIT Access for AI Agents
+
+```typescript
+// AI Agent requests temporary, scoped access
+const grant = await kernel.requestJITAccess({
+  agent_id: 'invoice-processor',
+  permissions: ['finance.payment.execute'],
+  duration_ms: 300000,  // 5 minutes
+  scope: { tenant_id: 'demo-corp', max_amount: 10000 }
+});
+```
+
+### 8.4 Unique Differentiators
+
+| Capability | Enterprise IAM | AI-BOS Kernel |
+|------------|----------------|---------------|
+| SSO / MFA | ✅ Core | 🔌 Delegates |
+| Domain Routing | ❌ None | ✅ Gateway |
+| Cell Orchestration | ❌ None | ✅ Health model |
+| Event Bus | ❌ None | ✅ Domain events |
+| Chaos Engineering | ❌ None | ✅ Built-in |
+| Schema Governance | ❌ None | ✅ Contract SSOT |
+| JIT Agent Access | ❌ None | 🔲 v3.0 |
+| Cross-IdP Portability | ❌ None | 🔲 v2.0 |
+| Evidence Packs | ❌ None | 🔲 v2.0 |
+| Permission Drift Radar | ❌ None | 🔲 v2.0 |
+
+### 8.5 Silent Killer Roadmap
+
+> **Positioning:** AI-BOS Kernel = **"Identity-to-Evidence Control Plane"**
+> - IdP authenticates users
+> - Kernel governs access to Canons, produces evidence, makes integrations deterministic
+
+These features address market pain points that existing IAM solutions don't solve:
+
+| Pain Point | Feature | Phase |
+|------------|---------|-------|
+| **Authorization Fragmentation** | BYO-IdP + Kernel Authorization Fabric | v2.0 |
+| **Vendor Lock-in** | Cross-IdP Claim Normalization (Portable RBAC) | v2.0 |
+| **Evidence Fragmentation** | Policy Proof Receipts + Evidence Packs | v2.0 |
+| **Lifecycle Drift** | Permission Drift Radar | v2.0 |
+| **High-Risk Access** | JIT Step-Up via IdP | v3.0 |
+| **Risk Detection** | Telemetry-to-Policy Loop | v3.0 |
+
+#### 8.5.1 Cross-IdP Claim Normalization (Portable RBAC)
+
+Map external IdP claims/groups → Kernel roles/permissions. Tenants can switch IdPs without rewriting Canon security.
+
+```typescript
+interface ClaimNormalizationPort {
+  // Normalize claims from any IdP to Kernel identity
+  mapClaims(provider: IdPType, claims: ExternalClaims): KernelIdentity;
+  
+  // Map IdP groups to Kernel permissions
+  mapGroups(externalGroups: string[]): Permission[];
+}
+
+type IdPType = 'okta' | 'entra' | 'auth0' | 'keycloak' | 'custom';
+
+interface KernelIdentity {
+  sub: string;           // Normalized user ID
+  tenant_id: string;     // Mapped from IdP org/tenant
+  roles: string[];       // Kernel roles
+  permissions: string[]; // Resolved permissions
+}
+```
+
+#### 8.5.2 Policy Proof Receipts
+
+Every allow/deny at the Gateway produces structured audit with:
+- `correlation_id` — Full request trace
+- `action` — ALLOWED or DENIED
+- `reason` — Why (e.g., MISSING_PERMISSION, CELL_UNHEALTHY)
+- `required_permissions` — What was needed
+- `had_permissions` — What user had
+
+```typescript
+interface PolicyProof {
+  correlation_id: string;
+  timestamp: string;
+  actor: { sub: string; tenant_id: string };
+  resource: { method: string; path: string; cell: string };
+  decision: 'ALLOWED' | 'DENIED';
+  reason?: 'MISSING_PERMISSION' | 'CELL_UNHEALTHY' | 'RATE_LIMITED' | 'INVALID_TOKEN';
+  required_permissions: string[];
+  had_permissions: string[];
+}
+```
+
+#### 8.5.3 Access Review Lite (IGA-lite)
+
+Not a full SailPoint replacement — focused Canon permission attestations:
+- **Snapshot Export:** Who has access to what? (JSON/CSV)
+- **Periodic Attestation:** "Is this access still needed?" (Quarterly/Monthly)
+- **Remediation Tasks:** Auto-generated when attestation fails
+
+| Full IGA (SailPoint) | Kernel Access Review Lite |
+|----------------------|---------------------------|
+| All enterprise apps | Canon permissions only |
+| Complex workflows | Simple snapshot + attest |
+| $100k+/year | Built-in |
+
+#### 8.5.4 Permission Drift Radar
+
+Detect when Cell routes/permissions changed but roles were not updated:
+
+```typescript
+interface DriftReport {
+  route: { method: string; path: string };
+  current_required: string[];
+  role_grants: string[];
+  gap: string[];  // Permissions required but not granted to any role
+  recommendation: string;
+}
+
+// Example output:
+{
+  route: { method: 'POST', path: '/payments/process' },
+  current_required: ['finance.payment.execute'],
+  role_grants: ['finance.payment.view'],  // Role only has view!
+  gap: ['finance.payment.execute'],
+  recommendation: 'Add finance.payment.execute to Accountant role or update route'
+}
+```
+
+#### 8.5.5 JIT Step-Up for High-Risk Routes
+
+For critical routes, require step-up MFA at the IdP:
+
+```typescript
+// Route configuration
+{
+  path: '/payments/process',
+  method: 'POST',
+  required_permissions: ['finance.payment.execute'],
+  risk_level: 'high',
+  step_up: {
+    required: true,
+    max_age_seconds: 300,  // Must have MFA within last 5 minutes
+    fallback: 'DENY'
+  }
+}
+```
+
+Kernel checks IdP token `amr` (authentication methods) and `auth_time` claims to enforce step-up.
 
 ---
 
-**End of Contract CONT_02**
+## 9. Compliance
 
+All Canons, Molecules, and Cells MUST comply with:
 
+1. **CONT_01** — Canon Identity & Registration Standard
+2. **CONT_02** — This document (Kernel Architecture)
+3. **Section 3.1** — Non-Negotiable Rules
+4. **Section 6.2** — Cell Non-Negotiables
 
+---
 
+## References
 
+| Document | Location |
+|----------|----------|
+| **README** | `apps/kernel/README.md` |
+| **Architecture** | `apps/kernel/docs/ARCHITECTURE.md` |
+| **Cell Integration Guide** | `apps/kernel/docs/cell-integration-guide.md` |
+| **Troubleshooting** | `apps/kernel/docs/TROUBLESHOOTING.md` |
+| **OpenAPI Spec** | `apps/kernel/docs/openapi.yaml` |
+| **MVP Sprint Plan** | `apps/kernel/PRD-KERNEL-MVP.md` |
+
+---
+
+**End of Contract CONT_02 v1.3.0**

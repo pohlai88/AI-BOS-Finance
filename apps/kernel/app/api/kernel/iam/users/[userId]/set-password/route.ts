@@ -10,7 +10,7 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { getKernelContainer } from "@/src/server/container";
-import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
+import { getCorrelationId, createResponseHeaders, requireTenantId } from "@/src/server/http";
 import { enforceRBAC, createForbiddenResponse } from "@/src/server/rbac";
 import { checkBootstrapGate, checkUserHasNoCredentials } from "@/src/server/bootstrap";
 import { IamSetPasswordSchema } from "@aibos/contracts";
@@ -44,20 +44,28 @@ export async function POST(
 
     if (bootstrapCheck.allowed && hasNoCreds) {
       // Bootstrap: Allow password setting for first user without credentials (with bootstrap key)
-      if (!headerTenantId) {
+      // Validate UUID format (Day 2 requirement)
+      try {
+        tenantId = requireTenantId(req);
+      } catch (e: any) {
+        const errorCode = e?.message === "INVALID_TENANT_ID_FORMAT"
+          ? "VALIDATION_ERROR"
+          : "MISSING_TENANT_ID";
+        const errorMessage = e?.message === "INVALID_TENANT_ID_FORMAT"
+          ? "tenant_id must be a valid UUID format"
+          : "Missing x-tenant-id header";
         return NextResponse.json(
           {
             ok: false,
             error: {
-              code: "MISSING_TENANT_ID",
-              message: "Missing x-tenant-id header",
+              code: errorCode,
+              message: errorMessage,
             },
             correlation_id: correlationId,
           },
           { status: 400, headers }
         );
       }
-      tenantId = headerTenantId;
     } else {
       // Bootstrap denied or user already has credentials
       // Check if bootstrap was denied (return error instead of falling through to RBAC)

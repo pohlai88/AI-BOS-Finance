@@ -53,9 +53,16 @@ export async function checkBootstrapGate(
   }
 
   // Require explicit tenant id (avoid accidental "system" bootstraps)
+  // Validate UUID format (Day 2 requirement)
   const tenantId = req.headers.get("x-tenant-id");
   if (!tenantId) {
     return { allowed: false, reason: "Missing x-tenant-id" };
+  }
+
+  // Validate UUID format
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(tenantId)) {
+    return { allowed: false, reason: "tenant_id must be a valid UUID format" };
   }
 
   const container = getKernelContainer();

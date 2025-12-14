@@ -9,7 +9,7 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { getKernelContainer } from "@/src/server/container";
-import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
+import { getCorrelationId, createResponseHeaders, requireTenantId } from "@/src/server/http";
 import { verifyJWT } from "@/src/server/jwt";
 import { enforceRBAC, createForbiddenResponse } from "@/src/server/rbac";
 import { checkBootstrapGate } from "@/src/server/bootstrap";
@@ -34,21 +34,28 @@ export async function POST(req: NextRequest) {
 
     if (bootstrapCheck.allowed) {
       // Bootstrap: First user creation allowed with bootstrap key
-      const headerTenantId = req.headers.get("x-tenant-id");
-      if (!headerTenantId) {
+      // Validate UUID format (Day 2 requirement)
+      try {
+        tenantId = requireTenantId(req);
+      } catch (e: any) {
+        const errorCode = e?.message === "INVALID_TENANT_ID_FORMAT"
+          ? "VALIDATION_ERROR"
+          : "MISSING_TENANT_ID";
+        const errorMessage = e?.message === "INVALID_TENANT_ID_FORMAT"
+          ? "tenant_id must be a valid UUID format"
+          : "Missing x-tenant-id header";
         return NextResponse.json(
           {
             ok: false,
             error: {
-              code: "MISSING_TENANT_ID",
-              message: "Missing x-tenant-id header",
+              code: errorCode,
+              message: errorMessage,
             },
             correlation_id: correlationId,
           },
           { status: 400, headers }
         );
       }
-      tenantId = headerTenantId;
     } else {
       // Bootstrap denied - check if tenant is already bootstrapped
       // If tenant has users, require RBAC (even if bootstrap key was invalid/missing)

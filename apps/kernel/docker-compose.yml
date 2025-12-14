@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: kernel_db
+    restart: always
+    environment:
+      POSTGRES_USER: kernel
+      POSTGRES_PASSWORD: kernelpassword
+      POSTGRES_DB: kernel_local
+    ports:
+      - "5433:5432"
+    volumes:
+      - kernel_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U kernel -d kernel_local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kernel_net
+
+  # Cell: Payment Hub (Finance Domain)
+  # Demonstrates cell-based resilient architecture
+  cell-payment-hub:
+    build:
+      context: ../cell-payment-hub
+      dockerfile: Dockerfile
+    container_name: cell_payment_hub
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:4000/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - kernel_net
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  kernel_net:
+    driver: bridge
+
+volumes:
+  kernel_pg_data:

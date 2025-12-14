@@ -1,172 +1,222 @@
-MCP# @aibos/kernel — Control Plane Service
+# AI-BOS Kernel (v1.0.0-mvp)
 
-> **Build 1**: Walking Skeleton MVP with Anti-Gravity Architecture
+> **The Identity-to-Evidence Control Plane for AI-BOS Finance.**  
+> Governs access to Canons, produces evidence, makes integrations deterministic.
 
-## Overview
+![Status](https://img.shields.io/badge/status-MVP%20Complete-green)
+![Architecture](https://img.shields.io/badge/arch-Cell--Based-purple)
+![Tests](https://img.shields.io/badge/tests-11%2F11%20pass-brightgreen)
+![Postgres](https://img.shields.io/badge/persistence-Postgres%2015-blue)
 
-The Kernel is the **Control Plane** for AIBOS — the single source of truth for:
-- **Tenant Management** — Multi-tenant isolation
-- **Service Registry** — Service discovery and routing (Build 2)
-- **Policy Engine** — RBAC and data access control (Build 2)
-- **Audit Trail** — Complete audit logging
+---
 
-## Architecture
+## 🎯 What This Solves
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                           ANTI-GRAVITY                               │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │ apps/kernel (Next.js App Router)                                 ││
-│  │ ├── app/api/kernel/     ← Route Handlers (HTTP layer)           ││
-│  │ ├── middleware.ts       ← Correlation ID injection              ││
-│  │ └── src/server/         ← Container + HTTP utilities            ││
-│  └─────────────────────────────────────────────────────────────────┘│
-│                               │                                      │
-│                               ▼                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │ @aibos/kernel-core (Pure TypeScript)                            ││
-│  │ ├── domain/             ← Pure data types                       ││
-│  │ ├── ports/              ← Interfaces (TenantRepoPort, etc.)     ││
-│  │ └── application/        ← Use-cases (createTenant, listTenants) ││
-│  └─────────────────────────────────────────────────────────────────┘│
-│                               │                                      │
-│                               ▼                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │ @aibos/kernel-adapters                                           ││
-│  │ └── memory/             ← In-memory implementations              ││
-│  └─────────────────────────────────────────────────────────────────┘│
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │ @aibos/contracts                                                 ││
-│  │ ├── kernel/tenants      ← Zod schemas (request/response)        ││
-│  │ ├── kernel/audit        ← Audit event schema                    ││
-│  │ └── shared/envelope     ← Standard API envelopes                ││
-│  └─────────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────────┘
-```
+| Problem | How Kernel Solves It |
+|---------|---------------------|
+| **Authorization Fragmentation** | Centralized RBAC across all Cells |
+| **Audit Evidence Gaps** | Every request logged with correlation ID |
+| **Cell Health Blindness** | Gateway checks Cell health before routing |
+| **Integration Fatigue** | Deterministic Cell onboarding via Registry |
 
-## Anti-Gravity Rules (Hard Enforcement)
+**Core Philosophy:** *"Bring Your Own Identity, We Provide the Trust."*
 
-### ✅ Allowed Imports
+---
 
-| From | Can Import |
-|------|------------|
-| `apps/kernel/app/api/**` | `@aibos/contracts`, `@aibos/kernel-core`, `apps/kernel/src/server/*` |
-| `apps/kernel/src/server/*` | `@aibos/kernel-core`, `@aibos/kernel-adapters`, `@aibos/contracts` |
-| `@aibos/kernel-core` | `@aibos/contracts` (schemas only) |
-| `@aibos/kernel-adapters` | `@aibos/kernel-core` (ports), `@aibos/contracts` |
+## ⚡️ Zero to Hero (5 Minutes)
 
-### ❌ Forbidden Imports
+Spin up the entire **Finance Payment Stack** (Kernel + Postgres + Payment Hub) in 3 commands.
 
-| From | Cannot Import |
-|------|---------------|
-| UI pages | `@aibos/kernel-adapters`, any DB layer |
-| `@aibos/kernel-core` | `apps/kernel`, Next.js modules, adapters |
-| `@aibos/kernel-adapters` | `apps/kernel`, Next.js modules |
+### Prerequisites
+- Docker Desktop (running)
+- Node.js 18+
+- pnpm
 
-## Quick Start
+### 1. Start the Stack
 
 ```bash
-# From monorepo root
-pnpm install
-
-# Start Kernel dev server (port 3001)
-pnpm --filter @aibos/kernel dev
+# Starts Kernel (:3001), Postgres (:5433), Payment Hub Cell (:4000)
+cd apps/kernel
+docker-compose up -d
 ```
 
-## API Endpoints
+**Expected Output:**
+```
+✔ Container kernel_db        Started
+✔ Container cell_payment_hub Started
+```
 
-### Health Check
+### 2. Seed the Environment
 
 ```bash
-GET /api/kernel/health
+pnpm seed:happy-path
+```
 
-# Response
+**You'll see:**
+```
+🌱 Seeding Happy Path Environment...
+   📦 Creating tenant: Demo Corp
+   👤 Creating user: admin@demo.local
+   🎭 Creating role: Super Admin
+   🔐 Granting permissions...
+   📡 Registering cell: cell-payment-hub
+✅ Seed Complete!
+```
+
+### 3. Process a Payment (The "Hello World")
+
+**PowerShell:**
+```powershell
+# Login and get token
+$login = Invoke-RestMethod -Method POST -Uri "http://localhost:3001/api/kernel/iam/login" `
+  -Headers @{"x-tenant-id"="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"; "Content-Type"="application/json"} `
+  -Body '{"email":"admin@demo.local","password":"password123"}'
+
+# Process payment via Kernel Gateway
+Invoke-RestMethod -Method POST -Uri "http://localhost:4000/payments/process" `
+  -Headers @{"x-tenant-id"="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"; "Content-Type"="application/json"} `
+  -Body '{"amount": 500, "currency": "USD", "beneficiary": "Acme Corp"}'
+```
+
+**Bash/curl:**
+```bash
+# Login
+TOKEN=$(curl -s -X POST http://localhost:3001/api/kernel/iam/login \
+  -H "x-tenant-id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@demo.local","password":"password123"}' | jq -r '.data.access_token')
+
+# Process Payment
+curl -X POST http://localhost:4000/payments/process \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 500, "currency": "USD", "beneficiary": "Acme Corp"}'
+```
+
+**Success Response:**
+```json
 {
   "ok": true,
-  "service": "kernel",
-  "version": "0.1.0",
-  "correlation_id": "uuid"
+  "data": {
+    "transaction_id": "c6942f43-e0da-444a-a1f1-2f7a3c24e35e",
+    "status": "PROCESSED",
+    "amount": 500,
+    "currency": "USD",
+    "beneficiary": "Acme Corp"
+  },
+  "trace": {
+    "tenant_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "correlation_id": "b8fbd438-dfc0-4d9c-909b-d40d86bede72"
+  }
 }
 ```
 
-### Create Tenant
+### 4. Break Something (Chaos Engineering)
 
 ```bash
-POST /api/kernel/tenants
-Content-Type: application/json
+# Break the ledger cell
+curl -X POST http://localhost:4000/chaos/fail/ledger
 
-{
-  "name": "ACME Corporation"
-}
+# Try payment again
+curl -X POST http://localhost:4000/payments/process \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 100, "currency": "USD", "beneficiary": "Test"}'
+# → 503 LEDGER_DOWN
 
-# Response (201)
-{
-  "id": "uuid",
-  "name": "ACME Corporation",
-  "status": "ACTIVE",
-  "created_at": "2024-01-01T00:00:00.000Z"
-}
+# Recover
+curl -X POST http://localhost:4000/chaos/recover/ledger
 ```
 
-### List Tenants
+---
 
-```bash
-GET /api/kernel/tenants
+## 🏗 Architecture at a Glance
 
-# Response
-{
-  "items": [
-    {
-      "id": "uuid",
-      "name": "ACME Corporation",
-      "status": "ACTIVE",
-      "created_at": "2024-01-01T00:00:00.000Z"
-    }
-  ]
-}
+```
+┌────────────────────────────────────────────────────────────────┐
+│                      CONTROL PLANE                              │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                      Kernel (:3001)                       │  │
+│  │   [Auth] [RBAC] [Gateway] [Registry] [Audit] [Events]    │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                              │                                  │
+│                      JWT + Headers                              │
+│                              ▼                                  │
+└────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌────────────────────────────────────────────────────────────────┐
+│                       DATA PLANE                                │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌───────────────┐  │
+│  │  Payment Hub    │  │ Invoice Matcher │  │   (Future)    │  │
+│  │  Cell (:4000)   │  │   Cell (:4001)  │  │     Cell      │  │
+│  │  ┌───────────┐  │  │                 │  │               │  │
+│  │  │ gateway   │  │  │                 │  │               │  │
+│  │  │ processor │  │  │                 │  │               │  │
+│  │  │ ledger    │  │  │                 │  │               │  │
+│  │  └───────────┘  │  │                 │  │               │  │
+│  └─────────────────┘  └─────────────────┘  └───────────────┘  │
+└────────────────────────────────────────────────────────────────┘
 ```
 
-## Build 1 Deliverables
+| Component | Port | Purpose |
+|-----------|------|---------|
+| **Kernel** | 3001 | The Guard. No request reaches a Cell without valid JWT + RBAC |
+| **Payment Hub** | 4000 | The Logic. Domain cell with gateway/processor/ledger |
+| **Postgres** | 5433 | The Memory. Users, Roles, Routes, Audit Trail |
 
-- ✅ Next.js (App Router) Kernel app boots
-- ✅ `/api/kernel/health` returns OK + `correlation_id`
-- ✅ `/api/kernel/tenants` supports POST + GET (in-memory repo)
-- ✅ Every request is validated by **contracts schemas**
-- ✅ Every critical action writes an **audit event**
-- ✅ Anti-Gravity enforced by folder structure
+---
 
-## Correlation ID
+## 📚 Documentation
 
-Every request receives a `x-correlation-id` header:
+| Document | Description |
+|----------|-------------|
+| [🏗 Architecture](docs/ARCHITECTURE.md) | Mental model: Cells, Molecules, Canons |
+| [🔌 Cell Integration Guide](docs/cell-integration-guide.md) | Build your own Finance Cell |
+| [🔧 Troubleshooting](docs/TROUBLESHOOTING.md) | Fix 401/403/503 errors |
+| [📋 API Specification](docs/openapi.yaml) | Full OpenAPI 3.0 Reference |
 
-1. If client provides `x-correlation-id`, we use it (for tracing)
-2. Otherwise, we generate a new UUID
-3. Response always includes `x-correlation-id` header
+---
 
-This enables end-to-end request tracing across microservices.
+## 🛠 Operational Commands
 
-## Audit Trail
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start Kernel locally (connects to Docker DB) |
+| `pnpm db:migrate` | Apply SQL schema updates |
+| `pnpm seed:happy-path` | Seed demo data (tenant, user, cell, routes) |
+| `pnpm test:e2e` | Run full Integration Suite |
+| `docker-compose logs -f` | Tail logs for all services |
 
-Every mutation (POST, PUT, DELETE) writes an audit event:
+---
 
-```typescript
-{
-  id: "uuid",
-  tenant_id: "uuid",
-  actor_id: "uuid",  // From auth session
-  action: "kernel.tenant.create",
-  resource: "kernel_tenant",
-  result: "OK",
-  correlation_id: "uuid",
-  payload: { name: "ACME" },
-  created_at: "2024-01-01T00:00:00.000Z"
-}
+## ⚠️ MVP Limitations
+
+| Limitation | Impact | Future Fix |
+|------------|--------|------------|
+| Single Process | No horizontal scaling | Add Redis session store |
+| Manual Tenants | Tenant creation via seed/SQL | Add `/api/kernel/tenants` CRUD |
+| No Rate Limiting | DoS risk on public endpoints | Add rate limiting middleware |
+
+---
+
+## 📁 Project Structure
+
+```
+apps/kernel/
+├── app/api/              # Next.js API routes
+│   ├── gateway/          # Reverse proxy to Cells
+│   ├── health/           # Liveness check
+│   └── kernel/           # IAM, Registry, Events, Audit
+├── db/migrations/        # SQL schema files
+├── docs/                 # Documentation
+├── scripts/              # Utility scripts (migrate, seed)
+└── docker-compose.yml    # Stack orchestration
+
+apps/cell-payment-hub/    # Reference Cell implementation
+├── src/index.ts          # Express + Cell architecture
+└── Dockerfile            # Container definition
 ```
 
-## Next: Build 2
+---
 
-- Service Registry endpoints
-- Gateway route `/api/gateway/[...path]`
-- Minimal RBAC gate at the gateway
-  
+**Built with ❤️ by AI-BOS Team**

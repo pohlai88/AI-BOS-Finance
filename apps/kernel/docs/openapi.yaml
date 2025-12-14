@@ -1,24 +1,35 @@
 openapi: 3.0.3
 info:
-  title: AI-BOS Kernel MVP API
-  version: 0.1.0
+  title: AI-BOS Kernel API
+  version: 1.0.0
   description: |
-    Control plane API for AI-BOS platform.
+    Control Plane API for AI-BOS Finance platform.
+    
+    ## Architecture
+    The Kernel is the Control Plane that orchestrates:
+    - **Authentication:** JWT-based identity verification
+    - **Authorization:** RBAC permission enforcement
+    - **Gateway:** Reverse proxy routing to Cells
+    - **Audit:** Immutable event logging with correlation IDs
     
     ## Authentication
     Most endpoints require JWT Bearer token (obtained via `/api/kernel/iam/login`).
     
     ## Bootstrap
-    First user creation requires `x-kernel-bootstrap-key` header (see Canon Integration Guide).
+    First user creation requires `x-kernel-bootstrap-key` header (see Cell Integration Guide).
     
     ## Tenant Authority
     - **Before login:** `x-tenant-id` header selects tenant context
     - **After login:** JWT `tid` claim is authoritative; header is ignored
     
-    ## MVP Limitations
-    - **In-Memory Only:** All state is lost on server restart
-    - **Single-Process:** No horizontal scaling
-    - **Event Publish RBAC:** Permission defined but not enforced (planned)
+    ## Data Persistence
+    All state is persisted to PostgreSQL (survives restarts).
+    
+    ## Reference Cell
+    The `cell-payment-hub` demonstrates cell-based resilience:
+    - Health endpoints: `/ping`, `/health`
+    - Finance endpoints: `/payments/process`, `/payments/status/:id`
+    - Chaos endpoints: `/chaos/fail/:cell`, `/chaos/recover/:cell`
 
 servers:
   - url: http://localhost:3001
@@ -488,18 +499,25 @@ paths:
                   items:
                     type: string
                     enum:
+                      # Kernel IAM
                       - kernel.iam.user.create
                       - kernel.iam.user.list
                       - kernel.iam.role.create
                       - kernel.iam.role.list
                       - kernel.iam.role.assign
                       - kernel.iam.credential.set_password
+                      # Registry
                       - kernel.registry.canon.register
                       - kernel.registry.route.create
                       - kernel.registry.route.list
-                      - kernel.gateway.proxy.invoke
+                      # Gateway
+                      - kernel.gateway.proxy
+                      # Events & Audit
                       - kernel.event.publish
                       - kernel.audit.read
+                      # Finance Domain (Payment Hub)
+                      - finance.payment.execute
+                      - finance.payment.status
       responses:
         '200':
           description: Permissions granted
@@ -690,42 +708,52 @@ paths:
 
   /api/kernel/events/publish:
     post:
-      summary: Publish event
+      summary: Publish event (SECURED - Build 3.4)
       description: |
         Publishes an event to the Event Bus.
         
-        **RBAC Status:** Currently does NOT enforce `kernel.event.publish` permission. 
-        This is a known MVP gap. Enforcement is planned for a future build.
-        For forward compatibility, include `kernel.event.publish` in role grants.
+        **Security (Build 3.4):**
+        - Requires valid JWT (Bearer token)
+        - Requires `kernel.event.publish` permission
+        - `tenant_id` is derived from JWT (not request body)
+        - `actor_id` is derived from JWT (not request body)
+        - Cross-tenant injection attempts are blocked and audited
         
-        Requires `tenant_id` in request body (must be valid UUID matching header/JWT).
+        **Body tenant_id/actor_id:**
+        If provided in request body, they are validated against JWT claims.
+        Mismatch results in 400 VALIDATION_ERROR and audit log entry.
       operationId: publishEvent
-      parameters:
-        - $ref: '#/components/headers/XTenantId'
+      tags:
+        - Events
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [event_name, source, tenant_id]
+              required: [event_name, payload]
               properties:
                 event_name:
                   type: string
                   minLength: 1
                   maxLength: 128
                   example: canon.demo.ping
+                  description: Event type identifier
                 source:
                   type: string
                   enum: [kernel, canon, molecule, cell]
+                  default: canon
+                  description: Event source type
                 tenant_id:
                   type: string
                   format: uuid
-                  description: Must match x-tenant-id header
+                  description: Optional - MUST match JWT tenant_id if provided (validated, not used)
                 actor_id:
                   type: string
                   format: uuid
-                  description: Optional user ID that triggered the event
+                  description: Optional - MUST match JWT user_id if provided (validated, not used)
                 correlation_id:
                   type: string
                   format: uuid
@@ -739,7 +767,7 @@ paths:
                   description: Event payload (any JSON object)
       responses:
         '201':
-          description: Event published
+          description: Event published successfully
           content:
             application/json:
               schema:
@@ -758,11 +786,34 @@ paths:
                     type: string
                     format: date-time
         '400':
-          description: Validation error
+          description: Validation error (invalid body or cross-tenant mismatch)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized (missing or invalid JWT)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (missing kernel.event.publish permission)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Error'
+                  - type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          missing_permissions:
+                            type: array
+                            items:
+                              type: string
+                            example: ["kernel.event.publish"]
         '500':
           description: Internal error
           content:
@@ -971,3 +1022,18 @@ paths:
                     type: string
                   correlation_id:
                     type: string
+
+# ============================================================
+# CELL ENDPOINTS (Reference: cell-payment-hub on port 4000)
+# ============================================================
+# These are not part of the Kernel API, but documented here
+# for completeness. Cells run as separate services.
+
+  # Note: Payment Hub Cell endpoints (port 4000)
+  # GET  /ping                    → Liveness probe
+  # GET  /health                  → Cell-level health status
+  # POST /payments/process        → Process a payment
+  # GET  /payments/status/:id     → Check payment status
+  # POST /chaos/fail/:cell        → Simulate cell failure
+  # POST /chaos/recover/:cell     → Recover cell
+  # POST /chaos/degrade/:cell     → Set cell to degraded

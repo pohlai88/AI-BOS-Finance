@@ -23,6 +23,21 @@ export { InMemorySessionRepo } from './memory/sessionRepo.memory';
 export { InMemoryPermissionRepo } from './memory/permissionRepo.memory';
 export { InMemoryRolePermissionRepo } from './memory/rolePermissionRepo.memory';
 
+// SQL adapters (PostgreSQL)
+export {
+  SqlTenantRepo,
+  SqlUserRepo,
+  SqlRoleRepo,
+  SqlCredentialRepo,
+  SqlSessionRepo,
+  SqlPermissionRepo,
+  SqlRolePermissionRepo,
+  SqlCanonRepo,
+  SqlRouteRepo,
+  SqlEventBus,
+  SqlAuditRepo,
+} from './sql';
+
 // Auth adapters (bcryptjs, jose)
 export { BcryptPasswordHasher } from './auth/bcryptHasher';
 export { JoseTokenSigner } from './auth/joseTokenSigner';

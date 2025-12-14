@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const c = getKernelContainer();
     const role = await createRole(
       {
         roles: c.roleRepo,
