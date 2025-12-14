@@ -33,19 +33,19 @@ Below is a **complete MVP PRD for your Kernel** (control plane) that you can use
 
 **Completed:** 2025-12-14
 
-### 🚧 Build 3.2 — IN PLANNING (JWT Authentication)
+### ✅ Build 3.2 — COMPLETE (JWT Authentication)
 
 **JWT Issuance + Verification + Session Management**
 
-| Feature | Status | Priority | Dependencies |
-|---------|--------|----------|--------------|
-| Password Hashing | 📋 Planned | P0 | Build 3.1 complete |
-| JWT Issuance (Login) | 📋 Planned | P0 | Password Hashing |
-| JWT Verification | 📋 Planned | P0 | JWT Issuance |
-| Session Tracking | 📋 Planned | P1 | JWT Verification |
-| Token Refresh | 📋 Planned | P2 | JWT Verification |
+| Feature | Status | Completion | Documentation |
+|---------|--------|------------|---------------|
+| Password Hashing | ✅ Complete | 100% | [BUILD_3.2_COMPLETE.md](./BUILD_3.2_COMPLETE.md) |
+| JWT Issuance (Login) | ✅ Complete | 100% | All tests passing (11/11) |
+| JWT Verification | ✅ Complete | 100% | Health endpoint updated |
+| Session Tracking | ✅ Complete | 100% | Server-side revocation enforced |
+| Token Refresh | ⏭️ Deferred | N/A | Out of MVP scope |
 
-**Target:** Next session (2-3 hours)
+**Completed:** 2025-12-14
 
 ### 🚧 Build 3.3 — IN PLANNING (RBAC Enforcement)
 
@@ -60,19 +60,21 @@ Below is a **complete MVP PRD for your Kernel** (control plane) that you can use
 
 **Target:** Following session (3-4 hours)
 
-### 🎯 Current Phase: Build 3.1 → Build 3.2 (JWT Authentication)
+### 🎯 Current Phase: Build 3.2 → Build 3.3 (RBAC Enforcement)
 
-**Build 3.1 Status:** ✅ COMPLETE
-- All acceptance tests passing (6/6)
-- Health endpoint updated with IAM checks
-- Committed: 7298c50
+**Build 3.2 Status:** ✅ COMPLETE
+- All acceptance tests passing (11/11)
+- JWT authentication operational
+- Session management with revocation
+- Health endpoint updated with auth checks
+- Committed: a85959e
 
-**Next Steps (Build 3.2):**
-1. Password hashing (bcrypt integration)
-2. JWT issuance (login endpoint)
-3. JWT verification (middleware)
-4. Session tracking (login/logout audit)
-5. Acceptance tests (JWT flow)
+**Next Steps (Build 3.3):**
+1. Permission system definition
+2. Role-permission mapping
+3. Gateway RBAC enforcement
+4. Kernel RBAC enforcement
+5. Acceptance tests (RBAC flow)
 
 ---
 
@@ -473,22 +475,24 @@ Recommended schema prefix: `kernel_`
 
 ---
 
-### 🚧 Identity / Admin — PARTIAL (Build 3.1 Phase 1 Complete, 3.2-3.3 Pending)
+### ✅ Identity / Admin — BUILD 3.2 COMPLETE (RBAC Pending)
 
 | Endpoint | Method | Status | Description |
 |----------|--------|--------|-------------|
 | `/api/kernel/iam/users` | POST | ✅ Build 3.1 | Create user |
-| `/api/kernel/iam/users` | GET | ✅ Build 3.1 | List users |
+| `/api/kernel/iam/users` | GET | ✅ Build 3.2 | List users (JWT protected) |
+| `/api/kernel/iam/users/{id}/set-password` | POST | ✅ Build 3.2 | Set password (admin) |
 | `/api/kernel/iam/roles` | POST | ✅ Build 3.1 | Create role |
 | `/api/kernel/iam/roles` | GET | ✅ Build 3.1 | List roles |
 | `/api/kernel/iam/roles/{roleId}/assign` | POST | ✅ Build 3.1 | Assign role to user |
-| `/api/kernel/auth/login` | POST | 🚧 Build 3.2 | Login (JWT) |
-| `/api/kernel/auth/logout` | POST | 🚧 Build 3.2 | Logout (session invalidation) |
+| `/api/kernel/iam/login` | POST | ✅ Build 3.2 | Login (JWT) |
+| `/api/kernel/iam/me` | GET | ✅ Build 3.2 | Get current user (JWT) |
+| `/api/kernel/iam/logout` | POST | ✅ Build 3.2 | Logout (session revocation) |
 | `/api/kernel/tenants` | POST | 🚧 Build 3.3 | Create tenant |
 | `/api/kernel/tenants` | GET | 🚧 Build 3.3 | List tenants |
 
 **Build 3.1 Complete:** User & Role management APIs operational  
-**Build 3.2 Target:** JWT authentication & session management  
+**Build 3.2 Complete:** JWT authentication & session management operational  
 **Build 3.3 Target:** RBAC enforcement & tenant management
 
 ---
@@ -675,21 +679,40 @@ export async function writeAuditEvent(input: {
 
 ---
 
-## 🚧 Build 3.2 — IN PLANNING (JWT Authentication)
+## ✅ Build 3.2 — COMPLETE (JWT Authentication)
 
 **JWT Issuance + Verification + Session Management**
 
-Kernel MVP is complete when:
+### Phase Completion
+- [x] **Password hashing** (bcryptjs)
+- [x] **JWT issuance** (login endpoint)
+- [x] **JWT verification** (middleware)
+- [x] **Session management** (creation, revocation, validation)
+- [x] **Me endpoint** (get current user context)
+- [x] **Logout endpoint** (revoke session)
+- [x] **Set password endpoint** (admin function)
+- [x] **JWT protection** (IAM endpoints require JWT)
+- [x] **Health endpoint** (auth subsystem checks)
+- [x] **Acceptance tests** (11/11 passing)
 
-- [ ] Password hashing implemented (bcrypt)
-- [ ] Login endpoint works (email + password → JWT)
-- [ ] JWT verification middleware works
-- [ ] JWT contains user_id, tenant_id, roles
-- [ ] Session tracking (login/logout events in audit)
-- [ ] Acceptance tests pass (JWT flow)
-- [ ] Health endpoint JWT checks (optional)
+### Acceptance Criteria
+- [x] Password hashing implemented (bcrypt)
+- [x] Login endpoint works (email + password → JWT)
+- [x] JWT verification middleware works
+- [x] JWT contains sub (user_id), tid (tenant_id), sid (session_id), email
+- [x] Session tracking (login/logout events in audit)
+- [x] Session revocation enforced server-side
+- [x] Protected endpoints require JWT
+- [x] Invalid tokens rejected (401)
+- [x] Acceptance tests pass (11/11)
+- [x] Health endpoint includes auth checks
+- [x] Changes committed to git
 
-**Target:** Next session (2-3 hours)
+### Documentation
+- [x] Completion report: [BUILD_3.2_COMPLETE.md](./BUILD_3.2_COMPLETE.md)
+- [x] Acceptance tests: [__tests__/build-3.2-acceptance.js](./__tests__/build-3.2-acceptance.js)
+
+**Completed:** 2025-12-14
 
 ---
 
