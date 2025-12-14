@@ -42,13 +42,13 @@ function discoverMigrations(schemaFilter?: string): MigrationFile[] {
   const migrationsRoot = path.resolve(__dirname, '../migrations');
   const migrations: MigrationFile[] = [];
 
-  const schemasToProcess = schemaFilter 
-    ? [schemaFilter] 
+  const schemasToProcess = schemaFilter
+    ? [schemaFilter]
     : SCHEMA_ORDER;
 
   for (const schema of schemasToProcess) {
     const schemaDir = path.join(migrationsRoot, schema);
-    
+
     if (!fs.existsSync(schemaDir)) {
       console.log(`⚠️  Schema directory not found: ${schema}`);
       continue;
@@ -85,7 +85,7 @@ async function migrate() {
   const schemaIndex = args.indexOf('--schema');
   const schemaFilter = schemaIndex !== -1 ? args[schemaIndex + 1] : undefined;
 
-  const connectionString = process.env.DATABASE_URL || 
+  const connectionString = process.env.DATABASE_URL ||
     'postgres://aibos:aibos_password@localhost:5433/aibos_local';
 
   const client = new Client({ connectionString });
@@ -100,7 +100,7 @@ async function migrate() {
 
     // Discover migrations
     const migrations = discoverMigrations(schemaFilter);
-    
+
     if (migrations.length === 0) {
       console.log('No migrations found.');
       return;
@@ -110,7 +110,7 @@ async function migrate() {
 
     // Group by schema for display
     let currentSchema = '';
-    
+
     for (const migration of migrations) {
       if (migration.schema !== currentSchema) {
         currentSchema = migration.schema;
@@ -120,7 +120,7 @@ async function migrate() {
       }
 
       console.log(`  ▶️  ${migration.filename}`);
-      
+
       try {
         const sql = fs.readFileSync(migration.filepath, 'utf8');
         await client.query(sql);

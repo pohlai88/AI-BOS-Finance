@@ -310,22 +310,22 @@ const SCHEMA_DIRS = ['kernel', 'finance', 'config'];
 
 function discoverMigrationFiles(): string[] {
   const files: string[] = [];
-  
+
   for (const schema of SCHEMA_DIRS) {
     const schemaDir = path.join(MIGRATIONS_DIR, schema);
-    
+
     if (!fs.existsSync(schemaDir)) {
       continue;
     }
-    
+
     const schemaFiles = fs.readdirSync(schemaDir)
       .filter(f => f.endsWith('.sql'))
       .sort()
       .map(f => path.join(schemaDir, f));
-    
+
     files.push(...schemaFiles);
   }
-  
+
   return files;
 }
 
