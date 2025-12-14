@@ -1,0 +1,973 @@
+openapi: 3.0.3
+info:
+  title: AI-BOS Kernel MVP API
+  version: 0.1.0
+  description: |
+    Control plane API for AI-BOS platform.
+    
+    ## Authentication
+    Most endpoints require JWT Bearer token (obtained via `/api/kernel/iam/login`).
+    
+    ## Bootstrap
+    First user creation requires `x-kernel-bootstrap-key` header (see Canon Integration Guide).
+    
+    ## Tenant Authority
+    - **Before login:** `x-tenant-id` header selects tenant context
+    - **After login:** JWT `tid` claim is authoritative; header is ignored
+    
+    ## MVP Limitations
+    - **In-Memory Only:** All state is lost on server restart
+    - **Single-Process:** No horizontal scaling
+    - **Event Publish RBAC:** Permission defined but not enforced (planned)
+
+servers:
+  - url: http://localhost:3001
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+  
+  parameters:
+    TenantIdHeader:
+      name: x-tenant-id
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Tenant ID (UUID). Required for control-plane calls. After login, JWT tenant_id is authoritative.
+    CorrelationIdHeader:
+      name: x-correlation-id
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      description: Correlation ID for tracing (optional, UUID format). Server generates if missing or invalid.
+    BootstrapKeyHeader:
+      name: x-kernel-bootstrap-key
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Bootstrap key for initial setup (required for bootstrap endpoints only)
+  
+  headers:
+    XTenantId:
+      schema:
+        type: string
+      description: Tenant ID (required for control-plane calls and public gateway calls)
+      required: true
+    XCorrelationId:
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      description: Correlation ID for tracing (optional, UUID format)
+      required: false
+    XKernelBootstrapKey:
+      schema:
+        type: string
+      description: Bootstrap key for initial setup (required for bootstrap endpoints only)
+      required: false
+  
+  schemas:
+    Error:
+      type: object
+      required: [ok, error]
+      properties:
+        ok:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [UNAUTHORIZED, FORBIDDEN, VALIDATION_ERROR, NOT_FOUND, INTERNAL_ERROR, BOOTSTRAP_DENIED]
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+        correlation_id:
+          type: string
+    
+    Success:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+        correlation_id:
+          type: string
+
+paths:
+  /api/kernel/iam/users:
+    post:
+      summary: Create user (bootstrap)
+      description: |
+        Creates a new user. Requires bootstrap key for empty tenants.
+        After tenant has users, this endpoint requires RBAC permission `kernel.iam.user.create`.
+      operationId: createUser
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+        - $ref: '#/components/headers/XKernelBootstrapKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                name:
+                  type: string
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  tenant_id:
+                    type: string
+                  email:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                    enum: [ACTIVE, SUSPENDED]
+                  created_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (bootstrap denied or insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    get:
+      summary: List users
+      description: Lists all users for the tenant (requires JWT)
+      operationId: listUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        email:
+                          type: string
+                        name:
+                          type: string
+                        status:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/users/{userId}/set-password:
+    post:
+      summary: Set user password
+      description: |
+        Sets password for a user. Requires bootstrap key if user has no credentials.
+        Otherwise requires RBAC permission `kernel.iam.credential.set_password`.
+      operationId: setPassword
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/headers/XTenantId'
+        - $ref: '#/components/headers/XKernelBootstrapKey'
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (bootstrap denied or insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/login:
+    post:
+      summary: Login
+      description: Authenticates user and returns JWT access token
+      operationId: login
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      token_type:
+                        type: string
+                        example: Bearer
+                      expires_in:
+                        type: integer
+                  correlation_id:
+                    type: string
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/me:
+    get:
+      summary: Get current user
+      description: Returns current authenticated user context
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/logout:
+    post:
+      summary: Logout
+      description: Revokes current session and invalidates JWT
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/roles:
+    post:
+      summary: Create role
+      description: Creates a new role (requires RBAC permission `kernel.iam.role.create`)
+      operationId: createRole
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Role created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  tenant_id:
+                    type: string
+                  name:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    get:
+      summary: List roles
+      description: Lists all roles for the tenant (requires JWT)
+      operationId: listRoles
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+
+  /api/kernel/iam/roles/{roleId}/assign:
+    post:
+      summary: Assign role to user
+      description: Assigns a role to a user (requires RBAC permission `kernel.iam.role.assign`)
+      operationId: assignRole
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Role assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/iam/roles/{roleId}/permissions:
+    post:
+      summary: Grant permissions to role
+      description: Grants permissions to a role (requires RBAC permission `kernel.iam.role.create`)
+      operationId: grantPermissions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [permissions]
+              properties:
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - kernel.iam.user.create
+                      - kernel.iam.user.list
+                      - kernel.iam.role.create
+                      - kernel.iam.role.list
+                      - kernel.iam.role.assign
+                      - kernel.iam.credential.set_password
+                      - kernel.registry.canon.register
+                      - kernel.registry.route.create
+                      - kernel.registry.route.list
+                      - kernel.gateway.proxy.invoke
+                      - kernel.event.publish
+                      - kernel.audit.read
+      responses:
+        '200':
+          description: Permissions granted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/registry/canons:
+    post:
+      summary: Register Canon
+      description: Registers a new Canon service (requires RBAC permission `kernel.registry.canon.register`)
+      operationId: registerCanon
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [canon_key, version, base_url]
+              properties:
+                canon_key:
+                  type: string
+                  minLength: 2
+                  maxLength: 64
+                  example: canon.demo
+                version:
+                  type: string
+                  minLength: 1
+                  maxLength: 32
+                  example: "1.0.0"
+                base_url:
+                  type: string
+                  format: uri
+                  example: http://localhost:4000
+                status:
+                  type: string
+                  enum: [ACTIVE, INACTIVE]
+                  default: ACTIVE
+                capabilities:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+      responses:
+        '201':
+          description: Canon registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  tenant_id:
+                    type: string
+                  canon_key:
+                    type: string
+                  version:
+                    type: string
+                  base_url:
+                    type: string
+                  status:
+                    type: string
+                  capabilities:
+                    type: array
+                  created_at:
+                    type: string
+                    format: date-time
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    get:
+      summary: List Canons
+      description: Lists all Canons for the tenant (requires JWT)
+      operationId: listCanons
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+
+  /api/kernel/registry/routes:
+    post:
+      summary: Create route mapping
+      description: Creates a route mapping from gateway path to Canon (requires RBAC permission `kernel.registry.route.create`)
+      operationId: createRoute
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [route_prefix, canon_id]
+              properties:
+                route_prefix:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  example: /demo/ping
+                canon_id:
+                  type: string
+                  format: uuid
+                required_permissions:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                  description: RBAC permissions required to access this route (empty = public)
+      responses:
+        '201':
+          description: Route created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  tenant_id:
+                    type: string
+                  route_prefix:
+                    type: string
+                  canon_id:
+                    type: string
+                    format: uuid
+                  required_permissions:
+                    type: array
+                    items:
+                      type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    get:
+      summary: List route mappings
+      description: Lists all route mappings for the tenant (requires JWT)
+      operationId: listRoutes
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+
+  /api/kernel/events/publish:
+    post:
+      summary: Publish event
+      description: |
+        Publishes an event to the Event Bus.
+        
+        **RBAC Status:** Currently does NOT enforce `kernel.event.publish` permission. 
+        This is a known MVP gap. Enforcement is planned for a future build.
+        For forward compatibility, include `kernel.event.publish` in role grants.
+        
+        Requires `tenant_id` in request body (must be valid UUID matching header/JWT).
+      operationId: publishEvent
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [event_name, source, tenant_id]
+              properties:
+                event_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  example: canon.demo.ping
+                source:
+                  type: string
+                  enum: [kernel, canon, molecule, cell]
+                tenant_id:
+                  type: string
+                  format: uuid
+                  description: Must match x-tenant-id header
+                actor_id:
+                  type: string
+                  format: uuid
+                  description: Optional user ID that triggered the event
+                correlation_id:
+                  type: string
+                  format: uuid
+                  description: Optional correlation ID (generated if missing)
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: Optional timestamp (generated if missing)
+                payload:
+                  type: object
+                  description: Event payload (any JSON object)
+      responses:
+        '201':
+          description: Event published
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  event_id:
+                    type: string
+                    format: uuid
+                  correlation_id:
+                    type: string
+                    format: uuid
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/kernel/audit/events:
+    get:
+      summary: Query audit trail
+      description: Queries audit events (requires RBAC permission `kernel.audit.read`)
+      operationId: queryAudit
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/XTenantId'
+        - name: correlation_id
+          in: query
+          schema:
+            type: string
+          description: Filter by correlation ID
+        - name: actor_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by actor ID
+        - name: action
+          in: query
+          schema:
+            type: string
+          description: Filter by action
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+          description: Maximum number of events to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Offset for pagination
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          type: object
+                      total:
+                        type: integer
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/gateway/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Gateway path (route_prefix without leading /api/gateway)
+        example: demo/ping
+      - $ref: '#/components/headers/XTenantId'
+    get:
+      summary: Gateway proxy (GET)
+      description: |
+        Proxies GET request to registered Canon.
+        Gateway path = `/api/gateway` + `route_prefix`.
+        Requires permissions specified in route's `required_permissions` (empty = public).
+      operationId: gatewayProxyGet
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK (proxied from Canon)
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Route not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    post:
+      summary: Gateway proxy (POST)
+      description: Proxies POST request to registered Canon
+      operationId: gatewayProxyPost
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK (proxied from Canon)
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Route not found
+    
+    put:
+      summary: Gateway proxy (PUT)
+      description: Proxies PUT request to registered Canon
+      operationId: gatewayProxyPut
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK (proxied from Canon)
+    
+    delete:
+      summary: Gateway proxy (DELETE)
+      description: Proxies DELETE request to registered Canon
+      operationId: gatewayProxyDelete
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK (proxied from Canon)
+
+  /api/health:
+    get:
+      summary: Health check
+      description: Returns health status of all Kernel subsystems
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy, degraded]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  duration_ms:
+                    type: integer
+                  services:
+                    type: object
+        '503':
+          description: Degraded (some subsystems down)
+        '500':
+          description: Unhealthy (critical failure)
+
+  /api/kernel/health:
+    get:
+      summary: Simple health check
+      description: Basic health check endpoint
+      operationId: kernelHealthCheck
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  service:
+                    type: string
+                  version:
+                    type: string
+                  correlation_id:
+                    type: string

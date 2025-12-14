@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           limit: 1,
           offset: 0,
         });
-        
+
         if (existingUsers.total > 0) {
           // Tenant already bootstrapped - require RBAC (ignore bootstrap key)
           auth = await enforceRBAC(req, {
