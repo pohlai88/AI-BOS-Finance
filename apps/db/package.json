@@ -13,6 +13,7 @@
     "seed:finance": "tsx seeds/finance/seed-demo-corp.ts",
     "seed:all": "pnpm seed:kernel && pnpm seed:finance",
     "validate": "tsx tools/validate-schema.ts",
+    "verify:roles": "tsx scripts/verify-roles.ts",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
     "db:reset": "docker-compose down -v && docker-compose up -d"
