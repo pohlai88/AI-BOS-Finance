@@ -26,7 +26,7 @@ export async function GET() {
     // Parallel health checks for all subsystems
     // ✅ Read-only checks, no data creation
     // ✅ Uses isolated tenant_id="system" for non-tenant operations
-    const [registry, events, audit, users, roles] = await Promise.all([
+    const [registry, events, audit, users, roles, sessions, credentials] = await Promise.all([
       // Check Registry: Can list canons
       container.canonRegistry
         .list({ tenant_id: "system" })
@@ -56,6 +56,18 @@ export async function GET() {
         .list({ tenant_id: "system", limit: 1, offset: 0 })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
+
+      // Check Auth Sessions: Can check session validity
+      container.sessionRepo
+        .isValid({ tenant_id: "system", session_id: "test", now: new Date().toISOString() })
+        .then(() => ({ status: "up" as const }))
+        .catch((e: Error) => ({ status: "down" as const, error: e.message })),
+
+      // Check Auth Credentials: Can get credentials
+      container.credentialRepo
+        .getByUserId({ tenant_id: "system", user_id: "test" })
+        .then(() => ({ status: "up" as const }))
+        .catch((e: Error) => ({ status: "down" as const, error: e.message })),
     ]);
 
     const duration = Math.round(performance.now() - start);
@@ -64,7 +76,9 @@ export async function GET() {
       events.status === "up" &&
       audit.status === "up" &&
       users.status === "up" &&
-      roles.status === "up";
+      roles.status === "up" &&
+      sessions.status === "up" &&
+      credentials.status === "up";
 
     // ✅ FIX: Return 200 (healthy) or 503 (degraded), never 500 for subsystem down
     return NextResponse.json(
@@ -80,9 +94,15 @@ export async function GET() {
             users: users,
             roles: roles,
           },
+          auth: {
+            sessions: sessions,
+            credentials: credentials,
+            jwt: { status: "up" }, // JWT signer initialized in container
+            password_hasher: { status: "up" }, // Bcrypt initialized in container
+          },
         },
-        version: "3.1.0", // Build 3.1 Phase 1 Complete
-        build: "Build 3.1 Phase 1 - IAM Foundation (Complete)",
+        version: "3.2.0", // Build 3.2 - JWT Authentication
+        build: "Build 3.2 - JWT Authentication (Complete)",
       },
       { status: isHealthy ? 200 : 503 } // 200=healthy, 503=degraded
     );

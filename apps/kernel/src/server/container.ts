@@ -22,6 +22,10 @@ import {
   InMemoryEventBus,
   InMemoryUserRepo,
   InMemoryRoleRepo,
+  InMemoryCredentialRepo,
+  InMemorySessionRepo,
+  BcryptPasswordHasher,
+  JoseTokenSigner,
 } from "@aibos/kernel-adapters";
 
 /**
@@ -35,6 +39,10 @@ export interface KernelContainer {
   eventBus: InMemoryEventBus;
   userRepo: InMemoryUserRepo;
   roleRepo: InMemoryRoleRepo;
+  credentialRepo: InMemoryCredentialRepo;
+  sessionRepo: InMemorySessionRepo;
+  passwordHasher: BcryptPasswordHasher;
+  tokenSigner: JoseTokenSigner;
 
   // Helper services (keep core pure)
   id: { uuid: () => string };
@@ -61,6 +69,12 @@ export function getKernelContainer(): KernelContainer {
   const existing = getGlobalContainer();
   if (existing) return existing;
 
+  // Get JWT secret from environment
+  const jwtSecret = process.env.KERNEL_JWT_SECRET;
+  if (!jwtSecret) {
+    throw new Error("KERNEL_JWT_SECRET environment variable is required");
+  }
+
   const created: KernelContainer = {
     tenantRepo: new InMemoryTenantRepo(),
     audit: new InMemoryAudit(),
@@ -69,11 +83,15 @@ export function getKernelContainer(): KernelContainer {
     eventBus: new InMemoryEventBus(),
     userRepo: new InMemoryUserRepo(),
     roleRepo: new InMemoryRoleRepo(),
+    credentialRepo: new InMemoryCredentialRepo(),
+    sessionRepo: new InMemorySessionRepo(),
+    passwordHasher: new BcryptPasswordHasher(),
+    tokenSigner: new JoseTokenSigner(jwtSecret),
     id: { uuid: () => randomUUID() },
     clock: { nowISO: () => new Date().toISOString() },
   };
   setGlobalContainer(created);
-  console.log("[Kernel] Container initialized with in-memory adapters");
+  console.log("[Kernel] Container initialized with in-memory adapters + JWT auth");
   return created;
 }
 

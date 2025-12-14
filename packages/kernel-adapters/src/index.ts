@@ -18,4 +18,10 @@ export { InMemoryRouteRegistry } from './memory/routeRegistry.memory';
 export { InMemoryEventBus } from './memory/eventBus.memory';
 export { InMemoryUserRepo } from './memory/userRepo.memory';
 export { InMemoryRoleRepo } from './memory/roleRepo.memory';
+export { InMemoryCredentialRepo } from './memory/credentialRepo.memory';
+export { InMemorySessionRepo } from './memory/sessionRepo.memory';
+
+// Auth adapters (bcryptjs, jose)
+export { BcryptPasswordHasher } from './auth/bcryptHasher';
+export { JoseTokenSigner } from './auth/joseTokenSigner';
 

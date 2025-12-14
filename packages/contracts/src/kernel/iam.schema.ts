@@ -34,6 +34,20 @@ export const IamRoleAssignSchema = z.object({
 }).strict();
 
 // ============================================================================
+// AUTH SCHEMAS (Build 3.2)
+// ============================================================================
+
+export const IamSetPasswordSchema = z.object({
+  user_id: z.string().uuid(),
+  password: z.string().min(8).max(255),
+}).strict();
+
+export const IamLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+}).strict();
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -41,3 +55,5 @@ export type IamUserCreateSchema = z.infer<typeof IamUserCreateSchema>;
 export type IamListQuerySchema = z.infer<typeof IamListQuerySchema>;
 export type IamRoleCreateSchema = z.infer<typeof IamRoleCreateSchema>;
 export type IamRoleAssignSchema = z.infer<typeof IamRoleAssignSchema>;
+export type IamSetPasswordSchema = z.infer<typeof IamSetPasswordSchema>;
+export type IamLoginSchema = z.infer<typeof IamLoginSchema>;

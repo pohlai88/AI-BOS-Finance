@@ -18,6 +18,7 @@ export * from './domain/tenant';
 export * from './domain/registry';
 export * from './domain/event';
 export * from './domain/iam';
+export * from './domain/auth';
 
 // Ports
 export * from './ports/tenantRepo';
@@ -27,6 +28,10 @@ export * from './ports/routeRegistryPort';
 export * from './ports/eventBusPort';
 export * from './ports/userRepoPort';
 export * from './ports/roleRepoPort';
+export * from './ports/credentialRepoPort';
+export * from './ports/sessionRepoPort';
+export * from './ports/passwordHasherPort';
+export * from './ports/tokenSignerPort';
 
 // Application (use-cases)
 export { createTenant } from './application/createTenant';
@@ -42,4 +47,8 @@ export { listUsers } from './application/listUsers';
 export { createRole } from './application/createRole';
 export { listRoles } from './application/listRoles';
 export { assignRole } from './application/assignRole';
+export { setPassword } from './application/setPassword';
+export { login } from './application/login';
+export { me } from './application/me';
+export { logout } from './application/logout';
 

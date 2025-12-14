@@ -79,32 +79,65 @@ function decodeJWT(token) {
 let testUserId, testUserEmail, testUserPassword, validToken;
 
 async function runTests() {
-  // Setup: Create test user with password (Build 3.2 requirement)
-  console.log('\n🔧 Setup: Creating test user...');
+  // Setup: Create test user and set password (Build 3.2 requirement)
+  console.log('\n🔧 Setup: Creating test user and setting password...');
+  testUserEmail = 'jwt-test@example.com';
+  testUserPassword = 'SecurePassword123!';
+  
   try {
-    const setupRes = await request('POST', '/api/kernel/iam/users', {
-      email: 'jwt-test@example.com',
+    // Step 1: Create user
+    const createRes = await request('POST', '/api/kernel/iam/users', {
+      email: testUserEmail,
       name: 'JWT Test User',
-      password: 'SecurePassword123!', // Build 3.2: password field added
     });
-    
-    if (setupRes.status === 201) {
-      testUserId = setupRes.data.data.user_id;
-      testUserEmail = 'jwt-test@example.com';
-      testUserPassword = 'SecurePassword123!';
+
+    if (createRes.status === 201) {
+      testUserId = createRes.data.data.user_id;
       console.log(`✓ Test user created: ${testUserId}`);
+    } else if (createRes.status === 409) {
+      // User already exists, try to get user ID from list (may fail if JWT required)
+      try {
+        const listRes = await request('GET', '/api/kernel/iam/users');
+        if (listRes.data?.data?.items) {
+          const existingUser = listRes.data.data.items.find((u) => u.email === testUserEmail);
+          if (existingUser) {
+            testUserId = existingUser.user_id;
+            console.log(`✓ Test user already exists: ${testUserId}`);
+          }
+        }
+      } catch (e) {
+        // If list fails (JWT required), we'll try to set password anyway
+        console.log('⚠️  Could not list users (JWT may be required), continuing...');
+      }
+      
+      if (!testUserId) {
+        // If we couldn't get user ID, try a known test user ID pattern or skip password set
+        console.log('⚠️  Could not determine user ID, password may already be set');
+      }
     } else {
-      console.log('⚠️  User creation failed (may already exist), continuing...');
-      testUserEmail = 'jwt-test@example.com';
-      testUserPassword = 'SecurePassword123!';
+      throw new Error(`Unexpected status: ${createRes.status}`);
+    }
+
+    // Step 2: Set password (if we have user ID)
+    if (testUserId) {
+      const passwordRes = await request('POST', `/api/kernel/iam/users/${testUserId}/set-password`, {
+        password: testUserPassword,
+      });
+
+      if (passwordRes.status === 200) {
+        console.log(`✓ Password set for user: ${testUserId}`);
+      } else {
+        console.log(`⚠️  Failed to set password: ${passwordRes.status} (may already be set)`);
+      }
     }
   } catch (e) {
     console.log('⚠️  Setup error:', e.message);
+    // Continue anyway - user might already have password set
   }
 
   // Test 1: Login with valid credentials (expect 200 + JWT)
   await test('Test 1: Login with valid credentials (expect 200 + JWT)', async () => {
-    const { status, data } = await request('POST', '/api/kernel/auth/login', {
+    const { status, data } = await request('POST', '/api/kernel/iam/login', {
       email: testUserEmail,
       password: testUserPassword,
     });
@@ -120,27 +153,27 @@ async function runTests() {
       throw new Error(`Expected ok=true`);
     }
 
-    if (!data.data.token) {
+    if (!data.data.access_token) {
       throw new Error(`Missing JWT token`);
     }
 
     // Verify JWT format
-    if (!data.data.token.startsWith('eyJ')) {
+    if (!data.data.access_token.startsWith('eyJ')) {
       throw new Error(`Invalid JWT format (should start with eyJ)`);
     }
 
-    validToken = data.data.token;
+    validToken = data.data.access_token;
 
     // Decode and verify JWT claims
     const decoded = decodeJWT(validToken);
     console.log(`   JWT Claims:`, JSON.stringify(decoded, null, 2));
 
-    if (!decoded.user_id) {
-      throw new Error(`JWT missing user_id claim`);
+    if (!decoded.sub) {
+      throw new Error(`JWT missing sub (user_id) claim`);
     }
 
-    if (!decoded.tenant_id) {
-      throw new Error(`JWT missing tenant_id claim`);
+    if (!decoded.tid) {
+      throw new Error(`JWT missing tid (tenant_id) claim`);
     }
 
     if (!decoded.exp || decoded.exp <= Date.now() / 1000) {
@@ -152,7 +185,7 @@ async function runTests() {
 
   // Test 2: Login with invalid password (expect 401)
   await test('Test 2: Login with invalid password (expect 401)', async () => {
-    const { status, data } = await request('POST', '/api/kernel/auth/login', {
+    const { status, data } = await request('POST', '/api/kernel/iam/login', {
       email: testUserEmail,
       password: 'WrongPassword',
     });
@@ -173,7 +206,7 @@ async function runTests() {
 
   // Test 3: Login with non-existent user (expect 401)
   await test('Test 3: Login with non-existent user (expect 401)', async () => {
-    const { status, data } = await request('POST', '/api/kernel/auth/login', {
+    const { status, data } = await request('POST', '/api/kernel/iam/login', {
       email: 'nonexistent@example.com',
       password: 'AnyPassword',
     });
@@ -202,8 +235,8 @@ async function runTests() {
     console.log(`   JWT Claims:`, JSON.stringify(decoded, null, 2));
 
     // Verify required claims
-    if (!decoded.user_id) throw new Error('Missing user_id claim');
-    if (!decoded.tenant_id) throw new Error('Missing tenant_id claim');
+    if (!decoded.sub) throw new Error('Missing sub (user_id) claim');
+    if (!decoded.tid) throw new Error('Missing tid (tenant_id) claim');
     if (!decoded.email) throw new Error('Missing email claim');
     if (!decoded.iat) throw new Error('Missing iat (issued at) claim');
     if (!decoded.exp) throw new Error('Missing exp (expiration) claim');
@@ -291,7 +324,7 @@ async function runTests() {
     // Perform login with unique correlation ID
     await request(
       'POST',
-      '/api/kernel/auth/login',
+      '/api/kernel/iam/login',
       {
         email: testUserEmail,
         password: testUserPassword,

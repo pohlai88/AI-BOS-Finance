@@ -10,6 +10,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getKernelContainer } from "@/src/server/container";
 import { getCorrelationId, createResponseHeaders } from "@/src/server/http";
+import { verifyJWT } from "@/src/server/jwt";
 import { IamUserCreateSchema, IamListQuerySchema } from "@aibos/contracts";
 import { createUser, listUsers } from "@aibos/kernel-core";
 
@@ -97,7 +98,9 @@ export async function GET(req: NextRequest) {
   const headers = createResponseHeaders(correlationId);
 
   try {
-    const tenantId = requireTenantId(req);
+    // Verify JWT (Build 3.2)
+    const auth = await verifyJWT(req);
+    const tenantId = auth.tenant_id; // Use tenant_id from JWT, not header
     const raw = Object.fromEntries(req.nextUrl.searchParams.entries());
     const parsed = IamListQuerySchema.safeParse(raw);
 
@@ -126,19 +129,35 @@ export async function GET(req: NextRequest) {
       { ok: true, data, correlation_id: correlationId },
       { status: 200, headers }
     );
-  } catch (e) {
+  } catch (e: any) {
+    const msg = e?.message || "INTERNAL_ERROR";
+    let code: string;
+    let status: number;
+    let message: string;
+
+    if (msg === "INVALID_TOKEN") {
+      code = "INVALID_TOKEN";
+      status = 401;
+      message = "Invalid or malformed token";
+    } else if (msg === "UNAUTHORIZED" || msg === "SESSION_INVALID") {
+      code = "UNAUTHORIZED";
+      status = 401;
+      message = "Missing or invalid authentication token";
+    } else {
+      code = "INTERNAL_ERROR";
+      status = 500;
+      message = "An unexpected error occurred";
+    }
+
     console.error("[Kernel] GET /iam/users error:", e);
 
     return NextResponse.json(
       {
         ok: false,
-        error: {
-          code: "INTERNAL_ERROR",
-          message: "An unexpected error occurred",
-        },
+        error: { code, message },
         correlation_id: correlationId,
       },
-      { status: 500, headers }
+      { status, headers }
     );
   }
 }
