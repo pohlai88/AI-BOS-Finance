@@ -5,8 +5,9 @@
  * cell-based resilient architecture. Each internal "cell" (gateway,
  * processor, ledger) can fail independently without cascading.
  * 
- * Part of: molecule-accounts-payable (future)
- * Canon: canon-accounting (future)
+ * Part of: molecule-accounts-payable
+ * Canon: canon-finance
+ * Location: apps/canon/finance/accounts-payable/payment-hub
  */
 
 import express, { Request, Response } from 'express';
@@ -90,6 +91,7 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({
     service: 'cell-payment-hub',
     version: '1.0.0',
+    location: 'apps/canon/finance/accounts-payable/payment-hub',
     status: overallStatus,
     cells: Object.fromEntries(
       Object.entries(cells).map(([name, cell]) => [
@@ -348,6 +350,7 @@ app.post('/chaos/degrade/:cell', (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Payment Hub Cell running on port ${PORT}`);
+  console.log(`   Location: apps/canon/finance/accounts-payable/payment-hub`);
   console.log(`   Health: http://localhost:${PORT}/health`);
   console.log(`   Process: POST http://localhost:${PORT}/payments/process`);
   console.log(`   Chaos:   POST http://localhost:${PORT}/chaos/fail/{gateway|processor|ledger}`);

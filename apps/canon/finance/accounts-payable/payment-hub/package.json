@@ -2,7 +2,7 @@
   "name": "@aibos/cell-payment-hub",
   "version": "1.0.0",
   "private": true,
-  "description": "Payment Hub Cell - Atomic payment processing with resilient cell architecture",
+  "description": "Payment Hub Cell - Payment governance and approval workflows",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",

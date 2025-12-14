@@ -1,0 +1,9 @@
+{
+  "name": "@aibos/canon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-BOS Canon - Business Logic Layer",
+  "workspaces": [
+    "finance/**/package.json"
+  ]
+}

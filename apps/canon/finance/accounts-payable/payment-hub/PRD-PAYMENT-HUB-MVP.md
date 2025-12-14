@@ -13,7 +13,8 @@
 | **Status** | 🟡 DRAFT |
 | **Sprint** | 2 weeks |
 | **Owner** | Finance Cell Team |
-| **Derives From** | [CONT_04_PaymentHubArchitecture.md](../../packages/canon/A-Governance/A-CONT/CONT_04_PaymentHubArchitecture.md) |
+| **Location** | `apps/canon/finance/accounts-payable/payment-hub` |
+| **Derives From** | [CONT_04_PaymentHubArchitecture.md](../../../../../packages/canon/A-Governance/A-CONT/CONT_04_PaymentHubArchitecture.md) |
 
 ---
 
@@ -289,9 +290,9 @@ Even in MVP, these controls are **mandatory**:
 
 ## 📎 Related Documents
 
-- [CONT_04: Payment Hub Architecture](../../packages/canon/A-Governance/A-CONT/CONT_04_PaymentHubArchitecture.md) — Full architecture specification
-- [CONT_03: Database Architecture](../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md) — Data Fabric standard
-- [CONT_02: Kernel Architecture](../../packages/canon/A-Governance/A-CONT/CONT_02_KernelArchitecture.md) — Control plane standard
+- [CONT_04: Payment Hub Architecture](../../../../../packages/canon/A-Governance/A-CONT/CONT_04_PaymentHubArchitecture.md) — Full architecture specification
+- [CONT_03: Database Architecture](../../../../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md) — Data Fabric standard
+- [CONT_02: Kernel Architecture](../../../../../packages/canon/A-Governance/A-CONT/CONT_02_KernelArchitecture.md) — Control plane standard
 
 ---
 
