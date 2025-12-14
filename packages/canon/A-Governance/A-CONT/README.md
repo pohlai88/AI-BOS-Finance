@@ -9,22 +9,23 @@
 
 # Canon Contracts
 
-## 📜 Single Source of Truth (SSOT)
+## 📜 Supreme Governance
 
-**SSOT Document:** [`CONT_01_CanonIdentity.md`](./CONT_01_CanonIdentity.md)  
+**Constitution:** [`CONT_00_Constitution.md`](./CONT_00_Constitution.md)  
 
-This is the authoritative specification document.
+The Constitution is the supreme governance document. All other contracts derive authority from it.
 
 ---
 
 ## 📜 Active Contracts (Plane A — Governance)
 
-| Canon Code | Document | Status | Version |
-|------------|----------|--------|---------|
-| **CONT_01_CanonIdentity** | [CONT_01_CanonIdentity](./CONT_01_CanonIdentity.md) | 🟢 ACTIVE | 2.2.0 |
-| **CONT_02_KernelArchitecture** | [CONT_02_KernelArchitecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.4.0 |
-| **CONT_03_DatabaseArchitecture** | [CONT_03_DatabaseArchitecture](./CONT_03_DatabaseArchitecture.md) | 🟡 DRAFT | 0.1.0 |
-| **CONT_04_PaymentHubArchitecture** | [CONT_04_PaymentHubArchitecture](./CONT_04_PaymentHubArchitecture.md) | 🟡 DRAFT | 0.1.0 |
+| Canon Code | Document | Status | Version | Scope |
+|------------|----------|--------|---------|-------|
+| **CONT_00_Constitution** | [Constitution](./CONT_00_Constitution.md) | 🟢 ACTIVE | 1.0.0 | **SUPREME** — Platform Architecture |
+| **CONT_01_CanonIdentity** | [Canon Identity](./CONT_01_CanonIdentity.md) | 🟢 ACTIVE | 2.2.0 | Naming & Codes |
+| **CONT_02_KernelArchitecture** | [Kernel Architecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.4.0 | Control Plane |
+| **CONT_03_DatabaseArchitecture** | [Database Architecture](./CONT_03_DatabaseArchitecture.md) | 🟡 DRAFT | 0.2.2 | Data Fabric |
+| **CONT_04_PaymentHubArchitecture** | [Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) | 🟡 DRAFT | 0.1.0 | Cell Example |
 
 ---
 
