@@ -506,14 +506,14 @@ Recommended schema prefix: `kernel_`
 
 | Endpoint | Method | Status | Description |
 |----------|--------|--------|-------------|
-| `/api/kernel/audit/events` | GET | ✅ Implemented | Query audit trail (filtered, paginated) |
+| `/api/kernel/audit/events` | GET | ✅ Build 3.3 | Query audit trail (RBAC: `kernel.audit.read`) |
 | `/health` | GET | 🚧 Build 3 | Kernel health status |
 
 **Location:** `apps/kernel/app/api/kernel/audit/events/route.ts`
 
 ---
 
-### ✅ Identity / Admin — BUILD 3.2 COMPLETE (RBAC Pending)
+### ✅ Identity / Admin — BUILD 3.3 COMPLETE (RBAC Enforced)
 
 | Endpoint | Method | Status | Description |
 |----------|--------|--------|-------------|
