@@ -1,0 +1,31 @@
+# AI-BOS Data Fabric - Database Infrastructure
+# This is the single source of truth for database containers
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: aibos_db
+    restart: always
+    environment:
+      POSTGRES_USER: aibos
+      POSTGRES_PASSWORD: aibos_password
+      POSTGRES_DB: aibos_local
+    ports:
+      - "5433:5432"
+    volumes:
+      - aibos_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aibos -d aibos_local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aibos_net
+
+networks:
+  aibos_net:
+    driver: bridge
+    name: aibos_network
+
+volumes:
+  aibos_pg_data:

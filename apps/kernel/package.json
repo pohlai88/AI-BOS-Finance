@@ -11,9 +11,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "vitest run tests/integration/full-chain.test.ts",
-    "db:migrate": "tsx scripts/migrate.ts",
-    "seed:happy-path": "tsx scripts/seed-happy-path.ts"
+    "test:e2e": "vitest run tests/integration/full-chain.test.ts"
   },
   "dependencies": {
     "@aibos/contracts": "*",
