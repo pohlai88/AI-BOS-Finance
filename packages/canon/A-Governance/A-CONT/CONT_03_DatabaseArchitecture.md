@@ -1,14 +1,15 @@
 > **🟡 [DRAFT]** — Pending Certification  
 > **Canon Code:** CONT_03  
-> **Version:** 0.2.0 (Strategic Update)  
+> **Version:** 0.2.1 (Certifiable Patch)  
 > **Created:** 2025-12-15  
+> **Updated:** 2025-12-15  
 > **Plane:** A — Governance (Contract)  
 > **Binding Scope:** All AI-BOS Database Infrastructure  
 > **Authority:** AI-BOS Data Fabric & Persistence Standard
 
 ---
 
-# AI-BOS Data Fabric Standard v0.2.0
+# AI-BOS Data Fabric Standard v0.2.1
 
 > **Beyond "Just Postgres" — An Intelligent, Tenant-Aware Data Governance Layer**
 
@@ -61,6 +62,8 @@ AI-BOS DB is **not a database engine**; it is an **intelligent governance and or
 
 **Positioning:** *"AI-BOS governs Postgres anywhere."*
 
+**Migration-Friendly:** Source-of-truth can remain external (e.g., Autocount, ERPNext, legacy ERP) during migration. AI-BOS can run in **audit/extraction mode first**, becoming the system of record only when the customer is ready.
+
 ### 1.3 The Governance Gap We Fill
 
 We replace the **messy human process**, not the database:
@@ -69,7 +72,7 @@ We replace the **messy human process**, not the database:
 |----------|----------------|-------------|
 | "Who changed schema and why?" | Git blame + Slack archaeology | Audit trail + migration manifest |
 | "Why is this query slow?" | Manual EXPLAIN analysis | Automatic optimization suggestions |
-| "Can we prove tenant isolation?" | "Trust me" | Mathematical enforcement at driver layer |
+| "Can we prove tenant isolation?" | "Trust me" | Driver guard + RLS + tested defense-in-depth |
 | "Which index should we add?" | DBA tribal knowledge | AI-recommended, shadow-tested |
 
 ### 1.4 Ecosystem Positioning
@@ -91,7 +94,7 @@ We replace the **messy human process**, not the database:
 
 ### 2.1 The Promise
 
-> **"Write your Canon once. We decide if it runs on a $0/mo Neon instance or a $5000/mo AWS cluster based on the Tenant's tier."**
+> **"Write your Canon once. We manage provider selection based on the Tenant's profile — from serverless to enterprise-grade, without code changes."**
 
 ### 2.2 Non-Negotiable Rules
 
@@ -103,9 +106,23 @@ We replace the **messy human process**, not the database:
 | **All DDL via numbered migrations** | Reproducible, auditable | CI/CD gate |
 | **Soft deletes for business data** | Compliance requirement | Schema Guardian |
 
+**Exception: Table Scoping Model**
+
+Tables are classified as either `TENANT_SCOPED` or `GLOBAL`:
+
+| Scope | `tenant_id` | Examples | Runtime Access |
+|-------|-------------|----------|----------------|
+| `TENANT_SCOPED` | Required, NOT NULL | `users`, `payments`, `accounts` | Read/Write via Cell |
+| `GLOBAL` | NULL (column omitted) | `permissions`, `provider_profiles`, `currencies` | Read-only in runtime |
+
+**Rule:** GLOBAL tables must be:
+- Explicitly declared in migration comments
+- Read-only at application runtime (writes only via admin/migration)
+- Excluded from tenant isolation checks
+
 ### 2.3 Logical Sharding by Default
 
-Every query is rewritten to enforce `WHERE tenant_id = $1`. Data leakage is **mathematically impossible** at the driver layer.
+Every query is rewritten to enforce `WHERE tenant_id = $1`. Tenant isolation is **enforced by driver guard, tested via integration tests, and reinforced by RLS policies** (defense-in-depth).
 
 ```typescript
 // What the Cell writes:
@@ -254,32 +271,37 @@ db_requirements:
 
 ### 5.3 Provider Capabilities Profile
 
-Each supported provider must declare:
+Each supported provider must declare capabilities and constraints. **Note:** Specific limits (storage, compute) are non-contractual examples and vary by provider tier.
 
 ```yaml
-# Example: Neon Serverless Profile
-provider: neon-serverless
+# Example: Serverless Provider Profile (Illustrative)
+provider: serverless-class
 capabilities:
-  max_connections: 100
   connection_pooling: true
-  branching: true           # Unique to Neon
   auto_suspend: true
-  backup_rpo: "1h"
-  compliance: ["soc2"]
-  regions: ["us-east-1", "eu-west-1", "ap-southeast-1"]
+  branching: boolean        # Provider-specific
+  backup_rpo: "configurable"
+  compliance: ["list of certifications"]
+  regions: ["list of supported regions"]
   
-limits:
-  storage_gb: 10            # Free tier
-  compute_hours: 100        # Per month
+constraints:
+  max_connections: "tier-dependent"
+  storage: "tier-dependent"
+  compute: "tier-dependent"
 ```
 
-### 5.4 Zero-Migration Promise
+### 5.4 Zero-Canon-Change Promise
 
-The Canon code **never changes** when migrating between providers. The Kernel:
+The Canon and API code **never changes** when migrating between providers. Data movement follows an **approved migration runbook** which may include:
+- Scheduled maintenance windows
+- Data copy/sync periods
+- Customer approval gates
+
+**The Kernel's role:**
 1. Reads the tenant's `db_requirements` manifest
 2. Matches against available provider profiles
-3. Provisions or migrates transparently
-4. Updates connection routing
+3. Initiates migration via approved runbook
+4. Updates connection routing after validation
 
 ---
 
@@ -325,19 +347,19 @@ The Canon code **never changes** when migrating between providers. The Kernel:
 
 ### 6.3 Adaptive Cost Routing (Future)
 
-**What it does:** Routes data to appropriate providers based on tier.
+**What it does:** Routes data to appropriate provider classes based on tenant profile.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    TENANT ROUTING LOGIC                          │
 │                                                                  │
-│   Tenant Tier        │  Provider            │  Rationale         │
+│   Tenant Profile     │  Provider Class      │  Rationale         │
 │   ─────────────────────────────────────────────────────────────  │
-│   Free Trial         │  Neon Free Tier      │  $0, auto-suspend  │
-│   Starter            │  Neon Pro            │  Low cost, spiky   │
-│   Growth             │  AWS RDS             │  Steady, reliable  │
-│   Enterprise         │  BYOS (their RDS)    │  Compliance, VPC   │
+│   Evaluation         │  Serverless (shared) │  Low barrier       │
+│   Growth             │  Managed (dedicated) │  Steady workload   │
+│   Enterprise         │  BYOS (tenant-owned) │  Compliance, VPC   │
 │                                                                  │
+│   Note: Specific providers selected based on region/compliance   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -458,6 +480,38 @@ CREATE POLICY tenant_isolation ON finance.accounts
 | At-Rest | AES-256 | Managed by provider |
 | Application | bcrypt | Cost factor 12 for passwords |
 
+### 10.4 Enforcement Mechanism (DB-Level)
+
+**Hexagonal boundary enforcement via Postgres roles and grants:**
+
+```sql
+-- Separate roles per schema (Mode A: Managed)
+CREATE ROLE aibos_kernel_role;
+CREATE ROLE aibos_finance_role;
+CREATE ROLE aibos_config_role;
+
+-- Kernel role can ONLY access kernel schema
+GRANT USAGE ON SCHEMA kernel TO aibos_kernel_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA kernel TO aibos_kernel_role;
+REVOKE ALL ON SCHEMA finance FROM aibos_kernel_role;
+
+-- Finance role can ONLY access finance schema
+GRANT USAGE ON SCHEMA finance TO aibos_finance_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA finance TO aibos_finance_role;
+REVOKE ALL ON SCHEMA kernel FROM aibos_finance_role;
+
+-- Cross-schema joins become IMPOSSIBLE by permissions, not just policy
+```
+
+**Result:** Even if application code attempts a cross-schema join, Postgres will reject it with a permission error.
+
+| Enforcement Layer | Mechanism | Failure Mode |
+|-------------------|-----------|--------------|
+| **Application** | Query analyzer warns | Logged warning |
+| **Driver** | Tenant context guard | Request rejected (400) |
+| **Database** | Role permissions | SQL error (42501) |
+| **Defense-in-Depth** | RLS policies | Row filtered silently |
+
 ---
 
 ## 11. Observability
@@ -514,16 +568,23 @@ Move from **static governance** to **autonomous data management**:
 
 ### 12.3 MCP Integration (Model Context Protocol)
 
-Enable AI agents to orchestrate across the data fabric:
+Enable AI agents to orchestrate across the data fabric **via APIs, not cross-schema joins**:
 
 ```typescript
 // Future: AI assistant query
 "Show all failed payments from last week with related audit events"
 
-// MCP translates to:
-1. Query finance.transactions WHERE status = 'FAILED'
-2. Join kernel.audit_events ON correlation_id
-3. Format response for human consumption
+// MCP translates to (API-based, respecting hexagonal boundaries):
+1. Query Payment Cell API: GET /payments?status=FAILED&since=7d
+   → Returns: [{id, correlation_id, ...}, ...]
+   
+2. Query Kernel Audit API: GET /audit?correlation_id=abc123,def456
+   → Returns: [{action, actor_id, timestamp, ...}, ...]
+   
+3. Correlate in-memory by correlation_id
+4. Format response for human consumption
+
+// Note: NO cross-schema SQL joins — APIs enforce boundaries
 ```
 
 ---
@@ -533,26 +594,43 @@ Enable AI agents to orchestrate across the data fabric:
 ### 13.1 What's Included in MVP
 
 - [x] Kernel schema (13 migrations)
-- [ ] Finance schema (accounts, fx_rates, transactions, journals)
+- [x] Finance schema (100_finance_schema.sql)
 - [ ] Schema Guardian (basic validation)
 - [ ] Docker Compose for local dev
 - [ ] Basic observability
 
-### 13.2 What's Deferred to v1.1.0
+### 13.2 MVP Acceptance Criteria (Measurable Gates)
 
-- [ ] BYOS mode
+| Gate | Acceptance Criteria | Verification |
+|------|---------------------|--------------|
+| **Tenant Isolation** | No query executes without tenant context | Driver guard throws if `tenant_id` missing |
+| **Schema Guardian** | Blocks migrations missing `tenant_id` on TENANT_SCOPED tables | Unit test: reject bad migration |
+| **Double-Entry Ledger** | Sum(debit) = Sum(credit) per journal entry | Trigger or check constraint |
+| **Finance MVP Tables** | companies, accounts, transactions, journals exist | Migration success |
+| **Cross-Schema Block** | Kernel role cannot SELECT from finance schema | Postgres permission error test |
+
+### 13.3 What's Deferred to v1.1.0
+
+- [ ] BYOS mode implementation
 - [ ] Provider auto-selection
 - [ ] Query Optimizer
 - [ ] Read replicas
-- [ ] RLS policies
+- [ ] Full RLS policy coverage
+- [ ] Neon branching integration for shadow testing
 
 ---
 
-**End of Contract CONT_03 v0.2.0**
+**End of Contract CONT_03 v0.2.1**
 
 ---
+
+**Changelog:**
+- v0.2.1: Certifiable patch — removed absolute claims, fixed MCP example, added GLOBAL table exception, renamed Zero-Canon-Change Promise, added enforcement mechanism
+- v0.2.0: Strategic update — DGOL positioning, deployment modes, provider portability
+- v0.1.0: Initial draft
 
 **Next Steps:**
-1. Create `100_finance_schema.sql` migration
+1. Apply `100_finance_schema.sql` migration
 2. Create `PRD-DB-MVP.md` sprint plan
 3. Implement Schema Guardian (basic)
+4. Implement DB role separation per schema
