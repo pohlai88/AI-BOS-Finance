@@ -8,13 +8,35 @@
 import { z } from "zod";
 
 // ============================================================================
+// AUDIT TENANT ID SCHEMA
+// ============================================================================
+
+/**
+ * Tenant ID validation for audit events
+ * 
+ * **Invariant (enforced at API boundary, not schema):**
+ * - Tenant-scoped business operations MUST use UUID (enforced by x-tenant-id header validation)
+ * - System/health events use "system" or "health-check"
+ * 
+ * **Why `.string()` and not union:**
+ * Zod's union with UUID causes validation issues when optional fields are involved.
+ * The invariant is enforced at the API route level (requireTenantId helper).
+ * 
+ * **For Build 3.2:** Consider separating SYSTEM events into a different table/scope
+ * to restore strict UUID typing here.
+ */
+export const AuditTenantIdSchema = z.string();
+
+export type AuditTenantId = z.infer<typeof AuditTenantIdSchema>;
+
+// ============================================================================
 // AUDIT EVENT SCHEMA
 // ============================================================================
 
 export const AuditEvent = z.object({
   id: z.string().uuid(),
-  tenant_id: z.string().uuid().optional(),
-  actor_id: z.string().uuid().optional(),
+  tenant_id: AuditTenantIdSchema.optional(),
+  actor_id: z.string().optional(), // Can be UUID or system identifier
   action: z.string(), // e.g., "kernel.tenant.create"
   resource: z.string(), // e.g., "kernel_tenant"
   result: z.enum(["OK", "FAIL", "ALLOW", "DENY"]),

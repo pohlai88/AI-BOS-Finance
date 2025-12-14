@@ -8,14 +8,20 @@
  * - This file CAN import from kernel-core and kernel-adapters
  * - Route handlers ONLY import from this container
  * - UI pages NEVER import this directly
+ * 
+ * Dev Note: globalThis storage is for dev convenience only (HMR survival).
+ * Production persistence requires Redis/Postgres (Build 3.2+).
  */
 
+import { randomUUID } from "node:crypto";
 import {
   InMemoryTenantRepo,
   InMemoryAudit,
   InMemoryCanonRegistry,
   InMemoryRouteRegistry,
   InMemoryEventBus,
+  InMemoryUserRepo,
+  InMemoryRoleRepo,
 } from "@aibos/kernel-adapters";
 
 /**
@@ -27,6 +33,12 @@ export interface KernelContainer {
   canonRegistry: InMemoryCanonRegistry;
   routes: InMemoryRouteRegistry;
   eventBus: InMemoryEventBus;
+  userRepo: InMemoryUserRepo;
+  roleRepo: InMemoryRoleRepo;
+
+  // Helper services (keep core pure)
+  id: { uuid: () => string };
+  clock: { nowISO: () => string };
 }
 
 declare global {
@@ -55,6 +67,10 @@ export function getKernelContainer(): KernelContainer {
     canonRegistry: new InMemoryCanonRegistry(),
     routes: new InMemoryRouteRegistry(),
     eventBus: new InMemoryEventBus(),
+    userRepo: new InMemoryUserRepo(),
+    roleRepo: new InMemoryRoleRepo(),
+    id: { uuid: () => randomUUID() },
+    clock: { nowISO: () => new Date().toISOString() },
   };
   setGlobalContainer(created);
   console.log("[Kernel] Container initialized with in-memory adapters");

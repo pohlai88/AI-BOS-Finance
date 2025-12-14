@@ -16,4 +16,6 @@ export { InMemoryAudit } from './memory/audit.memory';
 export { InMemoryCanonRegistry } from './memory/canonRegistry.memory';
 export { InMemoryRouteRegistry } from './memory/routeRegistry.memory';
 export { InMemoryEventBus } from './memory/eventBus.memory';
+export { InMemoryUserRepo } from './memory/userRepo.memory';
+export { InMemoryRoleRepo } from './memory/roleRepo.memory';
 

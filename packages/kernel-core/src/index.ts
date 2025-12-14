@@ -17,6 +17,7 @@
 export * from './domain/tenant';
 export * from './domain/registry';
 export * from './domain/event';
+export * from './domain/iam';
 
 // Ports
 export * from './ports/tenantRepo';
@@ -24,6 +25,8 @@ export * from './ports/auditPort';
 export * from './ports/canonRegistryPort';
 export * from './ports/routeRegistryPort';
 export * from './ports/eventBusPort';
+export * from './ports/userRepoPort';
+export * from './ports/roleRepoPort';
 
 // Application (use-cases)
 export { createTenant } from './application/createTenant';
@@ -34,4 +37,9 @@ export { listCanons, listRoutes } from './application/listRegistry';
 export { resolveRoute } from './application/resolveRoute';
 export { publishEvent } from './application/publishEvent';
 export { queryAudit } from './application/queryAudit';
+export { createUser } from './application/createUser';
+export { listUsers } from './application/listUsers';
+export { createRole } from './application/createRole';
+export { listRoles } from './application/listRoles';
+export { assignRole } from './application/assignRole';
 

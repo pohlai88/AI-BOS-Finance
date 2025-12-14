@@ -25,23 +25,35 @@ export async function GET() {
   try {
     // Parallel health checks for all subsystems
     // ✅ Read-only checks, no data creation
-    // ✅ Uses isolated tenant_id="health-check"
-    const [registry, events, audit] = await Promise.all([
+    // ✅ Uses isolated tenant_id="system" for non-tenant operations
+    const [registry, events, audit, users, roles] = await Promise.all([
       // Check Registry: Can list canons
       container.canonRegistry
-        .list({ tenant_id: "health-check" })
+        .list({ tenant_id: "system" })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Event Bus: Can list events
       container.eventBus
-        .list("health-check", 1)
+        .list("system", 1)
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
 
       // Check Audit: Can query audit log
       container.audit
-        .query({ tenant_id: "health-check", limit: 1, offset: 0 })
+        .query({ tenant_id: "system", limit: 1, offset: 0 })
+        .then(() => ({ status: "up" as const }))
+        .catch((e: Error) => ({ status: "down" as const, error: e.message })),
+
+      // Check IAM Users: Can list users
+      container.userRepo
+        .list({ tenant_id: "system", limit: 1, offset: 0 })
+        .then(() => ({ status: "up" as const }))
+        .catch((e: Error) => ({ status: "down" as const, error: e.message })),
+
+      // Check IAM Roles: Can list roles
+      container.roleRepo
+        .list({ tenant_id: "system", limit: 1, offset: 0 })
         .then(() => ({ status: "up" as const }))
         .catch((e: Error) => ({ status: "down" as const, error: e.message })),
     ]);
@@ -50,7 +62,9 @@ export async function GET() {
     const isHealthy =
       registry.status === "up" &&
       events.status === "up" &&
-      audit.status === "up";
+      audit.status === "up" &&
+      users.status === "up" &&
+      roles.status === "up";
 
     // ✅ FIX: Return 200 (healthy) or 503 (degraded), never 500 for subsystem down
     return NextResponse.json(
@@ -62,9 +76,13 @@ export async function GET() {
           canonRegistry: registry,
           eventBus: events,
           auditLog: audit,
+          iam: {
+            users: users,
+            roles: roles,
+          },
         },
-        version: "2.0.0", // Build 2 Complete
-        build: "Build 2 - Core Platform (Complete)",
+        version: "3.1.0", // Build 3.1 Phase 1 Complete
+        build: "Build 3.1 Phase 1 - IAM Foundation (Complete)",
       },
       { status: isHealthy ? 200 : 503 } // 200=healthy, 503=degraded
     );

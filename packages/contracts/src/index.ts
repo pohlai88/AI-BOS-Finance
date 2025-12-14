@@ -12,6 +12,7 @@ export * from './kernel/tenants.schema';
 export * from './kernel/audit.schema';
 export * from './kernel/registry.schema';
 export * from './kernel/events.schema';
+export * from './kernel/iam.schema';
 
 // Shared contracts
 export * from './shared/envelope.schema';
