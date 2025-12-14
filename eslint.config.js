@@ -1,6 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -18,7 +15,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   prettierConfig,
-  
+
   // Main config for source files
   {
     files: ['src/**/*.{ts,tsx}'],
@@ -52,7 +49,7 @@ export default tseslint.config(
       // Note: Requires eslint-plugin-tailwindcss (install if needed)
     },
   },
-  
+
   // Tailwind Governance: Ban arbitrary values in all files
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
@@ -66,7 +63,7 @@ export default tseslint.config(
       // ✅ className="p-4" → Correct (standard Tailwind spacing)
     },
   },
-  
+
   // Canon Identity Contract - Enforce PAGE_META in canonical pages
   {
     files: [
@@ -78,12 +75,10 @@ export default tseslint.config(
       'canon/require-page-meta': 'error',
     },
   },
-  
+
   // Ignore patterns
   {
     ignores: ['dist/', 'node_modules/', '*.config.js', '*.config.ts'],
   },
-  
-  storybook.configs["flat/recommended"]
 );
 

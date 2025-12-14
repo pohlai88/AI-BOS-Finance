@@ -44,17 +44,25 @@ async function kernelFetch<T>(
   const url = `${baseUrl}${endpoint}`;
 
   try {
-    const response = await fetch(url, {
+    // Build fetch options - only include 'next' for server-side fetches
+    const fetchOptions: RequestInit = {
       ...options,
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
       },
-      next: {
-        // Cache for 60 seconds by default, or use provided revalidate
-        revalidate: options?.next?.revalidate ?? 60,
-      },
-    });
+    };
+
+    // Only add 'next' option for server-side (when window is undefined)
+    // Client-side fetches should use cache: 'no-store' for real-time data
+    if (typeof window === 'undefined' && options?.next) {
+      (fetchOptions as any).next = options.next;
+    } else if (typeof window !== 'undefined') {
+      // Client-side: disable caching for real-time updates
+      fetchOptions.cache = 'no-store';
+    }
+
+    const response = await fetch(url, fetchOptions);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -189,6 +197,22 @@ export async function suggestMappings(
   });
 }
 
+/**
+ * Get hierarchy tree for a metadata record (COA: Group → Transaction → Cell)
+ * GET /metadata/hierarchy/{dict_id}
+ */
+export async function getMetadataHierarchy(
+  dictId: string
+): Promise<{
+  record: any;
+  parent: any | null;
+  children: any[];
+  depth: number;
+  hierarchy_type: 'group' | 'transaction' | 'cell';
+}> {
+  return kernelFetch(`/metadata/hierarchy/${dictId}`);
+}
+
 // ============================================================================
 // LINEAGE DOMAIN - Graph & Impact Operations
 // ============================================================================
@@ -275,6 +299,7 @@ export const kernelClient = {
   getEntityFields,
   lookupMapping,
   suggestMappings,
+  getMetadataHierarchy,
 
   // Lineage
   getLineageGraph,

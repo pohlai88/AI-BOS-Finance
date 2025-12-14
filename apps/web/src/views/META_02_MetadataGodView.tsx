@@ -14,7 +14,7 @@
 // - Visual consistency across all modules via Kernel definitions
 // ============================================================================
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MetaAppShell } from '@/components/shell/MetaAppShell';
 import { MetaPageHeader } from '@/components/MetaPageHeader';
 import { SuperTable } from '@/components/metadata/SuperTable';
@@ -22,9 +22,9 @@ import { FlexibleFilterBar } from '@/components/metadata/FlexibleFilterBar';
 import { DetailDrawer } from '@/components/metadata/DetailDrawer';
 import { MetadataRequestForm } from '@/components/metadata/MetadataRequestForm';
 import { BackendStatus } from '@/components/kernel/BackendStatus';
-import { mockMetadataRecords } from '@/data/mockMetadata';
 import { MetadataRecord } from '@/types/metadata';
-import { Database, Filter, Shield, Zap, Plus } from 'lucide-react';
+import { Database, Filter, Shield, Zap, Plus, Layers } from 'lucide-react';
+import { kernelClient } from '@/lib/kernel-client';
 
 // ⚙️ THE KERNEL MAGIC
 import {
@@ -41,6 +41,19 @@ import {
 // ============================================================================
 
 const REGISTRY_SCHEMA: MetadataField[] = [
+  {
+    technical_name: 'hierarchy_level',
+    business_term: 'Hierarchy',
+    data_type: 'status',
+    is_critical: true,
+    width: 120,
+    description: 'COA Hierarchy Level (Group → Transaction → Cell)',
+    status_config: {
+      'Group': 'bg-purple-900/30 text-purple-400 border-purple-800',
+      'Transaction': 'bg-blue-900/30 text-blue-400 border-blue-800',
+      'Cell': 'bg-emerald-900/30 text-emerald-400 border-emerald-800',
+    },
+  },
   {
     technical_name: 'dict_id',
     business_term: 'ID',
@@ -146,22 +159,114 @@ export function MetadataGodView() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);  // Governance Request Mode
 
+  // === DATA FETCHING ===
+  const [metadataRecords, setMetadataRecords] = useState<MetadataRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // === FETCH DATA FROM KERNEL API ===
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Fetch metadata with default filter: is_bindable=TRUE (show Transactions & Cells by default)
+        // Note: The API doesn't support is_bindable filter yet, so we'll filter client-side
+        const response = await kernelClient.searchMetadataFields({
+          q: '',
+          limit: 1000, // Get all records for now
+          offset: 0,
+        });
+
+        // Transform API response to MetadataRecord format
+        const transformedRecords: MetadataRecord[] = response.results.map((record: any) => ({
+          dict_id: record.dict_id,
+          business_term: record.business_term,
+          technical_name: record.technical_name,
+          version: record.version,
+          is_group: record.is_group ?? false,
+          parent_dict_id: record.parent_dict_id,
+          is_bindable: record.is_bindable ?? false,
+          domain: record.domain || '',
+          entity_group: record.entity_group || '',
+          tags: record.tags || [],
+          canon_status: record.canon_status || 'DRAFT',
+          classification: record.classification || 'INTERNAL',
+          criticality: record.criticality || 'LOW',
+          data_owner: record.data_owner || '',
+          data_steward: record.data_steward || '',
+          definition_short: record.definition_short || '',
+          definition_full: record.definition_full || '',
+          calculation_logic: record.calculation_logic,
+          source_of_truth: record.source_of_truth || '',
+          synonyms: record.synonyms || [],
+          data_type_biz: record.data_type_biz || 'TEXT',
+          data_type_tech: record.data_type_tech || '',
+          precision: record.precision,
+          nullability: record.nullability ?? false,
+          format_pattern: record.format_pattern,
+          valid_values: record.valid_values,
+          example_values: record.example_values || [],
+          edge_cases: record.edge_cases || [],
+          default_behaviour: record.default_behaviour,
+          default_interpretation: record.default_interpretation,
+          upstream_src: record.upstream_src || '',
+          downstream_use: record.downstream_use || [],
+          related_terms: record.related_terms || [],
+          compliance_tags: record.compliance_tags || [],
+          approval_required: record.approval_required ?? false,
+          last_certified: record.last_certified,
+          recertification_due: record.recertification_due,
+          errors_if_wrong: record.errors_if_wrong,
+          common_misuses: record.common_misuses || [],
+          created_at: record.created_at || new Date().toISOString(),
+          updated_at: record.updated_at || new Date().toISOString(),
+          created_by: record.created_by || '',
+          updated_by: record.updated_by || '',
+          // Add hierarchy_level for display
+          hierarchy_level: record.is_group ? 'Group' : record.parent_dict_id ? 'Cell' : 'Transaction',
+        } as MetadataRecord & { hierarchy_level: string }));
+
+        setMetadataRecords(transformedRecords);
+        setTotalCount(response.total);
+      } catch (err) {
+        console.error('Failed to fetch metadata:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch metadata');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMetadata();
+  }, []);
+
   // === THE GENERATOR (The Holy Grail) ===
   // Columns are auto-generated from schema - no hardcoding!
   const schemaColumns = useMemo(
-    () => generateColumnsFromSchema<MetadataRecord>(REGISTRY_SCHEMA),
+    () => generateColumnsFromSchema<MetadataRecord & { hierarchy_level?: string }>(REGISTRY_SCHEMA),
     []
   );
 
   // === FILTER LOGIC ===
   const filteredData = useMemo(() => {
-    let result = [...mockMetadataRecords];
+    let result = [...metadataRecords];
+
+    // Default filter: Show only bindable records (Transactions & Cells) unless explicitly filtered
+    const hasExplicitBindableFilter = activeDimensions.some(
+      d => d.field.key === 'is_bindable'
+    );
+
+    if (!hasExplicitBindableFilter) {
+      result = result.filter((record) => record.is_bindable === true);
+    }
 
     activeDimensions.forEach((dimension) => {
       if (dimension.selectedValues.length === 0) return;
 
       result = result.filter((record) => {
-        const value = record[dimension.field.key];
+        const value = record[dimension.field.key as keyof MetadataRecord];
 
         // Handle array values (like tags)
         if (Array.isArray(value)) {
@@ -177,15 +282,18 @@ export function MetadataGodView() {
     });
 
     return result;
-  }, [activeDimensions]);
+  }, [metadataRecords, activeDimensions]);
 
   // === STATISTICS ===
   const stats = useMemo(() => ({
-    total: mockMetadataRecords.length,
+    total: totalCount,
     filtered: filteredData.length,
     locked: filteredData.filter((r) => r.canon_status === 'LOCKED').length,
     critical: filteredData.filter((r) => r.criticality === 'CRITICAL').length,
-  }), [filteredData]);
+    groups: filteredData.filter((r) => r.is_group === true).length,
+    transactions: filteredData.filter((r) => r.is_group === false && !r.parent_dict_id).length,
+    cells: filteredData.filter((r) => r.is_group === false && r.parent_dict_id).length,
+  }), [filteredData, totalCount]);
 
   // === EVENT HANDLERS ===
   const handleRowClick = (record: MetadataRecord) => {
@@ -282,36 +390,93 @@ export function MetadataGodView() {
           </div>
         </div>
 
+        {/* HIERARCHY STATISTICS */}
+        {!isLoading && (
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#0A0A0A] border border-purple-900/30 rounded p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Layers className="w-4 h-4 text-purple-400" />
+                <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                  Groups
+                </span>
+              </div>
+              <div className="text-2xl text-purple-400 font-mono">{stats.groups}</div>
+            </div>
+            <div className="bg-[#0A0A0A] border border-blue-900/30 rounded p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Layers className="w-4 h-4 text-blue-400" />
+                <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                  Transactions
+                </span>
+              </div>
+              <div className="text-2xl text-blue-400 font-mono">{stats.transactions}</div>
+            </div>
+            <div className="bg-[#0A0A0A] border border-emerald-900/30 rounded p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Layers className="w-4 h-4 text-emerald-400" />
+                <span className="text-[10px] uppercase tracking-wider text-[#666] font-mono">
+                  Cells
+                </span>
+              </div>
+              <div className="text-2xl text-emerald-400 font-mono">{stats.cells}</div>
+            </div>
+          </div>
+        )}
+
         {/* FLEXIBLE FILTER BAR */}
         <div className="mt-8">
           <FlexibleFilterBar
-            data={mockMetadataRecords}
+            data={metadataRecords}
             activeDimensions={activeDimensions}
             onDimensionsChange={setActiveDimensions}
             onClearAll={handleClearAllFilters}
           />
         </div>
 
+        {/* LOADING STATE */}
+        {isLoading && (
+          <div className="mt-6 p-8 border border-[#1F1F1F] bg-[#0A0A0A]/50 rounded text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28E7A2] mx-auto mb-4" />
+            <p className="text-[#666] text-sm">Loading metadata from Kernel...</p>
+          </div>
+        )}
+
+        {/* ERROR STATE */}
+        {error && !isLoading && (
+          <div className="mt-6 p-6 border border-red-900/30 bg-red-900/10 rounded">
+            <p className="text-red-400 text-sm font-mono">Error: {error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-red-900/30 border border-red-800 text-red-400 font-mono text-xs rounded hover:bg-red-900/50 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* SUPER TABLE - Now with Schema-Generated Columns! */}
-        <div className="mt-6">
-          <SuperTable<MetadataRecord>
-            data={filteredData}
-            columns={schemaColumns}
-            title="METADATA_REGISTRY"
-            mobileKey="business_term"
-            onRowClick={handleRowClick}
+        {!isLoading && !error && (
+          <div className="mt-6">
+            <SuperTable<MetadataRecord & { hierarchy_level?: string }>
+              data={filteredData}
+              columns={schemaColumns}
+              title="METADATA_REGISTRY"
+              mobileKey="business_term"
+              onRowClick={handleRowClick}
+              isLoading={isLoading}
 
-            // Feature Flags
-            enableSelection={true}
-            enablePagination={true}
-            enableColumnVisibility={true}
-            enableColumnFilters={false}  // Using FlexibleFilterBar instead
-            enableGlobalFilter={true}
+              // Feature Flags
+              enableSelection={true}
+              enablePagination={true}
+              enableColumnVisibility={true}
+              enableColumnFilters={false}  // Using FlexibleFilterBar instead
+              enableGlobalFilter={true}
 
-            // Selection Handler
-            onSelectionChange={setSelectedRows}
-          />
-        </div>
+              // Selection Handler
+              onSelectionChange={setSelectedRows}
+            />
+          </div>
+        )}
 
         {/* BULK ACTION INDICATOR */}
         {selectedRows.length > 0 && (

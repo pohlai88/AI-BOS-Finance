@@ -24,6 +24,7 @@ alwaysApply: false
 | Supabase MCP | ✅ Active | Database operations |
 | Browser Automation | ✅ Active | Visual testing |
 | Next.js DevTools | ✅ Active | Next.js development |
+| Vitest MCP | ✅ Available | Test execution & coverage |
 
 ## Quick Reference Commands
 
@@ -55,6 +56,13 @@ alwaysApply: false
 - Error detection and live state queries
 - Development logs and debugging capabilities
 
+### Vitest MCP
+- `vitest_health_check` - Verify server connectivity
+- `vitest_run_tests` - Execute tests with structured output
+- `vitest_analyze_coverage` - Generate coverage reports
+- **Package:** `@madrus/vitest-mcp-server` (recommended)
+- **Alternative:** `@djankies/vitest-mcp`
+
 ## Recommended Workflows
 
 ### Design Validation
@@ -73,6 +81,11 @@ alwaysApply: false
 1. Check schema: `mcp_supabase_list_tables`
 2. Create migration: `mcp_supabase_apply_migration`
 3. Verify: `mcp_supabase_execute_sql`
+
+### Testing Workflow
+1. Run tests: `vitest_run_tests` (via Vitest MCP)
+2. Analyze coverage: `vitest_analyze_coverage`
+3. Check health: `vitest_health_check`
 
 ## Development Server
 - **Port:** 5173 (Vite default)

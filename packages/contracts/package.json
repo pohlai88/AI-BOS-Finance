@@ -1,0 +1,26 @@
+{
+  "name": "@aibos/contracts",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./kernel/tenants": "./src/kernel/tenants.schema.ts",
+    "./kernel/audit": "./src/kernel/audit.schema.ts",
+    "./shared/envelope": "./src/shared/envelope.schema.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.1",
+    "typescript": "~5.6.2"
+  }
+}
+

@@ -796,7 +796,7 @@ export const DetailDrawer = ({ record, isOpen, onClose }: DetailDrawerProps) => 
 
                 <div className="mb-6 flex justify-end">
                   <RouterLink
-                    to={`/metadata/${record.dict_id}`}
+                    to={`/meta-registry/${record.dict_id}`}
                     className="flex items-center gap-2 text-xs font-mono text-[#28E7A2] hover:underline uppercase tracking-wide"
                   >
                     View Full Fact Sheet <ArrowRight className="w-3 h-3" />
@@ -828,7 +828,7 @@ export const DetailDrawer = ({ record, isOpen, onClose }: DetailDrawerProps) => 
               {!isEditing && (
                 <div className="mt-8 mb-4 flex justify-center border-t border-[#1F1F1F] pt-6">
                   <RouterLink
-                    to={`/metadata/${record.dict_id}`}
+                    to={`/meta-registry/${record.dict_id}`}
                     className="flex items-center gap-2 px-6 py-3 bg-[#111] hover:bg-[#222] border border-[#333] rounded text-xs font-mono uppercase tracking-widest text-white transition-all"
                   >
                     View Full Fact Sheet <ArrowRight className="w-3.5 h-3.5" />

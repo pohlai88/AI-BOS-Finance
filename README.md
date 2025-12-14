@@ -19,7 +19,6 @@
 │  Backend:  SAP CDS + OData (Port 4004)                           │
 │  Database: SQLite (db.sqlite)                                    │
 │  Tests:    Vitest (7/7 passing)                                  │
-│  Docs:     Storybook (Port 6006)                                 │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -38,10 +37,6 @@ npm run dev:backend
 # 3. Start Frontend (Terminal 2)
 npm run dev
 # → App running at http://localhost:3000
-
-# 4. (Optional) Start Storybook
-npm run storybook
-# → Component docs at http://localhost:6006
 ```
 
 ---
@@ -173,23 +168,6 @@ npm run test:coverage
 
 ---
 
-## 📚 Storybook
-
-Visual documentation for all design system components.
-
-```bash
-npm run storybook
-# → http://localhost:6006
-```
-
-### Component Stories
-
-| Category | Components |
-|----------|------------|
-| `Forensic/Atoms` | NexusCard, NexusButton, NexusInput |
-
----
-
 ## 📝 Scripts Reference
 
 | Command | Description |
@@ -201,7 +179,6 @@ npm run storybook
 | `npm run lint:fix` | Auto-fix ESLint issues |
 | `npm run format` | Format with Prettier |
 | `npm run test` | Run Vitest |
-| `npm run storybook` | Start Storybook |
 
 ---
 
@@ -237,7 +214,6 @@ npm run storybook
 1. **Design:** All new components must use `NexusCard` or `nexus-*` tokens
 2. **Data:** No mock data in components; fetch from API
 3. **Tests:** New logic requires unit tests
-4. **Docs:** New components require Storybook stories
 
 ---
 

@@ -22,10 +22,15 @@ export type DataTypeBiz =
  */
 export interface MetadataRecord {
   // === IDENTITY ===
-  dict_id: string; // Unique identifier (e.g., "DS-8821")
+  dict_id: string; // Unique identifier (e.g., "DS-8821", "GC-REV-001")
   business_term: string; // Human-readable name (e.g., "Purchase Orders")
   technical_name: string; // System name (e.g., "purchase_orders_main")
   version: string; // Version number (e.g., "2.1.0")
+
+  // === COA HIERARCHY (DEF_03: Structural Immutability) ===
+  is_group?: boolean; // True for Group-level metadata (e.g., "GC-REV-001")
+  parent_dict_id?: string | null; // Self-reference FK to dict_id (Group → Transaction → Cell)
+  is_bindable?: boolean; // True if can be bound to actual data (Transactions & Cells)
 
   // === CLASSIFICATION ===
   domain: string; // Business domain (e.g., "Finance", "Operations")
