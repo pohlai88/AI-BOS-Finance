@@ -22,7 +22,9 @@ This is the authoritative specification document.
 | Canon Code | Document | Status | Version |
 |------------|----------|--------|---------|
 | **CONT_01_CanonIdentity** | [CONT_01_CanonIdentity](./CONT_01_CanonIdentity.md) | 🟢 ACTIVE | 2.2.0 |
-| **CONT_02_KernelArchitecture** | [CONT_02_KernelArchitecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.0.0 |
+| **CONT_02_KernelArchitecture** | [CONT_02_KernelArchitecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.4.0 |
+| **CONT_03_DatabaseArchitecture** | [CONT_03_DatabaseArchitecture](./CONT_03_DatabaseArchitecture.md) | 🟡 DRAFT | 0.1.0 |
+| **CONT_04_PaymentHubArchitecture** | [CONT_04_PaymentHubArchitecture](./CONT_04_PaymentHubArchitecture.md) | 🟡 DRAFT | 0.1.0 |
 
 ---
 
