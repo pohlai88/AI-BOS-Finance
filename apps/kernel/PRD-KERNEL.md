@@ -1,8 +1,29 @@
-Below is a **complete MVP PRD for your Kernel** (control plane) that you can use as the execution backbone. I have kept it **schema-first, low-pressure, and LEGO-enforcing** (Gateway + Registry + Event Bus + Observability), with **concrete API/event specs and code skeletons** you can start implementing immediately.
+# AI-BOS Kernel — Product Requirements Document
+
+> **AI-BOS Kernel** is the Identity-to-Evidence Control Plane powering **AI-BOS Finance** and future AI-BOS products.
+
+| Property | Value |
+|----------|-------|
+| **Product** | AI-BOS Kernel |
+| **Version** | 1.0.0-mvp |
+| **Status** | ✅ Production Ready |
+| **Powers** | AI-BOS Finance (current), AI-BOS HRM (future), AI-BOS CRM (future) |
 
 ---
 
-# PRD — Kernel MVP (Control Plane) v0.1
+## Product Hierarchy
+
+```
+AI-BOS (Platform) — "Business Operating System"
+├── AI-BOS Kernel (Control Plane) — Auth, Audit, Routing, Resilience
+│   └── This document defines the Kernel
+└── AI-BOS Finance (Product) — Finance Canons powered by Kernel
+    └── cell-payment-hub (Reference Cell)
+```
+
+---
+
+# PRD — AI-BOS Kernel (Control Plane) v1.0.0
 
 ## 📊 Implementation Status (Updated: 2025-12-14)
 

@@ -1,6 +1,8 @@
-# Changelog
+# Changelog — AI-BOS Kernel
 
-All notable changes to AI-BOS Kernel will be documented in this file.
+> **AI-BOS Kernel** — The Identity-to-Evidence Control Plane powering AI-BOS products.
+
+All notable changes will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -10,9 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0-mvp] - 2025-12-15
 
 ### 🚀 Released
-**AI-BOS Kernel Control Plane (MVP)**
+**AI-BOS Kernel v1.0.0-mvp** — Control Plane for AI-BOS Finance
 
-The Identity-to-Evidence Control Plane for AI-BOS Finance. Governs access to Canons, produces evidence, and makes integrations deterministic.
+The Identity-to-Evidence Control Plane powering **AI-BOS Finance**. Governs access to Canons, produces evidence, and makes integrations deterministic.
 
 ### ✨ Features
 - **Persistence:** Postgres 15 adapter implementation (replacing in-memory)

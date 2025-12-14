@@ -1,5 +1,7 @@
-l# AI-BOS Kernel Architecture
+# AI-BOS Kernel Architecture
 
+> **AI-BOS Kernel** — The Identity-to-Evidence Control Plane powering AI-BOS Finance.
+> 
 > Understanding the Control Plane, Data Plane, and why Cells exist.
 
 ---
