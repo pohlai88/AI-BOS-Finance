@@ -1,0 +1,6 @@
+pack_key,name,domain,version,is_active,description
+MFRS15_REVENUE,IFRS/MFRS Core Revenue,FINANCE,1.0.0,true,Core revenue recognition concepts under MFRS 15 / IFRS 15.
+IFRS_OTHER_INCOME,IFRS Other Income,FINANCE,1.0.0,true,Standardised concepts for other income not classified as revenue.
+IFRS_OTHER_GAIN,IFRS Gains,FINANCE,1.0.0,true,Standardised concepts for gains (disposal, FX, fair value etc.).
+AIBOS_INTERNAL_MANAGEMENT,AI-BOS Internal Management KPIs,FINANCE,1.0.0,true,Internal management-only KPIs for sales, quantity, non-statutory measures.
+

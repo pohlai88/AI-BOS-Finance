@@ -1,0 +1,7 @@
+canonical_key,label,domain,standard_pack_key,semantic_type,financial_element,tier,description
+revenue_ifrs_core,Revenue (IFRS/MFRS Core),FINANCE,MFRS15_REVENUE,currency_amount,INCOME,tier1,"Income from ordinary activities with customers under MFRS/IFRS. Statutory revenue line in P&L."
+other_income_ifrs,Other Income (IFRS/MFRS),FINANCE,IFRS_OTHER_INCOME,currency_amount,INCOME,tier1,"Non-revenue income such as grants, rental, and miscellaneous income."
+gain_ifrs_other,Gains (IFRS/MFRS),FINANCE,IFRS_OTHER_GAIN,currency_amount,INCOME,tier1,"Gains from disposals, remeasurements, or FX that are presented separately from revenue."
+sales_value_operational,Sales (Operational Gross Sales),FINANCE,AIBOS_INTERNAL_MANAGEMENT,currency_amount,MANAGEMENT_KPI,tier2,"Gross sales value used for operational KPIs (POS, invoice sales) before IFRS adjustments."
+sales_quantity_operational,Units Sold / Sales Quantity,OPERATIONS,AIBOS_INTERNAL_MANAGEMENT,quantity,NON_FINANCIAL_KPI,tier3,"Number of units sold. Used for volume KPIs and operational analytics."
+

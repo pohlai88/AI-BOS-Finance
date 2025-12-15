@@ -1,0 +1,13 @@
+alias_text,canonical_key,language,context_domain,strength,source_system,notes
+Sales,revenue_ifrs_core,en,FINANCIAL_REPORTING,SECONDARY_LABEL,AIBOS,"For UI/management wording only in financial reports; in statutory notes and captions prefer 'Revenue'."
+Sales,sales_value_operational,en,MANAGEMENT_REPORTING,PRIMARY_LABEL,AIBOS,"Default meaning of 'Sales' in operational dashboards and outlet/franchise performance reports."
+Sales,sales_quantity_operational,en,OPERATIONS,DISCOURAGED,AIBOS,"Avoid ambiguous 'Sales' for volume; prefer 'Units Sold' or 'Sales Quantity'."
+Revenue,revenue_ifrs_core,en,FINANCIAL_REPORTING,PRIMARY_LABEL,AIBOS,"Preferred wording for revenue from contracts with customers in IFRS/MFRS financial statements."
+Revenue,sales_value_operational,en,MANAGEMENT_REPORTING,SECONDARY_LABEL,AIBOS,"Sometimes used informally in dashboards; clarify whether this is statutory Revenue or operational Sales."
+Income,revenue_ifrs_core,en,GENERIC_SPEECH,DISCOURAGED,AIBOS,"Too broad in everyday speech; clarify if you mean Revenue or total income."
+Income,other_income_ifrs,en,FINANCIAL_REPORTING,SECONDARY_LABEL,AIBOS,"Allowed as a section label 'Other income' in P&L. Do not use 'Income' alone without context."
+Gain,gain_ifrs_other,en,FINANCIAL_REPORTING,PRIMARY_LABEL,AIBOS,"Use for fair value gain, disposal gain, FX gain and similar items separate from Revenue."
+Gains,gain_ifrs_other,en,FINANCIAL_REPORTING,PRIMARY_LABEL,AIBOS,"Plural variant of 'Gain'; same canonical concept as 'Gain'."
+Turnover,revenue_ifrs_core,en,MANAGEMENT_REPORTING,SECONDARY_LABEL,AIBOS,"Acceptable as a synonym for Revenue in certain jurisdictions; for statutory wording prefer 'Revenue'."
+Turnover,sales_value_operational,en,MANAGEMENT_REPORTING,SECONDARY_LABEL,AIBOS,"Can mean gross Sales; must be clarified in dashboards and docs."
+

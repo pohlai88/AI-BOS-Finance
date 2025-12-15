@@ -358,30 +358,79 @@ pnpm validate:schemas
 - ✅ Schema files match the registered `impl_file` path
 - ✅ No duplicate SCH codes
 
-### 2. Type Generation Script
+### 2. Type Generation Script ✅ IMPLEMENTED
 
-**Tool:** `scripts/generate-types-from-metadata.ts` (Post-MVP)
+**Tool:** `scripts/generate-types-from-metadata.ts`
 
 ```bash
+# Generate types from metadata (uses mock data if DB not connected)
 pnpm metadata:generate-types
+
+# Generate with explicit mock data (for development)
+pnpm metadata:generate-types:mock
+
+# Preview without writing files
+pnpm metadata:generate-types:dry-run
 ```
 
 **Generates:**
 - TypeScript interfaces from Metadata Registry (mdm_global_metadata)
-- Output: `packages/kernel-core/src/db/generated/types.ts`
+- Zod schemas with `satisfies z.ZodType<T>` for type safety
+- Output locations:
+  - `packages/kernel-core/src/db/generated/types.ts`
+  - `packages/kernel-core/src/db/generated/schemas.ts`
 - **Source:** Metadata Registry (SSOT), not PostgreSQL
 
-### 3. Zod Schema Generator
-
-**Tool:** `scripts/generate-zod-schemas.ts` (Post-MVP)
-
-```bash
-pnpm db:generate-schemas
+**Architecture:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Metadata Registry (apps/kernel/src/metadata-studio/)        │
+│ - mdm_global_metadata table                                 │
+│ - Zod schema: MdmGlobalMetadataSchema                       │
+│ - Drizzle table: mdmGlobalMetadata                          │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+                       ▼ [scripts/generate-types-from-metadata.ts]
+┌─────────────────────────────────────────────────────────────┐
+│ Generated Output (packages/kernel-core/src/db/generated/)  │
+│ - types.ts    → TypeScript interfaces                      │
+│ - schemas.ts  → Zod schemas with satisfies                 │
+│ - index.ts    → Re-exports                                 │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**Generates:**
-- Zod schemas from TypeScript types
-- Output: `packages/kernel-core/src/db/generated/schemas.ts`
+**Example Generated Output:**
+```typescript
+// packages/kernel-core/src/db/generated/types.ts
+export interface FinanceJournalEntriesTable {
+  journal_id: string;
+  journal_date: string;
+  description: string;
+  status: string;
+  total_debit: string;
+  total_credit: string;
+}
+
+// packages/kernel-core/src/db/generated/schemas.ts
+export const FinanceJournalEntriesTableSchema = z.object({
+  journal_id: z.string().uuid(),
+  journal_date: z.string().date(),
+  description: z.string(),
+  status: z.string(),
+  total_debit: z.string(),
+  total_credit: z.string(),
+}) satisfies z.ZodType<FinanceJournalEntriesTable>;
+```
+
+### 3. Metadata Studio
+
+**Location:** `apps/kernel/src/metadata-studio/`
+
+The Metadata Studio is the runtime service for the Metadata Registry:
+- **API:** REST endpoints for CRUD operations on metadata
+- **Schemas:** Zod schemas for validation (SSOT)
+- **Database:** Drizzle ORM table definitions
+- **Services:** Business logic for metadata management
 
 ### 4. Boundary Checker (CONT_05)
 
@@ -521,18 +570,34 @@ schemas:
 
 This contract is considered **implemented** when:
 
-- [ ] All schemas defined in Metadata Registry (SSOT)
-- [ ] All existing schemas registered with SCH codes
-- [ ] Schema validator (`validate-schemas.ts`) exists and passes
-- [ ] Type generation scripts exist (or manual process documented)
-- [ ] Types generated from Metadata Registry, not PostgreSQL
-- [ ] All Canon/Molecule/Cell code uses Kernel-provided types
-- [ ] No direct DB imports from Frontend
-- [ ] Documentation updated with examples
+- [x] Type generation script exists (`scripts/generate-types-from-metadata.ts`)
+- [x] Generated types output location exists (`packages/kernel-core/src/db/generated/`)
+- [x] Metadata Studio moved to proper location (`apps/kernel/src/metadata-studio/`)
+- [x] Types generated from Metadata Registry, not PostgreSQL
+- [x] npm scripts added (`pnpm metadata:generate-types`)
+- [ ] All schemas defined in Metadata Registry (SSOT) — In Progress
+- [ ] All existing schemas registered with SCH codes — Pending
+- [ ] Schema validator (`validate-schemas.ts`) exists and passes — Exists, needs schemas
+- [ ] All Canon/Molecule/Cell code uses Kernel-provided types — Migration needed
+- [ ] No direct DB imports from Frontend — Enforced via boundary checker
+- [ ] DB connection integrated for live metadata generation — Pending
 
 ---
 
-**Version:** 1.0.0  
+## 📝 Implementation Status
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| **Type Generator** | ✅ Done | `scripts/generate-types-from-metadata.ts` |
+| **Generated Types** | ✅ Done | `packages/kernel-core/src/db/generated/types.ts` |
+| **Generated Schemas** | ✅ Done | `packages/kernel-core/src/db/generated/schemas.ts` |
+| **Metadata Studio** | ✅ Moved | `apps/kernel/src/metadata-studio/` |
+| **DB Integration** | 🟡 Pending | Connect to live `mdm_global_metadata` |
+| **SCH Registration** | 🟡 Pending | Add to `canon/schemas.yaml` |
+
+---
+
+**Version:** 1.0.1  
 **Status:** 🟢 ACTIVE  
 **Last Updated:** 2025-12-15  
 **Next Review:** 2026-01-15
