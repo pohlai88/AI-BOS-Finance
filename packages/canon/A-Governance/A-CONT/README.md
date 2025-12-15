@@ -26,6 +26,18 @@ The Constitution is the supreme governance document. All other contracts derive 
 | **CONT_02_KernelArchitecture** | [Kernel Architecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.4.0 | Control Plane |
 | **CONT_03_DatabaseArchitecture** | [Database Architecture](./CONT_03_DatabaseArchitecture.md) | 🟡 DRAFT | 0.2.2 | Data Fabric |
 | **CONT_04_PaymentHubArchitecture** | [Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) | 🟡 DRAFT | 0.1.0 | Cell Example |
+| **CONT_05_NamingAndStructure** | [Naming & Structure](./CONT_05_NamingAndStructure.md) | 🟢 ACTIVE | 1.0.1 | Directory & Naming Standards |
+| **CONT_06_SchemaAndTypeGovernance** | [Schema & Type Governance](./CONT_06_SchemaAndTypeGovernance.md) | 🟢 ACTIVE | 1.0.0 | Metadata-First Schema Creation |
+
+---
+
+## 📚 Supporting Documentation
+
+**Developer guides and training materials are located in:** [`docs/guides/`](../../../../docs/guides/)
+
+- [CONT_05 Training Guide](../../../../docs/guides/CONT_05_TRAINING_GUIDE.md) — Onboarding materials
+- [CONT_05 Implementation Plan](../../../../docs/guides/CONT_05_IMPLEMENTATION_PLAN.md) — Rollout plan
+- [CONT_06 Developer Workflow](../../../../docs/guides/CONT_06_DEVELOPER_WORKFLOW.md) — Schema creation guide
 
 ---
 

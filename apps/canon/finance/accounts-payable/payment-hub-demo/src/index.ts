@@ -7,7 +7,7 @@
  * 
  * Part of: molecule-accounts-payable
  * Canon: canon-finance
- * Location: apps/canon/finance/accounts-payable/payment-hub
+ * Location: apps/canon/finance/accounts-payable/payment-hub-demo
  */
 
 import express, { Request, Response } from 'express';
@@ -350,7 +350,7 @@ app.post('/chaos/degrade/:cell', (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Payment Hub Cell running on port ${PORT}`);
-  console.log(`   Location: apps/canon/finance/accounts-payable/payment-hub`);
+  console.log(`   Location: apps/canon/finance/accounts-payable/payment-hub-demo`);
   console.log(`   Health: http://localhost:${PORT}/health`);
   console.log(`   Process: POST http://localhost:${PORT}/payments/process`);
   console.log(`   Chaos:   POST http://localhost:${PORT}/chaos/fail/{gateway|processor|ledger}`);

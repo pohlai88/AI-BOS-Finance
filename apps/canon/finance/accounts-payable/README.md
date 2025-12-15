@@ -9,7 +9,7 @@
 
 | Cell | Status | Description |
 |------|--------|-------------|
-| `payment-hub/` | 🟡 MVP | Payment governance and approval workflows |
+| `payment-hub-demo/` | 🟡 MVP (Demo) | Payment governance and approval workflows |
 | `vendor-master/` | ⬜ Planned | Vendor registration and management |
 | `invoice-matching/` | ⬜ Planned | 3-way matching (PO, GR, Invoice) |
 
@@ -23,7 +23,7 @@ The Payment Hub Cell is currently in MVP phase, demonstrating:
 - Immutable audit trails
 - Mock bank/FX/GL integrations
 
-See [PRD-PAYMENT-HUB-MVP.md](./payment-hub/PRD-PAYMENT-HUB-MVP.md) for details.
+See [PRD-PAYMENT-HUB-MVP.md](./payment-hub-demo/PRD-PAYMENT-HUB-MVP.md) for details.
 
 ---
 

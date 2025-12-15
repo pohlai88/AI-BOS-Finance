@@ -13,7 +13,7 @@
 | **Status** | 🟡 DRAFT |
 | **Sprint** | 2 weeks |
 | **Owner** | Finance Cell Team |
-| **Location** | `apps/canon/finance/accounts-payable/payment-hub` |
+| **Location** | `apps/canon/finance/accounts-payable/payment-hub-demo` |
 | **Derives From** | [CONT_04_PaymentHubArchitecture.md](../../../../../packages/canon/A-Governance/A-CONT/CONT_04_PaymentHubArchitecture.md) |
 
 ---

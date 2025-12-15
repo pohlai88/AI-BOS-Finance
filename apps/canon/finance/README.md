@@ -21,7 +21,7 @@
 ```
 finance/
 ├── accounts-payable/
-│   ├── payment-hub/           # 🟢 Active - Payment governance cell
+│   ├── payment-hub-demo/      # 🟢 Active - Payment governance cell (Demo)
 │   ├── vendor-master/         # ⬜ Planned
 │   └── invoice-matching/      # ⬜ Planned
 ├── accounts-receivable/       # ⬜ Planned

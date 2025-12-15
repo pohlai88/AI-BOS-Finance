@@ -11,7 +11,7 @@
 apps/canon/
 ├── finance/                    # Finance Domain (Canon)
 │   ├── accounts-payable/       # AP Molecule/Cluster
-│   │   ├── payment-hub/        # Payment Hub Cell
+│   │   ├── payment-hub-demo/   # Payment Hub Cell (Demo)
 │   │   ├── vendor-master/      # Vendor Master Cell (future)
 │   │   └── invoice-matching/   # Invoice Matching Cell (future)
 │   ├── accounts-receivable/    # AR Molecule/Cluster (future)
@@ -65,7 +65,7 @@ DB (via apps/db)
 
 ```bash
 # Start a specific cell (from repo root)
-cd apps/canon/finance/accounts-payable/payment-hub
+cd apps/canon/finance/accounts-payable/payment-hub-demo
 pnpm dev
 
 # Or via Docker Compose (from kernel)
