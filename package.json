@@ -37,6 +37,7 @@
     "supabase:metadata:export": "tsx scripts/supabase-metadata-sync.ts export",
     "supabase:metadata:create": "tsx scripts/supabase-metadata-sync.ts create",
     "supabase:metadata:seed": "tsx scripts/supabase-metadata-sync.ts seed",
+    "metadata:generate-types:live": "tsx scripts/generate-types-from-supabase.ts --query",
     "canon:sync-readme": "tsx canon/D-Operations/D-TOOL/sync-readme.ts",
     "canon:migrate-planes": "tsx canon/D-Operations/D-TOOL/TOOL_05_MigrateCanonPlanes.ts",
     "canon:rename-archive": "tsx canon/D-Operations/D-TOOL/TOOL_06_RenameArchive.ts",

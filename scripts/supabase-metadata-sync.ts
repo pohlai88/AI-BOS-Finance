@@ -39,7 +39,7 @@ const SEED_METADATA: MetadataField[] = [
   { canonicalKey: 'status', label: 'Tenant Status', description: 'Current status (ACTIVE, SUSPENDED, PENDING)', domain: 'kernel', module: 'iam', entityUrn: 'kernel.tenants', dataType: 'text' },
   { canonicalKey: 'created_at', label: 'Created At', description: 'Timestamp when tenant was created', domain: 'kernel', module: 'iam', entityUrn: 'kernel.tenants', dataType: 'timestamptz' },
   { canonicalKey: 'updated_at', label: 'Updated At', description: 'Timestamp when tenant was last updated', domain: 'kernel', module: 'iam', entityUrn: 'kernel.tenants', dataType: 'timestamptz' },
-  
+
   { canonicalKey: 'id', label: 'User ID', description: 'Unique identifier for the user (UUID)', domain: 'kernel', module: 'iam', entityUrn: 'kernel.users', dataType: 'uuid' },
   { canonicalKey: 'tenant_id', label: 'Tenant ID', description: 'Reference to tenant', domain: 'kernel', module: 'iam', entityUrn: 'kernel.users', dataType: 'uuid' },
   { canonicalKey: 'email', label: 'Email', description: 'User email address', domain: 'kernel', module: 'iam', entityUrn: 'kernel.users', dataType: 'text' },
@@ -200,34 +200,34 @@ ORDER BY entity_urn, canonical_key;
 function main() {
   const args = process.argv.slice(2);
   const action = args[0] ?? 'export';
-  
+
   // Default tenant ID (demo tenant)
   const tenantId = '00000000-0000-0000-0000-000000000001';
-  
+
   console.log('╔════════════════════════════════════════════════════════════════╗');
   console.log('║  Supabase Metadata Sync — CONT_06 Integration                   ║');
   console.log('╚════════════════════════════════════════════════════════════════╝');
   console.log();
-  
+
   switch (action) {
     case 'create':
       console.log('📋 CREATE TABLE SQL for mdm_global_metadata:');
       console.log('─'.repeat(70));
       console.log(generateCreateTableSQL());
       break;
-      
+
     case 'seed':
       console.log(`📋 SEED SQL for tenant ${tenantId}:`);
       console.log('─'.repeat(70));
       console.log(generateSeedSQL(tenantId));
       break;
-      
+
     case 'query':
       console.log(`📋 QUERY SQL for tenant ${tenantId}:`);
       console.log('─'.repeat(70));
       console.log(generateQuerySQL(tenantId));
       break;
-      
+
     case 'export':
     default:
       console.log('📦 Exporting all SQL statements...');
@@ -248,7 +248,7 @@ function main() {
       console.log(generateQuerySQL(tenantId));
       break;
   }
-  
+
   console.log();
   console.log('─'.repeat(70));
   console.log('💡 To run these in Supabase:');

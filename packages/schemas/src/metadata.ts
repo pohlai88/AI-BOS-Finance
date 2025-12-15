@@ -1,11 +1,29 @@
 /**
  * @aibos/schemas - Metadata Schema Definitions
  * 
- * Zod schemas for the Global Metadata Registry & Lineage OS.
- * These schemas define the "DNA" - the shared types between Kernel and Web.
+ * ⚠️ DEPRECATION NOTICE ⚠️
  * 
- * @see PRD_KERNEL_01_AIBOS_KERNEL.md
- * @see apps/web/src/types/metadata.ts (source of truth for interface definitions)
+ * This file contains LEGACY schema definitions that are being phased out.
+ * 
+ * The NEW Single Source of Truth (SSOT) is:
+ *   - Database: Supabase `mdm_global_metadata` table
+ *   - Generated Types: `packages/kernel-core/src/db/generated/types.ts`
+ *   - Generated Schemas: `packages/kernel-core/src/db/generated/schemas.ts`
+ * 
+ * Per CONT_06 Schema and Type Governance:
+ *   - All new schemas MUST be defined in `mdm_global_metadata` first
+ *   - Types and Zod schemas are DERIVED from the metadata registry
+ *   - Do NOT add new definitions to this file
+ * 
+ * MIGRATION PATH:
+ *   1. For new features, register metadata in Supabase
+ *   2. Run `pnpm metadata:generate-types` to generate types
+ *   3. Import from `@aibos/kernel-core/db/generated`
+ * 
+ * @deprecated Use generated types from kernel-core instead
+ * @see CONT_06_SchemaAndTypeGovernance.md
+ * @see CONT_06_SCHEMA_SPEC.md
+ * @see packages/kernel-core/src/db/generated/
  */
 
 import { z } from 'zod';
