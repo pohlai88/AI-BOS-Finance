@@ -5,22 +5,51 @@
 
 ---
 
-## 🚦 MVP Status
+## 🚦 Status
 
-See [MVP-GATE-CHECKLIST.md](./MVP-GATE-CHECKLIST.md) for current progress.
+| Phase | Status | Notes |
+|-------|--------|-------|
+| Core Migrations | ✅ Complete | `kernel`, `finance`, `config` schemas |
+| MVP Criteria (10/10) | ✅ Complete | All tests passing |
+| Supabase Adapter | ✅ Deployed | 25 tables, 57 RLS policies |
+| Self-Hosted Adapter | 📋 Planned | v1.2.0 |
+| Neon Adapter | 📋 Backlog | v1.2.0 |
 
-| Phase | Status |
-|-------|--------|
-| Core Migrations | ✅ Created |
-| Validation Tools | ✅ Configured |
-| MVP Criteria 1-10 | 🟡 In Progress |
-| Adapter Layer | ⏸️ DEFERRED to v1.1.0 |
+**Project URL:** `https://cnlutbuzjqtuicngldak.supabase.co`
 
 ---
 
 ## 📚 Architecture
 
 This package implements the **AI-BOS Data Fabric** as defined in [CONT_03](../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md).
+
+### Two-Layer Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      AI-BOS DATABASE ARCHITECTURE                        │
+│                    "PostgreSQL First, Adapters Second"                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │                    CORE LAYER (PostgreSQL Standard)             │     │
+│  │                                                                 │     │
+│  │   migrations/kernel/  migrations/finance/  migrations/config/  │     │
+│  │   • Standard DDL (portable to any PostgreSQL 15+ provider)     │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                              │                                           │
+│                    [Provider Detection]                                  │
+│                              │                                           │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │                   ADAPTER LAYER (Provider-Specific)             │     │
+│  │                                                                 │     │
+│  │   adapters/supabase/ ✅    adapters/neon/ 📋   adapters/rds/ 📋 │     │
+│  │   • RLS with auth.uid()    • Branching        • Read replicas  │     │
+│  │   • Storage policies       • Autoscaling      • IAM auth       │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Schema Hierarchy
 
@@ -51,18 +80,26 @@ This package implements the **AI-BOS Data Fabric** as defined in [CONT_03](../..
 
 ## 🚀 Quick Start
 
-### 1. Start Database (with PgBouncer)
+### Local Development (Docker)
 
 ```bash
-cd apps/db
+# Start PostgreSQL + PgBouncer
 pnpm db:up
+
+# Run migrations
+pnpm migrate
+
+# Seed demo data
+pnpm seed:all
+
+# Run tests
+pnpm test:all
+
+# Verify roles
+pnpm verify:roles
 ```
 
-This starts:
-- **PostgreSQL** on port `5433` (direct access)
-- **PgBouncer** on port `6432` (connection pooling - **recommended for apps**)
-
-### Connection Strings
+**Connection Strings:**
 
 ```bash
 # For applications (via PgBouncer - recommended)
@@ -72,33 +109,21 @@ DATABASE_URL=postgres://aibos:aibos_password@localhost:6432/aibos_local
 DATABASE_URL=postgres://aibos:aibos_password@localhost:5433/aibos_local
 ```
 
-### 2. Run Migrations
+### Supabase (Production)
 
 ```bash
-# All schemas
-pnpm migrate
+# Check CLI version
+npx supabase --version
 
-# Individual schemas
-pnpm migrate:kernel
-pnpm migrate:finance
-pnpm migrate:config
-```
+# Login and link
+npx supabase login
+npx supabase link --project-ref cnlutbuzjqtuicngldak
 
-### 3. Seed Demo Data
+# Apply adapter
+pnpm db:apply-supabase
 
-```bash
-# All seeds
-pnpm seed:all
-
-# Individual seeds
-pnpm seed:kernel    # Creates Demo Corp tenant, admin user
-pnpm seed:finance   # Creates companies, accounts, FX rates
-```
-
-### 4. Validate Schema
-
-```bash
-pnpm validate
+# Generate types
+npx supabase gen types typescript --linked > types.ts
 ```
 
 ---
@@ -108,125 +133,148 @@ pnpm validate
 ```
 apps/db/
 ├── migrations/               # CORE LAYER (PostgreSQL Standard)
-│   ├── kernel/               # Control Plane (IAM, Audit, Roles)
-│   │   ├── 001_create_tenants.sql
-│   │   ├── 002_create_users.sql
-│   │   ├── 014_create_db_roles.sql      # MVP Task 1
-│   │   ├── 015_grant_schema_permissions.sql  # MVP Task 2
-│   │   └── ...
-│   ├── finance/              # Data Plane (Ledger, Payments, Treasury)
-│   │   └── 100_finance_schema.sql
+│   ├── kernel/               # Control Plane (13 migrations)
+│   ├── finance/              # Data Plane (journals, transactions)
 │   └── config/               # Platform Configuration
-│       └── 101_config_provider_profiles.sql
-├── adapters/                 # ADAPTER LAYER (⏸️ DEFERRED to v1.1.0)
-│   ├── supabase/             # Supabase-specific optimizations
-│   └── self-hosted/          # Self-hosted PostgreSQL config
+├── adapters/                 # ADAPTER LAYER (Provider-Specific)
+│   ├── supabase/ ✅           # Supabase: RLS, Storage, Performance
+│   │   ├── 001_enable_rls.sql
+│   │   ├── 002_rls_policies.sql
+│   │   ├── 003_performance.sql
+│   │   ├── 004_storage_buckets.sql
+│   │   ├── config.ts
+│   │   ├── types.generated.ts
+│   │   └── README.md
+│   └── self-hosted/ 📋        # Vanilla PostgreSQL
 ├── tests/                    # pgTAP Database Tests
-│   ├── schema/               # Schema validation tests
-│   │   ├── 001_schemas_exist.sql
-│   │   ├── 002_tenant_isolation_columns.sql
-│   │   └── 003_roles_exist.sql
-│   └── constraints/          # Business constraint tests
-│       ├── 001_double_entry.sql
-│       └── 002_immutability.sql
+│   ├── schema/               # Schema validation
+│   ├── constraints/          # Double-entry, immutability
+│   └── isolation/            # Tenant isolation
+├── lib/
+│   └── tenant-guard.ts       # Application-level isolation
 ├── seeds/
 │   ├── kernel/
-│   │   └── seed-happy-path.ts
 │   └── finance/
-│       └── seed-demo-corp.ts
-├── lib/                      # (Coming) Tenant Guard, Connection Utils
 ├── scripts/
 │   ├── migrate.ts            # Migration runner
+│   ├── apply-adapter.ts      # Adapter loader
 │   └── verify-roles.ts       # Role verification
 ├── tools/
-│   └── validate-schema.ts    # Schema Guardian linter
-├── .squawk.toml              # Squawk migration linter config
+│   └── validate-schema.ts    # Schema Guardian
+├── config/
+│   ├── postgresql.conf       # Query logging
+│   └── pgbouncer/            # Connection pooling
 ├── docker-compose.yml
-└── README.md
+├── PRD-DB.md                 # Full PRD with roadmap
+├── PRD-DB-MVP.md             # MVP status & tasks
+└── README.md                 # This file
 ```
 
 ---
 
 ## 🔒 Security Model
 
-### Separation of Concerns
+### Schema Isolation
 
-| Schema | Owner | Can Access |
-|--------|-------|------------|
-| `kernel` | AI-BOS Kernel | `kernel` only |
-| `finance` | Finance Cells | `finance` only |
-| `config` | Platform Admin | `config` only (read-only at runtime) |
-
-**Cross-schema joins are forbidden.** All communication goes through APIs.
+| Schema | Owner | Can Access | RLS |
+|--------|-------|------------|-----|
+| `kernel` | Kernel | `kernel` only | ✅ Enabled |
+| `finance` | Finance Cells | `finance` only | ✅ Enabled |
+| `config` | Platform Admin | Read-only | ✅ Enabled |
 
 ### Tenant Isolation
 
-Every query is rewritten by the driver to enforce:
+**Application Layer (Primary):**
+```typescript
+// Every query enforced by TenantGuard
+const result = await tenantGuard.query(
+  'SELECT * FROM finance.companies',
+  { tenantId: session.tenantId }
+);
+```
 
+**Database Layer (Defense-in-Depth):**
 ```sql
-WHERE tenant_id = $current_tenant
+-- Supabase RLS policy
+CREATE POLICY "tenant_isolation" ON finance.companies
+  FOR ALL TO authenticated
+  USING (tenant_id = public.get_current_tenant_id());
 ```
 
 ---
 
-## 🛠️ Validation Tools
-
-### Squawk — Migration Safety Linter
-
-Detects dangerous migration patterns:
+## 🛠️ Validation & Governance Tools
 
 ```bash
+# Squawk — Migration safety linter
 pnpm lint:migrations
-```
 
-### pgTAP — Database Unit Testing
-
-Run schema and constraint tests:
-
-```bash
-# Schema tests (roles, columns, FKs)
+# pgTAP — Database unit testing
 pnpm test:schema
-
-# Constraint tests (double-entry, immutability)
 pnpm test:constraints
+pnpm test:isolation
 
-# All tests
-pnpm test:all
-```
-
-### Schema Guardian
-
-Validates migrations against AI-BOS Data Fabric standards:
-
-```bash
+# Schema Guardian — AI-BOS standards
 pnpm validate
-```
 
-### CI Validation
-
-Combined lint + dry-run for CI pipelines:
-
-```bash
+# CI validation (all combined)
 pnpm ci:validate
+
+# Auditor Evidence Pack — SOC2/HIPAA compliance
+pnpm evidence:export           # JSON + CSV
+pnpm evidence:json             # JSON only
+pnpm evidence:csv              # CSV only
 ```
+
+### Governance Views (Observability Contract)
+
+External tools (Metabase, Grafana) can connect using `aibos_monitor_role`:
+
+| View | Purpose |
+|------|---------|
+| `kernel.v_governance_summary` | All pass/fail checks in one view |
+| `kernel.v_tenant_health` | Per-tenant health metrics |
+| `kernel.v_schema_boundary_check` | Hexagonal boundary verification |
+| `kernel.v_tenant_isolation_check` | tenant_id column verification |
+| `finance.v_journal_integrity` | Double-entry balance per journal |
+| `finance.v_journal_integrity_summary` | Integrity summary by tenant |
 
 ---
 
 ## 📖 Related Documents
 
+### Requirements
+- [PRD-DB.md](./PRD-DB.md) — Full scope + roadmap
+- [PRD-DB-MVP.md](./PRD-DB-MVP.md) — MVP status (10/10 ✅)
+
 ### Governance
 - [CONT_03: Database Architecture](../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md)
 - [ADR-003: Database Provider Portability](./ADR_003_DatabaseProviderPortability.md)
 
-### Planning
-- [PRD-DB.md](./PRD-DB.md) — Full scope
-- [PRD-DB-MVP.md](./PRD-DB-MVP.md) — MVP sprint plan
-- [MVP-GATE-CHECKLIST.md](./MVP-GATE-CHECKLIST.md) — Gate criteria
+### Tools & Audits
+- [SCHEMA-VALIDATION-TOOLS.md](./SCHEMA-VALIDATION-TOOLS.md) — pgTAP, Squawk
+- [SUPABASE-MCP-CAPABILITIES.md](./SUPABASE-MCP-CAPABILITIES.md) — MCP tools
+- [AUDIT-SUPABASE-POSTGRES.md](./AUDIT-SUPABASE-POSTGRES.md) — Compliance
 
-### Tools
-- [SCHEMA-VALIDATION-TOOLS.md](./SCHEMA-VALIDATION-TOOLS.md) — pgTAP, Squawk setup
-- [SUPABASE-MCP-CAPABILITIES.md](./SUPABASE-MCP-CAPABILITIES.md) — MCP tool mapping
+### Adapters
+- [adapters/supabase/README.md](./adapters/supabase/README.md) — Supabase setup
+- [adapters/supabase/STORAGE-SETUP-GUIDE.md](./adapters/supabase/STORAGE-SETUP-GUIDE.md) — Storage config
 
-### Audits
-- [AUDIT-SUPABASE-POSTGRES.md](./AUDIT-SUPABASE-POSTGRES.md) — Compliance audit
-- [VALIDATION-AUDIT.md](./VALIDATION-AUDIT.md) — Work consistency check
+### Compliance & Governance
+- [docs/backlog/099_emergency_recovery_plan.md](./docs/backlog/099_emergency_recovery_plan.md) — Disaster recovery
+- [docs/backlog/100_governance_dashboard.md](./docs/backlog/100_governance_dashboard.md) — Governance overlay (v2.0)
+- [migrations/kernel/016_governance_views.sql](./migrations/kernel/016_governance_views.sql) — Observability contract
+
+---
+
+## 🚀 Next Steps
+
+1. **Create Storage Buckets** — Supabase Dashboard → Storage
+2. **Enable Leaked Password Protection** — Dashboard → Auth → Settings
+3. **Develop Neon Adapter** — v1.2.0 backlog
+4. **Implement BYOS** — v1.3.0 backlog
+
+---
+
+**Last Updated:** 2025-12-15  
+**Maintainer:** AI-BOS Data Fabric Team

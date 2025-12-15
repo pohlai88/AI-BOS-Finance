@@ -1,8 +1,9 @@
 # Supabase Adapter
 
 > **Purpose:** Supabase-specific database & storage optimizations  
-> **Status:** ✅ **READY** (Post-MVP)  
-> **Provider:** [Supabase](https://supabase.com)
+> **Status:** ✅ **DEPLOYED** (Applied to Supabase project)  
+> **Provider:** [Supabase](https://supabase.com)  
+> **Project:** `https://cnlutbuzjqtuicngldak.supabase.co`
 
 ---
 
@@ -45,11 +46,13 @@ pnpm db:apply-adapter --provider supabase
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `001_enable_rls.sql` | Enable RLS on all tables | ✅ Ready |
-| `002_rls_policies.sql` | Create tenant isolation policies | ✅ Ready |
-| `003_performance.sql` | Indexes for RLS performance | ✅ Ready |
-| `004_storage_buckets.sql` | Storage bucket configuration | ✅ Ready |
+| `001_enable_rls.sql` | Enable RLS on all tables | ✅ Applied |
+| `002_rls_policies.sql` | Create tenant isolation policies | ✅ Applied |
+| `003_performance.sql` | Indexes for RLS performance | ✅ Applied |
+| `004_storage_buckets.sql` | Storage bucket configuration | ✅ Applied |
 | `config.ts` | TypeScript configuration utilities | ✅ Ready |
+| `types.generated.ts` | Auto-generated TypeScript types | ✅ Generated |
+| `STORAGE-SETUP-GUIDE.md` | Storage bucket setup instructions | ✅ Ready |
 
 ---
 
@@ -226,11 +229,21 @@ Expected: No RLS-related warnings
 SELECT * FROM finance.companies;
 ```
 
-### 4. Verify Storage Buckets
+### 4. Create Storage Buckets (Manual Step)
 
-Check Supabase Dashboard → Storage for:
-- All 5 buckets created
-- Policies attached to each bucket
+Storage buckets must be created via **Supabase Dashboard → Storage**:
+
+| Bucket | Public | Max Size | MIME Types |
+|--------|--------|----------|------------|
+| `tenant-documents` | ❌ | 50 MB | PDF, images, Excel, CSV |
+| `payment-files` | ❌ | 100 MB | PDF, CSV, XML, Excel |
+| `journal-attachments` | ❌ | 25 MB | PDF, images |
+| `reports` | ❌ | 100 MB | PDF, CSV, Excel, JSON |
+| `public-assets` | ✅ | 5 MB | Images only |
+
+**RLS policies for storage are already applied!**
+
+See: [STORAGE-SETUP-GUIDE.md](./STORAGE-SETUP-GUIDE.md) for detailed instructions
 
 ---
 

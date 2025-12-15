@@ -505,23 +505,43 @@ Config: 200-299
 | `aibos_readonly` | SELECT only | Reporting, debugging |
 | `aibos_admin` | ALL + CREATE/DROP | Emergency maintenance |
 
-### 10.2 Tenant Isolation (MVP: Application-Level)
+### 10.2 Tenant Isolation (Application-Level via TenantDb)
 
-**For MVP, tenant isolation is enforced at the application layer:**
+**Tenant isolation is enforced via tenant-scoped data access primitives:**
 
 ```typescript
-// Kernel Adapter automatically appends tenant filter
-async function query<T>(sql: string, params: any[], tenantId: string): Promise<T[]> {
-  // Every query is rewritten to enforce tenant isolation
-  const isolatedSql = appendTenantFilter(sql, tenantId);
-  return await pool.query(isolatedSql, [...params, tenantId]);
-}
+// TenantDb provides safe, parameterized tenant-scoped access
+// NO SQL rewriting - all queries built with parameterized predicates
+import { createTenantDb, TenantContext } from '@aibos/db/lib/tenant-db';
+
+const tenantDb = createTenantDb(pool);
+
+// Tenant context is REQUIRED for all tenant-scoped operations
+const ctx: TenantContext = { tenantId: 'uuid', userId: 'uuid' };
+
+// SELECT with mandatory tenant isolation
+const companies = await tenantDb.select(
+  ctx,                           // Validated tenant context
+  'finance.companies',           // Whitelist-validated table
+  ['id', 'name', 'status'],      // Explicit columns (no SELECT *)
+  { status: 'active' }           // Parameterized filters
+);
+// Executes: SELECT id, name, status FROM finance.companies 
+//           WHERE tenant_id = $1 AND status = $2
 ```
+
+**Security Guarantees:**
+- ✅ No SQL string rewriting or interpolation
+- ✅ Compile-time whitelist for table/column identifiers
+- ✅ All values parameterized (no injection possible)
+- ✅ Mandatory tenant context validation (UUID format)
+- ✅ Cross-tenant access blocked at query construction time
 
 **Why not RLS for MVP?**
 - RLS requires complex "impersonation" (`SET app.tenant_id = ...`) for every query
 - Adds latency and complexity to connection pooling
 - The Kernel is a **trusted backend** — it controls all data access
+- TenantDb provides equivalent isolation without RLS overhead
 
 **Future (v1.1.0+): RLS as Defense-in-Depth**
 

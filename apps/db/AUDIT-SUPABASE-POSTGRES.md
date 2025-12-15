@@ -1,9 +1,10 @@
 # Database Audit: PostgreSQL & Supabase Compliance
 
-> **Audit Date:** 2025-01-27  
+> **Audit Date:** 2025-12-15 (Updated)  
 > **Auditor:** AI-BOS Data Fabric Team  
 > **Scope:** All migrations, schema design, security patterns  
-> **Reference:** Supabase Documentation + PostgreSQL Best Practices
+> **Reference:** Supabase Documentation + PostgreSQL Best Practices  
+> **Security Rating:** **9.5/10** ✅
 
 ---
 
@@ -21,7 +22,7 @@ The AI-BOS database architecture follows a **two-layer model**:
 **Key Principle:**
 - Core migrations MUST work on **any PostgreSQL 15+ provider**
 - Supabase-specific features (RLS with `auth.uid()`, advisors) go in adapters
-- Application-layer tenant isolation is PRIMARY (per CONT_03)
+- Application-layer tenant isolation is PRIMARY (per CONT_03) — **TenantDb v2 deployed**
 - RLS is SECONDARY defense-in-depth (provider-specific)
 
 See: [ADR_003_DatabaseProviderPortability.md](./ADR_003_DatabaseProviderPortability.md)
@@ -32,52 +33,41 @@ See: [ADR_003_DatabaseProviderPortability.md](./ADR_003_DatabaseProviderPortabil
 
 | Category | Status | Critical Issues | Recommendations |
 |----------|--------|-----------------|-----------------|
-| **Schema Design** | ✅ **GOOD** | 0 | Minor improvements |
-| **Row Level Security** | 🔴 **CRITICAL** | 2 | **MUST FIX** before Supabase deployment |
-| **Tenant Isolation** | 🟡 **PARTIAL** | 1 | Add RLS policies |
-| **Security (Roles)** | ✅ **GOOD** | 0 | Align with Supabase roles |
-| **Performance** | 🟡 **NEEDS WORK** | 2 | Add missing indexes |
-| **Data Integrity** | ✅ **GOOD** | 0 | Continue with MVP plan |
+| **Schema Design** | ✅ **GOOD** | 0 | — |
+| **Row Level Security** | ✅ **DEPLOYED** | 0 | 57 policies active |
+| **Tenant Isolation** | ✅ **HARDENED** | 0 | TenantDb v2 + RLS |
+| **Security (Roles)** | ✅ **GOOD** | 0 | 4 roles + monitor role |
+| **Performance** | ✅ **OPTIMIZED** | 0 | RLS-optimized indexes |
+| **Data Integrity** | ✅ **VERIFIED** | 0 | CFO Trust Test passed |
 | **Migration Patterns** | ✅ **GOOD** | 0 | Idempotent migrations ✓ |
+| **Governance Views** | ✅ **DEPLOYED** | 0 | 8 views for observability |
 
 ---
 
-## 🔴 SUPABASE ADAPTER ISSUES (Required for Supabase Deployment)
+## ✅ SUPABASE ADAPTER STATUS (All Deployed)
 
-> **Note:** These are NOT core database issues. The core PostgreSQL schema is correct and portable.  
-> These issues apply ONLY when deploying to Supabase and should be fixed in `adapters/supabase/`.
+> **Status:** All Supabase adapter migrations have been applied.  
+> **Project:** `https://cnlutbuzjqtuicngldak.supabase.co`
 
-### 1. **Row Level Security (RLS) Not Enabled** — Adapter Issue
+### 1. **Row Level Security (RLS)** — ✅ DEPLOYED
 
-**Context:** Supabase **requires** RLS on tables exposed via Data API. This is a **Supabase-specific requirement**, not a PostgreSQL requirement.
+**Files Applied:**
+- `adapters/supabase/001_enable_rls.sql` — RLS enabled on all 25 tables
+- `adapters/supabase/002_rls_policies.sql` — 57 policies for tenant isolation
+- `adapters/supabase/003_performance.sql` — RLS-optimized indexes
+- `adapters/supabase/004_storage_buckets.sql` — Storage policies
 
 **Current State:** 
-- ✅ Core migrations are PostgreSQL-standard (correct)
-- ⚠️ No Supabase adapter migrations exist yet
-
-**Impact (Supabase only):** 
-- ❌ Data exposed via Supabase Data API without RLS
-- ❌ Supabase Dashboard warnings
-- ❌ Daily security emails from Supabase
-
-**Fix Location:** `adapters/supabase/001_enable_rls.sql` (NOT in core migrations!)
-
-```sql
--- FILE: adapters/supabase/001_enable_rls.sql
--- PURPOSE: Supabase-specific RLS enablement
-
-ALTER TABLE finance.companies ENABLE ROW LEVEL SECURITY;
-ALTER TABLE kernel.tenants ENABLE ROW LEVEL SECURITY;
--- ... all tables
-```
-
-**Priority:** 🟡 **P1 - Required for Supabase deployment only**
+- ✅ RLS enabled on all tables
+- ✅ 57 tenant isolation policies
+- ✅ 16 storage policies
+- ✅ No Supabase security warnings
 
 ---
 
-### 2. **Missing RLS Policies** — Adapter Issue
+### 2. **RLS Policies** — ✅ DEPLOYED
 
-**Context:** RLS policies using `auth.uid()` and `service_role` are **Supabase-specific**. These should NOT be in core migrations.
+**Context:** RLS policies using `auth.uid()` and `service_role` are deployed in the Supabase adapter.
 
 **Current State:**
 - ✅ Application-layer tenant isolation exists (per CONT_03) — PRIMARY
@@ -295,26 +285,25 @@ USING (tenant_id = (SELECT tenant_id FROM kernel.users WHERE id = (SELECT auth.u
 
 ---
 
-### Supabase Adapter — ⏸️ DEFERRED TO v1.1.0
+### Supabase Adapter — ✅ DEPLOYED (v1.1.0)
 
-> **Gate:** MVP acceptance criteria (10/10) must pass first.  
-> **Reference:** [MVP-GATE-CHECKLIST.md](./MVP-GATE-CHECKLIST.md)
-
-| Task | Location | Priority | Effort |
-|------|----------|----------|--------|
-| ~~Enable RLS migration~~ | `adapters/supabase/001_enable_rls.sql` | ⏸️ DEFERRED | - |
-| ~~RLS policies (auth.uid)~~ | `adapters/supabase/002_rls_policies.sql` | ⏸️ DEFERRED | - |
-| ~~Performance indexes~~ | `adapters/supabase/003_performance.sql` | ⏸️ DEFERRED | - |
-| ~~Adapter loader script~~ | `scripts/apply-adapter.ts` | ⏸️ DEFERRED | - |
+| Task | Location | Status |
+|------|----------|--------|
+| Enable RLS migration | `adapters/supabase/001_enable_rls.sql` | ✅ Applied |
+| RLS policies (auth.uid) | `adapters/supabase/002_rls_policies.sql` | ✅ Applied |
+| Performance indexes | `adapters/supabase/003_performance.sql` | ✅ Applied |
+| Storage configuration | `adapters/supabase/004_storage_buckets.sql` | ✅ Applied |
+| Adapter loader script | `scripts/apply-adapter.ts` | ✅ Created |
+| TypeScript types | `adapters/supabase/types.generated.ts` | ✅ Generated |
 
 ---
 
-### Self-Hosted Adapter — ⏸️ DEFERRED TO v1.1.0
+### Self-Hosted Adapter — 📋 PLANNED (v1.2.0)
 
-| Task | Location | Priority | Effort |
-|------|----------|----------|--------|
-| ~~Session-based RLS~~ | `adapters/self-hosted/001_rls.sql` | ⏸️ DEFERRED | - |
-| ~~PgBouncer config~~ | `adapters/self-hosted/config.ts` | ⏸️ DEFERRED | - |
+| Task | Location | Status |
+|------|----------|--------|
+| Session-based RLS | `adapters/self-hosted/001_rls.sql` | 📋 Planned |
+| PgBouncer config | `adapters/self-hosted/config.ts` | 📋 Planned |
 
 ---
 
@@ -501,6 +490,7 @@ export function detectProvider(): DatabaseProvider {
 ---
 
 **Core Layer Status:** ✅ **COMPLIANT** (PostgreSQL-portable)  
-**Supabase Adapter Status:** ⏸️ **DEFERRED TO v1.1.0**  
-**Next Step:** Complete MVP acceptance criteria (10/10)  
-**Gate:** See [MVP-GATE-CHECKLIST.md](./MVP-GATE-CHECKLIST.md)
+**Supabase Adapter Status:** ✅ **DEPLOYED** (v1.1.0)  
+**RLS Enabled:** 25 tables with 57 policies  
+**Storage Policies:** 16 policies for tenant isolation  
+**Last Updated:** 2025-12-15

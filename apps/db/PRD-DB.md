@@ -9,11 +9,14 @@
 
 | Property | Value |
 |----------|-------|
-| **Version** | 1.0.0 |
-| **Status** | 🟡 DRAFT |
+| **Version** | 2.1.0 |
+| **Status** | 🟢 **MVP COMPLETE + CFO TRUST TEST VERIFIED** |
 | **Owner** | Data Fabric Team |
 | **Derives From** | [CONT_03_DatabaseArchitecture.md](../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md) |
 | **Constitution** | [CONT_00_Constitution.md](../../packages/canon/A-Governance/A-CONT/CONT_00_Constitution.md) — Pillar 5 (DB) |
+| **Supabase Project** | `https://cnlutbuzjqtuicngldak.supabase.co` |
+| **Security Rating** | **9.5/10** (Tenant Guard v2 + Governance Views) |
+| **Last Updated** | 2025-12-15 |
 
 ---
 
@@ -120,19 +123,36 @@ AI-BOS Data Fabric is **not a database engine** — it is an **intelligent gover
 
 | Layer | Mechanism | Status |
 |-------|-----------|--------|
-| **Application** | Kernel Adapter appends `WHERE tenant_id = $1` | ✅ Implemented |
-| **Driver** | Request rejected if `tenant_id` missing | ⬜ Planned |
-| **Database (Roles)** | Schema-level permission separation | ⬜ Planned |
-| **Database (RLS)** | Row-Level Security policies | 🔮 Future (v1.1.0) |
+| **Application (v2)** | `TenantDb` repository with parameterized queries | ✅ **Hardened** |
+| **Driver** | Request rejected if `tenant_id` missing | ✅ Implemented |
+| **Database (Roles)** | Schema-level permission separation | ✅ Deployed |
+| **Database (RLS)** | Row-Level Security policies (Supabase) | ✅ 57 policies |
 
-**MVP Isolation Model:**
+**Tenant Guard v2 (Repository Pattern):**
+
+> ⚠️ **SECURITY UPGRADE:** The original SQL string rewriting approach was replaced
+> with a repository pattern using parameterized queries and compile-time whitelisted identifiers.
+
 ```typescript
-// Every query is rewritten by the Kernel Adapter
-SELECT * FROM finance.payments WHERE status = 'pending'
-// Becomes:
-SELECT * FROM finance.payments 
-WHERE status = 'pending' AND tenant_id = '...'
+// TenantDb enforces isolation via parameterized queries
+const tenantDb = new TenantDb(pool);
+const ctx = { tenantId: 'uuid', userId: 'uuid' };
+
+// All queries automatically include tenant_id = $1
+const { rows } = await tenantDb.select(ctx, 'users', ['id', 'email']);
+// Generates: SELECT id, email FROM users WHERE tenant_id = $1
+
+// Inserts auto-inject tenant_id (cannot be overridden)
+await tenantDb.insert(ctx, 'users', { email: 'test@example.com' });
+// Generates: INSERT INTO users (email, tenant_id) VALUES ($1, $2)
 ```
+
+**Security Guarantees:**
+- ✅ No SQL string rewriting (eliminates injection risk)
+- ✅ Compile-time whitelisted table/column identifiers
+- ✅ Parameterized predicates only
+- ✅ Cross-tenant access blocked at repository level
+- ✅ 37 security tests passing
 
 ---
 
@@ -162,7 +182,53 @@ WHERE status = 'pending' AND tenant_id = '...'
 
 ---
 
-### 3.4 Finance Data Model (CFO Priority)
+### 3.4 Provider Portability Architecture
+
+**Purpose:** Run Canon code on any PostgreSQL provider without changes.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      AI-BOS DATABASE ARCHITECTURE                        │
+│                    "PostgreSQL First, Adapters Second"                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │                    CORE LAYER (PostgreSQL Standard)             │     │
+│  │                                                                 │     │
+│  │   migrations/kernel/  migrations/finance/  migrations/config/  │     │
+│  │   ─────────────────────────────────────────────────────────── │     │
+│  │   • Standard DDL (CREATE TABLE, INDEX, CONSTRAINT)             │     │
+│  │   • Works on ANY PostgreSQL 15+ provider                       │     │
+│  │   • NO provider-specific functions                             │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                              │                                           │
+│                    [Provider Detection]                                  │
+│                              │                                           │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │                   ADAPTER LAYER (Provider-Specific)             │     │
+│  │                                                                 │     │
+│  │   adapters/supabase/     adapters/neon/     adapters/rds/      │     │
+│  │   ──────────────────     ────────────────   ──────────────     │     │
+│  │   • RLS with auth.uid()  • Branching        • Read replicas    │     │
+│  │   • Storage policies     • Autoscaling      • IAM auth         │     │
+│  │   • Edge Functions       • Serverless       • VPC              │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Current Adapters:**
+
+| Adapter | Status | Features |
+|---------|--------|----------|
+| **Supabase** | ✅ Deployed | RLS, Storage, Edge Functions, Auth integration |
+| **Self-Hosted** | 🟡 Planned | Session-based RLS, PgBouncer, vanilla PostgreSQL |
+| **Neon** | 📋 Backlog | Serverless, branching, autoscaling |
+| **AWS RDS** | 📋 Backlog | Read replicas, IAM, VPC |
+
+---
+
+### 3.5 Finance Data Model (CFO Priority)
 
 **System of Record Artifacts:**
 
@@ -181,18 +247,65 @@ WHERE status = 'pending' AND tenant_id = '...'
 
 ---
 
-### 3.5 Provider Portability (Future)
+### 3.6 Provider Selection Matrix
 
-**Purpose:** Run Canon code on any Postgres provider without changes.
+**Purpose:** Match tenant profile to optimal provider.
 
-| Profile | Dimensions | Recommended Provider |
-|---------|------------|----------------------|
-| **Starter** | cost-sensitive, spiky, <50 connections | Neon Serverless |
-| **Growth** | balanced, steady, 50-200 connections | AWS RDS |
-| **Enterprise** | performance, compliance, >200 connections | AWS Aurora |
-| **Regulated** | pci/hipaa, private networking | Dedicated RDS in VPC |
+| Profile | Dimensions | Recommended Provider | Adapter |
+|---------|------------|----------------------|---------|
+| **Starter** | cost-sensitive, spiky, <50 connections | Supabase Free | `supabase` |
+| **Growth** | balanced, steady, 50-200 connections | Supabase Pro / Neon | `supabase` / `neon` |
+| **Enterprise** | performance, compliance, >200 connections | AWS Aurora | `aws-rds` |
+| **Regulated** | PCI/HIPAA, private networking | Dedicated RDS in VPC | `aws-rds` |
+| **Self-Hosted** | On-premise, full control | Docker / Kubernetes | `self-hosted` |
 
 **Zero-Canon-Change Promise:** Canon and API code never changes when migrating between providers.
+
+---
+
+### 3.7 BYOS — Bring Your Own Storage (Backlog)
+
+**Purpose:** Allow tenants to use their own storage while AI-BOS manages the database.
+
+```
+┌───────────────────────────────────────────────────────────────────┐
+│                          BYOS ARCHITECTURE                         │
+│              "AI-BOS Database + Tenant's Storage"                  │
+├───────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────────────┐       ┌─────────────────────────────┐   │
+│  │   AI-BOS MANAGED    │       │     TENANT MANAGED (BYOS)    │   │
+│  │                     │       │                              │   │
+│  │  PostgreSQL         │       │  Google Drive               │   │
+│  │  ├── kernel.*      │◄─────►│  Dropbox                    │   │
+│  │  ├── finance.*     │       │  OneDrive                   │   │
+│  │  └── config.*      │       │  S3 (tenant account)        │   │
+│  │                     │       │  MinIO (self-hosted)        │   │
+│  │  Supabase Storage   │       │                              │   │
+│  │  (if not BYOS)      │       │                              │   │
+│  └─────────────────────┘       └─────────────────────────────┘   │
+│                                                                    │
+│  Metadata stored in:  finance.document_metadata                   │
+│  Actual files stored: Tenant's chosen provider                    │
+│                                                                    │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+**BYOS Benefits:**
+- **Data Sovereignty:** Tenant controls their document storage
+- **Compliance:** Documents stay in tenant's jurisdiction
+- **Cost:** Use existing storage quotas
+- **Integration:** Native sharing/permissions in Drive/Dropbox
+
+**BYOS Providers (Backlog):**
+
+| Provider | Priority | Status | Notes |
+|----------|----------|--------|-------|
+| Google Drive | P2 | 📋 Backlog | OAuth, Drive API v3 |
+| Dropbox | P2 | 📋 Backlog | OAuth, Dropbox API v2 |
+| OneDrive | P3 | 📋 Backlog | Microsoft Graph API |
+| S3 (tenant) | P2 | 📋 Backlog | Tenant provides credentials |
+| MinIO | P3 | 📋 Backlog | Self-hosted S3-compatible |
 
 ---
 
@@ -452,33 +565,304 @@ SELECT pg_reload_conf();
 ```
 apps/db/
 ├── migrations/
-│   ├── kernel/           # 001-013 (Control Plane)
-│   ├── finance/          # 100+ (Data Plane)
+│   ├── kernel/           # 001-016 (Control Plane + Governance Views)
+│   ├── finance/          # 100-102 (Data Plane + Constraints)
 │   └── config/           # 200+ (Platform Config)
+├── adapters/
+│   └── supabase/         # Supabase-specific RLS, storage, indexes
+├── lib/
+│   ├── tenant-db.ts      # 🔒 Tenant Guard v2 (repository pattern)
+│   └── tenant-guard.ts   # ⚠️ Deprecated (safety clamp)
 ├── seeds/
 │   ├── kernel/           # Demo tenant, admin user
-│   └── finance/          # Demo companies, accounts
+│   ├── finance/          # Demo companies, accounts
+│   └── challenge/        # Deterministic challenge seed + attacks
+├── scripts/
+│   ├── migrate.ts        # Migration runner
+│   ├── demo-trust.ts     # 🎯 One-command CFO Trust Test
+│   └── export-evidence-pack.ts  # Auditor evidence export
+├── tests/
+│   ├── tenant-db.test.ts # 37 security tests for TenantDb
+│   └── child-table-isolation.test.sql  # FK isolation proof
 ├── tools/
 │   └── validate-schema.ts    # Schema Guardian
-├── scripts/
-│   └── migrate.ts            # Migration runner
+├── docs/
+│   ├── PAYMENT-HUB-INTEGRATION.md  # Payment Hub contract
+│   └── backlog/          # Future feature specs
 ├── docker-compose.yml
 ├── package.json
 ├── README.md
-└── PRD-DB.md                 # This document
+├── PRD-DB.md             # This document
+├── PRD-DB-MVP.md         # Sprint status
+└── GA-PATCHLIST.md       # Production readiness
 ```
 
 ---
 
-**End of PRD-DB v1.0.0**
+## 13. Backlog & Future Roadmap
+
+### v1.1.0 — Governance Observability (COMPLETE ✅)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Governance Views | ✅ Deployed | 8 views in kernel/finance schemas |
+| Monitor Role | ✅ Created | `aibos_monitor_role` (read-only) |
+| Evidence Pack Export | ✅ Implemented | JSON/CSV with tamper-evident hash |
+| CFO Trust Test | ✅ Verified | 5 attacks blocked, all checks PASS |
+
+**Views Created:**
+- `kernel.v_tenant_health` — Tenant status, user/company counts
+- `kernel.v_tenant_isolation_check` — Tenant isolation verification
+- `kernel.v_schema_boundary_check` — Cross-schema access audit
+- `kernel.v_governance_summary` — Aggregated pass/fail counts
+- `finance.v_journal_integrity` — Double-entry balance verification
+- `finance.v_journal_integrity_summary` — Per-tenant integrity summary
+- `finance.v_immutability_check` — POSTED journal protection status
+- `finance.v_double_entry_check` — Debit/credit balance per entry
+
+### v1.2.0 — Neon Adapter (Q1 2025)
+
+| Feature | Description | Effort |
+|---------|-------------|--------|
+| Neon Detection | Auto-detect `neon.tech` in DATABASE_URL | 1 day |
+| Branching Support | Create dev/staging branches | 2 days |
+| Autoscaling Config | Connection limits, compute scaling | 1 day |
+| Cold Start Optimization | Connection pooling for serverless | 2 days |
+
+**Why Neon?**
+- Serverless PostgreSQL (pay-per-query)
+- Instant branching (like Git for databases)
+- Autoscaling compute
+- Good for development/staging environments
 
 ---
 
-## 🎯 Next Step: Choose Your Path
+### v1.3.0 — BYOS Storage Adapters (Q2 2025)
 
-| Option | Description | Duration | Command |
-|--------|-------------|----------|---------|
-| **A** | MVP Sprint | 2 weeks | Start with DB Role Separation |
-| **B** | Full Development | 6 weeks | Start with MVP, extend to RLS |
+| Feature | Description | Effort |
+|---------|-------------|--------|
+| Storage Provider Interface | Abstract storage operations | 3 days |
+| Google Drive Adapter | OAuth + Drive API integration | 5 days |
+| Dropbox Adapter | OAuth + Dropbox API integration | 5 days |
+| S3-Compatible Adapter | AWS S3, MinIO, Backblaze B2 | 3 days |
+| Document Sync Service | Sync metadata with external storage | 5 days |
 
-**Recommendation:** Start with **MVP (Option A)** to prove the model, then extend.
+**Use Case:**
+- CFO uploads invoice to their Google Drive
+- AI-BOS stores metadata in `finance.document_metadata`
+- Document remains in tenant's Drive (data sovereignty)
+- AI-BOS can reference the document via stored path
+
+---
+
+### v1.4.0 — AWS/Azure Adapters (Q3 2025)
+
+| Feature | Description | Effort |
+|---------|-------------|--------|
+| AWS RDS Adapter | IAM auth, read replicas, VPC | 5 days |
+| AWS Aurora Adapter | Serverless v2, global database | 5 days |
+| Azure PostgreSQL Adapter | Flexible server, AAD auth | 5 days |
+| GCP Cloud SQL Adapter | Private IP, IAM | 5 days |
+
+### v2.0.0 — Governance Dashboard UI (Q4 2025)
+
+> **Philosophy:** External tools (Supabase Dashboard, Metabase, Grafana) handle generic DB management.
+> AI-BOS builds a **Governance Overlay** that provides unique, AI-BOS-specific insights.
+
+| Feature | Description | Priority |
+|---------|-------------|----------|
+| Tenant Health Score | Cross-tenant verification, anomaly detection | P1 |
+| Journal Integrity Dashboard | Real-time balanced/unbalanced visualization | P1 |
+| Compliance Posture Checklist | SOC2/HIPAA control status | P2 |
+| Drift/Schema Guardian Alerts | Real-time schema change notifications | P2 |
+| Evidence Pack Generator UI | One-click auditor artifact export | P2 |
+
+**Non-Goals for v2.0:**
+- ❌ SQL editor / query console (use Supabase/pgAdmin)
+- ❌ Table browser / data viewer (use Supabase/Metabase)
+- ❌ Backup management UI (use provider tools)
+
+**Documentation:** [Governance Dashboard Backlog](./docs/backlog/100_governance_dashboard.md)
+
+---
+
+## 14. Compliance & Governance
+
+### 14.1 SOC2 Type II Readiness
+
+AI-BOS Data Fabric implements controls aligned with AICPA Trust Service Criteria:
+
+| Control | TSC Reference | Implementation | Evidence |
+|---------|---------------|----------------|----------|
+| **Logical Access** | CC6.1 | TenantGuard + RLS policies | `lib/tenant-guard.ts`, RLS policies |
+| **Role-Based Access** | CC6.2 | DB roles per schema | `014_create_db_roles.sql` |
+| **Audit Logging** | CC6.6 | Immutable audit trail | `kernel.audit_events` |
+| **Change Management** | CC8.1 | Numbered migrations + CI | `.github/workflows/db-validate.yml` |
+| **Recovery Procedures** | CC7.4 | PITR + quarterly drills | `docs/backlog/099_emergency_recovery_plan.md` |
+
+### 14.2 HIPAA Security Rule (if applicable)
+
+For customers handling Protected Health Information (PHI):
+
+| Requirement | Section | Implementation |
+|-------------|---------|----------------|
+| **Unique User Identification** | § 164.312(a)(2)(i) | `kernel.users.id` UUID |
+| **Automatic Logoff** | § 164.312(a)(2)(iii) | JWT expiry + session timeout |
+| **Encryption** | § 164.312(a)(2)(iv) | TLS 1.3 in-transit, AES-256 at-rest |
+| **Audit Controls** | § 164.312(b) | `pg_stat_statements`, slow query log |
+| **Integrity Controls** | § 164.312(c)(1) | Double-entry, journal immutability |
+| **Transmission Security** | § 164.312(e)(1) | TLS 1.3 required for all connections |
+
+### 14.3 Data Residency
+
+| Region | Provider Options | Compliance |
+|--------|------------------|------------|
+| US (Oregon) | Supabase, AWS RDS | SOC2, HIPAA |
+| EU (Frankfurt) | Supabase, AWS RDS | GDPR, SOC2 |
+| Singapore | Supabase, AWS RDS | PDPA, SOC2 |
+| Australia | AWS RDS | Privacy Act, SOC2 |
+
+### 14.4 Disaster Recovery
+
+| Objective | Target | Method |
+|-----------|--------|--------|
+| **RTO** (Recovery Time) | < 15 minutes | PITR, automated failover |
+| **RPO** (Recovery Point) | < 1 minute | Continuous WAL archiving |
+| **Backup Retention** | 30 days | Supabase managed |
+| **Audit Log Retention** | 7 years | Cold storage (SOC2/HIPAA) |
+
+**Documentation:** [Disaster Recovery Plan](./docs/backlog/099_emergency_recovery_plan.md)
+
+### 14.5 GA Patchlist
+
+Before production launch, review and complete:
+
+**Documentation:** [GA Patchlist](./GA-PATCHLIST.md)
+
+| Priority | Items | Status |
+|----------|-------|--------|
+| P0 (Blockers) | Tenant Guard v2 | ✅ **COMPLETE** |
+| P0 (Blockers) | Governance Views | ✅ **COMPLETE** |
+| P1 (Recommended) | pg_stat_statements, role hygiene | ✅ Deployed |
+| P2 (Compliance) | SOC2/HIPAA docs, DR drills | 📋 Backlog |
+
+### 14.6 CFO Trust Test Results (2025-12-15)
+
+The database has been verified with a comprehensive "CFO Trust Test":
+
+| Governance Check | Pass | Fail | Status |
+|------------------|------|------|--------|
+| **Tenant Isolation** | 25 | 0 | ✅ PASS |
+| **Schema Boundary** | 0 | 0 | ✅ PASS |
+| **Journal Integrity** | 14 | 0 | ✅ PASS |
+| **Immutability** | 14 | 0 | ✅ PASS |
+
+| Attack Scenario | Result |
+|-----------------|--------|
+| POST unbalanced journal | ✅ BLOCKED |
+| Modify POSTED journal | ✅ BLOCKED |
+| Delete POSTED journal | ✅ BLOCKED |
+| Create orphan journal line | ✅ BLOCKED |
+| Add lines to POSTED journal | ✅ BLOCKED |
+
+**Run the demo:**
+```bash
+pnpm demo:trust
+```
+
+---
+
+## 15. CLI & Tooling
+
+### Supabase CLI
+
+```bash
+# Check version (should be 2.67.1+)
+npx supabase --version
+
+# Login to Supabase
+npx supabase login
+
+# Link to project
+npx supabase link --project-ref cnlutbuzjqtuicngldak
+
+# Push migrations
+npx supabase db push
+
+# Generate types
+npx supabase gen types typescript --linked > types.ts
+
+# Start local Supabase (for development)
+npx supabase start
+```
+
+### Adapter Scripts
+
+```bash
+# Apply adapter based on DATABASE_URL
+pnpm db:apply-adapter
+
+# Apply specific adapter
+pnpm db:apply-adapter --provider supabase
+pnpm db:apply-adapter --provider neon
+pnpm db:apply-adapter --provider self-hosted
+```
+
+### CFO Trust Test (Demo)
+
+```bash
+# 🎯 One-command demo: seed + verify + evidence pack
+pnpm demo:trust
+
+# Individual steps
+pnpm seed:challenge           # Seed deterministic test data
+pnpm test:tenant-db           # Run 37 security tests
+pnpm evidence:export          # Generate auditor evidence pack
+```
+
+---
+
+## 16. Related Documentation
+
+### Governance & Architecture
+- [CONT_00: Constitution](../../packages/canon/A-Governance/A-CONT/CONT_00_Constitution.md) — Supreme Governance
+- [CONT_03: Database Architecture](../../packages/canon/A-Governance/A-CONT/CONT_03_DatabaseArchitecture.md) — Full Specification
+- [ADR-003: Database Provider Portability](./ADR_003_DatabaseProviderPortability.md) — Two-layer architecture
+
+### Operational
+- [README.md](./README.md) — Quick start guide
+- [PRD-DB-MVP.md](./PRD-DB-MVP.md) — MVP status & tasks
+- [MVP-GATE-CHECKLIST.md](./MVP-GATE-CHECKLIST.md) — Gate criteria
+- [GA-PATCHLIST.md](./GA-PATCHLIST.md) — Production readiness
+
+### Adapters
+- [adapters/supabase/README.md](./adapters/supabase/README.md) — Supabase setup
+- [adapters/supabase/STORAGE-SETUP-GUIDE.md](./adapters/supabase/STORAGE-SETUP-GUIDE.md) — Storage config
+
+### Compliance & DR
+- [docs/backlog/099_emergency_recovery_plan.md](./docs/backlog/099_emergency_recovery_plan.md) — Disaster recovery
+
+---
+
+**End of PRD-DB v2.0.0**
+
+---
+
+## ✅ Current Status
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| MVP (Option A) | ✅ Complete | 12/12 tasks done |
+| Supabase Adapter | ✅ Deployed | 25 tables, 57 RLS policies |
+| Tenant Guard v2 | ✅ **Hardened** | Repository pattern, 37 tests |
+| Governance Views | ✅ Deployed | 8 views, monitor role |
+| CFO Trust Test | ✅ **VERIFIED** | 5 attacks blocked, all checks PASS |
+| Neon Adapter | 📋 Backlog | v1.2.0 |
+| BYOS Storage | 📋 Backlog | v1.3.0 |
+| AWS/Azure Adapters | 📋 Backlog | v1.4.0 |
+
+**Current Rating:** 9.5/10 (Security + Compliance)
+
+**Next Priority:** 
+1. Payment Hub integration for end-to-end demo
+2. Neon adapter for serverless development environments

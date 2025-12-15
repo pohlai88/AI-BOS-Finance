@@ -12,6 +12,7 @@
     "seed:kernel": "tsx seeds/kernel/seed-happy-path.ts",
     "seed:finance": "tsx seeds/finance/seed-demo-corp.ts",
     "seed:all": "pnpm seed:kernel && pnpm seed:finance",
+    "seed:challenge": "tsx seeds/challenge/seed-challenge.ts",
     "validate": "tsx tools/validate-schema.ts",
     "verify:roles": "tsx scripts/verify-roles.ts",
     "lint:migrations": "squawk migrations/**/*.sql",
@@ -19,6 +20,7 @@
     "test:constraints": "pg_prove -d $DATABASE_URL tests/constraints/*.sql",
     "test:isolation:pgtap": "pg_prove -d $DATABASE_URL tests/isolation/*.sql",
     "test:isolation": "vitest run tests/tenant-isolation.test.ts",
+    "test:tenant-db": "vitest run tests/tenant-db.test.ts",
     "test:pgtap": "pnpm test:schema && pnpm test:constraints && pnpm test:isolation:pgtap",
     "test:all": "pnpm test:pgtap && pnpm test:isolation",
     "ci:validate": "pnpm lint:migrations && pnpm migrate --dry-run",
@@ -26,7 +28,11 @@
     "db:down": "docker-compose down",
     "db:reset": "docker-compose down -v && docker-compose up -d",
     "db:apply-adapter": "tsx scripts/apply-adapter.ts",
-    "db:apply-supabase": "tsx scripts/apply-adapter.ts --provider supabase"
+    "db:apply-supabase": "tsx scripts/apply-adapter.ts --provider supabase",
+    "evidence:export": "tsx scripts/export-evidence-pack.ts",
+    "evidence:json": "tsx scripts/export-evidence-pack.ts --format=json",
+    "evidence:csv": "tsx scripts/export-evidence-pack.ts --format=csv",
+    "demo:trust": "tsx scripts/demo-trust.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
