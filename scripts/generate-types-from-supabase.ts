@@ -49,7 +49,7 @@ const CONFIG = {
   outputPath: 'packages/kernel-core/src/db/generated/types.ts',
   zodOutputPath: 'packages/kernel-core/src/db/generated/schemas.ts',
   tenantId: '00000000-0000-0000-0000-000000000001', // Demo tenant
-  
+
   dataTypeMap: {
     'text': 'string',
     'string': 'string',
@@ -74,7 +74,7 @@ const CONFIG = {
     'json': 'unknown',
     'jsonb': 'unknown',
   } as Record<string, string>,
-  
+
   zodTypeMap: {
     'text': 'z.string()',
     'string': 'z.string()',
@@ -130,7 +130,7 @@ interface EntityDefinition {
 function urnToInterfaceName(entityUrn: string): string {
   return entityUrn
     .split('.')
-    .map(part => 
+    .map(part =>
       part
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -155,7 +155,7 @@ function dataTypeToZodType(dataType: string): string {
 
 function groupByEntity(rows: MetadataRow[]): EntityDefinition[] {
   const entityMap = new Map<string, EntityDefinition>();
-  
+
   for (const row of rows) {
     const existing = entityMap.get(row.entity_urn);
     if (existing) {
@@ -169,7 +169,7 @@ function groupByEntity(rows: MetadataRow[]): EntityDefinition[] {
       });
     }
   }
-  
+
   return Array.from(entityMap.values());
 }
 
@@ -179,7 +179,7 @@ function groupByEntity(rows: MetadataRow[]): EntityDefinition[] {
 
 function generateInterface(entity: EntityDefinition): string {
   const interfaceName = urnToInterfaceName(entity.entityUrn);
-  
+
   const fieldDefs = entity.fields
     .map(field => {
       const propName = extractFieldName(field.canonical_key);
@@ -188,7 +188,7 @@ function generateInterface(entity: EntityDefinition): string {
       return `${comment}  ${propName}: ${tsType};`;
     })
     .join('\n');
-  
+
   return `/**
  * Generated from entity: ${entity.entityUrn}
  * Domain: ${entity.domain} | Module: ${entity.module}
@@ -204,7 +204,7 @@ ${fieldDefs}
 function generateZodSchema(entity: EntityDefinition): string {
   const interfaceName = urnToInterfaceName(entity.entityUrn);
   const schemaName = interfaceName.replace('Table', 'TableSchema');
-  
+
   const fieldDefs = entity.fields
     .map(field => {
       const propName = extractFieldName(field.canonical_key);
@@ -212,7 +212,7 @@ function generateZodSchema(entity: EntityDefinition): string {
       return `  ${propName}: ${zodType},`;
     })
     .join('\n');
-  
+
   return `/**
  * Zod schema for ${entity.entityUrn}
  * Source: Supabase mdm_global_metadata (SSOT)
@@ -247,7 +247,7 @@ function generateTypesFile(entities: EntityDefinition[]): string {
   const interfaces = entities
     .map(entity => generateInterface(entity))
     .join('\n\n');
-  
+
   const domains = [...new Set(entities.map(e => e.domain))];
   const exportsByDomain = domains
     .map(domain => {
@@ -258,7 +258,7 @@ function generateTypesFile(entities: EntityDefinition[]): string {
       return `// ${domain.toUpperCase()} Domain\nexport type {\n  ${exports},\n};`;
     })
     .join('\n\n');
-  
+
   return header + interfaces + '\n\n// ============================================================================\n// EXPORTS BY DOMAIN\n// ============================================================================\n\n' + exportsByDomain + '\n';
 }
 
@@ -290,7 +290,7 @@ ${entities.map(e => '  ' + urnToInterfaceName(e.entityUrn) + ',').join('\n')}
   const schemas = entities
     .map(entity => generateZodSchema(entity))
     .join('\n\n');
-  
+
   return header + schemas + '\n';
 }
 
@@ -306,9 +306,9 @@ export function generateFromMetadata(rows: MetadataRow[], dryRun = false): void 
   console.log('║  CONT_06 Type Generator — Supabase Live Mode                    ║');
   console.log('╚════════════════════════════════════════════════════════════════╝');
   console.log();
-  
+
   console.log(`📥 Received ${rows.length} field definitions from Supabase`);
-  
+
   // Group by entity
   const entities = groupByEntity(rows);
   console.log(`🔄 Grouped into ${entities.length} entities:`);
@@ -316,11 +316,11 @@ export function generateFromMetadata(rows: MetadataRow[], dryRun = false): void 
     console.log(`     - ${e.entityUrn} (${e.fields.length} fields)`);
   });
   console.log();
-  
+
   // Generate files
   const typesContent = generateTypesFile(entities);
   const zodContent = generateZodFile(entities);
-  
+
   if (dryRun) {
     console.log('   [DRY RUN] Would generate:');
     console.log(`     - ${CONFIG.outputPath}`);
@@ -335,14 +335,14 @@ export function generateFromMetadata(rows: MetadataRow[], dryRun = false): void 
     if (!existsSync(typesDir)) {
       mkdirSync(typesDir, { recursive: true });
     }
-    
+
     writeFileSync(join(process.cwd(), CONFIG.outputPath), typesContent);
     writeFileSync(join(process.cwd(), CONFIG.zodOutputPath), zodContent);
-    
+
     console.log(`   ✅ Generated: ${CONFIG.outputPath}`);
     console.log(`   ✅ Generated: ${CONFIG.zodOutputPath}`);
   }
-  
+
   console.log();
   console.log('📊 Summary:');
   console.log(`   Entities: ${entities.length}`);
@@ -388,7 +388,7 @@ ORDER BY entity_urn, canonical_key;
 // CLI Entry Point
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--query')) {
     printSupabaseQuery();
   } else {

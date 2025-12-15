@@ -78,6 +78,7 @@ Catalog of all entities (tables, views, APIs, screens) in the system.
 | `created_at` | TIMESTAMPTZ | YES | `NOW()` | Creation timestamp |
 | `updated_at` | TIMESTAMPTZ | YES | `NOW()` | Last update timestamp |
 | `created_by` | TEXT | NO | - | Creator ID |
+| `updated_by` | TEXT | YES | - | Last updater ID |
 
 **Constraints:**
 - `UNIQUE(tenant_id, entity_urn)` — One entity per URN per tenant
@@ -106,6 +107,7 @@ Maps local system fields to canonical metadata definitions.
 | `created_at` | TIMESTAMPTZ | YES | `NOW()` | Creation timestamp |
 | `updated_at` | TIMESTAMPTZ | YES | `NOW()` | Last update timestamp |
 | `created_by` | TEXT | NO | - | Creator ID |
+| `updated_by` | TEXT | YES | - | Last updater ID |
 
 **Constraints:**
 - `UNIQUE(tenant_id, local_system, local_entity, local_field)` — One mapping per field
@@ -136,6 +138,7 @@ Reference table for governance standards (IFRS, GAAP, SOC2).
 | `created_at` | TIMESTAMPTZ | YES | `NOW()` | Creation timestamp |
 | `updated_at` | TIMESTAMPTZ | YES | `NOW()` | Last update timestamp |
 | `created_by` | TEXT | NO | - | Creator ID |
+| `updated_by` | TEXT | YES | - | Last updater ID |
 
 **Constraints:**
 - `UNIQUE(pack_id)` — Pack ID is globally unique

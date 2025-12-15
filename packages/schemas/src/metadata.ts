@@ -110,28 +110,28 @@ export const MdmGlobalMetadataSchema = z.object({
   business_term: z.string().min(1), // e.g., "Purchase Orders"
   technical_name: z.string().min(1), // e.g., "purchase_orders_main"
   version: z.string().min(1), // e.g., "2.1.0"
-  
+
   // Classification
   domain: z.string().optional(), // e.g., "Finance"
   entity_group: z.string().optional(), // e.g., "Transactional"
   tags: z.array(z.string()).default([]),
-  
+
   // Status
   canon_status: CanonStatusSchema,
   classification: ClassificationSchema.optional(),
   criticality: CriticalitySchema.optional(),
-  
+
   // Ownership
   data_owner: z.string().optional(),
   data_steward: z.string().optional(),
-  
+
   // Business Semantics
   definition_short: z.string().optional(),
   definition_full: z.string().optional(),
   calculation_logic: z.string().optional(),
   source_of_truth: z.string().optional(),
   synonyms: z.array(z.string()).default([]),
-  
+
   // Technical Shape
   data_type_biz: DataTypeBizSchema.optional(),
   data_type_tech: z.string().optional(), // e.g., "VARCHAR(255)"
@@ -139,28 +139,28 @@ export const MdmGlobalMetadataSchema = z.object({
   nullability: z.boolean().default(false),
   format_pattern: z.string().optional(),
   valid_values: z.array(z.string()).optional(),
-  
+
   // Behavior
   example_values: z.array(z.string()).default([]),
   edge_cases: z.array(z.string()).default([]),
   default_behaviour: z.string().optional(),
   default_interpretation: z.string().optional(),
-  
+
   // Relationships
   upstream_src: z.string().optional(),
   downstream_use: z.array(z.string()).default([]),
   related_terms: z.array(z.string()).default([]),
-  
+
   // Governance
   compliance_tags: z.array(z.string()).default([]),
   approval_required: z.boolean().default(false),
   last_certified: z.string().optional(), // ISO date
   recertification_due: z.string().optional(), // ISO date
-  
+
   // Risk & Quality
   errors_if_wrong: z.string().optional(),
   common_misuses: z.array(z.string()).default([]),
-  
+
   // Metadata
   created_at: z.string().datetime().optional(),
   updated_at: z.string().datetime().optional(),

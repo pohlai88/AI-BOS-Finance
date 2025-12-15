@@ -1,6 +1,15 @@
 // metadata-studio/db/schema/index.ts
+// =============================================================================
+// CONT_06 Core Tables (Metadata Registry)
+// =============================================================================
 export * from './standard-pack.tables';
 export * from './metadata.tables';
+export * from './entity-catalog.tables';
+export * from './metadata-mapping.tables';
+
+// =============================================================================
+// Extended Metadata Tables
+// =============================================================================
 export * from './business-rule.tables';
 export * from './approval.tables';
 export * from './lineage.tables';
