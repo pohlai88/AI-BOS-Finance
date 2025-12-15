@@ -14,9 +14,19 @@
     "seed:all": "pnpm seed:kernel && pnpm seed:finance",
     "validate": "tsx tools/validate-schema.ts",
     "verify:roles": "tsx scripts/verify-roles.ts",
+    "lint:migrations": "squawk migrations/**/*.sql",
+    "test:schema": "pg_prove -d $DATABASE_URL tests/schema/*.sql",
+    "test:constraints": "pg_prove -d $DATABASE_URL tests/constraints/*.sql",
+    "test:isolation:pgtap": "pg_prove -d $DATABASE_URL tests/isolation/*.sql",
+    "test:isolation": "vitest run tests/tenant-isolation.test.ts",
+    "test:pgtap": "pnpm test:schema && pnpm test:constraints && pnpm test:isolation:pgtap",
+    "test:all": "pnpm test:pgtap && pnpm test:isolation",
+    "ci:validate": "pnpm lint:migrations && pnpm migrate --dry-run",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
-    "db:reset": "docker-compose down -v && docker-compose up -d"
+    "db:reset": "docker-compose down -v && docker-compose up -d",
+    "db:apply-adapter": "tsx scripts/apply-adapter.ts",
+    "db:apply-supabase": "tsx scripts/apply-adapter.ts --provider supabase"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -26,7 +36,9 @@
     "@types/node": "^22.10.2",
     "@types/pg": "^8.11.10",
     "bcryptjs": "^3.0.3",
+    "squawk-cli": "^1.4.0",
     "tsx": "^4.19.2",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "vitest": "^2.1.0"
   }
 }

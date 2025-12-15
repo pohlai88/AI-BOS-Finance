@@ -1,7 +1,11 @@
 # AI-BOS Data Fabric - Database Infrastructure
 # This is the single source of truth for database containers
+# MVP Task 7: Connection Pooling with PgBouncer
 
 services:
+  # ============================================================================
+  # PostgreSQL Database
+  # ============================================================================
   db:
     image: postgres:15-alpine
     container_name: aibos_db
@@ -10,13 +14,61 @@ services:
       POSTGRES_USER: aibos
       POSTGRES_PASSWORD: aibos_password
       POSTGRES_DB: aibos_local
+    # Note: Direct DB access on 5433, applications should use PgBouncer on 6432
     ports:
       - "5433:5432"
     volumes:
       - aibos_pg_data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U aibos -d aibos_local" ]
       interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aibos_net
+
+  # ============================================================================
+  # PgBouncer - Connection Pooling (MVP Task 7)
+  # ============================================================================
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: aibos_pgbouncer
+    restart: always
+    environment:
+      # Database connection
+      DATABASE_URL: postgres://aibos:aibos_password@db:5432/aibos_local
+      # Pool settings
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 100
+      DEFAULT_POOL_SIZE: 20
+      MIN_POOL_SIZE: 5
+      RESERVE_POOL_SIZE: 5
+      RESERVE_POOL_TIMEOUT: 3
+      # Timeouts
+      SERVER_IDLE_TIMEOUT: 600
+      SERVER_LIFETIME: 3600
+      SERVER_CONNECT_TIMEOUT: 5
+      # Authentication
+      AUTH_TYPE: md5
+      AUTH_FILE: /etc/pgbouncer/userlist.txt
+      # Logging
+      LOG_CONNECTIONS: 1
+      LOG_DISCONNECTIONS: 1
+      LOG_POOLER_ERRORS: 1
+      STATS_PERIOD: 60
+    ports:
+      # Applications connect here instead of directly to PostgreSQL
+      - "6432:5432"
+    volumes:
+      - ./config/pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-h", "localhost", "-p", "5432" ]
+      interval: 10s
       timeout: 5s
       retries: 5
     networks:

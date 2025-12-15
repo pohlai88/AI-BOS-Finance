@@ -1,0 +1,55 @@
+# Squawk Configuration for AI-BOS Data Fabric
+# https://squawkhq.com/docs/
+
+# ============================================================================
+# MIGRATION SAFETY LINTER
+# Purpose: Detect dangerous migration patterns before production
+# ============================================================================
+
+[connection]
+# Static analysis only - no connection needed
+
+# ============================================================================
+# RULES
+# ============================================================================
+
+[rules]
+# CRITICAL: Block operations that lock tables
+require-concurrent-index-creation = "error"
+
+# CRITICAL: Prevent data loss
+ban-drop-column = "error"
+ban-drop-table = "error"
+
+# HIGH: Adding required fields without defaults locks table
+adding-required-field = "error"
+
+# MEDIUM: Prefer TEXT over VARCHAR/CHAR
+prefer-text-field = "warn"
+ban-char-field = "warn"
+
+# MEDIUM: Use TIMESTAMPTZ for timezone safety
+prefer-timestamptz = "warn"
+
+# MEDIUM: Prefer identity columns over serial
+prefer-identity = "warn"
+
+# LOW: Naming conventions
+# (customize as needed)
+
+# ============================================================================
+# IGNORED PATHS
+# ============================================================================
+
+[ignored]
+# Adapter migrations are handled separately (Post-MVP)
+paths = [
+  "adapters/**/*.sql"
+]
+
+# ============================================================================
+# CUSTOM RULES (if needed)
+# ============================================================================
+
+# AI-BOS specific: All tables must have tenant_id
+# (enforced via pgTAP tests, not Squawk)

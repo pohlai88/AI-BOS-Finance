@@ -24,10 +24,11 @@ async function verifyRoles() {
     // Test 1: Verify roles exist
     console.log('📋 Test 1: Verifying roles exist...');
     const rolesResult = await pool.query(`
-      SELECT rolname, rolcomment 
-      FROM pg_roles 
-      WHERE rolname IN ('aibos_kernel_role', 'aibos_finance_role', 'aibos_config_role')
-      ORDER BY rolname
+      SELECT r.rolname, d.description 
+      FROM pg_roles r
+      LEFT JOIN pg_shdescription d ON d.objoid = r.oid
+      WHERE r.rolname IN ('aibos_kernel_role', 'aibos_finance_role', 'aibos_config_role')
+      ORDER BY r.rolname
     `);
 
     if (rolesResult.rows.length !== 3) {
@@ -39,8 +40,8 @@ async function verifyRoles() {
     console.log('Roles:');
     rolesResult.rows.forEach(row => {
       console.log(`  • ${row.rolname}`);
-      if (row.rolcomment) {
-        console.log(`    ${row.rolcomment}`);
+      if (row.description) {
+        console.log(`    ${row.description}`);
       }
     });
 

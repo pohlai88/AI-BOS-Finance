@@ -1,9 +1,17 @@
-CREATE TABLE IF NOT EXISTS canons (
+-- ============================================================================
+-- KERNEL CANONS TABLE
+-- Purpose: Service registry for Canon services
+-- Note: This is a GLOBAL table (not tenant-scoped)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS kernel.canons (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  tenant_id UUID NOT NULL REFERENCES tenants(id),
+  code VARCHAR(20) NOT NULL UNIQUE,
   name TEXT NOT NULL,
-  service_url TEXT NOT NULL,
+  service_url TEXT,
   healthy BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT uq_canons_name_tenant UNIQUE (tenant_id, name)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+COMMENT ON TABLE kernel.canons IS 'Global Canon service registry (not tenant-scoped)';

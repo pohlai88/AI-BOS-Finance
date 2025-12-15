@@ -1,0 +1,11 @@
+# PgBouncer User List
+# Format: "username" "password_hash"
+# 
+# Generate password hash with:
+#   echo -n "password_hereusername" | md5sum | awk '{print "md5"$1}'
+#
+# For aibos user with password 'aibos_password':
+#   echo -n "aibos_passwordaibos" | md5sum
+#   = md5 + result
+
+"aibos" "md5e8a48653851e28c69d0506508fb27fc5"

@@ -43,7 +43,7 @@ const ACCOUNT_AP_MYR_ID = "a0000001-0000-0000-0000-000000000006";
 
 const DATABASE_URL =
   process.env.DATABASE_URL ||
-  "postgres://kernel:kernelpassword@localhost:5433/kernel_local";
+  "postgres://aibos:aibos_password@localhost:5433/aibos_local";
 
 async function seedFinance() {
   console.log("🏦 Seeding Finance Schema...\n");
