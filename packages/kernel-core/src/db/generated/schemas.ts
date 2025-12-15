@@ -10,7 +10,7 @@
  *   pnpm metadata:generate-types
  * 
  * @see CONT_06_SchemaAndTypeGovernance.md
- * @generated 2025-12-15T16:34:05.714Z
+ * @generated 2025-12-15T17:02:00.805Z
  */
 
 import { z } from 'zod';
@@ -19,6 +19,8 @@ import type {
   KernelUsersTable,
   FinanceJournalEntriesTable,
   FinanceJournalLinesTable,
+  FinanceAccountsTable,
+  MetadataGlobalMetadataTable,
 } from './types';
 
 /**
@@ -27,9 +29,9 @@ import type {
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export const KernelTenantsTableSchema = z.object({
-  tenant_id: z.string().uuid(),
-  tenant_name: z.string(),
-  tenant_status: z.string(),
+  id: z.string().uuid(),
+  name: z.string(),
+  status: z.string(),
   created_at: z.date(),
   updated_at: z.date(),
 }) satisfies z.ZodType<KernelTenantsTable>;
@@ -40,10 +42,13 @@ export const KernelTenantsTableSchema = z.object({
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export const KernelUsersTableSchema = z.object({
-  user_id: z.string().uuid(),
+  id: z.string().uuid(),
+  tenant_id: z.string().uuid(),
   email: z.string(),
   name: z.string(),
   password_hash: z.string().nullable(),
+  created_at: z.date(),
+  updated_at: z.date(),
 }) satisfies z.ZodType<KernelUsersTable>;
 
 /**
@@ -52,12 +57,14 @@ export const KernelUsersTableSchema = z.object({
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export const FinanceJournalEntriesTableSchema = z.object({
-  journal_id: z.string().uuid(),
+  id: z.string().uuid(),
+  tenant_id: z.string().uuid(),
   journal_date: z.string().date(),
   description: z.string(),
   status: z.string(),
-  total_debit: z.string(),
-  total_credit: z.string(),
+  created_at: z.date(),
+  updated_at: z.date(),
+  posted_at: z.date().nullable(),
 }) satisfies z.ZodType<FinanceJournalEntriesTable>;
 
 /**
@@ -66,8 +73,49 @@ export const FinanceJournalEntriesTableSchema = z.object({
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export const FinanceJournalLinesTableSchema = z.object({
-  line_id: z.string().uuid(),
+  id: z.string().uuid(),
+  tenant_id: z.string().uuid(),
+  journal_id: z.string().uuid(),
   account_code: z.string(),
   debit_amount: z.string().nullable(),
   credit_amount: z.string().nullable(),
+  created_at: z.date(),
 }) satisfies z.ZodType<FinanceJournalLinesTable>;
+
+/**
+ * Zod schema for finance.accounts
+ * 
+ * @generated DO NOT EDIT - Generated from Metadata Registry
+ */
+export const FinanceAccountsTableSchema = z.object({
+  id: z.string().uuid(),
+  tenant_id: z.string().uuid(),
+  account_code: z.string(),
+  account_name: z.string(),
+  account_type: z.string(),
+  is_active: z.boolean(),
+  created_at: z.date(),
+}) satisfies z.ZodType<FinanceAccountsTable>;
+
+/**
+ * Zod schema for metadata.global_metadata
+ * 
+ * @generated DO NOT EDIT - Generated from Metadata Registry
+ */
+export const MetadataGlobalMetadataTableSchema = z.object({
+  id: z.string().uuid(),
+  tenant_id: z.string().uuid(),
+  canonical_key: z.string(),
+  label: z.string(),
+  description: z.string().nullable(),
+  domain: z.string(),
+  module: z.string(),
+  entity_urn: z.string(),
+  tier: z.string(),
+  data_type: z.string(),
+  status: z.string(),
+  owner_id: z.string(),
+  steward_id: z.string(),
+  created_at: z.date(),
+  updated_at: z.date(),
+}) satisfies z.ZodType<MetadataGlobalMetadataTable>;

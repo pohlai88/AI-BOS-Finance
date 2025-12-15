@@ -10,7 +10,7 @@
  *   pnpm metadata:generate-types
  * 
  * @see CONT_06_SchemaAndTypeGovernance.md
- * @generated 2025-12-15T16:34:05.713Z
+ * @generated 2025-12-15T17:02:00.804Z
  */
 
 /**
@@ -20,15 +20,15 @@
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export interface KernelTenantsTable {
-  /** Unique identifier for the tenant */
-  tenant_id: string;
+  /** Unique identifier for the tenant (UUID) */
+  id: string;
   /** Name of the tenant organization */
-  tenant_name: string;
-  /** Current status of the tenant */
-  tenant_status: string;
-  /** Timestamp when record was created */
+  name: string;
+  /** Current status (ACTIVE, SUSPENDED, PENDING) */
+  status: string;
+  /** Timestamp when tenant was created */
   created_at: Date;
-  /** Timestamp when record was last updated */
+  /** Timestamp when tenant was last updated */
   updated_at: Date;
 }
 
@@ -39,14 +39,20 @@ export interface KernelTenantsTable {
  * @generated DO NOT EDIT - Generated from Metadata Registry
  */
 export interface KernelUsersTable {
-  /** Unique identifier for the user */
-  user_id: string;
+  /** Unique identifier for the user (UUID) */
+  id: string;
+  /** Reference to tenant */
+  tenant_id: string;
   /** User email address */
   email: string;
   /** User display name */
   name: string;
   /** Hashed password (nullable until set) */
   password_hash: string | null;
+  /** Timestamp when user was created */
+  created_at: Date;
+  /** Timestamp when user was last updated */
+  updated_at: Date;
 }
 
 /**
@@ -57,17 +63,21 @@ export interface KernelUsersTable {
  */
 export interface FinanceJournalEntriesTable {
   /** Unique identifier for journal entry */
-  journal_id: string;
+  id: string;
+  /** Reference to tenant for multi-tenancy */
+  tenant_id: string;
   /** Date of the journal entry */
   journal_date: string;
   /** Journal entry description */
   description: string;
   /** Journal entry status (DRAFT, POSTED, REVERSED) */
   status: string;
-  /** Sum of debit amounts */
-  total_debit: string;
-  /** Sum of credit amounts */
-  total_credit: string;
+  /** Timestamp when entry was created */
+  created_at: Date;
+  /** Timestamp when entry was last updated */
+  updated_at: Date;
+  /** Timestamp when entry was posted (immutable after) */
+  posted_at: Date | null;
 }
 
 /**
@@ -78,13 +88,81 @@ export interface FinanceJournalEntriesTable {
  */
 export interface FinanceJournalLinesTable {
   /** Unique identifier for journal line */
-  line_id: string;
+  id: string;
+  /** Reference to tenant for multi-tenancy */
+  tenant_id: string;
+  /** Reference to parent journal entry */
+  journal_id: string;
   /** GL account code */
   account_code: string;
   /** Debit amount (null if credit) */
   debit_amount: string | null;
   /** Credit amount (null if debit) */
   credit_amount: string | null;
+  /** Timestamp when line was created */
+  created_at: Date;
+}
+
+/**
+ * Generated from entity: finance.accounts
+ * Domain: finance | Module: gl
+ * 
+ * @generated DO NOT EDIT - Generated from Metadata Registry
+ */
+export interface FinanceAccountsTable {
+  /** Unique identifier for GL account */
+  id: string;
+  /** Reference to tenant for multi-tenancy */
+  tenant_id: string;
+  /** Unique account code (e.g., 1000, 2000) */
+  account_code: string;
+  /** Display name of the account */
+  account_name: string;
+  /** Type (ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE) */
+  account_type: string;
+  /** Whether account is active */
+  is_active: boolean;
+  /** Timestamp when account was created */
+  created_at: Date;
+}
+
+/**
+ * Generated from entity: metadata.global_metadata
+ * Domain: metadata | Module: mdm
+ * 
+ * @generated DO NOT EDIT - Generated from Metadata Registry
+ */
+export interface MetadataGlobalMetadataTable {
+  /** Unique identifier for metadata entry */
+  id: string;
+  /** Reference to tenant for multi-tenancy */
+  tenant_id: string;
+  /** Unique canonical name per tenant (e.g., revenue_gross) */
+  canonical_key: string;
+  /** Human-readable label */
+  label: string;
+  /** Detailed description of the metadata */
+  description: string | null;
+  /** Business domain (e.g., finance, hr) */
+  domain: string;
+  /** Module within domain (e.g., gl, ap) */
+  module: string;
+  /** Entity identifier (e.g., finance.journal_entries) */
+  entity_urn: string;
+  /** Governance tier (tier1, tier2, tier3, tier4, tier5) */
+  tier: string;
+  /** Technical data type (text, uuid, decimal, etc.) */
+  data_type: string;
+  /** Metadata status (active, deprecated, draft) */
+  status: string;
+  /** Data owner (e.g., CFO) */
+  owner_id: string;
+  /** Data steward (e.g., Data Governance Team) */
+  steward_id: string;
+  /** Timestamp when metadata was created */
+  created_at: Date;
+  /** Timestamp when metadata was last updated */
+  updated_at: Date;
 }
 
 // ============================================================================
@@ -101,4 +179,10 @@ export type {
 export type {
   FinanceJournalEntriesTable,
   FinanceJournalLinesTable,
+  FinanceAccountsTable,
+};
+
+// METADATA Domain
+export type {
+  MetadataGlobalMetadataTable,
 };

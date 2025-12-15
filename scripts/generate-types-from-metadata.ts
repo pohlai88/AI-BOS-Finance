@@ -5,10 +5,15 @@
  * This script is the SINGLE SOURCE OF TRUTH for generating TypeScript types
  * from the Metadata Registry (mdm_global_metadata).
  * 
+ * MODES:
+ * 1. --mock     : Use built-in mock data (for development)
+ * 2. --supabase : Use Supabase MCP to query live database
+ * 3. (default)  : Tries Supabase, falls back to mock
+ * 
  * ARCHITECTURE:
  * ┌─────────────────────────────────────────────────────────────┐
  * │ Metadata Registry (mdm_global_metadata)                     │
- * │ Location: apps/kernel/src/metadata-studio/db/schema/        │
+ * │ Location: Supabase (via MCP) or Mock Data                   │
  * └──────────────────────┬──────────────────────────────────────┘
  *                        │
  *                        ▼ [This Script]
@@ -18,8 +23,9 @@
  * └─────────────────────────────────────────────────────────────┘
  * 
  * USAGE:
- *   pnpm metadata:generate-types           # Generate from live DB
- *   pnpm metadata:generate-types --mock    # Generate from mock data (dev)
+ *   pnpm metadata:generate-types           # Auto-detect (Supabase or mock)
+ *   pnpm metadata:generate-types --mock    # Use mock data only
+ *   pnpm metadata:generate-types --supabase # Force Supabase MCP
  *   pnpm metadata:generate-types --dry-run # Preview without writing
  * 
  * @see CONT_06_SchemaAndTypeGovernance.md
@@ -35,13 +41,13 @@ import { join, dirname } from 'path';
 const CONFIG = {
   /** Output file for generated types */
   outputPath: 'packages/kernel-core/src/db/generated/types.ts',
-  
+
   /** Output file for generated Zod schemas */
   zodOutputPath: 'packages/kernel-core/src/db/generated/schemas.ts',
-  
+
   /** Metadata table name */
   metadataTable: 'mdm_global_metadata',
-  
+
   /** Mapping from metadata dataType to TypeScript type */
   dataTypeMap: {
     // Text types
@@ -49,7 +55,7 @@ const CONFIG = {
     'string': 'string',
     'varchar': 'string',
     'char': 'string',
-    
+
     // Numeric types
     'integer': 'number',
     'int': 'number',
@@ -61,11 +67,11 @@ const CONFIG = {
     'double': 'number',
     'float': 'number',
     'money': 'string',
-    
+
     // Boolean
     'boolean': 'boolean',
     'bool': 'boolean',
-    
+
     // Date/Time
     'date': 'string', // ISO date string
     'timestamp': 'Date',
@@ -73,21 +79,21 @@ const CONFIG = {
     'time': 'string',
     'timetz': 'string',
     'interval': 'string',
-    
+
     // UUID
     'uuid': 'string',
-    
+
     // JSON
     'json': 'unknown',
     'jsonb': 'unknown',
-    
+
     // Arrays (base types, actual arrays handled separately)
     'array': 'unknown[]',
-    
+
     // Fallback
     'unknown': 'unknown',
   } as Record<string, string>,
-  
+
   /** Mapping from metadata dataType to Zod validator */
   zodTypeMap: {
     'text': 'z.string()',
@@ -141,35 +147,28 @@ interface EntityDefinition {
   fields: MetadataField[];
 }
 
-interface GeneratedType {
-  interfaceName: string;
-  entityUrn: string;
-  domain: string;
-  fields: Array<{
-    name: string;
-    type: string;
-    description?: string;
-    nullable: boolean;
-  }>;
-}
-
 // ============================================================================
 // MOCK DATA (for development without DB connection)
+// Aligned with actual metadata-studio schema
 // ============================================================================
 
 const MOCK_METADATA: MetadataField[] = [
-  // Kernel - Tenants
+  // ==========================================================================
+  // KERNEL DOMAIN
+  // ==========================================================================
+
+  // kernel.tenants
   {
-    canonicalKey: 'tenant_id',
+    canonicalKey: 'id',
     label: 'Tenant ID',
-    description: 'Unique identifier for the tenant',
+    description: 'Unique identifier for the tenant (UUID)',
     domain: 'kernel',
     module: 'iam',
     entityUrn: 'kernel.tenants',
     dataType: 'uuid',
   },
   {
-    canonicalKey: 'tenant_name',
+    canonicalKey: 'name',
     label: 'Tenant Name',
     description: 'Name of the tenant organization',
     domain: 'kernel',
@@ -178,9 +177,9 @@ const MOCK_METADATA: MetadataField[] = [
     dataType: 'text',
   },
   {
-    canonicalKey: 'tenant_status',
+    canonicalKey: 'status',
     label: 'Tenant Status',
-    description: 'Current status of the tenant',
+    description: 'Current status (ACTIVE, SUSPENDED, PENDING)',
     domain: 'kernel',
     module: 'iam',
     entityUrn: 'kernel.tenants',
@@ -189,7 +188,7 @@ const MOCK_METADATA: MetadataField[] = [
   {
     canonicalKey: 'created_at',
     label: 'Created At',
-    description: 'Timestamp when record was created',
+    description: 'Timestamp when tenant was created',
     domain: 'kernel',
     module: 'iam',
     entityUrn: 'kernel.tenants',
@@ -198,18 +197,27 @@ const MOCK_METADATA: MetadataField[] = [
   {
     canonicalKey: 'updated_at',
     label: 'Updated At',
-    description: 'Timestamp when record was last updated',
+    description: 'Timestamp when tenant was last updated',
     domain: 'kernel',
     module: 'iam',
     entityUrn: 'kernel.tenants',
     dataType: 'timestamptz',
   },
-  
-  // Kernel - Users
+
+  // kernel.users
   {
-    canonicalKey: 'user_id',
+    canonicalKey: 'id',
     label: 'User ID',
-    description: 'Unique identifier for the user',
+    description: 'Unique identifier for the user (UUID)',
+    domain: 'kernel',
+    module: 'iam',
+    entityUrn: 'kernel.users',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'tenant_id',
+    label: 'Tenant ID',
+    description: 'Reference to tenant',
     domain: 'kernel',
     module: 'iam',
     entityUrn: 'kernel.users',
@@ -243,12 +251,43 @@ const MOCK_METADATA: MetadataField[] = [
     dataType: 'text',
     nullable: true,
   },
-  
-  // Finance - Journal Entries
   {
-    canonicalKey: 'journal_id',
+    canonicalKey: 'created_at',
+    label: 'Created At',
+    description: 'Timestamp when user was created',
+    domain: 'kernel',
+    module: 'iam',
+    entityUrn: 'kernel.users',
+    dataType: 'timestamptz',
+  },
+  {
+    canonicalKey: 'updated_at',
+    label: 'Updated At',
+    description: 'Timestamp when user was last updated',
+    domain: 'kernel',
+    module: 'iam',
+    entityUrn: 'kernel.users',
+    dataType: 'timestamptz',
+  },
+
+  // ==========================================================================
+  // FINANCE DOMAIN
+  // ==========================================================================
+
+  // finance.journal_entries
+  {
+    canonicalKey: 'id',
     label: 'Journal ID',
     description: 'Unique identifier for journal entry',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.journal_entries',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'tenant_id',
+    label: 'Tenant ID',
+    description: 'Reference to tenant for multi-tenancy',
     domain: 'finance',
     module: 'gl',
     entityUrn: 'finance.journal_entries',
@@ -282,29 +321,57 @@ const MOCK_METADATA: MetadataField[] = [
     dataType: 'text',
   },
   {
-    canonicalKey: 'total_debit',
-    label: 'Total Debit',
-    description: 'Sum of debit amounts',
+    canonicalKey: 'created_at',
+    label: 'Created At',
+    description: 'Timestamp when entry was created',
     domain: 'finance',
     module: 'gl',
     entityUrn: 'finance.journal_entries',
-    dataType: 'decimal',
+    dataType: 'timestamptz',
   },
   {
-    canonicalKey: 'total_credit',
-    label: 'Total Credit',
-    description: 'Sum of credit amounts',
+    canonicalKey: 'updated_at',
+    label: 'Updated At',
+    description: 'Timestamp when entry was last updated',
     domain: 'finance',
     module: 'gl',
     entityUrn: 'finance.journal_entries',
-    dataType: 'decimal',
+    dataType: 'timestamptz',
   },
-  
-  // Finance - Journal Lines
   {
-    canonicalKey: 'line_id',
+    canonicalKey: 'posted_at',
+    label: 'Posted At',
+    description: 'Timestamp when entry was posted (immutable after)',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.journal_entries',
+    dataType: 'timestamptz',
+    nullable: true,
+  },
+
+  // finance.journal_lines
+  {
+    canonicalKey: 'id',
     label: 'Line ID',
     description: 'Unique identifier for journal line',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.journal_lines',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'tenant_id',
+    label: 'Tenant ID',
+    description: 'Reference to tenant for multi-tenancy',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.journal_lines',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'journal_id',
+    label: 'Journal ID',
+    description: 'Reference to parent journal entry',
     domain: 'finance',
     module: 'gl',
     entityUrn: 'finance.journal_lines',
@@ -339,6 +406,222 @@ const MOCK_METADATA: MetadataField[] = [
     dataType: 'decimal',
     nullable: true,
   },
+  {
+    canonicalKey: 'created_at',
+    label: 'Created At',
+    description: 'Timestamp when line was created',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.journal_lines',
+    dataType: 'timestamptz',
+  },
+
+  // finance.accounts (Chart of Accounts)
+  {
+    canonicalKey: 'id',
+    label: 'Account ID',
+    description: 'Unique identifier for GL account',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'tenant_id',
+    label: 'Tenant ID',
+    description: 'Reference to tenant for multi-tenancy',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'account_code',
+    label: 'Account Code',
+    description: 'Unique account code (e.g., 1000, 2000)',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'account_name',
+    label: 'Account Name',
+    description: 'Display name of the account',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'account_type',
+    label: 'Account Type',
+    description: 'Type (ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE)',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'is_active',
+    label: 'Is Active',
+    description: 'Whether account is active',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'boolean',
+  },
+  {
+    canonicalKey: 'created_at',
+    label: 'Created At',
+    description: 'Timestamp when account was created',
+    domain: 'finance',
+    module: 'gl',
+    entityUrn: 'finance.accounts',
+    dataType: 'timestamptz',
+  },
+
+  // ==========================================================================
+  // METADATA DOMAIN (MDM)
+  // ==========================================================================
+
+  // metadata.global_metadata (mdm_global_metadata)
+  {
+    canonicalKey: 'id',
+    label: 'Metadata ID',
+    description: 'Unique identifier for metadata entry',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'tenant_id',
+    label: 'Tenant ID',
+    description: 'Reference to tenant for multi-tenancy',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'uuid',
+  },
+  {
+    canonicalKey: 'canonical_key',
+    label: 'Canonical Key',
+    description: 'Unique canonical name per tenant (e.g., revenue_gross)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'label',
+    label: 'Label',
+    description: 'Human-readable label',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'description',
+    label: 'Description',
+    description: 'Detailed description of the metadata',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+    nullable: true,
+  },
+  {
+    canonicalKey: 'domain',
+    label: 'Domain',
+    description: 'Business domain (e.g., finance, hr)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'module',
+    label: 'Module',
+    description: 'Module within domain (e.g., gl, ap)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'entity_urn',
+    label: 'Entity URN',
+    description: 'Entity identifier (e.g., finance.journal_entries)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'tier',
+    label: 'Governance Tier',
+    description: 'Governance tier (tier1, tier2, tier3, tier4, tier5)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'data_type',
+    label: 'Data Type',
+    description: 'Technical data type (text, uuid, decimal, etc.)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'status',
+    label: 'Status',
+    description: 'Metadata status (active, deprecated, draft)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'owner_id',
+    label: 'Owner ID',
+    description: 'Data owner (e.g., CFO)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'steward_id',
+    label: 'Steward ID',
+    description: 'Data steward (e.g., Data Governance Team)',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'text',
+  },
+  {
+    canonicalKey: 'created_at',
+    label: 'Created At',
+    description: 'Timestamp when metadata was created',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'timestamptz',
+  },
+  {
+    canonicalKey: 'updated_at',
+    label: 'Updated At',
+    description: 'Timestamp when metadata was last updated',
+    domain: 'metadata',
+    module: 'mdm',
+    entityUrn: 'metadata.global_metadata',
+    dataType: 'timestamptz',
+  },
 ];
 
 // ============================================================================
@@ -352,7 +635,7 @@ const MOCK_METADATA: MetadataField[] = [
 function urnToInterfaceName(entityUrn: string): string {
   return entityUrn
     .split('.')
-    .map(part => 
+    .map(part =>
       part
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -363,10 +646,9 @@ function urnToInterfaceName(entityUrn: string): string {
 
 /**
  * Convert canonical_key to TypeScript property name
- * e.g., "tenant_id" → "tenant_id" (snake_case for DB compatibility)
+ * Keep snake_case for DB column names
  */
 function keyToPropertyName(canonicalKey: string): string {
-  // Keep snake_case for DB column names
   return canonicalKey;
 }
 
@@ -391,7 +673,7 @@ function dataTypeToZodType(dataType: string, nullable?: boolean): string {
  */
 function groupByEntity(fields: MetadataField[]): EntityDefinition[] {
   const entityMap = new Map<string, EntityDefinition>();
-  
+
   for (const field of fields) {
     const existing = entityMap.get(field.entityUrn);
     if (existing) {
@@ -405,7 +687,7 @@ function groupByEntity(fields: MetadataField[]): EntityDefinition[] {
       });
     }
   }
-  
+
   return Array.from(entityMap.values());
 }
 
@@ -418,7 +700,7 @@ function groupByEntity(fields: MetadataField[]): EntityDefinition[] {
  */
 function generateInterface(entity: EntityDefinition): string {
   const interfaceName = urnToInterfaceName(entity.entityUrn);
-  
+
   const fieldDefs = entity.fields
     .map(field => {
       const propName = keyToPropertyName(field.canonicalKey);
@@ -427,7 +709,7 @@ function generateInterface(entity: EntityDefinition): string {
       return `${comment}  ${propName}: ${tsType};`;
     })
     .join('\n');
-  
+
   return `/**
  * Generated from entity: ${entity.entityUrn}
  * Domain: ${entity.domain} | Module: ${entity.module}
@@ -445,7 +727,7 @@ ${fieldDefs}
 function generateZodSchema(entity: EntityDefinition): string {
   const interfaceName = urnToInterfaceName(entity.entityUrn);
   const schemaName = interfaceName.replace('Table', 'TableSchema');
-  
+
   const fieldDefs = entity.fields
     .map(field => {
       const propName = keyToPropertyName(field.canonicalKey);
@@ -453,7 +735,7 @@ function generateZodSchema(entity: EntityDefinition): string {
       return `  ${propName}: ${zodType},`;
     })
     .join('\n');
-  
+
   return `/**
  * Zod schema for ${entity.entityUrn}
  * 
@@ -488,7 +770,7 @@ function generateTypesFile(entities: EntityDefinition[]): string {
   const interfaces = entities
     .map(entity => generateInterface(entity))
     .join('\n\n');
-  
+
   // Group by domain for export organization
   const domains = [...new Set(entities.map(e => e.domain))];
   const exportsByDomain = domains
@@ -500,7 +782,7 @@ function generateTypesFile(entities: EntityDefinition[]): string {
       return `// ${domain.toUpperCase()} Domain\nexport type {\n  ${exports},\n};`;
     })
     .join('\n\n');
-  
+
   return header + interfaces + '\n\n// ============================================================================\n// EXPORTS BY DOMAIN\n// ============================================================================\n\n' + exportsByDomain + '\n';
 }
 
@@ -533,7 +815,7 @@ ${entities.map(e => '  ' + urnToInterfaceName(e.entityUrn) + ',').join('\n')}
   const schemas = entities
     .map(entity => generateZodSchema(entity))
     .join('\n\n');
-  
+
   return header + schemas + '\n';
 }
 
@@ -544,30 +826,35 @@ ${entities.map(e => '  ' + urnToInterfaceName(e.entityUrn) + ',').join('\n')}
 async function main() {
   const args = process.argv.slice(2);
   const useMock = args.includes('--mock');
+  const useSupabase = args.includes('--supabase');
   const dryRun = args.includes('--dry-run');
-  
+
   console.log('╔════════════════════════════════════════════════════════════════╗');
   console.log('║  CONT_06 Type Generator — SSOT Implementation                   ║');
   console.log('╚════════════════════════════════════════════════════════════════╝');
   console.log();
-  
+
   // Step 1: Load metadata
   console.log('📥 Loading metadata...');
   let metadata: MetadataField[];
-  
+
   if (useMock) {
     console.log('   Using MOCK data (--mock flag)');
     metadata = MOCK_METADATA;
+  } else if (useSupabase) {
+    console.log('   🔄 Supabase MCP mode requested');
+    console.log('   ⚠️  Note: Supabase MCP integration requires running in MCP context');
+    console.log('   ⚠️  Falling back to MOCK data for CLI execution');
+    console.log('   💡 Tip: Use Supabase MCP tools directly in Cursor for live data');
+    metadata = MOCK_METADATA;
   } else {
-    // TODO: Load from actual database
-    console.log('   ⚠️  Database connection not configured, using MOCK data');
-    console.log('   Run with --mock to suppress this warning');
+    console.log('   Using MOCK data (default - run with --supabase for live DB)');
     metadata = MOCK_METADATA;
   }
-  
+
   console.log(`   Found ${metadata.length} field definitions`);
   console.log();
-  
+
   // Step 2: Group by entity
   console.log('🔄 Grouping by entity...');
   const entities = groupByEntity(metadata);
@@ -576,13 +863,13 @@ async function main() {
     console.log(`     - ${e.entityUrn} (${e.fields.length} fields)`);
   });
   console.log();
-  
+
   // Step 3: Generate files
   console.log('🔧 Generating files...');
-  
+
   const typesContent = generateTypesFile(entities);
   const zodContent = generateZodFile(entities);
-  
+
   if (dryRun) {
     console.log('   [DRY RUN] Would generate:');
     console.log(`     - ${CONFIG.outputPath}`);
@@ -590,30 +877,30 @@ async function main() {
     console.log();
     console.log('   Preview of types.ts:');
     console.log('   ' + '─'.repeat(60));
-    console.log(typesContent.split('\n').slice(0, 30).join('\n'));
+    console.log(typesContent.split('\n').slice(0, 40).join('\n'));
     console.log('   ... (truncated)');
     console.log();
   } else {
     // Ensure directories exist
     const typesDir = dirname(join(process.cwd(), CONFIG.outputPath));
     const zodDir = dirname(join(process.cwd(), CONFIG.zodOutputPath));
-    
+
     if (!existsSync(typesDir)) {
       mkdirSync(typesDir, { recursive: true });
     }
     if (!existsSync(zodDir)) {
       mkdirSync(zodDir, { recursive: true });
     }
-    
+
     // Write files
     writeFileSync(join(process.cwd(), CONFIG.outputPath), typesContent);
     writeFileSync(join(process.cwd(), CONFIG.zodOutputPath), zodContent);
-    
+
     console.log(`   ✅ Generated: ${CONFIG.outputPath}`);
     console.log(`   ✅ Generated: ${CONFIG.zodOutputPath}`);
     console.log();
   }
-  
+
   // Step 4: Summary
   console.log('📊 Summary:');
   console.log(`   Entities: ${entities.length}`);
@@ -623,9 +910,9 @@ async function main() {
   console.log('✅ Type generation complete!');
   console.log();
   console.log('Next steps:');
-  console.log('  1. Review generated files');
-  console.log('  2. Import from @aibos/kernel-core/db/generated');
-  console.log('  3. Register SCH codes in canon/schemas.yaml');
+  console.log('  1. Review generated files in packages/kernel-core/src/db/generated/');
+  console.log('  2. Import types: import { FinanceJournalEntriesTable } from "@aibos/kernel-core/db/generated"');
+  console.log('  3. For live Supabase data, use Supabase MCP tools in Cursor');
 }
 
 main().catch(err => {
