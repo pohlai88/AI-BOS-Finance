@@ -548,12 +548,60 @@ jobs:
 
 ---
 
-**Status:** ✅ Ready for Implementation  
-**Supersedes:** CONT_10 v2.0  
-**Next Step:** Begin Sprint 1 Implementation
+## 7. Testing Standard
+
+BIOSKIN mandates unified testing with **Vitest Browser Mode + Playwright**.
+
+### Testing Philosophy
+
+```
+Unit + Component + Integration = ONE Test Runner (Real Browser)
+```
+
+### Coverage KPIs
+
+| Metric | Minimum | Target |
+|--------|---------|--------|
+| Line Coverage | 70% | 85% |
+| Branch Coverage | 60% | 75% |
+| Function Coverage | 80% | 90% |
+
+### Test Requirements by Layer
+
+| Layer | Requirement |
+|-------|-------------|
+| Atoms | Props render correctly |
+| Molecules | All variants + states |
+| Organisms | Schema-driven behavior |
+| Hooks | State management |
+| Utils | Pure function coverage |
+
+### Test Commands
+
+```bash
+pnpm test           # Run all (headless)
+pnpm test:watch     # Watch mode
+pnpm test:coverage  # Coverage report
+pnpm test:headed    # See browser
+```
+
+### PR Merge Gate
+
+- All tests pass
+- Coverage meets thresholds
+- Type check passes
+- New components have tests
+
+> **Full Standard:** `packages/bioskin/TESTING.md`
 
 ---
 
-**Last Updated:** 2025-12-16  
+**Status:** ✅ IMPLEMENTED (Sprint 1-3 Complete)  
+**Supersedes:** CONT_10 v2.0  
+**Testing:** Vitest Browser Mode + Playwright
+
+---
+
+**Last Updated:** 2024-12-16  
 **Maintainer:** AI-BOS Architecture Team  
 **Review Cycle:** Quarterly

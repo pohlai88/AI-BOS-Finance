@@ -200,6 +200,27 @@ export function PaymentTable({ data }) {
 
 ---
 
+### Sprint 4: Testing Infrastructure ✅ COMPLETE
+
+**Goal:** Unified testing with real browser execution.
+
+| Task | Deliverable | Status |
+|------|-------------|--------|
+| Configure Vitest Browser Mode | `vitest.config.ts` | ✅ |
+| Add Playwright provider | `@vitest/browser-playwright` | ✅ |
+| Create test setup | `__tests__/setup.ts` | ✅ |
+| Write demo tests | 18 passing tests | ✅ |
+| Document testing standard | `TESTING.md` | ✅ |
+
+**Exit Gate:**
+- [x] Vitest runs in real Chromium browser
+- [x] Unit + Component tests in ONE runner
+- [x] 18/18 tests passing
+- [x] Testing KPIs documented
+- [x] CONT_10 updated with testing section
+
+---
+
 ## 6) Functional Requirements
 
 | ID | Requirement | Acceptance Criteria |
