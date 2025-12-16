@@ -286,7 +286,7 @@ function BioTableInternal<T extends z.ZodRawShape>({
   }
 
   return (
-    <Surface padding="none" className={cn('overflow-hidden', className)}>
+    <Surface padding="none" className={cn('overflow-hidden', className)} data-testid="bio-table">
       {/* Header */}
       {(showTitle && displayTitle) || enableFiltering ? (
         <div className="px-6 py-4 border-b border-default space-y-4">

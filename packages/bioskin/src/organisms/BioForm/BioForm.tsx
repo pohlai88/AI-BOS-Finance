@@ -170,8 +170,8 @@ export function BioForm<T extends z.ZodRawShape>({
   }));
 
   return (
-    <Surface className={cn('space-y-6', className)}>
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <Surface className={cn('space-y-6', className)} data-testid="bio-form">
+      <form onSubmit={handleSubmit} className="space-y-6" data-testid="bio-form-element">
         {/* Header */}
         {(showTitle && displayTitle) || description ? (
           <div className="space-y-1">
