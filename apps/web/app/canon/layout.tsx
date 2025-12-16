@@ -18,23 +18,23 @@ import { CANON_SECTIONS, getCanonPagesBySection } from '@/canon-pages/registry'
 
 export default function CanonLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-nexus-void">
+    <div className="flex min-h-screen bg-background">
       {/* Canon Sidebar */}
-      <aside className="w-64 border-r border-nexus-border/30 hidden md:flex md:flex-col bg-nexus-surface/20">
+      <aside className="w-64 border-r border-subtle/30 hidden md:flex md:flex-col bg-surface-subtle/20">
         {/* Header */}
-        <div className="p-4 border-b border-nexus-border/30">
+        <div className="p-4 border-b border-subtle/30">
           <Link 
             href="/dashboard" 
-            className="flex items-center gap-2 text-nexus-signal/60 hover:text-nexus-signal text-sm transition-colors"
+            className="flex items-center gap-2 text-text-primary/60 hover:text-text-primary text-sm transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
           <div className="mt-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-nexus-green" />
-            <span className="font-semibold text-nexus-signal">Nexus Canon</span>
+            <BookOpen className="w-5 h-5 text-primary" />
+            <span className="font-semibold text-text-primary">Nexus Canon</span>
           </div>
-          <p className="text-xs text-nexus-signal/50 mt-1">
+          <p className="text-xs text-text-primary/50 mt-1">
             Governed Documentation
           </p>
         </div>
@@ -48,7 +48,7 @@ export default function CanonLayout({ children }: { children: ReactNode }) {
             
             return (
               <div key={section.id}>
-                <div className="flex items-center gap-2 text-xs font-semibold text-nexus-signal/50 uppercase tracking-wider mb-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-text-primary/50 uppercase tracking-wider mb-2">
                   <Icon className="w-3.5 h-3.5" />
                   {section.label}
                 </div>
@@ -57,15 +57,15 @@ export default function CanonLayout({ children }: { children: ReactNode }) {
                     <li key={page.slug}>
                       <Link
                         href={`/canon/${section.id}/${page.slug}`}
-                        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-nexus-signal/70 hover:text-nexus-signal hover:bg-nexus-surface/50 transition-colors"
+                        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-text-primary/70 hover:text-text-primary hover:bg-surface-subtle/50 transition-colors"
                       >
-                        <FileText className="w-3.5 h-3.5 text-nexus-signal/40" />
+                        <FileText className="w-3.5 h-3.5 text-text-primary/40" />
                         {page.meta.id}: {page.meta.title}
                       </Link>
                     </li>
                   ))}
                   {pages.length === 0 && (
-                    <li className="text-xs text-nexus-signal/30 italic px-2 py-1">
+                    <li className="text-xs text-text-primary/30 italic px-2 py-1">
                       No pages yet
                     </li>
                   )}
@@ -76,9 +76,9 @@ export default function CanonLayout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-nexus-border/30 text-xs text-nexus-signal/40">
+        <div className="p-4 border-t border-subtle/30 text-xs text-text-primary/40">
           <div className="flex items-center gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-nexus-green animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Canon v2.0
           </div>
         </div>

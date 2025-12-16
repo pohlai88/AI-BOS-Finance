@@ -84,9 +84,9 @@ export const STATUS_CONFIG: Record<CanonStatus, StatusConfig> = {
   ACTIVE: { 
     icon: CheckCircle, 
     label: 'Active', 
-    color: 'text-nexus-green', 
-    bg: 'bg-nexus-green/10', 
-    border: 'border-nexus-green/30' 
+    color: 'text-primary', 
+    bg: 'bg-primary/10', 
+    border: 'border-primary/30' 
   },
   DRAFT: { 
     icon: Clock, 

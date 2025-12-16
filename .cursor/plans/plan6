@@ -1,0 +1,555 @@
+Ah, NOW I understand! The real issue is **codebase chaos** - not the design tokens. Let me do a proper audit of the actual mess:
+
+[10 tools called]
+
+Now I see the **REAL problem**. Let me map the complete chaos:
+
+[1 tool called]
+
+---
+
+## 🔴 THE REAL PROBLEM: Codebase Chaos Audit
+
+### Component Locations (5 DIFFERENT PLACES!)
+
+| Location | Files | Purpose | Problem |
+|----------|-------|---------|---------|
+| `src/components/ui/` | 47 | shadcn/ui primitives | ✅ Good - keep as-is |
+| `src/components/nexus/` | 7 | Legacy Nexus styled | ⚠️ Duplicates shadcn |
+| `src/components/` (root) | 30+ | Mixed domain components | ❌ No organization |
+| `app/payments/_components/` | 8 | Payment UI (Next.js 16) | ⚠️ Duplicates module |
+| `src/modules/payment/components/` | 9 | Payment UI (feature module) | ⚠️ Duplicates app |
+
+### Duplicate Implementations
+
+#### 🃏 Cards (7 DIFFERENT IMPLEMENTATIONS!)
+
+```
+ui/card.tsx           → shadcn/ui Card (base)
+nexus/NexusCard.tsx   → Custom "forensic corners" card
+nexus/CardSection.tsx → Section card with icon
+canon/StatCard.tsx    → Stats display card
+canon/StatusCard.tsx  → Status indicator card
+landing/LinearFeatureCard.tsx → Landing page card
+health/HealthModuleCard.tsx   → Health dashboard card
+```
+
+#### 🔘 Buttons (2 implementations)
+
+```
+ui/button.tsx         → shadcn/ui Button (base)
+nexus/NexusButton.tsx → Custom Nexus button (NOT using base)
+```
+
+#### 🏷️ Badges (3 implementations)
+
+```
+ui/badge.tsx          → shadcn/ui Badge (base)
+nexus/NexusBadge.tsx  → Custom badge (NOT using base)
+canon/StatusBadge.tsx → Status-specific badge
+```
+
+#### 📊 Tables (5 IMPLEMENTATIONS!)
+
+```
+ui/table.tsx                → shadcn/ui primitives
+metadata/SuperTable.tsx     → Complex table with filtering
+metadata/SuperTableLite.tsx → Lite version of SuperTable (WHY?)
+IndustrialCanonTable.tsx    → Yet another table
+modules/payment/PaymentTable.tsx → Payment-specific table
+```
+
+#### 🎯 Headers (6 IMPLEMENTATIONS!)
+
+```
+Header.tsx                  → Root header
+nexus/Header.tsx           → Nexus header  
+landing/Header.tsx         → Landing header
+dashboard/DashboardHeader.tsx → Dashboard header
+simulation/ForensicHeader.tsx → Forensic header
+payment/TreasuryHeader.tsx → Treasury header
+```
+
+### Payment Components: DUPLICATED
+
+**Location A:** `app/payments/_components/` (8 files)
+```
+ApprovalButton, PaymentActionMenu, ExpandablePaymentRow,
+RiskQueueDashboard, ExceptionBadge, ApprovalChainTimeline,
+QuickDocumentPreview
+```
+
+**Location B:** `src/modules/payment/components/` (9 files)
+```
+AuditSidebar, TreasuryHeader, FunctionalCard, PaymentTable,
+ApprovalActions, AmountInput, PaymentStatusBadge, CreatePaymentDialog
+```
+
+**Both have `PaymentStatusBadge`!** And different approval components!
+
+---
+
+## 🎯 CONSOLIDATION PLAN
+
+### Target Architecture
+
+```
+apps/web/
+├── src/
+│   ├── components/
+│   │   ├── ui/              # shadcn/ui primitives ONLY (keep)
+│   │   ├── core/            # Extended primitives (Card variants, etc)
+│   │   ├── layout/          # Shell, Header, Nav, Footer
+│   │   ├── domain/          # Domain-specific (payment, metadata, etc)
+│   │   │   ├── payment/     # ALL payment components
+│   │   │   ├── metadata/    # ALL metadata components
+│   │   │   └── health/      # ALL health components
+│   │   └── marketing/       # Landing page only
+│   └── ...
+└── app/
+    └── (routes only - NO _components folders)
+```
+
+### Migration Strategy
+
+#### Phase 1: Merge Payment Duplicates (30 min)
+1. Move `app/payments/_components/*` → `src/components/domain/payment/`
+2. Delete `src/modules/payment/components/` (merge unique items)
+3. Single source of truth for payment UI
+
+#### Phase 2: Consolidate Card/Button/Badge (1 hour)
+1. Delete `nexus/NexusCard.tsx` → Use `ui/card.tsx` + variants
+2. Delete `nexus/NexusButton.tsx` → Use `ui/button.tsx` + variants
+3. Delete `nexus/NexusBadge.tsx` → Use `ui/badge.tsx` + variants
+4. Create `core/status-card.tsx` that extends `ui/card.tsx`
+
+#### Phase 3: Unify Tables (1 hour)
+1. Keep `ui/table.tsx` as base
+2. Keep `SuperTable.tsx` as main data table
+3. Delete `SuperTableLite.tsx` (merge into SuperTable with mode prop)
+4. Delete `IndustrialCanonTable.tsx` (use SuperTable)
+5. Make `PaymentTable.tsx` use SuperTable internally
+
+#### Phase 4: Unify Headers (30 min)
+1. Create single `layout/AppHeader.tsx` with variants
+2. Consolidate 6 headers into 1 composable component
+
+---
+
+## ❓ Decision Point
+
+**Do you want me to:**
+
+1. **Execute Phase 1 NOW** - Merge payment duplicates (quick win, 30 min)
+2. **Create detailed migration scripts** - Automated refactoring
+3. **Build the consolidation incrementally** - One duplicate at a time over sessions
+4. **Start fresh with a component audit document** - Manual tracking
+
+The mess is real but fixable. Which approach do you prefer
+
+
+---
+name: UI System Cleanup and BioSkin
+overview: Clean up the existing UI chaos by creating bridge components, migrating imports, reorganizing to features/ structure, and building the Bio Transform Self system (ui-atoms + bioskin) as defined in CONT_09. This establishes a clean, schema-driven UI architecture.
+todos:
+  - id: phase0-bridge
+    content: "Create bridge components: preserve NexusIcon in icons/, create ForensicCard variant"
+    status: pending
+  - id: phase0b-imports
+    content: Create TOOL_21_MigrateNexusImports.ts to update 32 files with new import paths
+    status: pending
+  - id: phase1-delete
+    content: "Delete legacy folders: nexus/ (except NexusIcon), simulation/, figma/"
+    status: pending
+  - id: phase2-features
+    content: Create src/features/ structure and migrate domain components
+    status: pending
+  - id: phase3-uiatoms
+    content: Build packages/ui-atoms with Surface, Txt, Btn, Field, Icon
+    status: pending
+  - id: phase4-bioskin
+    content: Build packages/bioskin with ZodSchemaIntrospector, BioObject, BioForm, BioTable
+    status: pending
+  - id: phase5-tokens
+    content: Run TOOL_20 to migrate 450 nexus-* class usages
+    status: pending
+  - id: phase6-proof
+    content: Wire BioTable to /payments page as proof of concept
+    status: pending
+---
+
+# UI System Cleanup and Bio Transform Self Implementation
+
+Following [CONT_09_UIUXArchitecture.md](packages/canon/A-Governance/A-CONT/CONT_09_UIUXArchitecture.md) to restore the codebase to a clean state.
+
+---
+
+## MCP Validation Summary
+
+Validated by: Next.js MCP, Figma MCP, shadcn-community MCP
+
+| Check | Result | Action Required |
+
+|-------|--------|-----------------|
+
+| Next.js Routes | 38 app routes found | No issues |
+
+| NexusIcon | Brand logo (animated SVG) | PRESERVE in icons/ |
+
+| NexusCard | Has forensic corners | Create ForensicCard variant |
+
+| Import statements | 32 files import from nexus/ | TOOL_21 required |
+
+| TOOL_20 scope | CSS classes only | Does NOT handle imports |
+
+| shadcn table component | Available with sorting | Can use for BioTable base |
+
+---
+
+## Current State Analysis
+
+| Layer | Status | Location |
+
+|-------|--------|----------|
+
+| Layer 0: Design Tokens | DONE | `apps/web/src/styles/globals.css` |
+
+| Layer 1: ui-atoms | NOT BUILT | `packages/ui-atoms/` (target) |
+
+| Layer 2: shadcn/ui | DONE | `apps/web/src/components/ui/` (47 files) |
+
+| Layer 3: COMP_* Canon | PARTIAL | `apps/web/src/components/canon/` |
+
+| Layer 4: bioskin | NOT BUILT | `packages/bioskin/` (target) |
+
+| Layer 5: features | NOT ORGANIZED | Scattered across 15+ folders |
+
+**Chaos to Clean:**
+
+- 7 Card implementations, 5 Table implementations, 6 Headers
+- `components/nexus/` duplicates shadcn/ui (BUT has unique NexusIcon)
+- Payment components in 2 locations with conflicts
+- 450 `nexus-*` class usages across 36 files
+- 32 import statements referencing nexus/ folder
+
+---
+
+## Phase 0: Create Bridge Components (CRITICAL - DO FIRST)
+
+**Why:** Deleting nexus/ without this will break 32 files immediately.
+
+### 0.1 Preserve NexusIcon (Brand Identity)
+
+Move NexusIcon to icons/ folder - it is a custom animated SVG brand logo, NOT a replaceable icon:
+
+```
+src/components/icons/
+├── LynxIcon.tsx      # (existing)
+└── NexusIcon.tsx     # (move from nexus/)
+```
+
+### 0.2 Create ForensicCard Variant
+
+NexusCard has unique "forensic corner markers". Create a variant that preserves this:
+
+```typescript
+// src/components/ui/card.tsx - ADD ForensicCard variant
+export function ForensicCard({ children, className, ...props }: CardProps) {
+  return (
+    <Card className={cn('relative', className)} {...props}>
+      {children}
+      {/* Forensic Corner Markers */}
+      <div className="absolute top-0 left-0 w-1 h-1 bg-border-default" />
+      <div className="absolute top-0 right-0 w-1 h-1 bg-border-default" />
+      <div className="absolute bottom-0 left-0 w-1 h-1 bg-border-default" />
+      <div className="absolute bottom-0 right-0 w-1 h-1 bg-border-default" />
+    </Card>
+  );
+}
+```
+
+### 0.3 Create TOOL_21_MigrateNexusImports.ts
+
+```typescript
+// scripts/TOOL_21_MigrateNexusImports.ts
+const IMPORT_MIGRATIONS = {
+  // Icon - move to icons folder
+  "from '@/components/nexus/NexusIcon'": "from '@/components/icons/NexusIcon'",
+  "from '../components/nexus/NexusIcon'": "from '../components/icons/NexusIcon'",
+  
+  // Card - use shadcn Card or ForensicCard
+  "from '@/components/nexus/NexusCard'": "from '@/components/ui/card'",
+  "{ NexusCard }": "{ ForensicCard as NexusCard }",
+  
+  // Button - use shadcn Button
+  "from '@/components/nexus/NexusButton'": "from '@/components/ui/button'",
+  "{ NexusButton }": "{ Button as NexusButton }",
+  
+  // Badge - use shadcn Badge
+  "from '@/components/nexus/NexusBadge'": "from '@/components/ui/badge'",
+  "{ NexusBadge }": "{ Badge as NexusBadge }",
+  
+  // Input - use shadcn Input
+  "from '@/components/nexus/NexusInput'": "from '@/components/ui/input'",
+  "{ NexusInput }": "{ Input as NexusInput }",
+  
+  // CardSection - move to canon
+  "from '../components/nexus/CardSection'": "from '@/components/canon/CardSection'",
+};
+```
+
+**Files requiring import migration (32 total):**
+
+- `src/views/SYS_01_SysBootloaderPage.tsx` (3 imports)
+- `src/views/DashboardPage.tsx` (2 imports)
+- `src/views/SYS_04_SysProfilePage.tsx` (4 imports)
+- `src/components/shell/AppFooter.tsx` (1 import)
+- ... and 28 more files
+
+---
+
+## Phase 1: Delete Legacy Components (AFTER Phase 0)
+
+Per CONT_09 Section 3.3, delete these folders:
+
+| Folder | Action | Reason |
+
+|--------|--------|--------|
+
+| `src/components/nexus/` | DELETE | Duplicates shadcn/ui (NexusCard, NexusButton, NexusBadge) |
+
+| `src/components/simulation/` | DELETE | One-off demo, not governed |
+
+| `src/components/figma/` | DELETE | Built into CI pipeline |
+
+**IMPORTANT:** Run Phase 0 first to move/bridge components, then delete.
+
+**Files to DELETE:**
+
+- `src/components/nexus/NexusCard.tsx` (replaced by ForensicCard)
+- `src/components/nexus/NexusButton.tsx` (replaced by shadcn Button)
+- `src/components/nexus/NexusBadge.tsx` (replaced by shadcn Badge)
+- `src/components/nexus/NexusInput.tsx` (replaced by shadcn Input)
+- `src/components/nexus/Header.tsx` (landing page specific)
+- `src/components/simulation/` (entire folder)
+- `src/components/figma/` (entire folder)
+
+**Files to MOVE (not delete):**
+
+- `src/components/nexus/NexusIcon.tsx` -> `src/components/icons/NexusIcon.tsx`
+- `src/components/nexus/CardSection.tsx` -> `src/components/canon/CardSection.tsx`
+
+---
+
+## Phase 2: Reorganize to features/ Structure
+
+Create `src/features/` and migrate domain components:
+
+```
+src/features/
+├── payment/
+│   ├── components/     # Merge from app/payments/_components + modules/payment/components
+│   ├── hooks/
+│   └── schemas/
+├── metadata/
+│   └── components/     # Move from src/components/metadata/
+├── dashboard/
+│   └── components/     # Move from src/components/dashboard/
+├── health/
+│   └── components/     # Move from src/components/health/
+├── marketing/
+│   └── components/     # Move from src/components/landing/
+├── shell/
+│   └── components/     # Move from src/components/shell/
+└── auth/
+    └── components/     # Move from src/components/auth/
+```
+
+**Key migrations:**
+
+1. Merge `app/payments/_components/` + `src/modules/payment/components/` into `src/features/payment/components/`
+2. Move `src/components/metadata/` to `src/features/metadata/components/`
+3. Move `src/components/landing/` to `src/features/marketing/components/`
+4. Delete `src/modules/` after migration
+
+---
+
+## Phase 3: Build packages/ui-atoms (Layer 1)
+
+Create the primitive layer per CONT_09 Section 5.3:
+
+```
+packages/ui-atoms/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── Surface.tsx      # Card/panel wrapper with variants
+    ├── Txt.tsx          # Typography component
+    ├── Btn.tsx          # Button primitive
+    ├── Field.tsx        # Form field primitive
+    ├── Icon.tsx         # Icon wrapper
+    └── index.ts
+```
+
+**Surface.tsx** (from CONT_09):
+
+```typescript
+export interface SurfaceProps {
+  children: React.ReactNode;
+  variant?: 'card' | 'subtle' | 'nested' | 'glass';
+  className?: string;
+}
+
+export function Surface({ children, variant = 'card', className }: SurfaceProps) {
+  const variantClasses = {
+    card: 'bg-surface-card border-default',
+    subtle: 'bg-surface-subtle border-subtle',
+    nested: 'bg-surface-nested border-subtle',
+    glass: 'bg-surface-card/60 backdrop-blur-md border-default',
+  };
+  return (
+    <div className={cn('rounded-lg p-layout-md', variantClasses[variant], className)}>
+      {children}
+    </div>
+  );
+}
+```
+
+---
+
+## Phase 4: Build packages/bioskin (Layer 4)
+
+Create the schema-driven generative layer:
+
+```
+packages/bioskin/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── introspector/
+    │   └── ZodSchemaIntrospector.ts
+    ├── components/
+    │   ├── BioObject.tsx    # View mode
+    │   ├── BioForm.tsx      # Edit mode
+    │   └── BioTable.tsx     # List mode
+    └── index.ts
+```
+
+**ZodSchemaIntrospector** extracts field metadata:
+
+```typescript
+export interface BioFieldDefinition {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'date' | 'enum' | 'array' | 'object';
+  label: string;
+  description?: string;
+  required: boolean;
+  validation?: { min?: number; max?: number; pattern?: string; options?: string[] };
+}
+
+export function introspectZodSchema(schema: z.ZodType): BioSchemaDefinition;
+```
+
+**BioObject** auto-renders from schema:
+
+```typescript
+export function BioObject<T extends z.ZodType>({ 
+  schema, 
+  data, 
+  mode = 'view'
+}: BioObjectProps<T>) {
+  const definition = introspectZodSchema(schema);
+  return (
+    <Surface>
+      {definition.fields.map(field => (
+        <Field key={field.name} field={field} value={data[field.name]} mode={mode} />
+      ))}
+    </Surface>
+  );
+}
+```
+
+---
+
+## Phase 5: Run Token Migration
+
+Execute CONT_09 Section 7.1 token cleanup:
+
+Run `scripts/TOOL_20_MigrateNexusTokens.ts` to replace 450 `nexus-*` usages:
+
+| Old Class | New Class |
+
+|-----------|-----------|
+
+| `bg-nexus-void` | `bg-background` |
+
+| `bg-nexus-matter` | `bg-surface-card` |
+
+| `text-nexus-signal` | `text-text-primary` |
+
+| `text-nexus-noise` | `text-text-secondary` |
+
+| `border-nexus-structure` | `border-default` |
+
+| `text-nexus-green` | `text-primary` |
+
+---
+
+## Phase 6: Wire to Payment Page (Proof of Concept)
+
+Use existing `PaymentResponseSchema` from [paymentZodSchemas.ts](apps/web/src/modules/payment/schemas/paymentZodSchemas.ts):
+
+```typescript
+// app/payments/page.tsx
+import { BioTable } from '@aibos/bioskin';
+import { PaymentResponseSchema } from '@/features/payment/schemas';
+
+export default function PaymentsPage() {
+  const payments = await fetchPayments();
+  return <BioTable schema={PaymentResponseSchema} data={payments} />;
+}
+```
+
+---
+
+## Success Metrics (from CONT_09 Section 9)
+
+| Metric | Current | Target |
+
+|--------|---------|--------|
+
+| nexus-* usage | 450 instances | 0 |
+
+| Component folders | 15+ | 5 (ui, canon, icons, motion, features) |
+
+| packages/ui-atoms | 0 | 5 primitives |
+
+| packages/bioskin | 0 | 3 components |
+
+---
+
+## Execution Order
+
+1. **Phase 0** (45 min): Create bridge components - CRITICAL FIRST
+   - Move NexusIcon to icons/
+   - Create ForensicCard variant
+   - Create TOOL_21 import migration script
+   - Run TOOL_21 to update 32 files
+2. **Phase 1** (15 min): Delete legacy - removes 15+ files (safely now)
+3. **Phase 2** (1 hour): Reorganize to features/ - clears chaos
+4. **Phase 3** (1 hour): Build ui-atoms - 5 primitives
+5. **Phase 4** (2 hours): Build bioskin - introspector + 3 components
+6. **Phase 5** (30 min): Run TOOL_20 token migration script
+7. **Phase 6** (30 min): Wire Payment page as proof
+
+Total: ~6-7 hours for clean state + working Bio system
+
+---
+
+## Validation Checklist (Run After Each Phase)
+
+- [ ] `pnpm run type-check` passes
+- [ ] `pnpm run dev` starts without errors
+- [ ] No broken imports (grep for nexus/ paths)
+- [ ] NexusIcon renders correctly in shell
+- [ ] ForensicCard has corner markers

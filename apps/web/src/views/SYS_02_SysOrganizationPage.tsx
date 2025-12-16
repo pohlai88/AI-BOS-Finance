@@ -6,8 +6,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MetaAppShell } from '../components/shell/MetaAppShell';
-import { CardSection } from '../components/nexus/CardSection';
-import { NexusBadge } from '../components/nexus/NexusBadge';
+import { CardSection } from '@/components/canon/CardSection';
+import { Badge as NexusBadge } from '@/components/ui/badge';
 import { useSysConfig } from '../context/SysConfigContext';
 import {
   Building2,

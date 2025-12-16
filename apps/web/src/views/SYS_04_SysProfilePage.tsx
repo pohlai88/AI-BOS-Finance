@@ -28,10 +28,10 @@ import { useSysConfig } from '../../context/SysConfigContext';
 import { MetaAppShell } from '../../components/shell/MetaAppShell';
 
 // Enterprise Design System Imports
-import { NexusCard } from '../../components/nexus/NexusCard';
-import { NexusButton } from '../../components/nexus/NexusButton';
-import { NexusInput } from '../../components/nexus/NexusInput';
-import { NexusBadge } from '../../components/nexus/NexusBadge';
+import { ForensicCard as NexusCard } from '@/components/ui/card';
+import { Button as NexusButton } from '@/components/ui/button';
+import { Input as NexusInput } from '@/components/ui/input';
+import { Badge as NexusBadge } from '@/components/ui/badge';
 
 export function SysProfilePage() {
   const navigate = useNavigate();

@@ -1,0 +1,200 @@
+> **🟢 [ACTIVE]** — Cursor Rule Enforcer
+> **Derives From:** CONT_09 v1.0.0 + Figma MCP
+> **Purpose:** Design System integration rules for AI-BOS
+> **Scope:** All TSX/CSS files
+> **Always Apply:** Yes
+
+---
+
+# Design System Rules (Figma MCP Optimized)
+
+## Overview
+
+This codebase uses a **Dual UI System**:
+1. **Manual Tokens** - CSS variables in `globals.css` (COMPLETE)
+2. **Bio Transform Self** - Schema-driven generation (IN PROGRESS)
+
+## Token Definitions
+
+**Location:** `apps/web/src/styles/globals.css`
+**Format:** CSS Variables with Figma token comments
+
+```css
+/* figma.token: surface.card */
+--color-surface-card: #0A0A0A;
+```
+
+### Color Tokens
+
+| Token | CSS Variable | Tailwind Class |
+|-------|--------------|----------------|
+| Background | `--color-background` | `bg-background` |
+| Surface Card | `--color-surface-card` | `bg-surface-card` |
+| Surface Subtle | `--color-surface-subtle` | `bg-surface-subtle` |
+| Primary | `--color-primary` | `text-primary`, `bg-primary` |
+| Border Default | `--color-border-default` | `border-default` |
+| Text Primary | `--color-text-primary` | `text-text-primary` |
+| Text Secondary | `--color-text-secondary` | `text-text-secondary` |
+| Status Success | `--color-status-success` | `text-status-success` |
+| Status Warning | `--color-status-warning` | `text-status-warning` |
+| Status Danger | `--color-status-danger` | `text-status-danger` |
+
+### Spacing Tokens (4px Grid)
+
+| Token | CSS Variable | Tailwind Class | Pixels |
+|-------|--------------|----------------|--------|
+| XS | `--spacing-layout-xs` | `p-layout-xs` | 8px |
+| SM | `--spacing-layout-sm` | `p-layout-sm` | 16px |
+| MD | `--spacing-layout-md` | `p-layout-md` | 24px |
+| LG | `--spacing-layout-lg` | `p-layout-lg` | 32px |
+| XL | `--spacing-layout-xl` | `p-layout-xl` | 64px |
+
+### Typography Tokens
+
+| Token | CSS Variable | Tailwind Class | Size |
+|-------|--------------|----------------|------|
+| Display | `--text-display` | `text-display` | 48px |
+| Heading | `--text-heading` | `text-heading` | 32px |
+| Subheading | `--text-subheading` | `text-subheading` | 24px |
+| Body | `--text-body` | `text-body` | 16px |
+| Small | `--text-small` | `text-small` | 14px |
+| Label | `--text-label` | `text-label` | 11px |
+| Micro | `--text-micro` | `text-micro` | 10px |
+
+## Component Library
+
+### Layer 1: shadcn/ui Primitives
+**Location:** `src/components/ui/`
+
+48 base components (Button, Card, Input, etc.)
+- Use directly for simple UI needs
+- Always use semantic token classes
+
+### Layer 2: COMP_* Governed
+**Location:** `src/components/canon/`
+
+Custom components with `COMPONENT_META` export:
+```typescript
+export const COMPONENT_META = {
+  code: 'COMP_StatCard',
+  version: '1.0.0',
+  family: 'CARD',
+  purpose: 'METRICS',
+  status: 'active',
+} as const;
+```
+
+### Layer 3: BioSkin Generative (PLANNED)
+**Location:** `packages/bioskin/`
+
+Schema-driven components:
+```typescript
+import { BioObject } from '@aibos/bioskin';
+<BioObject schema={PaymentSchema} data={payment} />
+```
+
+## Figma MCP Integration
+
+### Pull Design Context
+```typescript
+// Use Figma MCP to get design context
+const design = await figma.getDesignContext({
+  nodeId: '123:456',
+  fileKey: 'abc123'
+});
+```
+
+### Sync Tokens
+When Figma tokens change:
+1. Update `globals.css` CSS variables
+2. Tailwind config auto-inherits
+3. All components update automatically
+
+## Forbidden Patterns
+
+```typescript
+// ❌ NEVER use legacy nexus-* classes
+className="bg-nexus-void text-nexus-signal"
+
+// ❌ NEVER use arbitrary values
+className="bg-[#0A0A0A] p-[13px]"
+
+// ❌ NEVER hardcode colors
+const color = "#28E7A2";
+
+// ✅ ALWAYS use semantic tokens
+className="bg-surface-card text-text-primary p-layout-md"
+
+// ✅ ALWAYS use CSS variable references
+const color = "var(--color-primary)";
+```
+
+## shadcn/ui Community Components
+
+Available for installation via MCP:
+- `table` - Advanced data table with sorting
+- `calendar` - Full-featured calendar
+- `kanban` - Drag-and-drop board
+- `gantt` - Project timeline
+- `chart-*` - 30+ chart variants
+- `navbar-*` - 18 navigation patterns
+
+### Install Command
+```bash
+npx shadcn@latest add [component-name]
+```
+
+## Quick Reference
+
+### Import Patterns
+```typescript
+// shadcn/ui primitives
+import { Card, Button } from '@/components/ui';
+
+// Canon governed
+import { COMP_StatCard } from '@/components/canon';
+
+// BioSkin (when ready)
+import { BioObject, BioForm } from '@aibos/bioskin';
+```
+
+### Styling Pattern
+```typescript
+// Prefer semantic tokens
+<div className="bg-surface-card border-default p-layout-md">
+  <h2 className="text-heading text-text-primary">Title</h2>
+  <p className="text-body text-text-secondary">Content</p>
+</div>
+```
+
+## Asset Management
+
+**Icons:** Lucide React (`lucide-react`)
+**Images:** Next.js Image component with optimization
+**Location:** `public/` for static, CDN for dynamic
+
+## Responsive Design
+
+Use Tailwind breakpoints:
+- `sm:` - 640px
+- `md:` - 768px
+- `lg:` - 1024px
+- `xl:` - 1280px
+- `2xl:` - 1536px
+
+## Project Structure
+
+```
+apps/web/
+├── src/
+│   ├── components/
+│   │   ├── ui/          # shadcn/ui (Layer 1)
+│   │   └── canon/       # COMP_* (Layer 2)
+│   ├── features/        # Domain components
+│   └── styles/
+│       └── globals.css  # Design Tokens
+│
+packages/
+├── bioskin/             # Schema-driven (Layer 3)
+└── schemas/             # Zod schemas (DNA)
+```

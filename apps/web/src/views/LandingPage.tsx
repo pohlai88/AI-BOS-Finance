@@ -7,8 +7,8 @@ import { LivingLens } from '@/components/landing/LivingLens';
 import { TruthBar } from '@/components/landing/TruthBar';
 import { LinearFeatureCard } from '@/components/landing/LinearFeatureCard';
 import { CrystallizationVisual, InterrogationVisual, GovernanceVisual } from '@/components/landing/FeatureVisuals';
-import { NexusCard } from '@/components/nexus/NexusCard';
-import { NexusButton } from '@/components/nexus/NexusButton';
+import { ForensicCard as NexusCard } from '@/components/ui/card';
+import { Button as NexusButton } from '@/components/ui/button';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap, Layers, Search } from 'lucide-react';
 
@@ -20,7 +20,7 @@ export const LandingPage = ({
   onCanonClick: () => void;
 }) => {
   return (
-    <div className="relative min-h-screen bg-nexus-void selection:bg-nexus-green/30">
+    <div className="relative min-h-screen bg-background selection:bg-primary/30">
       {/* 0. LIVING BACKGROUND (Z-Layer 0) */}
       <BackgroundGrid />
 
@@ -38,7 +38,7 @@ export const LandingPage = ({
         <section id="lineage" className="py-32 px-6">
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+              <span className="nexus-label text-primary flex items-center justify-center gap-2">
                 <Layers className="w-3 h-3" />
                 Structural Integrity Protocol
               </span>
@@ -56,10 +56,10 @@ export const LandingPage = ({
         </section>
 
         {/* SECTION 2: THE TRIPLE THREAT (Linear Style) */}
-        <section id="logic" className="py-32 px-6 border-t border-nexus-structure bg-[#020403]">
+        <section id="logic" className="py-32 px-6 border-t border-default bg-[#020403]">
           <div className="max-w-7xl mx-auto">
             <div className="mb-20 text-center md:text-left">
-              <span className="nexus-label text-nexus-green flex items-center justify-center md:justify-start gap-2">
+              <span className="nexus-label text-primary flex items-center justify-center md:justify-start gap-2">
                 <ShieldCheck className="w-3 h-3" />
                 Core Capabilities
               </span>
@@ -67,7 +67,7 @@ export const LandingPage = ({
                 Forensic{' '}
                 <span className="text-zinc-400">Architecture</span>
               </h2>
-              <p className="mt-4 text-nexus-noise max-w-xl text-lg">
+              <p className="mt-4 text-text-secondary max-w-xl text-lg">
                 Built on first principles of cryptographic verification. We don't just audit data; we anchor it to mathematical truth.
               </p>
             </div>
@@ -104,10 +104,10 @@ export const LandingPage = ({
         </section>
 
         {/* SECTION 3: THE TRUTH ENGINE (Live Demo) */}
-        <section id="engine" className="py-32 px-6 border-t border-nexus-structure">
+        <section id="engine" className="py-32 px-6 border-t border-default">
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+              <span className="nexus-label text-primary flex items-center justify-center gap-2">
                 <GitBranch className="w-3 h-3" />
                 Deterministic Logic Processor
               </span>
@@ -115,7 +115,7 @@ export const LandingPage = ({
                 The Truth{' '}
                 <span className="text-zinc-400">Engine</span>
               </h2>
-              <p className="text-nexus-noise max-w-2xl mx-auto text-base">
+              <p className="text-text-secondary max-w-2xl mx-auto text-base">
                 Watch transactions flow through our Glass Box audit system. 
                 Every decision is traced. Every rule is visible. Zero hallucinations.
               </p>
@@ -127,10 +127,10 @@ export const LandingPage = ({
         </section>
 
         {/* SECTION 4: INTERACTIVE TRUTH BAR */}
-        <section id="query" className="py-32 px-6 border-t border-nexus-structure bg-nexus-matter/30">
+        <section id="query" className="py-32 px-6 border-t border-default bg-surface-card/30">
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+              <span className="nexus-label text-primary flex items-center justify-center gap-2">
                 <Search className="w-3 h-3" />
                 Interactive Query Interface
               </span>
@@ -138,7 +138,7 @@ export const LandingPage = ({
                 Ask the{' '}
                 <span className="text-zinc-400">System</span>
               </h2>
-              <p className="text-nexus-noise max-w-2xl mx-auto text-base">
+              <p className="text-text-secondary max-w-2xl mx-auto text-base">
                 Select a transaction and see the full logic traversal path. 
                 Click "Show Proof" to reveal exactly how the verdict was reached.
               </p>
@@ -150,13 +150,13 @@ export const LandingPage = ({
         </section>
 
         {/* SECTION 5: FINAL CTA - The Crystallization Event */}
-        <section className="py-24 px-6 border-t border-nexus-structure relative overflow-hidden bg-nexus-void">
+        <section className="py-24 px-6 border-t border-default relative overflow-hidden bg-background">
           {/* Background Radial for Depth */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)]" />
 
           {/* Header */}
           <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10 mb-12">
-            <span className="nexus-label text-nexus-green flex items-center justify-center gap-2">
+            <span className="nexus-label text-primary flex items-center justify-center gap-2">
               <Zap className="w-4 h-4" />
               State Transformation Event
             </span>
@@ -164,7 +164,7 @@ export const LandingPage = ({
               Freeze Your <br/>
 <span className="text-zinc-400">Financial Truth.</span>
             </h2>
-            <p className="text-nexus-noise max-w-xl mx-auto text-lg leading-relaxed">
+            <p className="text-text-secondary max-w-xl mx-auto text-lg leading-relaxed">
               Drifting data is a liability. NexusCanon locks your ledger into an 
               immutable crystalline state, ready for instant audit.
             </p>

@@ -17,7 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <RouterAdapterProvider>
       <SysConfigProvider>
       {/* Global app wrapper with styling */}
-      <div className="antialiased text-nexus-signal bg-nexus-void min-h-screen font-sans selection:bg-nexus-green/30">
+      <div className="antialiased text-text-primary bg-background min-h-screen font-sans selection:bg-primary/30">
         {/* THE CINEMATIC VIGNETTE - Focus the eye to center */}
         <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
         

@@ -14,3 +14,6 @@ export { StatusCard, type StatusCardProps } from './StatusCard'
 // Metric Components  
 export { StatCard, type StatCardProps } from './StatCard'
 export { HealthScoreRing, type HealthScoreRingProps } from './HealthScoreRing'
+
+// Layout Components (migrated from nexus/)
+export { CardSection, type CardSectionProps, COMPONENT_META as CardSectionMeta } from './CardSection'

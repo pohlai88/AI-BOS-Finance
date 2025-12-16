@@ -1,5 +1,5 @@
-import { NexusCard } from '@/components/nexus/NexusCard';
-import { NexusButton } from '@/components/nexus/NexusButton';
+import { ForensicCard as NexusCard } from '@/components/ui/card';
+import { Button as NexusButton } from '@/components/ui/button';
 import { StatusGrid } from '@/components/dashboard/StatusGrid';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
 import { Download, RefreshCw, Cpu, HardDrive, Wifi } from 'lucide-react';
@@ -17,12 +17,12 @@ const ThroughputMonitor = () => {
       <div className="space-y-8 mt-4">
         {metrics.map((m, i) => (
           <div key={i} className="space-y-2 group">
-            <div className="flex justify-between text-xs font-mono text-nexus-noise">
+            <div className="flex justify-between text-xs font-mono text-text-secondary">
               <div className="flex items-center gap-2">
-                <m.icon className="w-3 h-3 text-nexus-structure group-hover:text-nexus-green transition-colors" />
+                <m.icon className="w-3 h-3 text-nexus-structure group-hover:text-primary transition-colors" />
                 <span>{m.label}</span>
               </div>
-              <span className="text-nexus-green">{m.value}%</span>
+              <span className="text-primary">{m.value}%</span>
             </div>
             {/* The Bar: Sharp, Rectangular, Segmented */}
             <div className="h-2 w-full bg-nexus-structure/50 relative overflow-hidden">
@@ -30,7 +30,7 @@ const ThroughputMonitor = () => {
               <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_2px,#000_2px)] bg-[size:10%_100%] z-10 opacity-30" />
 
               <div
-                className="h-full bg-nexus-green shadow-[0_0_10px_rgba(40,231,162,0.3)] transition-all duration-1000 ease-out"
+                className="h-full bg-primary shadow-[0_0_10px_rgba(40,231,162,0.3)] transition-all duration-1000 ease-out"
                 style={{ width: `${m.value}%` }}
               />
             </div>
@@ -38,7 +38,7 @@ const ThroughputMonitor = () => {
         ))}
 
         {/* Forensic Footer */}
-        <div className="pt-6 mt-6 border-t border-nexus-structure flex justify-between items-center text-[10px] font-mono text-nexus-noise">
+        <div className="pt-6 mt-6 border-t border-default flex justify-between items-center text-[10px] font-mono text-text-secondary">
           <span>BUFFER: OPTIMAL</span>
           <span>LATENCY: 12ms</span>
         </div>
@@ -49,13 +49,13 @@ const ThroughputMonitor = () => {
 
 export const DashboardPage = () => {
   return (
-    <div className="min-h-screen bg-nexus-void p-6 md:p-12 space-y-8">
+    <div className="min-h-screen bg-background p-6 md:p-12 space-y-8">
       {/* 1. COMMAND DECK HEADER */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-nexus-structure pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-default pb-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-nexus-green animate-pulse" />
-            <span className="nexus-label text-nexus-green">LIVE ENVIRONMENT</span>
+            <div className="w-2 h-2 bg-primary animate-pulse" />
+            <span className="nexus-label text-primary">LIVE ENVIRONMENT</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-medium tracking-tighter text-white">
             Command Deck
@@ -91,7 +91,7 @@ export const DashboardPage = () => {
       </section>
 
       {/* 4. SYSTEM FOOTER */}
-      <footer className="flex justify-between items-center pt-8 border-t border-nexus-structure text-[10px] font-mono text-nexus-structure">
+      <footer className="flex justify-between items-center pt-8 border-t border-default text-[10px] font-mono text-nexus-structure">
         <div>SECURE_CONNECTION // TLS_1.3</div>
         <div>NEXUS_CANON_v2.4.1</div>
       </footer>

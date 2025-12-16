@@ -63,6 +63,7 @@
     "./lib",
     "./canon-pages",
     "../../packages/canon/**/*.ts",
+    "../../types/**/*.d.ts",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts",

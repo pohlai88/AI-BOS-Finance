@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
 import RadarDisplay, { RadarConfig, RadarPoint } from './RadarDisplay';
 import { LynxIcon } from '@/components/icons/LynxIcon';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 import { cn } from '@/lib/utils';
 
 // Lynx protection color - brightest emerald green

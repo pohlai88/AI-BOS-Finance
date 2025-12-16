@@ -8,7 +8,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Shield, ArrowRight, Zap, Activity, Database, Cpu } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform } from 'motion/react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 import {
   EngineProvider,
   ReactorCore,

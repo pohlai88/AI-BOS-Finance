@@ -36,7 +36,7 @@ export function StatCard({
     <Card 
       id={cardId}
       className={cn(
-        'border-nexus-border/30 bg-nexus-surface/10 p-4 text-center focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
+        'border-subtle/30 bg-surface-subtle/10 p-4 text-center focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2',
         className
       )}
       role="region"
@@ -45,18 +45,18 @@ export function StatCard({
       tabIndex={0}
     >
       <Icon 
-        className="w-5 h-5 text-nexus-signal/60 mx-auto mb-2" 
+        className="w-5 h-5 text-text-primary/60 mx-auto mb-2" 
         aria-hidden="true"
       />
       <div 
-        className={cn('text-xl font-bold text-nexus-signal', valueClassName)}
+        className={cn('text-xl font-bold text-text-primary', valueClassName)}
         aria-hidden="true"
       >
         {value}
       </div>
       <div 
         id={`${cardId}-label`}
-        className="text-xs font-medium text-nexus-signal/70 mt-1"
+        className="text-xs font-medium text-text-primary/70 mt-1"
       >
         {label}
       </div>

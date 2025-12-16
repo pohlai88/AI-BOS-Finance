@@ -9,7 +9,7 @@ import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AlertTriangle, ArrowLeft, Zap, Power, ShieldAlert } from 'lucide-react';
 import { motion, useMotionValue } from 'motion/react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 import { EngineProvider, HighVoltageSystem } from '../components/auth/IntegratedEngine';
 
 // --- SUB-COMPONENT: HAZARD STRIPE ---

@@ -68,4 +68,28 @@ function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
+/**
+ * ForensicCard - Card variant with corner markers (forensic aesthetic)
+ * Preserves the unique visual identity from NexusCard per CONT_09 cleanup.
+ */
+function ForensicCard({ className, children, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="forensic-card"
+      className={cn(
+        'bg-card text-card-foreground relative flex flex-col gap-6 rounded-xl border',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      {/* Forensic Corner Markers */}
+      <div className="absolute top-0 left-0 w-1 h-1 bg-border-default" />
+      <div className="absolute top-0 right-0 w-1 h-1 bg-border-default" />
+      <div className="absolute bottom-0 left-0 w-1 h-1 bg-border-default" />
+      <div className="absolute bottom-0 right-0 w-1 h-1 bg-border-default" />
+    </div>
+  );
+}
+
+export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent, ForensicCard };

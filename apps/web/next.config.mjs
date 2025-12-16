@@ -10,6 +10,9 @@ const nextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
+  // Transpile workspace packages (Bio Transform Self - CONT_10)
+  transpilePackages: ['@aibos/bioskin'],
+
   // Performance optimizations
   compress: true,
   poweredByHeader: false,

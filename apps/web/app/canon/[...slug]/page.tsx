@@ -77,9 +77,9 @@ export default async function CanonPage({ params }: PageProps) {
 function CanonPageLoading() {
   return (
     <div className="animate-pulse space-y-4">
-      <div className="h-8 bg-nexus-surface/50 rounded w-3/4" />
-      <div className="h-4 bg-nexus-surface/30 rounded w-1/2" />
-      <div className="h-32 bg-nexus-surface/20 rounded" />
+      <div className="h-8 bg-surface-subtle/50 rounded w-3/4" />
+      <div className="h-4 bg-surface-subtle/30 rounded w-1/2" />
+      <div className="h-32 bg-surface-subtle/20 rounded" />
     </div>
   )
 }

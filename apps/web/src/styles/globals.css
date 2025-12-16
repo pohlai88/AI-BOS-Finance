@@ -3,115 +3,159 @@
 @tailwind utilities;
 
 /* ============================================================================
-   🎨 FIGMA MCP -> TAILWIND THEME MAP
-   Design Tokens as Native CSS Variables
-   Changing these updates the entire app automatically.
+   🎨 HYBRID DESIGN SYSTEM v2.0
+   AI-BOS Finance - Premium ERP SaaS Theme
+   
+   Combines NexusCanon + ERP Premium best practices
+   Version: 2.0.0
+   Last Updated: 2024-12-16
+   
+   CHANGES FROM v1.0 (NexusCanon):
+   - Primary: Green → Electric Blue (trust-building for finance)
+   - Added: Secondary (Teal) + Highlight (Purple) accents
+   - Border Radius: 0px → 8px (modern SaaS aes`thetic)
+   - Text Secondary: Higher contrast (#888 → #B0B0B5)
+   - Card: Distinct from background (#1F1F23)
+   
+   KEPT FROM v1.0:
+   - Token architecture with Figma MCP comments
+   - Motion design (film grain, custom scrollbar)
+   - Spacing system (4px/8px grid)
+   - Magic UI animations
    ============================================================================ */
 
 :root {
-  /* --- COLORS (Semantic) --- */
+  /* ===== COLOR SYSTEM (Hybrid) ===== */
+  
+  /* --- Background & Surface --- */
   /* figma.token: color.background */
-  --color-background: #0A0A0A;
+  --color-background: #0E0E10;       /* Graphite Black */
   /* figma.token: color.foreground */
   --color-foreground: #FFFFFF;
   
   /* figma.token: surface.subtle */
-  --color-surface-subtle: #1F1F1F;
+  --color-surface-subtle: #1A1A1D;   /* Charcoal */
   /* figma.token: surface.card */
-  --color-surface-card: #0A0A0A;
+  --color-surface-card: #1F1F23;     /* Distinct card bg */
   /* figma.token: surface.hover */
-  --color-surface-hover: #050505;
+  --color-surface-hover: #252528;
   /* figma.token: surface.nested */
-  --color-surface-nested: #050505;
+  --color-surface-nested: #141416;
 
-  /* "Signal" tokens (The Nexus Brand) */
+  /* --- Primary Accent (Electric Blue - Trust) --- */
   /* figma.token: brand.primary */
-  --color-primary: #28E7A2;       /* Nexus Green */
+  --color-primary: #4A90E2;          /* Electric Blue */
   /* figma.token: brand.primary.foreground */
-  --color-primary-fg: #000000;
+  --color-primary-fg: #FFFFFF;
   /* figma.token: brand.primary.hover */
-  --color-primary-hover: #2DF5B0;
+  --color-primary-hover: #5BA0F2;
   /* figma.token: brand.primary.muted */
-  --color-primary-muted: #1DB87F;
+  --color-primary-muted: #3A7ACC;
+
+  /* --- Secondary Accent (Emerald Teal - Growth) --- */
+  /* figma.token: brand.secondary */
+  --color-secondary: #50E3C2;        /* Emerald Teal */
+  /* figma.token: brand.secondary.foreground */
+  --color-secondary-fg: #000000;
+  /* figma.token: brand.secondary.hover */
+  --color-secondary-hover: #60F3D2;
+
+  /* --- Highlight Accent (Royal Purple - Premium) --- */
+  /* figma.token: brand.highlight */
+  --color-highlight: #A259FF;        /* Royal Purple */
+  /* figma.token: brand.highlight.foreground */
+  --color-highlight-fg: #FFFFFF;
+
+  /* --- Legacy Nexus Green (kept for special accents) --- */
+  /* figma.token: brand.nexus */
+  --color-nexus-green: #28E7A2;      /* Original Nexus Green */
+  
+  /* --- Text Hierarchy --- */
+  /* figma.token: text.primary */
+  --color-text-primary: #FFFFFF;
+  /* figma.token: text.secondary */
+  --color-text-secondary: #B0B0B5;   /* Higher contrast */
+  /* figma.token: text.tertiary */
+  --color-text-tertiary: #7A7A80;
+  /* figma.token: text.disabled */
+  --color-text-disabled: #6E6E73;
   
   /* figma.token: text.muted */
-  --color-muted: #888888;
+  --color-muted: #7A7A80;
   /* figma.token: text.muted.fg */
-  --color-muted-fg: #A3A3A3;
+  --color-muted-fg: #B0B0B5;
   /* figma.token: text.muted.foreground */
-  --color-muted-foreground: #888888;
-  
-  /* figma.token: border.default */
-  --color-border-default: #1F1F1F;
-  /* figma.token: border.subtle */
-  --color-border-subtle: #111111;
-  /* figma.token: border.active */
-  --color-border-active: #28E7A2;
-  /* figma.token: border.emphasis */
-  --color-border-emphasis: #333333;
+  --color-muted-foreground: #7A7A80;
 
-  /* Status Colors */
+  /* --- Border System --- */
+  /* figma.token: border.default */
+  --color-border-default: #2C2C31;   /* Higher contrast */
+  /* figma.token: border.subtle */
+  --color-border-subtle: #1F1F23;
+  /* figma.token: border.active */
+  --color-border-active: #4A90E2;
+  /* figma.token: border.emphasis */
+  --color-border-emphasis: #3A3A40;
+
+  /* --- Status Colors --- */
   /* figma.token: status.success */
-  --color-status-success: #28E7A2;
+  --color-status-success: #27AE60;   /* Standard green */
   /* figma.token: status.warning */
   --color-status-warning: #F5A623;
   /* figma.token: status.danger */
   --color-status-danger: #E74C3C;
   /* figma.token: status.info */
-  --color-status-info: #3498DB;
+  --color-status-info: #4A90E2;      /* Matches primary */
 
-  /* Text Hierarchy */
-  /* figma.token: text.primary */
-  --color-text-primary: #FFFFFF;
-  /* figma.token: text.secondary */
-  --color-text-secondary: #888888;
-  /* figma.token: text.tertiary */
-  --color-text-tertiary: #666666;
-  /* figma.token: text.disabled */
-  --color-text-disabled: #444444;
-
-  /* --- SPACING (Governance - 4px Grid) --- */
-  /* Enforces 4px grid. Bans arbitrary pixel values. */
+  /* ===== SPACING SYSTEM (8px Grid) ===== */
+  /* figma.token: spacing.layout.xxs */
+  --spacing-layout-xxs: 0.25rem;     /* 4px */
   /* figma.token: spacing.layout.xs */
-  --spacing-layout-xs: 0.5rem;    /* 8px */
+  --spacing-layout-xs: 0.5rem;       /* 8px */
   /* figma.token: spacing.layout.sm */
-  --spacing-layout-sm: 1rem;      /* 16px */
+  --spacing-layout-sm: 1rem;         /* 16px */
   /* figma.token: spacing.layout.md */
-  --spacing-layout-md: 1.5rem;    /* 24px */
+  --spacing-layout-md: 1.5rem;       /* 24px */
   /* figma.token: spacing.layout.lg */
-  --spacing-layout-lg: 2rem;      /* 32px */
+  --spacing-layout-lg: 2rem;         /* 32px */
   /* figma.token: spacing.layout.xl */
-  --spacing-layout-xl: 4rem;      /* 64px */
+  --spacing-layout-xl: 2.5rem;       /* 40px */
   /* figma.token: spacing.layout.2xl */
-  --spacing-layout-2xl: 7.5rem;   /* 120px */
+  --spacing-layout-2xl: 4rem;        /* 64px */
   /* figma.token: spacing.layout.3xl */
-  --spacing-layout-3xl: 15rem;    /* 240px */
+  --spacing-layout-3xl: 7.5rem;      /* 120px */
 
   /* Component spacing */
   /* figma.token: spacing.card.gap */
-  --spacing-card-gap: 1.5rem;     /* 24px */
+  --spacing-card-gap: 1.5rem;        /* 24px */
   /* figma.token: spacing.card.px */
-  --spacing-card-px: 1.5rem;      /* 24px */
+  --spacing-card-px: 1.5rem;         /* 24px */
   /* figma.token: spacing.card.py */
-  --spacing-card-py: 1rem;        /* 16px */
+  --spacing-card-py: 1rem;           /* 16px */
 
-  /* --- TYPOGRAPHY (Hierarchy) --- */
+  /* ===== TYPOGRAPHY SYSTEM ===== */
   /* figma.token: text.display */
-  --text-display: 3rem;           /* h1 - 48px */
+  --text-display: 3rem;              /* 48px - H1 */
   /* figma.token: text.heading */
-  --text-heading: 2rem;           /* h2 - 32px */
+  --text-heading: 2rem;              /* 32px - H2 */
   /* figma.token: text.subheading */
-  --text-subheading: 1.5rem;      /* h3 - 24px */
+  --text-subheading: 1.5rem;         /* 24px - H3 */
   /* figma.token: text.body */
-  --text-body: 1rem;              /* p - 16px */
+  --text-body: 1rem;                 /* 16px - Body */
   /* figma.token: text.small */
-  --text-small: 0.875rem;         /* sm - 14px */
+  --text-small: 0.875rem;            /* 14px - Small */
+  /* figma.token: text.caption */
+  --text-caption: 0.75rem;           /* 12px - Caption */
   /* figma.token: text.label */
-  --text-label: 0.6875rem;        /* label - 11px */
+  --text-label: 0.6875rem;           /* 11px - Label */
   /* figma.token: text.micro */
-  --text-micro: 0.625rem;         /* micro - 10px */
+  --text-micro: 0.625rem;            /* 10px - Micro */
   
+  /* Font stacks */
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
   --font-jetbrains: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
   /* Letter spacing (tracking) */
@@ -126,7 +170,40 @@
   /* figma.token: tracking.widest */
   --tracking-widest: 0.2em;
 
-  /* Shadcn/ui compatibility (legacy) */
+  /* Line heights */
+  --leading-heading: 1.2;            /* 120% */
+  --leading-body: 1.5;               /* 150% */
+
+  /* ===== BORDER RADIUS (Modern SaaS) ===== */
+  /* figma.token: radius.sm */
+  --radius-sm: 4px;
+  /* figma.token: radius.md */
+  --radius-md: 6px;                  /* Inputs */
+  /* figma.token: radius.lg */
+  --radius-lg: 8px;                  /* Cards, Buttons */
+  /* figma.token: radius.xl */
+  --radius-xl: 12px;
+  /* figma.token: radius.full */
+  --radius-full: 9999px;
+
+  /* Shadcn/ui default */
+  --radius: 8px;                     /* Modern rounded corners */
+
+  /* ===== SHADOWS ===== */
+  /* figma.token: shadow.card */
+  --shadow-card: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  /* figma.token: shadow.hover */
+  --shadow-hover: 0px 6px 16px rgba(0, 0, 0, 0.35);
+  /* figma.token: shadow.dropdown */
+  --shadow-dropdown: 0px 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* ===== MOTION ===== */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --easing-default: ease-in-out;
+  
+  /* ===== SHADCN/UI COMPATIBILITY ===== */
   --background: var(--color-background);
   --foreground: var(--color-foreground);
   --card: var(--color-surface-card);
@@ -141,13 +218,16 @@
   --muted-foreground: var(--color-muted);
   --accent: var(--color-surface-subtle);
   --accent-foreground: var(--color-foreground);
-  --destructive: #ef4444;
+  --destructive: var(--color-status-danger);
   --destructive-foreground: #fafafa;
   --border: var(--color-border-default);
   --input: var(--color-border-default);
   --ring: var(--color-primary);
-  /* figma.token: radius.none */
-  --radius: 0px; /* Sharp corners for forensic aesthetic */
+
+  /* ===== CONTAINER WIDTHS ===== */
+  --container-mobile: 100%;
+  --container-tablet: 720px;
+  --container-desktop: 1140px;
 }
 
 /* ============================================================================
@@ -162,9 +242,25 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-inter);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  h1 { font-size: var(--text-display); font-weight: 700; }
+  h2 { font-size: var(--text-heading); font-weight: 600; }
+  h3 { font-size: var(--text-subheading); font-weight: 500; }
+
+  code, pre {
+    font-family: var(--font-mono);
   }
 
   /* Hide Next.js dev tools portal elements */
@@ -181,7 +277,7 @@
 }
 
 /* ============================================================================
-   FORTUNE 500 REFINEMENTS - The "Invisible Polish"
+   PREMIUM REFINEMENTS - The "Invisible Polish"
    ============================================================================ */
 
 /* 1. FILM GRAIN - Breaks the "digital plastic" feel */
@@ -196,45 +292,53 @@ body::before {
   z-index: 9999;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
-/* 2. TACTILE SELECTION - Premium HUD feel */
+/* 2. PREMIUM SELECTION - Electric Blue glow */
 ::selection {
-  background-color: rgba(40, 231, 162, 0.2);
+  background-color: rgba(74, 144, 226, 0.2);
   color: #ffffff;
-  text-shadow: 0 0 8px rgba(40, 231, 162, 0.5);
+  text-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
 }
 
-/* 3. INERTIA SCROLL - Heavy physics */
+/* 3. SMOOTH SCROLL */
 html {
   scroll-behavior: smooth;
 }
 
-/* 4. MECHANICAL SCROLLBAR */
+/* 4. CUSTOM SCROLLBAR - Modern rounded */
 ::-webkit-scrollbar {
   width: 8px;
-  background: #050505;
+  background: var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f1f1f;
-  border-radius: 0px;
-  border: 1px solid #000;
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #28E7A2;
+  background: var(--color-primary);
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1f1f1f #050505;
+  scrollbar-color: var(--color-border-default) var(--color-background);
 }
 
 /* ============================================================================
-   MAGIC UI ANIMATIONS
+   FOCUS STATES (Accessibility - WCAG 2.1 AA)
+   ============================================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   MAGIC UI ANIMATIONS (KEPT)
    ============================================================================ */
 
 /* Orbit Animation - for OrbitingCircles component */
@@ -293,4 +397,73 @@ html {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ============================================================================
+   MOTION PRESETS (NEW)
+   ============================================================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) var(--easing-default);
+}
+
+.animate-slide-up {
+  animation: slide-up var(--duration-normal) var(--easing-default);
+}
+
+.animate-slide-down {
+  animation: slide-down var(--duration-normal) var(--easing-default);
+}
+
+.animate-scale-in {
+  animation: scale-in var(--duration-normal) var(--easing-default);
+}
+
+/* ============================================================================
+   UTILITY CLASSES (NEW)
+   ============================================================================ */
+
+/* Transition presets */
+.transition-fast {
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+.transition-normal {
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--easing-default);
+}
+
+.transition-slow {
+  transition-duration: var(--duration-slow);
+  transition-timing-function: var(--easing-default);
+}
+
+/* Card shadow utilities */
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-card-hover {
+  box-shadow: var(--shadow-hover);
 }

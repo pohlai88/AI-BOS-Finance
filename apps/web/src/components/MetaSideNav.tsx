@@ -20,7 +20,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 
 interface MetaSideNavProps {
   isOpen: boolean;

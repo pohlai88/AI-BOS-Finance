@@ -28,7 +28,7 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
     <Card 
       id={cardId}
       className={cn(
-        'p-4 transition-all hover:scale-[1.02] focus-within:ring-2 focus-within:ring-nexus-green focus-within:ring-offset-2',
+        'p-4 transition-all hover:scale-[1.02] focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2',
         config.border,
         config.bg,
         className
@@ -48,7 +48,7 @@ export function StatusCard({ status, count, className }: StatusCardProps) {
       </div>
       <span 
         id={`${cardId}-label`}
-        className="text-xs font-medium text-nexus-signal/70"
+        className="text-xs font-medium text-text-primary/70"
       >
         {config.label} Pages
       </span>

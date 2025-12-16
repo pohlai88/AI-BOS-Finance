@@ -70,12 +70,12 @@ export function HealthScoreRing({
             strokeWidth="8"
             strokeDasharray={strokeDasharray}
             strokeLinecap="round"
-            className="text-nexus-green transition-all duration-1000"
+            className="text-primary transition-all duration-1000"
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <span 
-            className={cn('font-bold text-nexus-signal', sizeConfig.text)}
+            className={cn('font-bold text-text-primary', sizeConfig.text)}
             aria-hidden="true"
           >
             {score}%
@@ -84,7 +84,7 @@ export function HealthScoreRing({
       </div>
       <span 
         id={`${ringId}-label`}
-        className={cn('text-nexus-signal/70 font-medium mt-2', sizeConfig.label)}
+        className={cn('text-text-primary/70 font-medium mt-2', sizeConfig.label)}
       >
         {label}: {score}%
       </span>

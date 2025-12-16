@@ -8,7 +8,7 @@ import prettierConfig from 'eslint-config-prettier';
 // Canon Identity Contract - Local ESLint Rules
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const canonRules = require('./eslint-local-rules.js');
+const canonRules = require('./eslint-local-rules.cjs');
 
 export default tseslint.config(
   // Base configs

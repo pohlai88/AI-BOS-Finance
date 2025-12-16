@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MetaAppShell } from '../components/shell/MetaAppShell';
-import { NexusCard } from '../components/nexus/NexusCard';
-import { NexusButton } from '../components/nexus/NexusButton';
-import { NexusBadge } from '../components/nexus/NexusBadge';
+import { ForensicCard as NexusCard } from '@/components/ui/card';
+import { Button as NexusButton } from '@/components/ui/button';
+import { Badge as NexusBadge } from '@/components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { useSysConfig } from '../context/SysConfigContext';
 import {

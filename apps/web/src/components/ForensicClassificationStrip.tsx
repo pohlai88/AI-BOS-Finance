@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouterAdapter } from '@/hooks/useRouterAdapter';
-import { NexusIcon } from '@/components/nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 
 interface ForensicStripProps {
   code: string;
