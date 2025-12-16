@@ -49,9 +49,9 @@ describe('BioApprovalActions - Rendering', () => {
       <BioPermissionProvider user={approverUser}>
         <BioApprovalActions
           state="submitted"
-          onApprove={() => {}}
-          onReject={() => {}}
-          onReturn={() => {}}
+          onApprove={() => { }}
+          onReject={() => { }}
+          onReturn={() => { }}
         />
       </BioPermissionProvider>
     );
@@ -64,7 +64,7 @@ describe('BioApprovalActions - Rendering', () => {
   it('renders cancel action for draft state', () => {
     render(
       <BioPermissionProvider user={editorUser}>
-        <BioApprovalActions state="draft" onCancel={() => {}} />
+        <BioApprovalActions state="draft" onCancel={() => { }} />
       </BioPermissionProvider>
     );
 
@@ -74,7 +74,7 @@ describe('BioApprovalActions - Rendering', () => {
   it('renders resubmit action for rejected state', () => {
     render(
       <BioPermissionProvider user={editorUser}>
-        <BioApprovalActions state="rejected" onResubmit={() => {}} />
+        <BioApprovalActions state="rejected" onResubmit={() => { }} />
       </BioPermissionProvider>
     );
 
@@ -94,7 +94,7 @@ describe('BioApprovalActions - Rendering', () => {
   it('includes data-state attribute', () => {
     render(
       <BioPermissionProvider user={approverUser}>
-        <BioApprovalActions state="submitted" onApprove={() => {}} />
+        <BioApprovalActions state="submitted" onApprove={() => { }} />
       </BioPermissionProvider>
     );
 
@@ -138,7 +138,7 @@ describe('BioApprovalActions - Interactions', () => {
   it('shows rejection dialog when reason required', () => {
     render(
       <BioPermissionProvider user={approverUser}>
-        <BioApprovalActions state="submitted" onReject={() => {}} requireRejectReason />
+        <BioApprovalActions state="submitted" onReject={() => { }} requireRejectReason />
       </BioPermissionProvider>
     );
 
@@ -194,8 +194,8 @@ describe('BioApprovalActions - Interactions', () => {
       <BioPermissionProvider user={approverUser}>
         <BioApprovalActions
           state="submitted"
-          onApprove={() => {}}
-          onReject={() => {}}
+          onApprove={() => { }}
+          onReject={() => { }}
           disabled
         />
       </BioPermissionProvider>
@@ -210,7 +210,7 @@ describe('BioApprovalActions - Sizes', () => {
   it('applies small size classes', () => {
     render(
       <BioPermissionProvider user={approverUser}>
-        <BioApprovalActions state="submitted" onApprove={() => {}} size="sm" />
+        <BioApprovalActions state="submitted" onApprove={() => { }} size="sm" />
       </BioPermissionProvider>
     );
 
@@ -221,7 +221,7 @@ describe('BioApprovalActions - Sizes', () => {
   it('applies large size classes', () => {
     render(
       <BioPermissionProvider user={approverUser}>
-        <BioApprovalActions state="submitted" onApprove={() => {}} size="lg" />
+        <BioApprovalActions state="submitted" onApprove={() => { }} size="lg" />
       </BioPermissionProvider>
     );
 

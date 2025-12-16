@@ -80,3 +80,13 @@ export {
   RoleGate,
   StateGate,
 } from './providers';
+
+// ============================================================
+// HOOKS (Cross-cutting) - Shared hooks
+// ============================================================
+export {
+  useKeyboardNavigation,
+  useRovingTabIndex,
+  type UseKeyboardNavigationOptions,
+  type UseKeyboardNavigationReturn,
+} from './hooks';

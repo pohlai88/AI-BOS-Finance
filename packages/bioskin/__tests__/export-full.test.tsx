@@ -82,7 +82,7 @@ describe('useBioChartExport', () => {
   });
 
   it('exportSVG warns when no SVG found', () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
     const ref = { current: document.createElement('div') };
 
     const { result } = renderHook(() => useBioChartExport(ref));
@@ -96,7 +96,7 @@ describe('useBioChartExport', () => {
   });
 
   it('print warns when no SVG found', () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
     const ref = { current: document.createElement('div') };
 
     const { result } = renderHook(() => useBioChartExport(ref));
