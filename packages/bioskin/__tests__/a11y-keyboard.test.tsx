@@ -33,10 +33,12 @@ const testTasks: GanttTask[] = [
 ];
 
 const testTreeNodes: TreeNode[] = [
-  { id: '1', label: 'Node 1', children: [
-    { id: '1.1', label: 'Node 1.1' },
-    { id: '1.2', label: 'Node 1.2' },
-  ]},
+  {
+    id: '1', label: 'Node 1', children: [
+      { id: '1.1', label: 'Node 1.1' },
+      { id: '1.2', label: 'Node 1.2' },
+    ]
+  },
   { id: '2', label: 'Node 2' },
 ];
 
