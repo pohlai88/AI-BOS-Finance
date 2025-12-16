@@ -393,7 +393,9 @@ export function BioDropzone({
           accept={acceptString}
           onChange={e => handleFiles(e.target.files)}
           disabled={disabled}
-          className="hidden"
+          className="sr-only"
+          id="dropzone-input"
+          aria-label={label}
         />
 
         <motion.div

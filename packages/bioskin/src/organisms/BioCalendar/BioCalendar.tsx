@@ -346,16 +346,16 @@ export function BioCalendar<T = Record<string, unknown>>({
       {/* Header */}
       <div className="px-4 py-3 border-b border-default flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Btn variant="ghost" size="sm" onClick={goToPrevMonth}>
+          <Btn variant="ghost" size="sm" onClick={goToPrevMonth} aria-label="Previous month">
             <ChevronLeft className="h-4 w-4" />
           </Btn>
-          <Txt variant="label" weight="semibold" className="min-w-[150px] text-center">
+          <Txt variant="label" weight="semibold" className="min-w-[150px] text-center" aria-live="polite">
             {MONTHS[month]} {year}
           </Txt>
-          <Btn variant="ghost" size="sm" onClick={goToNextMonth}>
+          <Btn variant="ghost" size="sm" onClick={goToNextMonth} aria-label="Next month">
             <ChevronRight className="h-4 w-4" />
           </Btn>
-          <Btn variant="ghost" size="sm" onClick={goToToday}>
+          <Btn variant="ghost" size="sm" onClick={goToToday} aria-label="Go to today">
             Today
           </Btn>
         </div>
@@ -363,7 +363,7 @@ export function BioCalendar<T = Record<string, unknown>>({
         <div className="flex items-center gap-2">
           {/* View switcher */}
           {showViewSwitcher && (
-            <div className="flex rounded-md border border-default overflow-hidden">
+            <div className="flex rounded-md border border-default overflow-hidden" role="group" aria-label="Calendar view">
               {(['month', 'week', 'day'] as CalendarView[]).map(v => (
                 <button
                   key={v}
@@ -374,6 +374,8 @@ export function BioCalendar<T = Record<string, unknown>>({
                       ? 'bg-accent-primary text-white'
                       : 'bg-surface-card text-text-secondary hover:bg-surface-hover'
                   )}
+                  aria-pressed={currentView === v}
+                  aria-label={`${v} view`}
                 >
                   {v}
                 </button>
@@ -398,10 +400,11 @@ export function BioCalendar<T = Record<string, unknown>>({
       {/* Calendar Grid */}
       <div className="p-2">
         {/* Day headers */}
-        <div className="grid grid-cols-7 mb-1">
+        <div className="grid grid-cols-7 mb-1" role="row" aria-label="Days of week">
           {dayHeaders.map(day => (
             <div
               key={day}
+              role="columnheader"
               className="py-2 text-center text-caption font-medium text-text-secondary"
             >
               {day}
@@ -409,24 +412,28 @@ export function BioCalendar<T = Record<string, unknown>>({
           ))}
         </div>
 
-        {/* Days grid */}
+        {/* Days grid - using table-like structure for proper a11y */}
         <div
           role="grid"
-          className="grid grid-cols-7 border-l border-t border-default"
+          aria-label={`${MONTHS[month]} ${year} calendar`}
+          className="border-l border-t border-default"
         >
-          <AnimatePresence mode="wait">
-            {calendarDays.map(({ date, isCurrentMonth }, idx) => (
-              <CalendarDay
-                key={`${date.toISOString()}-${idx}`}
-                date={date}
-                events={events}
-                isCurrentMonth={isCurrentMonth}
-                isSelected={selectedDate ? isSameDay(date, selectedDate) : false}
-                onSelect={handleDateSelect}
-                onEventClick={onEventClick}
-              />
-            ))}
-          </AnimatePresence>
+          {/* Render rows of 7 days */}
+          {Array.from({ length: 6 }).map((_, rowIdx) => (
+            <div key={rowIdx} role="row" className="grid grid-cols-7">
+              {calendarDays.slice(rowIdx * 7, (rowIdx + 1) * 7).map(({ date, isCurrentMonth }, idx) => (
+                <CalendarDay
+                  key={`${date.toISOString()}-${rowIdx * 7 + idx}`}
+                  date={date}
+                  events={events}
+                  isCurrentMonth={isCurrentMonth}
+                  isSelected={selectedDate ? isSameDay(date, selectedDate) : false}
+                  onSelect={handleDateSelect}
+                  onEventClick={onEventClick}
+                />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </Surface>

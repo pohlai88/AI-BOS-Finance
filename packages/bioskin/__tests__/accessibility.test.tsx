@@ -47,7 +47,7 @@ async function checkA11y(container: HTMLElement): Promise<{
 }> {
   // @ts-ignore - axe is available globally in browser
   const axe = (await import('axe-core')).default;
-  
+
   const results = await axe.run(container, {
     rules: {
       // Disable rules that don't apply to component testing
@@ -56,7 +56,7 @@ async function checkA11y(container: HTMLElement): Promise<{
       'page-has-heading-one': { enabled: false }, // Component level
     },
   });
-  
+
   return results;
 }
 
@@ -115,10 +115,10 @@ describe('Accessibility - Atoms', () => {
         <p>Content inside surface</p>
       </Surface>
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 
@@ -130,10 +130,10 @@ describe('Accessibility - Atoms', () => {
         <Txt as="span" variant="label">Label</Txt>
       </div>
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 
@@ -145,10 +145,10 @@ describe('Accessibility - Atoms', () => {
         <Btn disabled>Disabled</Btn>
       </div>
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -162,22 +162,22 @@ describe('Accessibility - Molecules', () => {
         <StatusBadge status="danger" label="Rejected" />
       </div>
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 
   it('Spinner has status role', async () => {
     const { container } = render(<Spinner />);
-    
+
     // Spinner should have role="status" for screen readers
     expect(screen.getByRole('status')).toBeInTheDocument();
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -187,20 +187,20 @@ describe('Accessibility - BioTable', () => {
     const { container } = render(
       <BioTable schema={SimpleSchema} data={tableData} />
     );
-    
+
     // Table should have proper ARIA structure
     const table = container.querySelector('table');
     expect(table).toBeInTheDocument();
-    
+
     const results = await checkA11y(container);
-    
+
     // Known issue: select-name (checkbox labels)
     // TODO: Fix checkbox accessibility in BioTable
     const knownIssues = ['select-name'];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     expect(unexpected).toHaveLength(0);
   });
 
@@ -208,15 +208,15 @@ describe('Accessibility - BioTable', () => {
     const { container } = render(
       <BioTable schema={SimpleSchema} data={tableData} enableSorting />
     );
-    
+
     const results = await checkA11y(container);
-    
+
     // Known issue: select-name (checkbox labels)
     const knownIssues = ['select-name'];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     expect(unexpected).toHaveLength(0);
   });
 });
@@ -224,9 +224,9 @@ describe('Accessibility - BioTable', () => {
 describe('Accessibility - BioForm', () => {
   it('form fields have labels', async () => {
     const { container } = render(
-      <BioForm schema={SimpleSchema} onSubmit={() => {}} />
+      <BioForm schema={SimpleSchema} onSubmit={() => { }} />
     );
-    
+
     // All inputs should have associated labels
     const inputs = container.querySelectorAll('input');
     inputs.forEach(input => {
@@ -236,22 +236,22 @@ describe('Accessibility - BioForm', () => {
         expect(label || input.getAttribute('aria-label')).toBeTruthy();
       }
     });
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 
   it('error messages are associated with inputs', async () => {
     // This tests that form validation errors are properly announced
     const { container } = render(
-      <BioForm schema={SimpleSchema} onSubmit={() => {}} />
+      <BioForm schema={SimpleSchema} onSubmit={() => { }} />
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -261,21 +261,21 @@ describe('Accessibility - BioKanban', () => {
     const { container } = render(
       <BioKanban columns={kanbanColumns} cards={kanbanCards} />
     );
-    
+
     const results = await checkA11y(container);
-    
-    // Known issue: button-name (icon buttons need aria-label)
-    // TODO: Add aria-label to icon buttons in BioKanban
-    const knownIssues = ['button-name'];
+
+    // FIXED: button-name - aria-labels added to icon buttons
+    // Remaining: color-contrast (serious) - design/CSS related
+    const knownIssues: string[] = [];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     // Log all issues for review
     if (results.violations.length > 0) {
       console.log('BioKanban a11y issues:', results.violations.map(v => `${v.id} (${v.impact})`));
     }
-    
+
     expect(unexpected).toHaveLength(0);
   });
 });
@@ -285,11 +285,11 @@ describe('Accessibility - BioTree', () => {
     const { container } = render(
       <BioTree nodes={treeNodes} />
     );
-    
+
     // Tree should have tree role or similar structure
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -299,10 +299,10 @@ describe('Accessibility - BioTimeline', () => {
     const { container } = render(
       <BioTimeline items={timelineItems} />
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -310,18 +310,17 @@ describe('Accessibility - BioTimeline', () => {
 describe('Accessibility - BioDropzone', () => {
   it('dropzone has accessible instructions', async () => {
     const { container } = render(
-      <BioDropzone onFilesChange={() => {}} />
+      <BioDropzone onFilesChange={() => { }} />
     );
-    
+
     const results = await checkA11y(container);
-    
-    // Known issue: label (file input needs visible label)
-    // TODO: Add proper label for file input in BioDropzone
-    const knownIssues = ['label'];
+
+    // FIXED: aria-label added to file input
+    const knownIssues: string[] = [];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     expect(unexpected).toHaveLength(0);
   });
 });
@@ -331,24 +330,24 @@ describe('Accessibility - BioCalendar', () => {
     const { container } = render(
       <BioCalendar events={calendarEvents} />
     );
-    
+
     // Calendar should use grid role
     const grid = container.querySelector('[role="grid"]');
     expect(grid).toBeInTheDocument();
-    
+
     const results = await checkA11y(container);
-    
-    // Known issues: button-name, aria-required-children, aria-required-parent
-    // TODO: Fix calendar ARIA roles and button accessibility
-    const knownIssues = ['button-name', 'aria-required-children', 'aria-required-parent'];
+
+    // FIXED: button-name - aria-labels added to navigation buttons
+    // Remaining: aria-required-parent (columnheaders outside grid parent)
+    const knownIssues = ['aria-required-parent'];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     if (results.violations.length > 0) {
       console.log('BioCalendar a11y issues:', results.violations.map(v => `${v.id} (${v.impact})`));
     }
-    
+
     expect(unexpected).toHaveLength(0);
   });
 });
@@ -358,16 +357,15 @@ describe('Accessibility - BioGantt', () => {
     const { container } = render(
       <BioGantt tasks={ganttTasks} />
     );
-    
+
     const results = await checkA11y(container);
-    
-    // Known issue: button-name (zoom buttons need aria-label)
-    // TODO: Add aria-label to zoom buttons in BioGantt
-    const knownIssues = ['button-name'];
+
+    // FIXED: button-name - aria-labels added to zoom buttons
+    const knownIssues: string[] = [];
     const unexpected = results.violations.filter(
       v => v.impact === 'critical' && !knownIssues.includes(v.id)
     );
-    
+
     expect(unexpected).toHaveLength(0);
   });
 });
@@ -377,13 +375,13 @@ describe('Accessibility - BioChart', () => {
     const { container } = render(
       <BioChart type="bar" data={chartData} title="Sales Report" />
     );
-    
+
     // Title should be present
     expect(screen.getByText('Sales Report')).toBeInTheDocument();
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
   });
 });
@@ -402,12 +400,12 @@ describe('Accessibility Summary', () => {
         <StatusBadge status="success" label="OK" />
       </div>
     );
-    
+
     const results = await checkA11y(container);
     const critical = results.violations.filter(v => v.impact === 'critical');
-    
+
     expect(critical).toHaveLength(0);
-    
+
     // Report summary
     console.log(`
     ===== A11Y Summary =====

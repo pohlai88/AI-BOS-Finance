@@ -205,10 +205,10 @@ export function BioGantt<T = Record<string, unknown>>({
           Project Timeline
         </Txt>
         <div className="flex items-center gap-2">
-          <Btn variant="ghost" size="sm">
+          <Btn variant="ghost" size="sm" aria-label="Zoom out">
             <ZoomOut className="h-4 w-4" />
           </Btn>
-          <Btn variant="ghost" size="sm">
+          <Btn variant="ghost" size="sm" aria-label="Zoom in">
             <ZoomIn className="h-4 w-4" />
           </Btn>
         </div>

@@ -121,6 +121,8 @@ export function BioKanbanColumn<T = Record<string, unknown>>({
             <button
               onClick={() => onToggleCollapse?.(column.id)}
               className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+              aria-label={column.collapsed ? `Expand ${column.title}` : `Collapse ${column.title}`}
+              aria-expanded={!column.collapsed}
             >
               {column.collapsed ? (
                 <ChevronRight className="h-4 w-4 text-text-secondary" />
@@ -166,6 +168,7 @@ export function BioKanbanColumn<T = Record<string, unknown>>({
                 onClick={() => onAddCard?.(column.id)}
                 disabled={Boolean(isAtLimit)}
                 className="h-6 w-6 p-0"
+                aria-label={`Add card to ${column.title}`}
               >
                 <Plus className="h-4 w-4" />
               </Btn>
@@ -175,6 +178,7 @@ export function BioKanbanColumn<T = Record<string, unknown>>({
               size="sm"
               onClick={() => onColumnAction?.(column.id, 'menu')}
               className="h-6 w-6 p-0"
+              aria-label={`More options for ${column.title}`}
             >
               <MoreHorizontal className="h-4 w-4" />
             </Btn>
