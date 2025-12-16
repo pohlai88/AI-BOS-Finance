@@ -42,18 +42,41 @@
     "./layout": {
       "types": "./src/layout.ts",
       "import": "./src/layout.ts"
+    },
+    "./atoms": {
+      "types": "./src/atoms.ts",
+      "import": "./src/atoms.ts"
     }
   },
   "typesVersions": {
     "*": {
-      "server": ["./src/server.ts"],
-      "table": ["./src/table.ts"],
-      "chart": ["./src/chart.ts"],
-      "kanban": ["./src/kanban.ts"],
-      "calendar": ["./src/calendar.ts"],
-      "gantt": ["./src/gantt.ts"],
-      "form": ["./src/form.ts"],
-      "layout": ["./src/layout.ts"]
+      "server": [
+        "./src/server.ts"
+      ],
+      "table": [
+        "./src/table.ts"
+      ],
+      "chart": [
+        "./src/chart.ts"
+      ],
+      "kanban": [
+        "./src/kanban.ts"
+      ],
+      "calendar": [
+        "./src/calendar.ts"
+      ],
+      "gantt": [
+        "./src/gantt.ts"
+      ],
+      "form": [
+        "./src/form.ts"
+      ],
+      "layout": [
+        "./src/layout.ts"
+      ],
+      "atoms": [
+        "./src/atoms.ts"
+      ]
     }
   },
   "scripts": {
@@ -62,7 +85,10 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:headed": "vitest --browser.headless=false"
+    "test:headed": "vitest --browser.headless=false",
+    "analyze": "node scripts/analyze-bundle.mjs",
+    "analyze:ci": "node scripts/analyze-bundle.mjs --ci",
+    "size-check": "node scripts/analyze-bundle.mjs --ci"
   },
   "peerDependencies": {
     "lucide-react": ">=0.400.0",
@@ -88,6 +114,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "esbuild": "^0.24.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
