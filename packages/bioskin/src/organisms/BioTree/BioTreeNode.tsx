@@ -2,23 +2,35 @@
  * BioTreeNode - Individual tree node component
  *
  * Sprint 5 per BIOSKIN 2.1 PRD - ERPNext Expansion
+ * Wrapped in React.memo for optimal performance with large trees
  */
 
 'use client';
 
 import * as React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
   ChevronRight,
-  ChevronDown,
   Folder,
   FolderOpen,
   File,
-  type LucideIcon,
 } from 'lucide-react';
 import { cn } from '../../atoms/utils';
 import { Txt } from '../../atoms/Txt';
 import type { TreeNode } from './useBioTree';
+
+// ============================================================
+// Animation Constants (extracted for performance)
+// ============================================================
+
+const NODE_ANIMATION = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.15 },
+} as const;
+
+const CHEVRON_TRANSITION = { duration: 0.15 } as const;
 
 // ============================================================
 // Types
@@ -52,10 +64,10 @@ export interface BioTreeNodeProps<T = Record<string, unknown>> {
 }
 
 // ============================================================
-// Component
+// Component (Memoized for performance)
 // ============================================================
 
-export function BioTreeNode<T = Record<string, unknown>>({
+function BioTreeNodeInner<T = Record<string, unknown>>({
   node,
   isExpanded,
   isSelected,
@@ -121,7 +133,7 @@ export function BioTreeNode<T = Record<string, unknown>>({
     [node, isExpanded, onSelect, onToggle]
   );
 
-  // Default icon
+  // Default icon - memoized
   const DefaultIcon = React.useMemo(() => {
     if (node.hasChildren) {
       return isExpanded ? FolderOpen : Folder;
@@ -129,13 +141,16 @@ export function BioTreeNode<T = Record<string, unknown>>({
     return File;
   }, [node.hasChildren, isExpanded]);
 
+  // Memoized style for paddingLeft
+  const nodeStyle = React.useMemo(
+    () => ({ paddingLeft: node.level * indentSize }),
+    [node.level, indentSize]
+  );
+
   // Custom node render
   if (renderNode) {
     return (
-      <div
-        style={{ paddingLeft: node.level * indentSize }}
-        className={className}
-      >
+      <div style={nodeStyle} className={className}>
         {renderNode(node, { isExpanded, isSelected })}
       </div>
     );
@@ -143,10 +158,7 @@ export function BioTreeNode<T = Record<string, unknown>>({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.15 }}
+      {...NODE_ANIMATION}
       role="treeitem"
       aria-expanded={node.hasChildren ? isExpanded : undefined}
       aria-selected={isSelected}
@@ -154,7 +166,7 @@ export function BioTreeNode<T = Record<string, unknown>>({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onKeyDown={handleKeyDown}
-      style={{ paddingLeft: node.level * indentSize }}
+      style={nodeStyle}
       className={cn(
         'flex items-center gap-1 px-2 py-1.5 rounded-md cursor-pointer',
         'transition-colors duration-100',
@@ -180,7 +192,7 @@ export function BioTreeNode<T = Record<string, unknown>>({
         {node.hasChildren && (
           <motion.div
             animate={{ rotate: isExpanded ? 90 : 0 }}
-            transition={{ duration: 0.15 }}
+            transition={CHEVRON_TRANSITION}
           >
             <ChevronRight className="h-4 w-4 text-text-secondary" />
           </motion.div>
@@ -215,5 +227,9 @@ export function BioTreeNode<T = Record<string, unknown>>({
     </motion.div>
   );
 }
+
+// Wrap in React.memo for optimal performance with large trees
+// Uses generic type assertion pattern for memo with generics
+export const BioTreeNode = React.memo(BioTreeNodeInner) as typeof BioTreeNodeInner;
 
 BioTreeNode.displayName = 'BioTreeNode';

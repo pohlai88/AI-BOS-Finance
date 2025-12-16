@@ -5,6 +5,7 @@
  * Automatically maps status values to semantic colors.
  * 
  * Now powered by `motion` for animated pulsing dot indicators.
+ * Wrapped in React.memo for optimal performance in list renders.
  * 
  * @example
  * // Basic usage
@@ -19,8 +20,10 @@
  * <StatusBadge status="active" variant="dot" />
  */
 
+'use client';
+
 import * as React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { cn } from '../atoms/utils';
 import {
   CheckCircle,
@@ -90,10 +93,39 @@ function getStatusConfig(status: string) {
   return STATUS_COLORS[normalizedStatus] || STATUS_COLORS.unknown;
 }
 
+// ============================================================
+// Animation Constants (extracted for performance)
+// ============================================================
+
+const BADGE_ANIMATION = {
+  initial: { opacity: 0, scale: 0.9 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { duration: 0.2, ease: 'easeOut' },
+} as const;
+
+const PULSE_ANIMATION = {
+  initial: { scale: 0.5, opacity: 0.75 },
+  animate: { scale: 1.5, opacity: 0 },
+  transition: { duration: 1.5, repeat: Infinity, ease: 'easeOut' },
+} as const;
+
+const DOT_SIZES = {
+  sm: 'w-1.5 h-1.5',
+  md: 'w-2 h-2',
+  lg: 'w-2.5 h-2.5',
+} as const;
+
+const PULSE_SIZES = {
+  sm: 'w-3 h-3',
+  md: 'w-4 h-4',
+  lg: 'w-5 h-5',
+} as const;
+
 /**
  * Pulsing Dot Component - Animated status indicator
+ * Memoized for optimal performance in list renders
  */
-function PulsingDot({
+const PulsingDot = React.memo(function PulsingDot({
   color,
   pulse,
   size
@@ -102,18 +134,6 @@ function PulsingDot({
   pulse: boolean;
   size: 'sm' | 'md' | 'lg';
 }) {
-  const dotSizes = {
-    sm: 'w-1.5 h-1.5',
-    md: 'w-2 h-2',
-    lg: 'w-2.5 h-2.5',
-  };
-
-  const pulseSizes = {
-    sm: 'w-3 h-3',
-    md: 'w-4 h-4',
-    lg: 'w-5 h-5',
-  };
-
   return (
     <span className="relative inline-flex items-center justify-center">
       {/* Static dot */}
@@ -121,7 +141,7 @@ function PulsingDot({
         className={cn(
           'rounded-full',
           color,
-          dotSizes[size]
+          DOT_SIZES[size]
         )}
       />
 
@@ -131,23 +151,33 @@ function PulsingDot({
           className={cn(
             'absolute rounded-full',
             color,
-            pulseSizes[size],
+            PULSE_SIZES[size],
             'opacity-75'
           )}
-          initial={{ scale: 0.5, opacity: 0.75 }}
-          animate={{ scale: 1.5, opacity: 0 }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: 'easeOut',
-          }}
+          {...PULSE_ANIMATION}
         />
       )}
     </span>
   );
-}
+});
 
-export function StatusBadge({
+const SIZE_CLASSES = {
+  sm: 'px-2 py-0.5 text-micro gap-1',
+  md: 'px-2.5 py-1 text-small gap-1.5',
+  lg: 'px-3 py-1.5 text-base gap-2',
+} as const;
+
+const ICON_SIZES = {
+  sm: 'w-3 h-3',
+  md: 'w-3.5 h-3.5',
+  lg: 'w-4 h-4',
+} as const;
+
+/**
+ * StatusBadge Component
+ * Wrapped in React.memo for optimal performance when rendered in lists/tables
+ */
+export const StatusBadge = React.memo(function StatusBadge({
   status,
   className,
   showIcon = true,
@@ -162,12 +192,6 @@ export function StatusBadge({
 
   // Auto-enable pulse for active states if not explicitly set
   const shouldPulse = pulse ?? config.defaultPulse ?? false;
-
-  const sizeClasses = {
-    sm: 'px-2 py-0.5 text-micro gap-1',
-    md: 'px-2.5 py-1 text-small gap-1.5',
-    lg: 'px-3 py-1.5 text-base gap-2',
-  };
 
   // Dot-only variant
   if (variant === 'dot') {
@@ -191,14 +215,12 @@ export function StatusBadge({
         config.bg,
         config.text,
         config.border,
-        sizeClasses[size],
+        SIZE_CLASSES[size],
         className
       )}
       role="status"
       aria-label={`Status: ${displayLabel}`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+      {...BADGE_ANIMATION}
     >
       {showIcon && (
         <>
@@ -206,11 +228,7 @@ export function StatusBadge({
             <PulsingDot color={config.dot} pulse={shouldPulse} size={size} />
           ) : (
             <Icon
-              className={cn(
-                size === 'sm' ? 'w-3 h-3' :
-                  size === 'md' ? 'w-3.5 h-3.5' :
-                    'w-4 h-4'
-              )}
+              className={ICON_SIZES[size]}
               aria-hidden="true"
             />
           )}
@@ -219,7 +237,7 @@ export function StatusBadge({
       <span>{displayLabel}</span>
     </motion.span>
   );
-}
+});
 
 StatusBadge.displayName = 'StatusBadge';
 

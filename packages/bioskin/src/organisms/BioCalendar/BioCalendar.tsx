@@ -151,7 +151,7 @@ const eventColors: Record<CalendarEventType, string> = {
 };
 
 // ============================================================
-// CalendarDay Component
+// CalendarDay Component (Memoized)
 // ============================================================
 
 interface CalendarDayProps<T> {
@@ -163,7 +163,11 @@ interface CalendarDayProps<T> {
   onEventClick?: (event: CalendarEvent<T>) => void;
 }
 
-function CalendarDay<T>({
+/**
+ * CalendarDay - Single day cell in the calendar grid
+ * Wrapped in React.memo since 42 instances render per month view
+ */
+const CalendarDay = React.memo(function CalendarDay<T>({
   date,
   events,
   isCurrentMonth,
@@ -174,12 +178,30 @@ function CalendarDay<T>({
   const dayEvents = getEventsForDate(events, date);
   const isCurrentDay = isToday(date);
 
+  // Memoized click handler
+  const handleSelect = React.useCallback(() => {
+    onSelect(date);
+  }, [date, onSelect]);
+
+  // Memoized keydown handler
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onSelect(date);
+    }
+  }, [date, onSelect]);
+
+  // Memoized event click handler factory
+  const handleEventClick = React.useCallback((event: CalendarEvent<T>) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEventClick?.(event);
+  }, [onEventClick]);
+
   return (
     <div
       role="gridcell"
       tabIndex={0}
-      onClick={() => onSelect(date)}
-      onKeyDown={e => e.key === 'Enter' && onSelect(date)}
+      onClick={handleSelect}
+      onKeyDown={handleKeyDown}
       className={cn(
         'min-h-[80px] p-1 border-b border-r border-default cursor-pointer',
         'transition-colors hover:bg-surface-hover',
@@ -207,10 +229,7 @@ function CalendarDay<T>({
         {dayEvents.slice(0, 3).map(event => (
           <div
             key={event.id}
-            onClick={e => {
-              e.stopPropagation();
-              onEventClick?.(event);
-            }}
+            onClick={handleEventClick(event)}
             className={cn(
               'px-1 py-0.5 rounded text-micro truncate cursor-pointer',
               'hover:opacity-80 transition-opacity',
@@ -229,7 +248,7 @@ function CalendarDay<T>({
       </div>
     </div>
   );
-}
+}) as <T>(props: CalendarDayProps<T>) => React.ReactElement;
 
 // ============================================================
 // Component
@@ -264,30 +283,30 @@ export function BioCalendar<T = Record<string, unknown>>({
   const MONTHS = locale.getMonthNames('long');
   const DAYS = locale.getDayNames('short');
 
-  // Navigate
-  const goToPrevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
-  };
+  // Navigate - memoized for stable references
+  const goToPrevMonth = React.useCallback(() => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  }, []);
 
-  const goToNextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
-  };
+  const goToNextMonth = React.useCallback(() => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  }, []);
 
-  const goToToday = () => {
+  const goToToday = React.useCallback(() => {
     setCurrentDate(new Date());
-  };
+  }, []);
 
-  // Handle date select
-  const handleDateSelect = (date: Date) => {
+  // Handle date select - memoized
+  const handleDateSelect = React.useCallback((date: Date) => {
     setSelectedDate(date);
     onDateSelect?.(date);
-  };
+  }, [onDateSelect]);
 
-  // Handle view change
-  const handleViewChange = (newView: CalendarView) => {
+  // Handle view change - memoized
+  const handleViewChange = React.useCallback((newView: CalendarView) => {
     setCurrentView(newView);
     onViewChange?.(newView);
-  };
+  }, [onViewChange]);
 
   // Build calendar grid
   const daysInMonth = getDaysInMonth(year, month);

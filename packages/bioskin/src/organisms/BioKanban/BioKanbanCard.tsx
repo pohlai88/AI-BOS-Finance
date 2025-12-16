@@ -2,6 +2,7 @@
  * BioKanbanCard - Draggable card component
  *
  * Sprint 5 per BIOSKIN 2.1 PRD - ERPNext Expansion
+ * Wrapped in React.memo for optimal performance with many cards
  */
 
 'use client';
@@ -13,8 +14,17 @@ import { motion } from 'motion/react';
 import { GripVertical, Calendar, Tag, User } from 'lucide-react';
 import { cn } from '../../atoms/utils';
 import { Txt } from '../../atoms/Txt';
-import { StatusBadge } from '../../molecules/StatusBadge';
 import type { KanbanCard } from './useBioKanban';
+
+// ============================================================
+// Animation Constants (extracted for performance)
+// ============================================================
+
+const CARD_ANIMATION = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.95 },
+} as const;
 
 // ============================================================
 // Types
@@ -48,10 +58,10 @@ const colorStyles: Record<string, string> = {
 };
 
 // ============================================================
-// Component
+// Component (Memoized)
 // ============================================================
 
-export function BioKanbanCard<T = Record<string, unknown>>({
+function BioKanbanCardInner<T = Record<string, unknown>>({
   card,
   isDragging = false,
   onClick,
@@ -74,12 +84,17 @@ export function BioKanbanCard<T = Record<string, unknown>>({
     },
   });
 
-  const style = {
+  const style = React.useMemo(() => ({
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+  }), [transform, transition]);
 
   const isCurrentlyDragging = isDragging || isSortableDragging;
+
+  // Memoized click handler
+  const handleClick = React.useCallback(() => {
+    onClick?.(card);
+  }, [onClick, card]);
 
   // Custom renderer
   if (renderCard) {
@@ -105,9 +120,7 @@ export function BioKanbanCard<T = Record<string, unknown>>({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      {...CARD_ANIMATION}
       className={cn(
         'group relative bg-surface-card rounded-lg border border-default',
         'border-l-4 shadow-sm hover:shadow-md transition-shadow',
@@ -116,7 +129,7 @@ export function BioKanbanCard<T = Record<string, unknown>>({
         isCurrentlyDragging && 'opacity-50 shadow-lg rotate-2',
         className
       )}
-      onClick={() => onClick?.(card)}
+      onClick={handleClick}
       data-testid="kanban-card"
     >
       {/* Drag Handle */}
@@ -192,5 +205,8 @@ export function BioKanbanCard<T = Record<string, unknown>>({
     </motion.div>
   );
 }
+
+// Wrap in React.memo for optimal performance with many cards
+export const BioKanbanCard = React.memo(BioKanbanCardInner) as typeof BioKanbanCardInner;
 
 BioKanbanCard.displayName = 'BioKanbanCard';

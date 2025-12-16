@@ -242,7 +242,7 @@ export function BioNavbar({
               <Menu className="w-5 h-5" />
             </Btn>
           )}
-          
+
           {logo && <div className="flex-shrink-0">{logo}</div>}
         </div>
 

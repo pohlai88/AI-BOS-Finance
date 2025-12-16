@@ -69,7 +69,7 @@ export function generateBreadcrumbs(
   config: BreadcrumbConfig = {}
 ): BioBreadcrumbItem[] {
   const { labels = {}, homeLabel = 'Home' } = config;
-  
+
   const segments = pathname.split('/').filter(Boolean);
   const items: BioBreadcrumbItem[] = [
     { label: homeLabel, href: '/', icon: Home },
@@ -95,7 +95,7 @@ function formatSegment(segment: string): string {
   if (segment.startsWith('[') && segment.endsWith(']')) {
     return segment.slice(1, -1).toUpperCase();
   }
-  
+
   // Convert kebab-case to Title Case
   return segment
     .split('-')
@@ -119,7 +119,7 @@ export function BioBreadcrumb({
 
   // Determine if we need to collapse
   const shouldCollapse = items.length > maxItems && !expanded;
-  
+
   let displayItems = items;
   if (shouldCollapse) {
     // Show first, ellipsis, and last (maxItems - 2) items
@@ -136,7 +136,7 @@ export function BioBreadcrumb({
       setExpanded(true);
       return;
     }
-    
+
     if (item.href && onNavigate) {
       e.preventDefault();
       onNavigate(item.href);
@@ -159,7 +159,7 @@ export function BioBreadcrumb({
           return (
             <li key={`${item.label}-${index}`} className="flex items-center gap-1">
               {index > 0 && <span className="mx-1">{separator}</span>}
-              
+
               {isEllipsis ? (
                 <button
                   onClick={(e) => handleClick(item, e)}

@@ -129,7 +129,7 @@ export function BioAppShell({
   // Hydration-safe initialization
   React.useEffect(() => {
     setMounted(true);
-    
+
     // Load persisted state
     if (persistState && typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey);

@@ -31,7 +31,7 @@ import { cn } from '../atoms/utils';
 // Types
 // ============================================================
 
-export type BioToastPosition = 
+export type BioToastPosition =
   | 'top-left'
   | 'top-center'
   | 'top-right'

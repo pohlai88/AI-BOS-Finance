@@ -134,7 +134,7 @@ export function BioCommandPalette({
   // Group commands by category
   const groupedCommands = React.useMemo(() => {
     const groups: Record<string, BioCommand[]> = {};
-    
+
     for (const cmd of commands) {
       const category = cmd.category || 'General';
       if (!groups[category]) {

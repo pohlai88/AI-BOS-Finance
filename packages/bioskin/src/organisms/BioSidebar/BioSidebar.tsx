@@ -104,7 +104,7 @@ function NavItem({ item, collapsed, isActive, depth, onNavigate }: NavItemProps)
   return (
     <div>
       {item.divider && <div className="h-px bg-border-default my-2 mx-3" />}
-      
+
       <button
         onClick={handleClick}
         disabled={item.disabled}
@@ -122,7 +122,7 @@ function NavItem({ item, collapsed, isActive, depth, onNavigate }: NavItemProps)
         {Icon && (
           <Icon className={cn('w-5 h-5 flex-shrink-0', isActive && 'text-accent-primary')} />
         )}
-        
+
         <AnimatePresence>
           {!collapsed && (
             <motion.span
@@ -231,7 +231,7 @@ export function BioSidebar({
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {!isMobile && (
           <Btn
             variant="ghost"
