@@ -8,6 +8,13 @@
 // Main component
 export { BioTable, type BioTableProps, COMPONENT_META } from './BioTable';
 
+// Virtualized table for large datasets (10k+ rows)
+export {
+  BioTableVirtual,
+  type BioTableVirtualProps,
+  VIRTUAL_COMPONENT_META,
+} from './BioTableVirtual';
+
 // Sub-components (for advanced usage)
 export { BioTableHeader, type BioTableHeaderProps } from './BioTableHeader';
 export {
