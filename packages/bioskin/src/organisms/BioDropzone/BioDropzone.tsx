@@ -239,8 +239,8 @@ export function BioDropzone({
   // Build accept string
   const acceptString = accept
     ? Object.entries(accept)
-        .flatMap(([mime, exts]) => [mime, ...exts])
-        .join(',')
+      .flatMap(([mime, exts]) => [mime, ...exts])
+      .join(',')
     : undefined;
 
   // Validate files

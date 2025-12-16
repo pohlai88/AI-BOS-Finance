@@ -46,3 +46,6 @@ export { BioKanban, type BioKanbanProps, type KanbanCard, type KanbanColumn } fr
 export { BioTree, type BioTreeProps, type TreeNode } from './organisms/BioTree';
 export { BioTimeline, type BioTimelineProps, type TimelineItem } from './organisms/BioTimeline';
 export { BioDropzone, type BioDropzoneProps, type UploadedFile } from './organisms/BioDropzone';
+export { BioCalendar, type BioCalendarProps, type CalendarEvent } from './organisms/BioCalendar';
+export { BioGantt, type BioGanttProps, type GanttTask } from './organisms/BioGantt';
+export { BioChart, type BioChartProps, type ChartDataPoint } from './organisms/BioChart';

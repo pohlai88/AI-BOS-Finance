@@ -96,3 +96,31 @@ export {
   type FileStatus,
   COMPONENT_META as BIO_DROPZONE_META,
 } from './BioDropzone';
+
+// BioCalendar - event calendar (Sprint 5 - ERPNext Expansion)
+export {
+  BioCalendar,
+  type BioCalendarProps,
+  type CalendarEvent,
+  type CalendarEventType,
+  type CalendarView,
+  COMPONENT_META as BIO_CALENDAR_META,
+} from './BioCalendar';
+
+// BioGantt - project timeline (Sprint 5 - ERPNext Expansion)
+export {
+  BioGantt,
+  type BioGanttProps,
+  type GanttTask,
+  type GanttTaskStatus,
+  COMPONENT_META as BIO_GANTT_META,
+} from './BioGantt';
+
+// BioChart - dashboard charts (Sprint 5 - ERPNext Expansion)
+export {
+  BioChart,
+  type BioChartProps,
+  type ChartDataPoint,
+  type ChartType,
+  COMPONENT_META as BIO_CHART_META,
+} from './BioChart';

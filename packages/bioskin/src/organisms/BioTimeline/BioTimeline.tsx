@@ -44,7 +44,7 @@ import { StatusBadge } from '../../molecules/StatusBadge';
 // Types
 // ============================================================
 
-export type TimelineItemType = 
+export type TimelineItemType =
   | 'default'
   | 'success'
   | 'warning'

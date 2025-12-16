@@ -159,7 +159,7 @@ describe('BioDropzone - Interactions', () => {
     render(<BioDropzone onFilesSelected={onFilesSelected} />);
 
     const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
+
     // Simulate file selection via input
     Object.defineProperty(input, 'files', {
       value: [mockFile],
@@ -185,7 +185,7 @@ describe('BioDropzone - Validation', () => {
     );
 
     const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-    
+
     // Try to upload a PDF (not accepted)
     Object.defineProperty(input, 'files', {
       value: [mockFile], // PDF file
