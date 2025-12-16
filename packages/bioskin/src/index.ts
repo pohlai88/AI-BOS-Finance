@@ -35,6 +35,8 @@ export { ActionMenu, type ActionMenuProps, type ActionMenuItem } from './molecul
 export { EmptyState, type EmptyStateProps } from './molecules/EmptyState';
 export { LoadingState, type LoadingStateProps } from './molecules/LoadingState';
 export { ErrorState, type ErrorStateProps } from './molecules/ErrorState';
+export { BioApprovalActions, type BioApprovalActionsProps } from './molecules/BioApprovalActions';
+export { BioDiffViewer, useDiff, type BioDiffViewerProps, type DiffEntry } from './molecules/BioDiffViewer';
 
 // ============================================================
 // ORGANISMS (Layer 3) - Schema-driven components

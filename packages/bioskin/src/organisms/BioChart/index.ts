@@ -9,3 +9,10 @@ export {
   type ChartDataPoint,
   type ChartType,
 } from './BioChart';
+
+// Export functionality
+export {
+  useBioChartExport,
+  type ChartExportOptions,
+  type UseBioChartExportReturn,
+} from './useBioChartExport';

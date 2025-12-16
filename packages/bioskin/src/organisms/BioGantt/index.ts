@@ -9,3 +9,10 @@ export {
   type GanttTask,
   type GanttTaskStatus,
 } from './BioGantt';
+
+// Export functionality
+export {
+  useBioGanttExport,
+  type GanttExportOptions,
+  type UseBioGanttExportReturn,
+} from './useBioGanttExport';

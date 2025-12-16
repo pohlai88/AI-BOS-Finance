@@ -10,3 +10,10 @@ export {
   type CalendarEventType,
   type CalendarView,
 } from './BioCalendar';
+
+// Export functionality
+export {
+  useBioCalendarExport,
+  type CalendarExportOptions,
+  type UseBioCalendarExportReturn,
+} from './useBioCalendarExport';

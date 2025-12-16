@@ -30,3 +30,14 @@ export { StatCard, type StatCardProps, COMPONENT_META as STAT_CARD_META } from '
 // Overlays & Navigation
 export { DetailSheet, type DetailSheetProps, COMPONENT_META as DETAIL_SHEET_META } from './DetailSheet';
 export { ActionMenu, type ActionMenuProps, type ActionMenuItem, COMPONENT_META as ACTION_MENU_META } from './ActionMenu';
+
+// Governance (Sprint E6+)
+export { BioApprovalActions, type BioApprovalActionsProps, COMPONENT_META as BIO_APPROVAL_ACTIONS_META } from './BioApprovalActions';
+export {
+  BioDiffViewer,
+  useDiff,
+  type BioDiffViewerProps,
+  type DiffType,
+  type DiffEntry,
+  COMPONENT_META as BIO_DIFF_VIEWER_META,
+} from './BioDiffViewer';
