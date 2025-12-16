@@ -94,16 +94,20 @@ describe('BioTimeline - Rendering', () => {
 describe('BioTimeline - Features', () => {
   it('shows timestamps when enabled', () => {
     render(<BioTimeline items={mockItems} showTimestamps />);
-    // Should show relative time (multiple timestamps)
-    const timestamps = screen.getAllByText(/Just now|ago/i);
-    expect(timestamps.length).toBeGreaterThan(0);
+    // Timestamp container should be visible (Clock icon + text)
+    // Format depends on locale provider - could be "ago" or date format
+    const timelineItems = screen.getAllByTestId('timeline-item');
+    expect(timelineItems.length).toBeGreaterThan(0);
+    // Each item should have a timestamp container (flex items with gap-1)
+    const clockIcons = document.querySelectorAll('.lucide-clock');
+    expect(clockIcons.length).toBe(mockItems.length);
   });
 
   it('hides timestamps when disabled', () => {
     render(<BioTimeline items={mockItems} showTimestamps={false} />);
-    // Should not show time-related text
-    const timeElements = screen.queryAllByText(/Just now|ago/i);
-    expect(timeElements.length).toBe(0);
+    // Clock icons should not be present
+    const clockIcons = document.querySelectorAll('.lucide-clock');
+    expect(clockIcons.length).toBe(0);
   });
 
   it('groups items by date when enabled', () => {

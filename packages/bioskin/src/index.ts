@@ -49,3 +49,13 @@ export { BioDropzone, type BioDropzoneProps, type UploadedFile } from './organis
 export { BioCalendar, type BioCalendarProps, type CalendarEvent } from './organisms/BioCalendar';
 export { BioGantt, type BioGanttProps, type GanttTask } from './organisms/BioGantt';
 export { BioChart, type BioChartProps, type ChartDataPoint } from './organisms/BioChart';
+
+// ============================================================
+// PROVIDERS (Cross-cutting) - Context providers
+// ============================================================
+export {
+  BioLocaleProvider,
+  useLocale,
+  type BioLocaleConfig,
+  type BioLocaleProviderProps,
+} from './providers';

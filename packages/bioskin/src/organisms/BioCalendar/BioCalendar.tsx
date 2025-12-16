@@ -32,6 +32,7 @@ import { cn } from '../../atoms/utils';
 import { Surface } from '../../atoms/Surface';
 import { Txt } from '../../atoms/Txt';
 import { Btn } from '../../atoms/Btn';
+import { useLocale } from '../../providers';
 
 // ============================================================
 // Types
@@ -108,12 +109,6 @@ export const COMPONENT_META = {
 // ============================================================
 // Helper Functions
 // ============================================================
-
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
 
 function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate();
@@ -250,16 +245,24 @@ export function BioCalendar<T = Record<string, unknown>>({
   onViewChange,
   showViewSwitcher = true,
   showAddButton = true,
-  weekStartsOn = 0,
+  weekStartsOn: weekStartsOnProp,
   className,
   loading = false,
 }: BioCalendarProps<T>) {
+  // i18n support
+  const locale = useLocale();
+  const weekStartsOn = weekStartsOnProp ?? locale.weekStartsOn;
+
   const [currentDate, setCurrentDate] = React.useState(initialDate || new Date());
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [currentView, setCurrentView] = React.useState<CalendarView>(view);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+
+  // Locale-aware names
+  const MONTHS = locale.getMonthNames('long');
+  const DAYS = locale.getDayNames('short');
 
   // Navigate
   const goToPrevMonth = () => {
@@ -320,10 +323,8 @@ export function BioCalendar<T = Record<string, unknown>>({
     });
   }
 
-  // Day headers
-  const dayHeaders = weekStartsOn === 1
-    ? [...DAYS.slice(1), DAYS[0]]
-    : DAYS;
+  // Day headers (DAYS already respects weekStartsOn from locale)
+  const dayHeaders = DAYS;
 
   // Loading state
   if (loading) {

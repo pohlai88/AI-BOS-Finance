@@ -18,6 +18,7 @@ import { cn } from '../../atoms/utils';
 import { Surface } from '../../atoms/Surface';
 import { Txt } from '../../atoms/Txt';
 import { Btn } from '../../atoms/Btn';
+import { useLocale } from '../../providers';
 
 // ============================================================
 // Types
@@ -96,10 +97,6 @@ function addDays(date: Date, days: number): Date {
   return result;
 }
 
-function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
 // ============================================================
 // Status Colors
 // ============================================================
@@ -133,6 +130,11 @@ export function BioGantt<T = Record<string, unknown>>({
   className,
   loading = false,
 }: BioGanttProps<T>) {
+  // i18n support
+  const locale = useLocale();
+  const formatDate = (date: Date): string => {
+    return locale.formatDate(date, { month: 'short', day: 'numeric' });
+  };
   // Calculate date range from tasks
   const dateRange = React.useMemo(() => {
     if (tasks.length === 0) {

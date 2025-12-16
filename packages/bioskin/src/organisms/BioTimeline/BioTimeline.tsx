@@ -39,6 +39,7 @@ import { cn } from '../../atoms/utils';
 import { Surface } from '../../atoms/Surface';
 import { Txt } from '../../atoms/Txt';
 import { StatusBadge } from '../../molecules/StatusBadge';
+import { useLocale } from '../../providers';
 
 // ============================================================
 // Types
@@ -147,41 +148,8 @@ const typeColors: Record<TimelineItemType, string> = {
 };
 
 // ============================================================
-// Helper Functions
+// Helper Functions (locale-independent)
 // ============================================================
-
-function formatRelativeTime(date: Date | string): string {
-  const now = new Date();
-  const then = new Date(date);
-  const diffMs = now.getTime() - then.getTime();
-  const diffSecs = Math.floor(diffMs / 1000);
-  const diffMins = Math.floor(diffSecs / 60);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffSecs < 60) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-
-  return then.toLocaleDateString();
-}
-
-function formatDateGroup(date: Date | string): string {
-  const d = new Date(date);
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  if (d.toDateString() === today.toDateString()) return 'Today';
-  if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
-
-  return d.toLocaleDateString(undefined, {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 
 function groupByDateFn<T>(items: TimelineItem<T>[]): Map<string, TimelineItem<T>[]> {
   const groups = new Map<string, TimelineItem<T>[]>();
@@ -208,6 +176,7 @@ interface TimelineItemComponentProps<T> {
   isLast: boolean;
   onClick?: (item: TimelineItem<T>) => void;
   renderItem?: (item: TimelineItem<T>) => React.ReactNode;
+  formatRelativeTime: (date: Date | string) => string;
 }
 
 function TimelineItemComponent<T>({
@@ -217,6 +186,7 @@ function TimelineItemComponent<T>({
   isLast,
   onClick,
   renderItem,
+  formatRelativeTime,
 }: TimelineItemComponentProps<T>) {
   const type = item.type || 'default';
   const Icon = typeof item.icon === 'function' ? item.icon : typeIcons[type];
@@ -335,6 +305,34 @@ export function BioTimeline<T = Record<string, unknown>>({
   loading = false,
   emptyMessage = 'No activity yet',
 }: BioTimelineProps<T>) {
+  // i18n support
+  const locale = useLocale();
+
+  // Locale-aware formatters
+  const formatRelativeTime = React.useCallback(
+    (date: Date | string): string => locale.formatRelativeTime(date),
+    [locale]
+  );
+
+  const formatDateGroup = React.useCallback(
+    (date: Date | string): string => {
+      const d = new Date(date);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (d.toDateString() === today.toDateString()) return 'Today';
+      if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+
+      return locale.formatDate(d, {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [locale]
+  );
+
   // Group by date if enabled
   const groupedItems = React.useMemo(() => {
     if (!groupByDate) return null;
@@ -403,6 +401,7 @@ export function BioTimeline<T = Record<string, unknown>>({
                   isLast={idx === dateItems.length - 1}
                   onClick={onItemClick}
                   renderItem={renderItem}
+                  formatRelativeTime={formatRelativeTime}
                 />
               ))}
             </div>
@@ -418,6 +417,7 @@ export function BioTimeline<T = Record<string, unknown>>({
               isLast={idx === items.length - 1}
               onClick={onItemClick}
               renderItem={renderItem}
+              formatRelativeTime={formatRelativeTime}
             />
           ))
         )}
