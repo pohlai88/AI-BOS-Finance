@@ -78,3 +78,21 @@ export {
   type UseBioTreeOptions,
   type UseBioTreeReturn,
 } from './BioTree';
+
+// BioTimeline - activity logs (Sprint 5 - ERPNext Expansion)
+export {
+  BioTimeline,
+  type BioTimelineProps,
+  type TimelineItem,
+  type TimelineItemType,
+  COMPONENT_META as BIO_TIMELINE_META,
+} from './BioTimeline';
+
+// BioDropzone - file upload (Sprint 5 - ERPNext Expansion)
+export {
+  BioDropzone,
+  type BioDropzoneProps,
+  type UploadedFile,
+  type FileStatus,
+  COMPONENT_META as BIO_DROPZONE_META,
+} from './BioDropzone';
