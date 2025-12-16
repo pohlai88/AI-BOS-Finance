@@ -175,14 +175,25 @@ Examples:
 
 ## 4. Canonical Key Format
 
-```
-{entity_urn}.{field_name}
+> 📖 **See Also:** [REF_METADATA_GLOSSARY.md](../../E-Knowledge/E-REF/REF_METADATA_GLOSSARY.md) for complete term definitions.
 
+**Format:** `{entity_urn}.{field_name}`
+
+- `entity_urn`: Fully-qualified entity identifier (e.g., `finance.journal_entries`)
+- `field_name`: Short field name within the entity (e.g., `amount`)
+- `canonical_key`: The combination (e.g., `finance.journal_entries.amount`)
+
+```
 Examples:
 - kernel.tenants.id
 - finance.journal_entries.journal_date
 - finance.accounts.account_code
 ```
+
+**Why fully-qualified?**
+1. **Global Uniqueness:** No collisions across entities with same field names
+2. **Lineage Tracking:** Self-documenting references in data flows
+3. **Code Clarity:** `finance.journal_entries.amount` is unambiguous in logs/code
 
 ---
 
@@ -240,6 +251,12 @@ Examples:
 
 ## References
 
-- **CONT_06**: Schema and Type Governance
-- **metadata-studio**: `apps/kernel/src/metadata-studio/db/schema/`
-- **Supabase**: Live database with current schema
+| Document | Purpose |
+|----------|---------|
+| [CONT_06_SchemaAndTypeGovernance.md](./CONT_06_SchemaAndTypeGovernance.md) | Governance contract |
+| [CONT_06_HEXAGON_MAPPING.md](./CONT_06_HEXAGON_MAPPING.md) | Cell and flow definitions |
+| [PRD_META_01_METADATA_STUDIO.md](../../E-Knowledge/E-SPEC/PRD_META_01_METADATA_STUDIO.md) | Behavioral specification |
+| [REF_METADATA_GLOSSARY.md](../../E-Knowledge/E-REF/REF_METADATA_GLOSSARY.md) | Term definitions |
+| [METADATA_LITE_MODE_GUIDE.md](/docs/guides/METADATA_LITE_MODE_GUIDE.md) | Developer DX guide |
+| metadata-studio | `apps/kernel/src/metadata-studio/db/schema/` |
+| Supabase | Live database with current schema |

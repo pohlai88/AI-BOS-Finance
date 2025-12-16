@@ -2,21 +2,15 @@
 // =============================================================================
 // CONT_06 Core Tables (Metadata Registry)
 // =============================================================================
+
+// Core registry tables
 export * from './standard-pack.tables';
 export * from './metadata.tables';
+export * from './alias.tables';
 export * from './entity-catalog.tables';
 export * from './metadata-mapping.tables';
+export * from './remediation.tables';
 
-// =============================================================================
-// Extended Metadata Tables
-// =============================================================================
-export * from './business-rule.tables';
-export * from './approval.tables';
+// Extended features (derived from .tempo)
 export * from './lineage.tables';
-export * from './glossary.tables';
-export * from './tags.tables';
 export * from './kpi.tables';
-export * from './observability.tables';
-export * from './naming-variant.tables';
-export * from './alias.tables';
-

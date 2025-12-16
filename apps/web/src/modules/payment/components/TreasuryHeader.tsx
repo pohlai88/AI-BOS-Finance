@@ -1,3 +1,5 @@
+'use client';
+
 // ============================================================================
 // COM_PAY_02: TREASURY HEADER - The "100 Logins" Solution
 // ============================================================================
@@ -5,11 +7,11 @@
 // without logging into 15 different bank portals.
 // ============================================================================
 
-import React from 'react';
-import { 
-  Building2, 
-  Wallet, 
-  TrendingDown, 
+import React, { useState, useEffect } from 'react';
+import {
+  Building2,
+  Wallet,
+  TrendingDown,
   TrendingUp,
   Calendar,
   ArrowRightLeft,
@@ -19,8 +21,8 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { 
-  TREASURY_DATA, 
+import {
+  TREASURY_DATA,
   ENTITY_OPTIONS,
   type TreasuryContext,
   type EntityOption,
@@ -50,10 +52,10 @@ interface EntitySelectorProps {
 function EntitySelector({ options, selectedId, onChange }: EntitySelectorProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const selected = options.find(o => o.id === selectedId);
-  
+
   return (
     <div className="relative">
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 bg-[#111] border border-[#1F1F1F] rounded hover:border-[#333] transition-colors min-w-[220px]"
       >
@@ -74,12 +76,12 @@ function EntitySelector({ options, selectedId, onChange }: EntitySelectorProps) 
           isOpen && 'rotate-180'
         )} />
       </button>
-      
+
       {isOpen && (
         <>
-          <div 
-            className="fixed inset-0 z-40" 
-            onClick={() => setIsOpen(false)} 
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setIsOpen(false)}
           />
           <div className="absolute top-full left-0 mt-1 w-full bg-[#0A0A0A] border border-[#1F1F1F] rounded shadow-lg z-50 overflow-hidden">
             {options.map(option => (
@@ -153,7 +155,7 @@ function MetricCard({ icon: Icon, label, value, subValue, status = 'neutral', tr
             {value}
           </span>
           {trend && (
-            trend === 'up' 
+            trend === 'up'
               ? <TrendingUp className="w-3.5 h-3.5 text-[#28E7A2]" />
               : <TrendingDown className="w-3.5 h-3.5 text-red-400" />
           )}
@@ -180,14 +182,27 @@ function MetricCard({ icon: Icon, label, value, subValue, status = 'neutral', tr
 // MAIN COMPONENT
 // ============================================================================
 
-export function TreasuryHeader({ 
-  selectedEntityId, 
+export function TreasuryHeader({
+  selectedEntityId,
   onEntityChange,
   onRefresh,
   className,
 }: TreasuryHeaderProps) {
   const treasury = TREASURY_DATA[selectedEntityId] as TreasuryContext | undefined;
-  
+
+  // Format time on client-side only to avoid hydration mismatch
+  const [formattedTime, setFormattedTime] = useState<string>('--:--');
+  useEffect(() => {
+    if (treasury?.last_sync) {
+      setFormattedTime(
+        new Date(treasury.last_sync).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      );
+    }
+  }, [treasury?.last_sync]);
+
   if (!treasury) {
     return (
       <div className={cn('p-4 bg-[#0A0A0A] border border-[#1F1F1F] rounded', className)}>
@@ -196,21 +211,22 @@ export function TreasuryHeader({
     );
   }
 
-  // Formatters
+  // Formatters - Use deterministic formatting to avoid hydration mismatches
   const formatCurrency = (amount: number, compact = false) => {
-    if (compact && Math.abs(amount) >= 1000) {
-      return new Intl.NumberFormat('en-US', { 
-        style: 'currency', 
-        currency: 'USD',
-        notation: 'compact',
-        maximumFractionDigits: 1,
-      }).format(amount);
+    if (compact) {
+      const absAmount = Math.abs(amount);
+      const sign = amount < 0 ? '-' : '';
+      if (absAmount >= 1_000_000_000) {
+        return `${sign}$${(absAmount / 1_000_000_000).toFixed(1)}B`;
+      } else if (absAmount >= 1_000_000) {
+        return `${sign}$${(absAmount / 1_000_000).toFixed(1)}M`;
+      } else if (absAmount >= 1_000) {
+        return `${sign}$${(absAmount / 1_000).toFixed(0)}K`;
+      }
+      return `${sign}$${absAmount.toFixed(0)}`;
     }
-    return new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(amount);
+    // Non-compact: simple formatting
+    return `$${amount.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
   };
 
   const formatPercent = (value: number) => {
@@ -218,21 +234,21 @@ export function TreasuryHeader({
   };
 
   // Derived status
-  const cashStatus = treasury.cash_status === 'healthy' ? 'positive' 
-                   : treasury.cash_status === 'critical' ? 'negative' 
-                   : 'warning';
-  
+  const cashStatus = treasury.cash_status === 'healthy' ? 'positive'
+    : treasury.cash_status === 'critical' ? 'negative'
+      : 'warning';
+
   const budgetStatus = treasury.budget_used_pct > 1 ? 'negative'
-                     : treasury.budget_used_pct > 0.9 ? 'warning'
-                     : 'neutral';
-  
+    : treasury.budget_used_pct > 0.9 ? 'warning'
+      : 'neutral';
+
   const icStatus = treasury.ic_status === 'lender' ? 'positive'
-                 : treasury.ic_status === 'borrower' ? 'warning'
-                 : 'neutral';
+    : treasury.ic_status === 'borrower' ? 'warning'
+      : 'neutral';
 
   const runwayStatus = treasury.runway_months < 1 ? 'negative'
-                     : treasury.runway_months < 3 ? 'warning'
-                     : 'positive';
+    : treasury.runway_months < 3 ? 'warning'
+      : 'positive';
 
   return (
     <div className={cn(
@@ -244,26 +260,26 @@ export function TreasuryHeader({
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-[#666] font-mono uppercase tracking-wider">Entity</span>
-            <EntitySelector 
+            <EntitySelector
               options={ENTITY_OPTIONS}
               selectedId={selectedEntityId}
               onChange={onEntityChange}
             />
           </div>
-          
+
           <div className="flex items-center gap-2 text-[#666]">
             <span className="text-[10px] font-mono">Bank:</span>
             <span className="text-sm text-[#888]">{treasury.bank_name}</span>
             <span className="text-[11px] font-mono text-[#555]">{treasury.bank_account_masked}</span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <span className="text-[9px] text-[#555] font-mono">
-            Last sync: {new Date(treasury.last_sync).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+            Last sync: {formattedTime}
           </span>
           {onRefresh && (
-            <button 
+            <button
               onClick={onRefresh}
               className="p-1.5 hover:bg-[#1F1F1F] rounded text-[#666] hover:text-white transition-colors"
             >
@@ -276,16 +292,16 @@ export function TreasuryHeader({
       {/* Bottom Row: Metrics */}
       <div className="flex items-center">
         {/* Cash Position */}
-        <MetricCard 
+        <MetricCard
           icon={Wallet}
           label="Cash"
           value={formatCurrency(treasury.cash_balance, true)}
           subValue={treasury.cash_status === 'critical' ? '⚠️ LOW' : undefined}
           status={cashStatus}
         />
-        
+
         {/* Budget Burn */}
-        <MetricCard 
+        <MetricCard
           icon={treasury.budget_used_pct > 1 ? TrendingUp : TrendingDown}
           label="Burn"
           value={formatPercent(treasury.budget_used_pct)}
@@ -293,22 +309,22 @@ export function TreasuryHeader({
           status={budgetStatus}
           trend={treasury.budget_used_pct > 1 ? 'up' : undefined}
         />
-        
+
         {/* IC Position */}
-        <MetricCard 
+        <MetricCard
           icon={ArrowRightLeft}
           label="IC Position"
           value={formatCurrency(treasury.ic_net_position, true)}
           subValue={
-            treasury.ic_status === 'lender' ? 'Net Lender' 
-            : treasury.ic_status === 'borrower' ? 'Net Borrower'
-            : 'Balanced'
+            treasury.ic_status === 'lender' ? 'Net Lender'
+              : treasury.ic_status === 'borrower' ? 'Net Borrower'
+                : 'Balanced'
           }
           status={icStatus}
         />
-        
+
         {/* Runway */}
-        <MetricCard 
+        <MetricCard
           icon={Calendar}
           label="Runway"
           value={treasury.runway_months < 1 ? '< 1' : treasury.runway_months.toFixed(1)}

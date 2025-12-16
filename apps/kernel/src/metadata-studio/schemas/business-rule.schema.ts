@@ -1,62 +1,90 @@
+// metadata-studio/schemas/business-rule.schema.ts
+// =============================================================================
+// BUSINESS RULE SCHEMA
+// Validation schemas for business rules and governance
+// =============================================================================
+
 import { z } from 'zod';
 
 /**
- * Business Rule Zod Schemas
- * Validates envelope-level fields for mdm_business_rule
- * configuration is left as unknown and validated per ruleType
+ * Governance tier levels - used for data classification
  */
-
-// Governance Tier Enum
 export const GovernanceTierEnum = z.enum([
-  'tier1',
-  'tier2',
-  'tier3',
-  'tier4',
-  'tier5',
+  'CRITICAL',
+  'HIGH',
+  'MEDIUM',
+  'LOW',
+  'UNCLASSIFIED',
 ]);
 
-// Governance Lane Enum
-export const GovernanceLaneEnum = z.enum([
-  'kernel_only',
-  'governed',
-  'draft',
-]);
-
-// Environment Enum
-export const EnvironmentEnum = z.enum(['live', 'sandbox']);
+export type GovernanceTier = z.infer<typeof GovernanceTierEnum>;
 
 /**
- * Base schema for mdm_business_rule rows.
- * configuration is left as unknown here and will be refined
- * per ruleType (FinanceApprovalConfigSchema, KpiDefinitionConfigSchema, etc.)
+ * Business rule types
  */
-export const MdmBusinessRuleBaseSchema = z.object({
+export const BusinessRuleType = z.enum([
+  'validation',
+  'transformation',
+  'quality',
+  'security',
+  'compliance',
+]);
+
+/**
+ * Business rule severity
+ */
+export const BusinessRuleSeverity = z.enum([
+  'critical',
+  'high',
+  'medium',
+  'low',
+  'info',
+]);
+
+/**
+ * Business rule status
+ */
+export const BusinessRuleStatus = z.enum([
+  'active',
+  'inactive',
+  'draft',
+  'deprecated',
+]);
+
+/**
+ * Business rule schema
+ */
+export const BusinessRuleSchema = z.object({
   id: z.string().uuid().optional(),
-
   tenantId: z.string().uuid(),
-
-  ruleType: z.string().min(1),
-  key: z.string().min(1),
-
-  name: z.string().min(1),
-  description: z.string().optional(),
-
-  tier: GovernanceTierEnum,
-  lane: GovernanceLaneEnum,
-  environment: EnvironmentEnum.default('live'),
-
-  configuration: z.unknown(),
-
-  version: z.string().min(1).default('1.0.0'),
-
-  isActive: z.boolean().default(true),
-  isDraft: z.boolean().default(false),
-
-  createdAt: z.string().datetime().optional(),
-  updatedAt: z.string().datetime().optional(),
-  createdBy: z.string().min(1).optional(),
-  updatedBy: z.string().min(1).optional(),
+  ruleCode: z.string().min(1).max(100),
+  ruleName: z.string().min(1).max(255),
+  description: z.string().nullable(),
+  ruleType: BusinessRuleType,
+  severity: BusinessRuleSeverity,
+  status: BusinessRuleStatus,
+  expression: z.string(), // SQL or expression language
+  errorMessage: z.string().nullable(),
+  applicableFields: z.array(z.string()).nullable(),
+  createdBy: z.string(),
+  updatedBy: z.string().nullable(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
-export type MdmBusinessRuleBase = z.infer<typeof MdmBusinessRuleBaseSchema>;
+/**
+ * Business rule execution result
+ */
+export const BusinessRuleExecutionSchema = z.object({
+  ruleId: z.string().uuid(),
+  passed: z.boolean(),
+  message: z.string().nullable(),
+  executedAt: z.date(),
+  executionTimeMs: z.number(),
+});
 
+/**
+ * Type exports
+ */
+export type BusinessRule = z.infer<typeof BusinessRuleSchema>;
+export type BusinessRuleExecution = z.infer<typeof BusinessRuleExecutionSchema>;

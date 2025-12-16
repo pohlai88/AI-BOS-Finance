@@ -36,6 +36,15 @@ export * from './ports/tokenSignerPort';
 export * from './ports/permissionRepoPort';
 export * from './ports/rolePermissionRepoPort';
 
+// AP-05 Payment Execution Cell Ports
+export * from './ports/fiscalTimePort';
+export * from './ports/policyPort';
+export * from './ports/paymentRepositoryPort';
+export * from './ports/glPostingPort';
+
+// Export TransactionContext for use in other ports
+export type { TransactionContext } from './ports/paymentRepositoryPort';
+
 // Constants
 export { KERNEL_PERMISSIONS } from './constants/permissions';
 export { SYSTEM_TENANT_ID, NULL_UUID, TABLES, COLUMNS } from './constants/system';

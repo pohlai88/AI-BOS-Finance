@@ -54,6 +54,7 @@ export const mdmStandardPack = pgTable(
 
     // Who registered this pack in the system
     createdBy: text('created_by').notNull(),
+    updatedBy: text('updated_by'),
   },
   (table) => ({
     // So you can't accidentally define the same pack twice

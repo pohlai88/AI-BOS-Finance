@@ -1,5 +1,6 @@
 packages:
   - apps/*
+  - apps/kernel/src/metadata-studio
   - packages/*
 
 overrides:

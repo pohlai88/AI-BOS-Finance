@@ -1,0 +1,92 @@
+# ============================================================================
+# Payment Hub - Dockerfile
+# ============================================================================
+# Multi-stage build for optimized production deployment
+# Phase 6b Enhancement: Integration Kit
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Stage 1: Dependencies
+# ----------------------------------------------------------------------------
+FROM node:20-alpine AS deps
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/
+COPY packages/*/package.json ./packages/
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# ----------------------------------------------------------------------------
+# Stage 2: Builder
+# ----------------------------------------------------------------------------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps ./apps
+COPY --from=deps /app/packages ./packages
+
+# Copy source code
+COPY . .
+
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Build application (Next.js + TypeScript)
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+RUN pnpm build:web
+
+# ----------------------------------------------------------------------------
+# Stage 3: Runner
+# ----------------------------------------------------------------------------
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy built application
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+
+# Copy database migrations
+COPY --from=builder /app/apps/db/migrations ./apps/db/migrations
+
+# Install production-only dependencies
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set ownership
+RUN chown -R nextjs:nodejs /app
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3001
+
+# Environment
+ENV NODE_ENV=production
+ENV PORT=3001
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start application
+CMD ["node", "apps/web/server.js"]

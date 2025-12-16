@@ -40,6 +40,9 @@
       "@/views/*": [
         "./src/views/*"
       ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
       "@aibos/canon": [
         "../../packages/canon"
       ],
@@ -57,6 +60,7 @@
   "include": [
     "./src",
     "./app",
+    "./lib",
     "./canon-pages",
     "../../packages/canon/**/*.ts",
     "./dist/types/**/*.ts",

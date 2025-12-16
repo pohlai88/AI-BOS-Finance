@@ -7,12 +7,28 @@
  * - Per-tenant event storage
  * - Retention cap (last N events per tenant)
  * - Correlation ID indexing for tracing
+ * - Transactional outbox simulation (in-memory)
  * 
  * Later: Swap to Redis/NATS/RabbitMQ without changing kernel-core.
  */
 
-import type { EventBusPort } from "@aibos/kernel-core";
+import { v4 as uuidv4 } from 'uuid';
+import type { EventBusPort, TransactionContext } from "@aibos/kernel-core";
 import type { Event } from "@aibos/kernel-core";
+
+/**
+ * In-Memory Outbox Entry (simulates transactional outbox table)
+ */
+interface OutboxEntry {
+  id: string;
+  eventType: string;
+  payload: Record<string, unknown>;
+  correlationId: string;
+  tenantId?: string;
+  createdAt: Date;
+  published: boolean;
+  publishedAt?: Date;
+}
 
 /**
  * In-Memory Event Bus
@@ -20,12 +36,14 @@ import type { Event } from "@aibos/kernel-core";
  * Storage structure:
  * - events: Map<tenant_id, Event[]>
  * - correlationIndex: Map<correlation_id, Event[]>
+ * - outbox: OutboxEntry[] (simulates transactional outbox table)
  * 
  * Retention: Keep last MAX_EVENTS_PER_TENANT events per tenant
  */
 export class InMemoryEventBus implements EventBusPort {
   private events: Map<string, Event[]> = new Map();
   private correlationIndex: Map<string, Event[]> = new Map();
+  private outbox: OutboxEntry[] = [];
   private readonly maxEventsPerTenant: number;
 
   constructor(maxEventsPerTenant: number = 1000) {
@@ -77,6 +95,72 @@ export class InMemoryEventBus implements EventBusPort {
    */
   async listByCorrelationId(correlation_id: string): Promise<Event[]> {
     return this.correlationIndex.get(correlation_id) ?? [];
+  }
+
+  /**
+   * Write event to transactional outbox (same DB transaction)
+   * 
+   * In-memory implementation: Stores in outbox array (simulates outbox table).
+   * In production, this would INSERT into kernel.event_outbox within the same transaction.
+   * 
+   * A separate dispatcher process would read from outbox and publish events.
+   */
+  async writeToOutbox(
+    eventType: string,
+    payload: Record<string, unknown>,
+    txContext: TransactionContext
+  ): Promise<void> {
+    const entry: OutboxEntry = {
+      id: uuidv4(),
+      eventType,
+      payload,
+      correlationId: txContext.correlationId,
+      tenantId: (payload as { tenantId?: string }).tenantId,
+      createdAt: new Date(),
+      published: false,
+    };
+
+    this.outbox.push(entry);
+
+    // Simulate dispatcher: immediately publish (in production, dispatcher does this)
+    // In real implementation, dispatcher reads from outbox after commit
+    await this.publishFromOutbox(entry);
+  }
+
+  /**
+   * Publish event from outbox entry (simulates dispatcher)
+   */
+  private async publishFromOutbox(entry: OutboxEntry): Promise<void> {
+    // Convert outbox entry to Event format
+    const event: Event = {
+      event_id: entry.id,
+      event_name: entry.eventType,
+      tenant_id: entry.tenantId || '',
+      correlation_id: entry.correlationId,
+      causation_id: undefined,
+      payload: entry.payload,
+      created_at: entry.createdAt.toISOString(),
+    };
+
+    await this.publish(event);
+
+    // Mark as published
+    entry.published = true;
+    entry.publishedAt = new Date();
+  }
+
+  /**
+   * Get outbox entries (for testing/debugging)
+   */
+  getOutboxEntries(): OutboxEntry[] {
+    return [...this.outbox];
+  }
+
+  /**
+   * Get unpublished outbox entries (for dispatcher simulation)
+   */
+  getUnpublishedOutboxEntries(): OutboxEntry[] {
+    return this.outbox.filter(e => !e.published);
   }
 
   /**

@@ -6,7 +6,14 @@
  */
 
 import crypto from "node:crypto";
-import type { AuditPort, AuditWriteInput, AuditQueryInput, AuditQueryOutput } from "@aibos/kernel-core";
+import type {
+  AuditPort,
+  AuditWriteInput,
+  AuditQueryInput,
+  AuditQueryOutput,
+  AuditEvent,
+  TransactionContext,
+} from "@aibos/kernel-core";
 
 export interface StoredAuditEvent extends AuditWriteInput {
   id: string;
@@ -36,6 +43,32 @@ export class InMemoryAudit implements AuditPort {
     if (this.events.length > this.retentionLimit) {
       this.events = this.events.slice(0, this.retentionLimit);
     }
+  }
+
+  /**
+   * Emit audit event within a database transaction (TRANSACTIONAL)
+   * 
+   * In-memory implementation: Just appends the event (no real transaction).
+   * In production, this would write to the same DB transaction.
+   */
+  async emitTransactional(
+    event: AuditEvent,
+    _txContext: TransactionContext
+  ): Promise<void> {
+    // Convert AuditEvent to AuditWriteInput format
+    const auditInput: AuditWriteInput = {
+      tenant_id: event.actor.tenantId,
+      actor_id: event.actor.userId,
+      action: event.eventType,
+      resource: event.entityId,
+      result: 'OK',
+      correlation_id: _txContext.correlationId,
+      payload: event.payload,
+      event_type: event.eventType,
+      source: 'canon',
+    };
+
+    await this.append(auditInput);
   }
 
   /**

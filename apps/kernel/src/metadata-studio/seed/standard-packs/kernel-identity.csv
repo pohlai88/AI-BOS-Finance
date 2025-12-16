@@ -1,0 +1,7 @@
+pack_key,name,domain,version,is_active,tier,standard_body,description
+KERNEL_TENANT,Kernel Tenant Identity,KERNEL,1.0.0,true,tier1,AI-BOS,Multi-tenant isolation and tenant identity governance. All tenant_id fields.
+KERNEL_USER,Kernel User Identity,KERNEL,1.0.0,true,tier1,AI-BOS,User identity, authentication, and profile governance.
+KERNEL_SESSION,Kernel Session Management,KERNEL,1.0.0,true,tier1,AI-BOS,Session lifecycle, tokens, and authentication state governance.
+KERNEL_ROLE,Kernel Role & Permission,KERNEL,1.0.0,true,tier1,AI-BOS,RBAC roles, permissions, and access control governance.
+KERNEL_AUDIT,Kernel Audit Trail,KERNEL,1.0.0,true,tier1,AI-BOS,Immutable audit log governance for all kernel operations.
+KERNEL_EVENT,Kernel Event Bus,KERNEL,1.0.0,true,tier2,AI-BOS,Domain event publishing and subscription governance.

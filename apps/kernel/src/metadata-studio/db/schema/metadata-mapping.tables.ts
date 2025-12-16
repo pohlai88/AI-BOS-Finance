@@ -41,6 +41,15 @@ export const mdmMetadataMapping = pgTable(
     // Reference to canonical metadata
     canonicalKey: text('canonical_key').notNull(),
 
+    // Local field data type
+    localType: text('local_type'),
+
+    // Transformation expression/rule
+    transformation: text('transformation'),
+
+    // Notes/comments
+    notes: text('notes'),
+
     // How mapped: manual, ai-suggested
     mappingSource: text('mapping_source').notNull().default('manual'),
 

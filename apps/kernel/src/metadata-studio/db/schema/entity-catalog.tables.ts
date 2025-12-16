@@ -53,6 +53,9 @@ export const mdmEntityCatalog = pgTable(
     // Entity description
     description: text('description'),
 
+    // Owner (governance)
+    ownerId: text('owner_id'),
+
     // Audit columns
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),

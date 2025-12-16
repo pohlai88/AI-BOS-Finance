@@ -63,6 +63,9 @@ export const mdmGlobalMetadata = pgTable(
         status: text('status').notNull().default('active'), // active | deprecated | draft
         isDraft: boolean('is_draft').notNull().default(false),
 
+        // PII flag for sensitive data governance
+        piiFlag: boolean('pii_flag').notNull().default(false),
+
         createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 

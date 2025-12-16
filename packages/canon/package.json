@@ -1,7 +1,8 @@
 {
-  "name": "@aibos/canon",
-  "version": "0.0.0",
+  "name": "@aibos/canon-governance",
+  "version": "1.0.0",
   "private": true,
+  "description": "AI-BOS Canon Governance - Contracts, ADRs, Registries, and Tools",
   "main": "index.ts",
   "types": "index.ts",
   "exports": {
@@ -12,6 +13,9 @@
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "decimal.js": "^10.4.3"
   },
   "devDependencies": {
     "typescript": "~5.6.2",

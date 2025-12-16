@@ -3,7 +3,7 @@
 > **Prefixes:** CONT
 > **Location:** `canon\A-Governance\A-CONT/`
 > **SSOT:** [`CONT_01_CanonIdentity.md`](./CONT_01_CanonIdentity.md) — Single Source of Truth
-> **Auto-Generated:** 2025-12-11
+> **Auto-Generated:** 2025-12-16
 
 ---
 
@@ -11,7 +11,7 @@
 
 ## 📜 Supreme Governance
 
-**Constitution:** [`CONT_00_Constitution.md`](./CONT_00_Constitution.md)  
+**Constitution:** [`CONT_00_Constitution.md`](./CONT_00_Constitution.md)
 
 The Constitution is the supreme governance document. All other contracts derive authority from it.
 
@@ -25,9 +25,10 @@ The Constitution is the supreme governance document. All other contracts derive 
 | **CONT_01_CanonIdentity** | [Canon Identity](./CONT_01_CanonIdentity.md) | 🟢 ACTIVE | 2.2.0 | Naming & Codes |
 | **CONT_02_KernelArchitecture** | [Kernel Architecture](./CONT_02_KernelArchitecture.md) | 🟢 ACTIVE | 1.4.0 | Control Plane |
 | **CONT_03_DatabaseArchitecture** | [Database Architecture](./CONT_03_DatabaseArchitecture.md) | 🟡 DRAFT | 0.2.2 | Data Fabric |
-| **CONT_04_PaymentHubArchitecture** | [Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) | 🟡 DRAFT | 0.1.0 | Cell Example |
+| **CONT_04_PaymentHubArchitecture** | [Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) | 🟢 CERTIFIED | 2.0.0 | Cell: AP-05 Payment Execution (Fortune 500) |
 | **CONT_05_NamingAndStructure** | [Naming & Structure](./CONT_05_NamingAndStructure.md) | 🟢 ACTIVE | 1.0.1 | Directory & Naming Standards |
 | **CONT_06_SchemaAndTypeGovernance** | [Schema & Type Governance](./CONT_06_SchemaAndTypeGovernance.md) | 🟢 ACTIVE | 1.0.0 | Metadata-First Schema Creation |
+| **CONT_07_FinanceCanonArchitecture** | [Finance Canon Architecture](./CONT_07_FinanceCanonArchitecture.md) | 🟢 CERTIFIED | 3.0.0 | **Finance Domain** — Enterprise Constitution |
 
 ---
 

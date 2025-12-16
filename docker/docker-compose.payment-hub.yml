@@ -1,0 +1,200 @@
+version: '3.9'
+
+# ============================================================================
+# AI-BOS Payment Hub - Standalone Deployment
+# ============================================================================
+# This Docker Compose configuration deploys the Payment Hub as a standalone
+# service without requiring the full AI-BOS Kernel infrastructure.
+#
+# Usage:
+#   1. Set required environment variables (see .env.example)
+#   2. Start: docker-compose -f docker/docker-compose.payment-hub.yml up -d
+#   3. Stop:  docker-compose -f docker/docker-compose.payment-hub.yml down
+#
+# Ports:
+#   - 3001: Payment Hub API (Next.js)
+#   - 5432: PostgreSQL (local only)
+#   - 6379: Redis cache (optional)
+#
+# Phase 6b Enhancement: Integration Kit
+# ============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL Database
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: payment-hub-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-payment_hub}
+      POSTGRES_USER: ${POSTGRES_USER:-payment_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.UTF-8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-payment_admin}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - payment-hub-network
+
+  # --------------------------------------------------------------------------
+  # Redis Cache (Optional - for webhook queue and caching)
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: payment-hub-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_secret}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - payment-hub-network
+    profiles:
+      - full
+
+  # --------------------------------------------------------------------------
+  # Payment Hub API (Next.js)
+  # --------------------------------------------------------------------------
+  payment-hub:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.payment-hub
+      args:
+        NODE_VERSION: 20
+    container_name: payment-hub-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Node environment
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-payment_admin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payment_hub}
+
+      # Redis (optional)
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secret}@redis:6379
+
+      # JWT Authentication
+      JWT_SECRET: ${JWT_SECRET:?JWT secret required}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-3600}
+
+      # Webhook configuration
+      WEBHOOK_MAX_RETRIES: ${WEBHOOK_MAX_RETRIES:-5}
+      WEBHOOK_RETRY_DELAY: ${WEBHOOK_RETRY_DELAY:-60000}
+
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+      # Feature flags
+      ENABLE_WEBHOOKS: ${ENABLE_WEBHOOKS:-true}
+      ENABLE_BENEFICIARY_IMPORT: ${ENABLE_BENEFICIARY_IMPORT:-true}
+
+      # External service URLs (if integrated with full AI-BOS)
+      KERNEL_URL: ${KERNEL_URL:-}
+      METADATA_STUDIO_URL: ${METADATA_STUDIO_URL:-}
+
+    ports:
+      - "${PAYMENT_HUB_PORT:-3001}:3001"
+    volumes:
+      # Mount for hot-reload in development
+      - ../apps/web:/app/apps/web:ro
+      - ../packages:/app/packages:ro
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3001/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - payment-hub-network
+    labels:
+      com.ai-bos.service: "payment-hub"
+      com.ai-bos.version: "1.0.0"
+
+  # --------------------------------------------------------------------------
+  # Webhook Worker (Background job processor)
+  # --------------------------------------------------------------------------
+  webhook-worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.webhook-worker
+    container_name: payment-hub-webhook-worker
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-payment_admin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payment_hub}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secret}@redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-5}
+      WORKER_POLL_INTERVAL: ${WORKER_POLL_INTERVAL:-5000}
+    networks:
+      - payment-hub-network
+    profiles:
+      - full
+
+  # --------------------------------------------------------------------------
+  # pgAdmin (Optional - for database management)
+  # --------------------------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: payment-hub-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@payment-hub.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - payment-hub-network
+    profiles:
+      - dev
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  payment-hub-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

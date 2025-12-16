@@ -16,3 +16,13 @@ export { SqlRouteRepo } from './routeRepo.sql';
 export { SqlEventBus } from './eventBus.sql';
 export { SqlAuditRepo } from './auditRepo.sql';
 export { SqlCredentialRepo } from './credentialRepo.sql';
+
+// AP-05 Payment Execution Cell
+export { SqlPaymentRepository, createSqlPaymentRepository } from './paymentRepo.sql';
+export {
+  OutboxDispatcher,
+  createOutboxDispatcher,
+  type OutboxEvent,
+  type EventHandler,
+  type OutboxDispatcherConfig,
+} from './outboxDispatcher.sql';

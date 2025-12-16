@@ -14,3 +14,9 @@
 
 // Export registry and types
 export * from './registry';
+
+// Domain Primitives (Value Objects)
+export * from './primitives';
+
+// State Machines
+export * from './state-machines';

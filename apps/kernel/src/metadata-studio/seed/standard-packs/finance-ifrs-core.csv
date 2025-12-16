@@ -1,6 +1,19 @@
-pack_key,name,domain,version,is_active,description
-MFRS15_REVENUE,IFRS/MFRS Core Revenue,FINANCE,1.0.0,true,Core revenue recognition concepts under MFRS 15 / IFRS 15.
-IFRS_OTHER_INCOME,IFRS Other Income,FINANCE,1.0.0,true,Standardised concepts for other income not classified as revenue.
-IFRS_OTHER_GAIN,IFRS Gains,FINANCE,1.0.0,true,Standardised concepts for gains (disposal, FX, fair value etc.).
-AIBOS_INTERNAL_MANAGEMENT,AI-BOS Internal Management KPIs,FINANCE,1.0.0,true,Internal management-only KPIs for sales, quantity, non-statutory measures.
+pack_key,name,domain,version,is_active,tier,standard_body,description
+KERNEL_ID_CORE,Kernel Identity Core,SECURITY,1.0.0,true,tier1,AI-BOS,Core identity fields for kernel entities: tenants, users, sessions, roles. Immutable governance.
+MFRS_101,Presentation of Financial Statements,FINANCE,1.0.0,true,tier1,MFRS/IASB,General requirements for presenting financial statements per MFRS 101/IAS 1.
+MFRS_15,Revenue from Contracts with Customers,FINANCE,1.0.0,true,tier1,MFRS/IASB,Five-step model for revenue recognition under MFRS 15/IFRS 15.
+MFRS_16,Leases,FINANCE,1.0.0,true,tier1,MFRS/IASB,Lease accounting standards for lessees and lessors under MFRS 16/IFRS 16.
+MFRS_9,Financial Instruments,FINANCE,1.0.0,true,tier1,MFRS/IASB,Classification, measurement, impairment, and hedge accounting for financial instruments.
+MFRS_2,Share-based Payment,FINANCE,1.0.0,true,tier1,MFRS/IASB,Accounting for share-based payment transactions.
+SOC2_IAM,Identity & Access Management,SECURITY,1.0.0,true,tier1,AICPA,SOC 2 Trust Service Criteria for identity, authentication, and access controls.
+SOC2_AUDIT,Logging & Monitoring,SECURITY,1.0.0,true,tier1,AICPA,SOC 2 Trust Service Criteria for audit logging, monitoring, and anomaly detection.
+SOC2_ENCRYPTION,Data Protection & Encryption,SECURITY,1.0.0,true,tier1,AICPA,SOC 2 Trust Service Criteria for data protection at rest and in transit.
+ISO27001_RISK,Information Security Risk Management,SECURITY,1.0.0,true,tier1,ISO,ISO 27001 risk assessment and treatment requirements.
+GDPR_PII,Personal Data Protection,PRIVACY,1.0.0,true,tier1,EU,GDPR requirements for personal data processing and protection.
+PDPA_MY,Malaysia Personal Data Protection,PRIVACY,1.0.0,true,tier1,JPDP,Malaysia PDPA requirements for personal data handling.
+MFRS15_REVENUE,IFRS/MFRS Core Revenue,FINANCE,1.0.0,true,tier1,MFRS/IASB,Core revenue recognition concepts under MFRS 15 / IFRS 15.
+IFRS_OTHER_INCOME,IFRS Other Income,FINANCE,1.0.0,true,tier2,IASB,Standardised concepts for other income not classified as revenue.
+IFRS_OTHER_GAIN,IFRS Gains,FINANCE,1.0.0,true,tier2,IASB,Standardised concepts for gains (disposal, FX, fair value etc.).
+AIBOS_INTERNAL_MANAGEMENT,AI-BOS Internal Management KPIs,OPERATIONS,1.0.0,true,tier2,AI-BOS,Internal management-only KPIs for sales, quantity, non-statutory measures.
+AIBOS_OPERATIONAL,AI-BOS Operational Metrics,OPERATIONS,1.0.0,true,tier3,AI-BOS,Operational metrics and non-statutory KPIs for internal analytics.
 

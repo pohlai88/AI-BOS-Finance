@@ -1,6 +1,6 @@
 // ============================================================================
 // PAYMENT MODULE - COMPONENTS
-// Sprint 2 deliverables: COM_PAY_01 through COM_PAY_05
+// Sprint 2 deliverables: COM_PAY_01 through COM_PAY_08
 // ============================================================================
 
 // COM_PAY_01: Audit Sidebar - The 4W1H Orchestra
@@ -10,8 +10,8 @@ export { AuditSidebar } from './AuditSidebar';
 export { TreasuryHeader } from './TreasuryHeader';
 
 // COM_PAY_03: Functional Card - Batch Processing Clusters
-export { 
-  FunctionalCard, 
+export {
+  FunctionalCard,
   FunctionalCardGrid,
   type FunctionalClusterData,
   type ClusterStatus,
@@ -22,8 +22,39 @@ export {
 export { PaymentTable } from './PaymentTable';
 
 // COM_PAY_05: Approval Actions - Approve/Reject Buttons
-export { 
+export {
   ApprovalActions,
   BatchApprovalButton,
 } from './ApprovalActions';
+
+// ============================================================================
+// AP-05 PAYMENT EXECUTION CELL COMPONENTS
+// ============================================================================
+
+// COM_PAY_06: Amount Input - String-only money input
+export {
+  AmountInput,
+  getCurrencySymbol,
+  sanitizeAmountInput,
+  formatForDisplay,
+  type CurrencyCode,
+} from './AmountInput';
+
+// COM_PAY_07: Payment Status Badge - State machine visualization
+export {
+  PaymentStatusBadge,
+  RetryBadge,
+  getStatusLabel,
+  isTerminalStatus,
+  canTransition,
+  getNextStatus,
+  STATUS_CONFIG,
+  type PaymentStatus,
+} from './PaymentStatusBadge';
+
+// COM_PAY_08: Create Payment Dialog - Enterprise payment creation
+export {
+  CreatePaymentDialog,
+  type CreatePaymentDialogProps,
+} from './CreatePaymentDialog';
 

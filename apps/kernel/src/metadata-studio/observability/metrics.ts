@@ -1,278 +1,128 @@
 // metadata-studio/observability/metrics.ts
-import {
-  Counter,
-  Histogram,
-  Registry,
-  collectDefaultMetrics,
-} from 'prom-client';
+// =============================================================================
+// METRICS COLLECTION MODULE
+// Provides basic metrics collection for metadata operations
+// =============================================================================
 
-/**
- * Prometheus Metrics Registry
- *
- * Exposes runtime metrics for:
- * - Metadata search operations
- * - Lineage queries
- * - Data profiling runs
- * - Usage event tracking
- * - Node.js runtime (GC, event loop, memory, CPU)
- *
- * Prometheus scrapes GET /metrics to collect these.
- * Grafana dashboards visualize them.
- *
- * Closes audit gap: "zero instrumentation" → "metrics present"
- */
-export const registry = new Registry();
+export interface MetricData {
+  name: string;
+  value: number;
+  timestamp: Date;
+  labels?: Record<string, string>;
+}
 
-// Default Node.js metrics (GC, event loop, memory, CPU)
-collectDefaultMetrics({ register: registry });
+class MetricsCollector {
+  private metrics: MetricData[] = [];
 
-// ═══════════════════════════════════════════════════════════════════
-// METADATA SEARCH METRICS
-// ═══════════════════════════════════════════════════════════════════
+  /**
+   * Record a metric
+   */
+  record(name: string, value: number, labels?: Record<string, string>) {
+    this.metrics.push({
+      name,
+      value,
+      timestamp: new Date(),
+      labels,
+    });
 
-export const metadataSearchRequestsTotal = new Counter({
-  name: 'metadata_search_requests_total',
-  help: 'Total number of metadata search requests',
-  labelNames: ['tenant_id', 'status'],
-  registers: [registry],
-});
+    // Keep only last 1000 metrics to prevent memory issues
+    if (this.metrics.length > 1000) {
+      this.metrics = this.metrics.slice(-1000);
+    }
+  }
 
-export const metadataSearchDurationSeconds = new Histogram({
-  name: 'metadata_search_duration_seconds',
-  help: 'Metadata search duration in seconds',
-  buckets: [0.01, 0.05, 0.1, 0.15, 0.3, 0.5, 1],
-  labelNames: ['tenant_id'],
-  registers: [registry],
-});
+  /**
+   * Get all recorded metrics
+   */
+  getMetrics(): MetricData[] {
+    return [...this.metrics];
+  }
 
-// ═══════════════════════════════════════════════════════════════════
-// LINEAGE METRICS
-// ═══════════════════════════════════════════════════════════════════
+  /**
+   * Get metrics by name
+   */
+  getMetricsByName(name: string): MetricData[] {
+    return this.metrics.filter((m) => m.name === name);
+  }
 
-export const metadataLineageRequestsTotal = new Counter({
-  name: 'metadata_lineage_requests_total',
-  help: 'Total number of lineage requests',
-  labelNames: ['tenant_id', 'direction'],
-  registers: [registry],
-});
+  /**
+   * Clear all metrics
+   */
+  clear() {
+    this.metrics = [];
+  }
 
-export const metadataLineageDurationSeconds = new Histogram({
-  name: 'metadata_lineage_duration_seconds',
-  help: 'Lineage query duration in seconds',
-  buckets: [0.01, 0.05, 0.1, 0.3, 0.5, 1, 2],
-  labelNames: ['tenant_id', 'direction'],
-  registers: [registry],
-});
+  /**
+   * Get summary statistics for a metric
+   */
+  getSummary(name: string) {
+    const metrics = this.getMetricsByName(name);
+    if (metrics.length === 0) {
+      return null;
+    }
 
-// ═══════════════════════════════════════════════════════════════════
-// DATA PROFILER METRICS
-// ═══════════════════════════════════════════════════════════════════
+    const values = metrics.map((m) => m.value);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const avg = sum / values.length;
+    const min = Math.min(...values);
+    const max = Math.max(...values);
 
-export const metadataProfilerRunsTotal = new Counter({
-  name: 'metadata_profiler_runs_total',
-  help: 'Total number of profiler runs',
-  labelNames: ['tenant_id', 'entity_type'],
-  registers: [registry],
-});
+    return {
+      count: metrics.length,
+      sum,
+      avg,
+      min,
+      max,
+    };
+  }
+}
 
-export const metadataProfilerFailuresTotal = new Counter({
-  name: 'metadata_profiler_failures_total',
-  help: 'Total number of profiler failures',
-  labelNames: ['tenant_id', 'error_type'],
-  registers: [registry],
-});
+// Singleton instance
+export const metrics = new MetricsCollector();
 
-export const metadataProfilerDurationSeconds = new Histogram({
-  name: 'metadata_profiler_duration_seconds',
-  help: 'Profiler run duration in seconds',
-  buckets: [0.1, 0.5, 1, 2, 5, 10, 30],
-  labelNames: ['tenant_id', 'entity_type'],
-  registers: [registry],
-});
+// Registry for Prometheus-style metrics endpoint
+export const registry = {
+  metrics: () => metrics.getMetrics(),
+  contentType: 'text/plain',
+  getMetricsAsPrometheus: () => {
+    const allMetrics = metrics.getMetrics();
+    const lines: string[] = [];
 
-// ═══════════════════════════════════════════════════════════════════
-// USAGE TRACKING METRICS
-// ═══════════════════════════════════════════════════════════════════
+    // Group by metric name
+    const grouped = new Map<string, MetricData[]>();
+    for (const m of allMetrics) {
+      const existing = grouped.get(m.name) || [];
+      existing.push(m);
+      grouped.set(m.name, existing);
+    }
 
-export const metadataUsageEventsTotal = new Counter({
-  name: 'metadata_usage_events_total',
-  help: 'Total number of metadata usage events',
-  labelNames: ['tenant_id', 'event_type', 'actor_type', 'governance_tier'],
-  registers: [registry],
-});
+    // Format as Prometheus exposition format
+    for (const [name, data] of grouped) {
+      lines.push(`# TYPE ${name} gauge`);
+      const latest = data[data.length - 1];
+      const labels = latest.labels
+        ? Object.entries(latest.labels).map(([k, v]) => `${k}="${v}"`).join(',')
+        : '';
+      lines.push(`${name}${labels ? `{${labels}}` : ''} ${latest.value}`);
+    }
 
-// ═══════════════════════════════════════════════════════════════════
-// APPROVAL WORKFLOW METRICS
-// ═══════════════════════════════════════════════════════════════════
+    return lines.join('\n');
+  },
+};
 
-export const metadataApprovalRequestsTotal = new Counter({
-  name: 'metadata_approval_requests_total',
-  help: 'Total number of approval requests',
-  labelNames: ['tenant_id', 'entity_type', 'tier'],
-  registers: [registry],
-});
+// Helper functions
+export function recordMetric(
+  name: string,
+  value: number,
+  labels?: Record<string, string>
+) {
+  metrics.record(name, value, labels);
+}
 
-export const metadataApprovalDecisionsTotal = new Counter({
-  name: 'metadata_approval_decisions_total',
-  help: 'Total number of approval decisions',
-  labelNames: ['tenant_id', 'entity_type', 'decision'],
-  registers: [registry],
-});
+export function getMetrics() {
+  return metrics.getMetrics();
+}
 
-export const metadataApprovalDurationSeconds = new Histogram({
-  name: 'metadata_approval_duration_seconds',
-  help: 'Time from request to approval/rejection in seconds',
-  buckets: [60, 300, 900, 3600, 7200, 14400, 86400], // 1m, 5m, 15m, 1h, 2h, 4h, 1d
-  labelNames: ['tenant_id', 'entity_type'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// KPI & IMPACT ANALYSIS METRICS
-// ═══════════════════════════════════════════════════════════════════
-
-export const metadataKpiRequestsTotal = new Counter({
-  name: 'metadata_kpi_requests_total',
-  help: 'Total number of KPI definition requests',
-  labelNames: ['tenant_id', 'tier', 'status'],
-  registers: [registry],
-});
-
-export const metadataImpactAnalysisRequestsTotal = new Counter({
-  name: 'metadata_impact_analysis_requests_total',
-  help: 'Total number of impact analysis requests',
-  labelNames: ['tenant_id'],
-  registers: [registry],
-});
-
-export const metadataImpactAnalysisDurationSeconds = new Histogram({
-  name: 'metadata_impact_analysis_duration_seconds',
-  help: 'Impact analysis duration in seconds',
-  buckets: [0.05, 0.1, 0.3, 0.5, 1, 2],
-  labelNames: ['tenant_id'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// HTTP API METRICS
-// ═══════════════════════════════════════════════════════════════════
-
-export const httpRequestsTotal = new Counter({
-  name: 'http_requests_total',
-  help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status'],
-  registers: [registry],
-});
-
-export const httpRequestDurationSeconds = new Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'HTTP request duration in seconds',
-  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
-  labelNames: ['method', 'route'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// DATABASE METRICS
-// ═══════════════════════════════════════════════════════════════════
-
-export const dbQueriesTotal = new Counter({
-  name: 'db_queries_total',
-  help: 'Total number of database queries',
-  labelNames: ['table', 'operation'],
-  registers: [registry],
-});
-
-export const dbQueryDurationSeconds = new Histogram({
-  name: 'db_query_duration_seconds',
-  help: 'Database query duration in seconds',
-  buckets: [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1],
-  labelNames: ['table', 'operation'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// MAPPING SERVICE METRICS (GRCD Phase 1)
-// ═══════════════════════════════════════════════════════════════════
-
-export const mappingLookupRequestsTotal = new Counter({
-  name: 'metadata_mapping_lookup_requests_total',
-  help: 'Total number of mapping lookup requests',
-  labelNames: ['tenant_id', 'context_domain', 'match_type'],
-  registers: [registry],
-});
-
-export const mappingLookupDurationSeconds = new Histogram({
-  name: 'metadata_mapping_lookup_duration_seconds',
-  help: 'Mapping lookup duration in seconds',
-  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25],
-  labelNames: ['tenant_id', 'context_domain'],
-  registers: [registry],
-});
-
-export const mappingSuggestRequestsTotal = new Counter({
-  name: 'metadata_mapping_suggest_requests_total',
-  help: 'Total number of mapping suggest requests',
-  labelNames: ['tenant_id', 'context_domain'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// POLICY SERVICE METRICS (GRCD Phase 1)
-// ═══════════════════════════════════════════════════════════════════
-
-export const policyAccessCheckRequestsTotal = new Counter({
-  name: 'metadata_policy_access_check_requests_total',
-  help: 'Total number of policy access check requests',
-  labelNames: ['tenant_id', 'resource_type', 'intent', 'allowed'],
-  registers: [registry],
-});
-
-export const policyAccessCheckDurationSeconds = new Histogram({
-  name: 'metadata_policy_access_check_duration_seconds',
-  help: 'Policy access check duration in seconds',
-  buckets: [0.001, 0.005, 0.01, 0.025, 0.05],
-  labelNames: ['tenant_id', 'resource_type'],
-  registers: [registry],
-});
-
-export const policyApprovalRequiredTotal = new Counter({
-  name: 'metadata_policy_approval_required_total',
-  help: 'Total number of operations requiring approval',
-  labelNames: ['tenant_id', 'tier', 'intent', 'required_role'],
-  registers: [registry],
-});
-
-// ═══════════════════════════════════════════════════════════════════
-// SCHEMA DRIFT KPI METRICS (GRCD Section 5)
-// ═══════════════════════════════════════════════════════════════════
-
-export const schemaDriftIncidentsTotal = new Counter({
-  name: 'metadata_schema_drift_incidents_total',
-  help: 'Total number of schema drift incidents detected',
-  labelNames: ['tenant_id', 'domain', 'severity'],
-  registers: [registry],
-});
-
-export const schemaDriftResolutionDurationSeconds = new Histogram({
-  name: 'metadata_schema_drift_resolution_duration_seconds',
-  help: 'Time to resolve schema drift incidents in seconds',
-  buckets: [60, 300, 900, 3600, 7200, 14400, 86400, 172800], // 1m to 2d
-  labelNames: ['tenant_id', 'domain'],
-  registers: [registry],
-});
-
-export const tier1LineageCoverageGauge = new Counter({
-  name: 'metadata_tier1_lineage_coverage_total',
-  help: 'Number of Tier1 fields with lineage coverage',
-  labelNames: ['tenant_id', 'status'], // covered | uncovered
-  registers: [registry],
-});
-
-export const metadataChangesWithAiReviewTotal = new Counter({
-  name: 'metadata_changes_with_ai_review_total',
-  help: 'Total number of metadata changes with AI review',
-  labelNames: ['tenant_id', 'tier', 'ai_reviewed'],
-  registers: [registry],
-});
-
+export function getMetricsSummary(name: string) {
+  return metrics.getSummary(name);
+}

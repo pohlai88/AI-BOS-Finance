@@ -11,10 +11,17 @@
  *   pnpm metadata:bootstrap
  */
 
+import 'dotenv/config';
 import { z } from 'zod';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import { parse } from 'csv-parse/sync';
+
+// ESM alternative to __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 import { db } from '../../metadata-studio/db/client';
 import { mdmStandardPack } from '../../metadata-studio/db/schema/standard-pack.tables';
 import { mdmGlobalMetadata } from '../../metadata-studio/db/schema/metadata.tables';
@@ -35,6 +42,8 @@ const StandardPackRowSchema = z.object({
     .transform((v) => v.toLowerCase() === 'true')
     .or(z.boolean())
     .default(true),
+  tier: z.string().default('tier1'),
+  standard_body: z.string().default('IFRS'),
   description: z.string().optional().default(''),
 });
 
@@ -96,15 +105,35 @@ function loadCsv(filePath: string): Record<string, string>[] {
 async function loadStandardPacks() {
   console.log('\n📦 Loading Standard Packs...');
 
-  const filePath = path.join(__dirname, 'standard-packs', 'finance-ifrs-core.csv');
-  const rawRows = loadCsv(filePath);
+  // Load all CSV files from standard-packs directory
+  const packDir = path.join(__dirname, 'standard-packs');
+  const csvFiles = fs.existsSync(packDir)
+    ? fs.readdirSync(packDir).filter((f) => f.endsWith('.csv'))
+    : [];
 
-  if (rawRows.length === 0) {
+  if (csvFiles.length === 0) {
+    console.log('  No standard pack CSV files found.');
+    return;
+  }
+
+  let totalRows: StandardPackRow[] = [];
+
+  for (const csvFile of csvFiles) {
+    const filePath = path.join(packDir, csvFile);
+    const rawRows = loadCsv(filePath);
+    if (rawRows.length > 0) {
+      console.log(`  📄 Loading: ${csvFile} (${rawRows.length} rows)`);
+      const rows = rawRows.map((row) => StandardPackRowSchema.parse(row));
+      totalRows = totalRows.concat(rows);
+    }
+  }
+
+  if (totalRows.length === 0) {
     console.log('  No standard pack rows to load.');
     return;
   }
 
-  const rows = rawRows.map((row) => StandardPackRowSchema.parse(row));
+  const rows = totalRows;
 
   for (const row of rows) {
     const existing = await db.query.mdmStandardPack.findFirst({
@@ -121,12 +150,12 @@ async function loadStandardPacks() {
           description: row.description,
           status: row.is_active ? 'active' : 'deprecated',
           category: row.domain.toLowerCase(),
-          tier: 'tier1', // Default for IFRS packs
-          standardBody: 'IFRS', // Default
+          tier: row.tier,
+          standardBody: row.standard_body,
         })
         .where(eq(mdmStandardPack.packId, row.pack_key));
 
-      console.log(`  ✅ Updated: ${row.pack_key}`);
+      console.log(`  ✅ Updated: ${row.pack_key} (${row.tier}, ${row.standard_body})`);
     } else {
       // Insert new pack
       await db.insert(mdmStandardPack).values({
@@ -135,16 +164,16 @@ async function loadStandardPacks() {
         version: row.version,
         description: row.description,
         category: row.domain.toLowerCase(),
-        tier: 'tier1', // Default for IFRS packs
+        tier: row.tier,
         status: row.is_active ? 'active' : 'deprecated',
-        isPrimary: true,
-        standardBody: 'IFRS', // Default
+        isPrimary: row.tier === 'tier1', // Tier1 packs are primary SoT
+        standardBody: row.standard_body,
         standardReference: null,
         createdBy: 'bootstrap',
         updatedBy: 'bootstrap',
       });
 
-      console.log(`  ✅ Created: ${row.pack_key}`);
+      console.log(`  ✅ Created: ${row.pack_key} (${row.tier}, ${row.standard_body})`);
     }
   }
 

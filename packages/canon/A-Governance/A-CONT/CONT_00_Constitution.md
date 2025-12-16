@@ -343,7 +343,13 @@ CONT_00 — Constitution (SUPREME)
     │
     ├── CONT_03 — Database Architecture (Data Fabric)
     │
-    ├── CONT_04 — Payment Hub Architecture (Cell Example)
+    ├── CONT_04 — Payment Hub Architecture (Cell: AP-05)
+    │
+    ├── CONT_05 — Naming & Structure
+    │
+    ├── CONT_06 — Schema & Type Governance
+    │
+    ├── CONT_07 — Finance Canon Architecture (NEW)
     │
     └── ADR_* — Architecture Decision Records
 ```
@@ -401,7 +407,10 @@ This Constitution may be amended only by:
 - [CONT_01: Canon Identity](./CONT_01_CanonIdentity.md) — Naming conventions
 - [CONT_02: Kernel Architecture](./CONT_02_KernelArchitecture.md) — Control Plane
 - [CONT_03: Database Architecture](./CONT_03_DatabaseArchitecture.md) — Data Fabric
-- [CONT_04: Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) — Cell Example
+- [CONT_04: Payment Hub Architecture](./CONT_04_PaymentHubArchitecture.md) — Cell: AP-05
+- [CONT_05: Naming & Structure](./CONT_05_NamingAndStructure.md) — File Organization
+- [CONT_06: Schema & Type Governance](./CONT_06_SchemaAndTypeGovernance.md) — Type Definitions
+- [CONT_07: Finance Canon Architecture](./CONT_07_FinanceCanonArchitecture.md) — Finance Domain
 
 ---
 

@@ -12,7 +12,7 @@ export {
   PAYMENT_SCHEMA,
   PAYMENT_EXTENDED_FIELDS,
   PAYMENT_CONFIG,
-  
+
   // Types
   type Payment,
   type PaymentStatus,
@@ -21,14 +21,14 @@ export {
   type EliminationStatus,
   type FunctionalCluster,
   type Manifest,
-  
+
   // Mock Data
   MOCK_PAYMENTS,
   getPaymentsByStatus,
   getPaymentsByEntity,
   getPaymentsByCluster,
   aggregateFunctionalClusters,
-  
+
   // Treasury
   TREASURY_DATA,
   ENTITY_OPTIONS,
@@ -47,7 +47,7 @@ export {
 } from './data';
 
 // Components (Sprint 2)
-export { 
+export {
   AuditSidebar,
   TreasuryHeader,
   FunctionalCard,
@@ -58,7 +58,70 @@ export {
   type FunctionalClusterData,
   type ClusterStatus,
   type ClusterType,
+  // AP-05 Components
+  AmountInput,
+  getCurrencySymbol,
+  sanitizeAmountInput,
+  formatForDisplay,
+  PaymentStatusBadge,
+  RetryBadge,
+  getStatusLabel,
+  isTerminalStatus,
+  canTransition,
+  getNextStatus,
+  STATUS_CONFIG,
+  CreatePaymentDialog,
+  type CurrencyCode,
+  type CreatePaymentDialogProps,
 } from './components';
+
+// AP-05 Payment Execution Cell API
+export {
+  paymentApi,
+  PaymentApiError,
+  ConcurrencyError,
+  ValidationError,
+  NotFoundError,
+  SoDViolationError,
+  PeriodClosedError,
+} from './api';
+
+// AP-05 Payment Execution Cell Schemas
+export {
+  CurrencyCodeSchema,
+  MoneyAmountSchema,
+  PaymentStatusSchema,
+  PaymentActionSchema,
+  SourceDocumentTypeSchema,
+  BeneficiarySnapshotSchema,
+  CreatePaymentInputSchema,
+  ApprovalInputSchema,
+  RejectionInputSchema,
+  ExecutionInputSchema,
+  CompletionInputSchema,
+  FailureInputSchema,
+  RetryInputSchema,
+  PaymentResponseSchema,
+  paymentSchemas,
+  type PaymentAction,
+  type SourceDocumentType,
+  type BeneficiarySnapshot,
+  type CreatePaymentInput,
+  type ApprovalInput,
+  type RejectionInput,
+  type ExecutionInput,
+  type CompletionInput,
+  type FailureInput,
+  type RetryInput,
+  type PaymentResponse,
+  type ApprovalResult,
+  type RejectionResult,
+  type SubmissionResult,
+  type ExecutionResult,
+  type CompletionResult,
+  type FailureResult,
+  type RetryResult,
+} from './schemas';
 
 // Governance Hooks (Sprint 3)
 export {
@@ -68,7 +131,7 @@ export {
   type ApproverRole,
   type SoDCheckResult,
   type CurrentUser,
-  
+
   // RULE_PAY_02: IC Validation
   validateICTransaction,
   useICValidation,
@@ -77,14 +140,14 @@ export {
   type ICValidationResult,
   type ICSettlementStep,
   type ICSettlementStatus,
-  
+
   // RULE_PAY_03: Batch Approval
   validateBatchApproval,
   useBatchApproval,
   useClusterSummary,
   type BatchValidationResult,
   type BatchApprovalState,
-  
+
   // RULE_PAY_04: Document Completeness
   validateDocuments,
   useDocumentValidation,
@@ -93,7 +156,7 @@ export {
   type DocumentType,
   type DocumentRequirement,
   type DocumentValidationResult,
-  
+
   // Unified Approval
   checkApproval,
   usePaymentApproval,
