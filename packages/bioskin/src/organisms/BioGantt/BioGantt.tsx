@@ -7,6 +7,30 @@
  * @example
  * // Basic usage
  * <BioGantt tasks={tasks} />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~12KB - Dynamic import for non-project pages:
+ * ```tsx
+ * const LazyGantt = dynamic(() => import('@aibos/bioskin').then(m => m.BioGantt), {
+ *   ssr: false, // Date calculations not needed on server
+ *   loading: () => <LoadingState message="Loading timeline..." />
+ * });
+ * ```
+ *
+ * **Memoize task data:**
+ * ```tsx
+ * const tasks = useMemo(() => rawTasks.map(t => ({
+ *   ...t,
+ *   start: new Date(t.startDate),
+ *   end: new Date(t.endDate)
+ * })), [rawTasks]);
+ * ```
+ *
+ * **Large projects (100+ tasks):** Consider pagination or date-range filtering.
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';

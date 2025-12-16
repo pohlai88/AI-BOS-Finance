@@ -11,6 +11,27 @@
  * @example
  * // Line chart
  * <BioChart type="line" data={trendData} />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~15KB - Consider dynamic import:
+ * ```tsx
+ * const LazyChart = dynamic(() => import('@aibos/bioskin').then(m => m.BioChart), {
+ *   ssr: false,
+ *   loading: () => <LoadingState />
+ * });
+ * ```
+ *
+ * **Memoize data transformations:**
+ * ```tsx
+ * const chartData = useMemo(() => rawData.map(d => ({
+ *   label: d.month,
+ *   value: d.revenue
+ * })), [rawData]);
+ * ```
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';

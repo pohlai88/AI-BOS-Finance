@@ -14,13 +14,46 @@
     "./server": {
       "types": "./src/server.ts",
       "import": "./src/server.ts"
+    },
+    "./table": {
+      "types": "./src/table.ts",
+      "import": "./src/table.ts"
+    },
+    "./chart": {
+      "types": "./src/chart.ts",
+      "import": "./src/chart.ts"
+    },
+    "./kanban": {
+      "types": "./src/kanban.ts",
+      "import": "./src/kanban.ts"
+    },
+    "./calendar": {
+      "types": "./src/calendar.ts",
+      "import": "./src/calendar.ts"
+    },
+    "./gantt": {
+      "types": "./src/gantt.ts",
+      "import": "./src/gantt.ts"
+    },
+    "./form": {
+      "types": "./src/form.ts",
+      "import": "./src/form.ts"
+    },
+    "./layout": {
+      "types": "./src/layout.ts",
+      "import": "./src/layout.ts"
     }
   },
   "typesVersions": {
     "*": {
-      "server": [
-        "./src/server.ts"
-      ]
+      "server": ["./src/server.ts"],
+      "table": ["./src/table.ts"],
+      "chart": ["./src/chart.ts"],
+      "kanban": ["./src/kanban.ts"],
+      "calendar": ["./src/calendar.ts"],
+      "gantt": ["./src/gantt.ts"],
+      "form": ["./src/form.ts"],
+      "layout": ["./src/layout.ts"]
     }
   },
   "scripts": {

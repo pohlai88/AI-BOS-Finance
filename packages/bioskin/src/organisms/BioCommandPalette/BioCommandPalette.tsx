@@ -15,6 +15,30 @@
  *   commands={commands}
  *   onSelect={(cmd) => handleCommand(cmd)}
  * />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~8KB (cmdk) - Load on demand since rarely used:
+ * ```tsx
+ * const LazyCommandPalette = dynamic(
+ *   () => import('@aibos/bioskin').then(m => m.BioCommandPalette),
+ *   { ssr: false }
+ * );
+ *
+ * // Only mount when needed
+ * {showCommandPalette && <LazyCommandPalette ... />}
+ * ```
+ *
+ * **Memoize command list:**
+ * ```tsx
+ * const commands = useMemo(() => [
+ *   { id: 'search', label: 'Search...', action: () => {} },
+ *   // ... more commands
+ * ], []);
+ * ```
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';

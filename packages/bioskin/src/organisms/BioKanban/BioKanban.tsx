@@ -17,6 +17,30 @@
  *   onCardClick={handleClick}
  *   onCardAdd={handleAdd}
  * />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~20KB (@dnd-kit) - Dynamic import for non-kanban pages:
+ * ```tsx
+ * const LazyKanban = dynamic(() => import('@aibos/bioskin').then(m => m.BioKanban), {
+ *   loading: () => <LoadingState />
+ * });
+ * ```
+ *
+ * **Memoize callbacks:**
+ * ```tsx
+ * const handleCardMove = useCallback((cardId, from, to) => { ... }, []);
+ * const handleCardClick = useCallback((card) => { ... }, []);
+ * ```
+ *
+ * **Custom card renderers:** Wrap in React.memo:
+ * ```tsx
+ * const CustomCard = React.memo(({ card }) => <div>{card.title}</div>);
+ * <BioKanban renderCard={(card) => <CustomCard card={card} />} />
+ * ```
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';

@@ -67,10 +67,15 @@ const colorMap: Record<SpinnerColor, string> = {
 };
 
 // ============================================================
-// Spinner Variants
+// Spinner Variants (Memoized for optimal performance)
 // ============================================================
 
-function DefaultSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+interface SpinnerVariantProps {
+  size: SpinnerSize;
+  color: SpinnerColor;
+}
+
+const DefaultSpinner = React.memo(function DefaultSpinner({ size, color }: SpinnerVariantProps) {
   const { container, stroke } = sizeMap[size];
 
   return (
@@ -90,9 +95,17 @@ function DefaultSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColo
       />
     </svg>
   );
-}
+});
 
-function DotsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+// Animation constants for Spinner variants
+const DOTS_ANIMATION = { y: [0, -6, 0] };
+const PULSE_ANIMATION = { scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] };
+const BARS_ANIMATION = { scaleY: [0.4, 1, 0.4] };
+const RING_ANIMATION = { rotate: 360 };
+const BOUNCE_ANIMATION = { y: [0, -12, 0] };
+const WAVE_ANIMATION = { scale: [0.5, 1, 0.5], opacity: [0.5, 1, 0.5] };
+
+const DotsSpinner = React.memo(function DotsSpinner({ size, color }: SpinnerVariantProps) {
   const dotSize = size === 'xs' ? 'w-1 h-1' : size === 'sm' ? 'w-1.5 h-1.5' : size === 'md' ? 'w-2 h-2' : size === 'lg' ? 'w-2.5 h-2.5' : 'w-3 h-3';
 
   return (
@@ -101,7 +114,7 @@ function DotsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
         <motion.span
           key={i}
           className={cn(dotSize, 'rounded-full bg-current', colorMap[color])}
-          animate={{ y: [0, -6, 0] }}
+          animate={DOTS_ANIMATION}
           transition={{
             duration: 0.6,
             repeat: Infinity,
@@ -112,19 +125,19 @@ function DotsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
       ))}
     </div>
   );
-}
+});
 
-function PulseSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const PulseSpinner = React.memo(function PulseSpinner({ size, color }: SpinnerVariantProps) {
   return (
     <motion.div
       className={cn(sizeMap[size].container, 'rounded-full bg-current', colorMap[color])}
-      animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+      animate={PULSE_ANIMATION}
       transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
     />
   );
-}
+});
 
-function BarsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const BarsSpinner = React.memo(function BarsSpinner({ size, color }: SpinnerVariantProps) {
   const barHeight = size === 'xs' ? 'h-3' : size === 'sm' ? 'h-4' : size === 'md' ? 'h-5' : size === 'lg' ? 'h-6' : 'h-8';
   const barWidth = size === 'xs' || size === 'sm' ? 'w-0.5' : 'w-1';
 
@@ -134,7 +147,7 @@ function BarsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
         <motion.span
           key={i}
           className={cn(barWidth, barHeight, 'rounded-full bg-current', colorMap[color])}
-          animate={{ scaleY: [0.4, 1, 0.4] }}
+          animate={BARS_ANIMATION}
           transition={{
             duration: 0.8,
             repeat: Infinity,
@@ -146,9 +159,9 @@ function BarsSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
       ))}
     </div>
   );
-}
+});
 
-function RingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const RingSpinner = React.memo(function RingSpinner({ size, color }: SpinnerVariantProps) {
   const { container, stroke } = sizeMap[size];
 
   return (
@@ -156,7 +169,7 @@ function RingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
       className={cn(container, colorMap[color])}
       viewBox="0 0 24 24"
       fill="none"
-      animate={{ rotate: 360 }}
+      animate={RING_ANIMATION}
       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
     >
       <circle
@@ -170,9 +183,9 @@ function RingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
       />
     </motion.svg>
   );
-}
+});
 
-function DualRingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const DualRingSpinner = React.memo(function DualRingSpinner({ size, color }: SpinnerVariantProps) {
   const { container, stroke } = sizeMap[size];
 
   return (
@@ -181,7 +194,7 @@ function DualRingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerCol
         className={cn('absolute inset-0', colorMap[color])}
         viewBox="0 0 24 24"
         fill="none"
-        animate={{ rotate: 360 }}
+        animate={RING_ANIMATION}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       >
         <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeDasharray="30 70" />
@@ -197,19 +210,19 @@ function DualRingSpinner({ size, color }: { size: SpinnerSize; color: SpinnerCol
       </motion.svg>
     </div>
   );
-}
+});
 
-function BounceSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const BounceSpinner = React.memo(function BounceSpinner({ size, color }: SpinnerVariantProps) {
   return (
     <motion.div
       className={cn(sizeMap[size].container, 'rounded-full bg-current', colorMap[color])}
-      animate={{ y: [0, -12, 0] }}
+      animate={BOUNCE_ANIMATION}
       transition={{ duration: 0.6, repeat: Infinity, ease: 'easeInOut' }}
     />
   );
-}
+});
 
-function WaveSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }) {
+const WaveSpinner = React.memo(function WaveSpinner({ size, color }: SpinnerVariantProps) {
   const dotSize = size === 'xs' ? 'w-1 h-1' : size === 'sm' ? 'w-1.5 h-1.5' : size === 'md' ? 'w-2 h-2' : size === 'lg' ? 'w-2.5 h-2.5' : 'w-3 h-3';
 
   return (
@@ -218,7 +231,7 @@ function WaveSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
         <motion.span
           key={i}
           className={cn(dotSize, 'rounded-full bg-current', colorMap[color])}
-          animate={{ scale: [0.5, 1, 0.5], opacity: [0.5, 1, 0.5] }}
+          animate={WAVE_ANIMATION}
           transition={{
             duration: 1,
             repeat: Infinity,
@@ -229,7 +242,7 @@ function WaveSpinner({ size, color }: { size: SpinnerSize; color: SpinnerColor }
       ))}
     </div>
   );
-}
+});
 
 // ============================================================
 // Main Component

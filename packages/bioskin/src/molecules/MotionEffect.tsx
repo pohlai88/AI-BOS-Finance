@@ -155,11 +155,11 @@ export function MotionEffect({
 }: MotionEffectProps) {
   const selectedVariants = variants || presets[preset];
 
-  const transition: Transition = {
-    duration,
-    delay,
-    ease: 'easeOut',
-  };
+  // Memoize transition object to prevent unnecessary re-renders
+  const transition = React.useMemo<Transition>(
+    () => ({ duration, delay, ease: 'easeOut' }),
+    [duration, delay]
+  );
 
   const content = (
     <motion.div

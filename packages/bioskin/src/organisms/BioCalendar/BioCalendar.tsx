@@ -16,6 +16,32 @@
  *   onEventClick={handleEventClick}
  *   view="month"
  * />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~10KB - Dynamic import for non-calendar pages:
+ * ```tsx
+ * const LazyCalendar = dynamic(() => import('@aibos/bioskin').then(m => m.BioCalendar), {
+ *   loading: () => <LoadingState message="Loading calendar..." />
+ * });
+ * ```
+ *
+ * **Memoize callbacks:**
+ * ```tsx
+ * const handleDateSelect = useCallback((date) => { ... }, []);
+ * const handleEventClick = useCallback((event) => { ... }, []);
+ * ```
+ *
+ * **Large event sets:** Filter events to visible month before passing:
+ * ```tsx
+ * const visibleEvents = useMemo(() =>
+ *   events.filter(e => isSameMonth(e.start, currentMonth)),
+ *   [events, currentMonth]
+ * );
+ * ```
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';

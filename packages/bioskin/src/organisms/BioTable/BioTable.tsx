@@ -1,13 +1,13 @@
 /**
  * BioTable - Schema-driven data table powered by TanStack Table
- * 
+ *
  * Sprint 2 Day 10 per BIOSKIN 2.1 PRD
  * Production-grade table with sorting, filtering, pagination, and selection.
- * 
+ *
  * @example
  * // Basic usage
  * <BioTable schema={PaymentSchema} data={payments} />
- * 
+ *
  * @example
  * // Full featured
  * <BioTable
@@ -20,6 +20,29 @@
  *   onRowClick={handleRowClick}
  *   onSelectionChange={handleSelectionChange}
  * />
+ *
+ * ---
+ * ## ⚡ Performance Tips
+ *
+ * **Bundle Size:** ~25KB (@tanstack/react-table) - Dynamic import for non-table pages:
+ * ```tsx
+ * const LazyTable = dynamic(() => import('@aibos/bioskin').then(m => m.BioTable), {
+ *   loading: () => <LoadingState />
+ * });
+ * ```
+ *
+ * **Large Datasets (1000+ rows):** Use `BioTableVirtual` instead:
+ * ```tsx
+ * import { BioTableVirtual } from '@aibos/bioskin';
+ * <BioTableVirtual schema={schema} data={largeData} height={600} />
+ * ```
+ *
+ * **Memoize callbacks:**
+ * ```tsx
+ * const handleRowClick = useCallback((row) => { ... }, []);
+ * ```
+ *
+ * @see PERFORMANCE.md for full optimization guide
  */
 
 'use client';
