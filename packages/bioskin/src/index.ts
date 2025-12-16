@@ -42,3 +42,4 @@ export { ErrorState, type ErrorStateProps } from './molecules/ErrorState';
 export { BioTable, type BioTableProps } from './organisms/BioTable';
 export { BioForm, type BioFormProps } from './organisms/BioForm';
 export { BioObject, type BioObjectProps } from './organisms/BioObject';
+export { BioKanban, type BioKanbanProps, type KanbanCard, type KanbanColumn } from './organisms/BioKanban';

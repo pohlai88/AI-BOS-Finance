@@ -10,6 +10,16 @@ import path from 'path';
  * Uses real browser (Chromium via Playwright) instead of jsdom.
  */
 export default defineConfig({
+  // Pre-bundle dependencies to avoid reload issues
+  optimizeDeps: {
+    include: [
+      '@dnd-kit/core',
+      '@dnd-kit/sortable',
+      '@dnd-kit/utilities',
+      'jotai',
+      'motion',
+    ],
+  },
   test: {
     name: 'bioskin',
     globals: true,
@@ -42,5 +52,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+
+    // Timeout for complex tests
+    testTimeout: 30000,
   },
 });

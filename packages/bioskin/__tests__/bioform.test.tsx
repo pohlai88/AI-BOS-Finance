@@ -235,10 +235,10 @@ describe('BioForm - Reset (E2E)', () => {
 
     // Find and click cancel button - it should exist when onCancel is provided
     const buttons = screen.getAllByRole('button');
-    const cancelBtn = buttons.find(btn => 
+    const cancelBtn = buttons.find(btn =>
       btn.textContent?.toLowerCase().includes('cancel')
     );
-    
+
     if (cancelBtn) {
       await user.click(cancelBtn);
       // onCancel should be called
@@ -272,7 +272,7 @@ describe('BioForm - Field Types (E2E)', () => {
     // Age input should accept numbers
     const ageInput = screen.getByLabelText(/age/i);
     await user.type(ageInput, '25');
-    
+
     expect(ageInput).toHaveValue(25);
   });
 

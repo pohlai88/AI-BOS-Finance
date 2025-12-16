@@ -43,3 +43,22 @@ export {
 
 // BioObject - detail view from schema
 export { BioObject, type BioObjectProps, COMPONENT_META as BIO_OBJECT_META } from './BioObject';
+
+// BioKanban - powered by @dnd-kit (Sprint 5 - ERPNext Expansion)
+export {
+  BioKanban,
+  type BioKanbanProps,
+  COMPONENT_META as BIO_KANBAN_META,
+  // Sub-components
+  BioKanbanColumn,
+  type BioKanbanColumnProps,
+  BioKanbanCard,
+  type BioKanbanCardProps,
+  // Hook + types
+  useBioKanban,
+  type KanbanCard,
+  type KanbanColumn,
+  type KanbanState,
+  type UseBioKanbanOptions,
+  type UseBioKanbanReturn,
+} from './BioKanban';
