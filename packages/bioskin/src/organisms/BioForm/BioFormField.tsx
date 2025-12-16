@@ -76,6 +76,7 @@ function TextInput({
   return (
     <div className="relative">
       <input
+        id={`field-${definition.name}`}
         type={inputType}
         {...register}
         disabled={disabled}
@@ -110,6 +111,7 @@ function NumberInput({
 
   return (
     <input
+      id={`field-${definition.name}`}
       type="number"
       {...register}
       disabled={disabled}
@@ -156,6 +158,7 @@ function SelectInput({
 
   return (
     <select
+      id={`field-${definition.name}`}
       {...register}
       disabled={disabled}
       className={cn(
@@ -181,8 +184,9 @@ function CheckboxInput({
   disabled,
 }: BioFormFieldProps) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer">
+    <label htmlFor={`field-${definition.name}`} className="flex items-center gap-3 cursor-pointer">
       <input
+        id={`field-${definition.name}`}
         type="checkbox"
         {...register}
         disabled={disabled}
@@ -212,6 +216,7 @@ function DateInput({
   return (
     <div className="relative">
       <input
+        id={`field-${definition.name}`}
         type="date"
         {...register}
         disabled={disabled}
@@ -298,7 +303,7 @@ export function BioFormField({
 
 function FieldLabel({ definition }: { definition: BioFieldDefinition }) {
   return (
-    <label className="flex items-center gap-1">
+    <label htmlFor={`field-${definition.name}`} className="flex items-center gap-1">
       <Txt variant="label" color="secondary">
         {definition.label}
       </Txt>

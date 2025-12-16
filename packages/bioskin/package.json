@@ -29,11 +29,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:headed": "vitest --browser.headless=false",
-    "e2e": "playwright test",
-    "e2e:headed": "playwright test --headed",
-    "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "test:headed": "vitest --browser.headless=false"
   },
   "peerDependencies": {
     "lucide-react": ">=0.400.0",
@@ -57,27 +53,28 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
-    "@vitest/browser-playwright": "^4.0.15",
-    "@vitest/coverage-v8": "^4.0.15",
-    "vitest": "^4.0.15",
-    "playwright": "^1.57.0",
-    "@radix-ui/react-slot": "^1.2.4",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@vitest/browser-playwright": "^4.0.15",
+    "@vitest/coverage-v8": "^4.0.15",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.474.0",
     "next-themes": "^0.4.6",
+    "playwright": "^1.57.0",
     "react-day-picker": "^8.10.1",
     "react-resizable-panels": "^2.1.9",
     "recharts": "^2.15.4",
     "sonner": "^1.7.4",
     "typescript": "~5.6.2",
     "vaul": "^1.1.2",
+    "vitest": "^4.0.15",
     "zod": "^4.1.13"
   }
 }
