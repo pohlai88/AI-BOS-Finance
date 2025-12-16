@@ -1,0 +1,622 @@
+openapi: 3.1.0
+info:
+  title: AP-05 Payment Execution API
+  version: 1.0.0
+  description: |
+    Enterprise payment execution API with:
+    - Segregation of Duties (SoD) enforcement
+    - Optimistic locking (concurrency control)
+    - Idempotency guarantees
+    - Period lock validation
+    - Transactional audit trail
+    - Money precision (string-based, never float)
+    - Immutability after approval
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: https://api.example.com
+    description: Production
+
+paths:
+  /api/payments:
+    post:
+      summary: Create a new payment
+      operationId: createPayment
+      tags: [Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentInput'
+      responses:
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+        '422':
+          $ref: '#/components/responses/PeriodClosed'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          description: UUID for idempotency (required for all mutations)
+          schema:
+            type: string
+            format: uuid
+
+    get:
+      summary: List payments
+      operationId: listPayments
+      tags: [Payments]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, pending_approval, approved, rejected, processing, completed, failed]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+                  total:
+                    type: integer
+
+  /api/payments/{id}:
+    get:
+      summary: Get payment by ID
+      operationId: getPayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Payment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/payments/{id}/submit:
+    post:
+      summary: Submit payment for approval
+      operationId: submitPayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionInput'
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/approve:
+    post:
+      summary: Approve payment
+      operationId: approvePayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+      responses:
+        '200':
+          description: Payment approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '403':
+          $ref: '#/components/responses/SoDViolation'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/reject:
+    post:
+      summary: Reject payment
+      operationId: rejectPayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectionInput'
+      responses:
+        '200':
+          description: Payment rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/execute:
+    post:
+      summary: Execute payment (send to bank)
+      operationId: executePayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecutionInput'
+      responses:
+        '200':
+          description: Payment executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/complete:
+    post:
+      summary: Complete payment (bank confirmed)
+      operationId: completePayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletionInput'
+      responses:
+        '200':
+          description: Payment completed (GL entry created)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/fail:
+    post:
+      summary: Mark payment as failed
+      operationId: failPayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FailureInput'
+      responses:
+        '200':
+          description: Payment marked as failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+  /api/payments/{id}/retry:
+    post:
+      summary: Retry failed payment
+      operationId: retryPayment
+      tags: [Payments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetryInput'
+      responses:
+        '200':
+          description: Payment resubmitted for approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '409':
+          $ref: '#/components/responses/ConcurrencyConflict'
+        '400':
+          $ref: '#/components/responses/InvalidState'
+      headers:
+        X-Idempotency-Key:
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+components:
+  schemas:
+    CreatePaymentInput:
+      type: object
+      required: [vendorId, vendorName, amount, currency, paymentDate]
+      properties:
+        vendorId:
+          type: string
+          format: uuid
+          description: Vendor identifier
+        vendorName:
+          type: string
+          description: Vendor name (for audit trail)
+        amount:
+          type: string
+          pattern: '^\d+(\.\d{1,4})?$'
+          description: Money amount as string (never use float)
+          example: "1250.00"
+        currency:
+          type: string
+          default: USD
+          pattern: '^[A-Z]{3}$'
+        paymentDate:
+          type: string
+          format: date
+          description: Payment date (must be in open fiscal period)
+        dueDate:
+          type: string
+          format: date
+          description: Optional due date
+        sourceDocumentId:
+          type: string
+          format: uuid
+          description: Source document reference (invoice, etc.)
+        sourceDocumentType:
+          type: string
+          enum: [invoice, tax, payroll, bank_fee, deposit, prepayment, other]
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        companyId:
+          type: string
+          format: uuid
+        paymentNumber:
+          type: string
+          description: Human-readable payment number
+        vendorId:
+          type: string
+          format: uuid
+        vendorName:
+          type: string
+        amount:
+          type: string
+          description: Money as string (preserves precision)
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [draft, pending_approval, approved, rejected, processing, completed, failed]
+        version:
+          type: integer
+          description: Optimistic locking version (increment on each update)
+        createdBy:
+          type: string
+          format: uuid
+        approvedBy:
+          type: string
+          format: uuid
+          nullable: true
+        approvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        executedBy:
+          type: string
+          format: uuid
+          nullable: true
+        executedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    SubmissionInput:
+      type: object
+      required: [version]
+      properties:
+        version:
+          type: integer
+          description: Current payment version (for optimistic locking)
+
+    ApprovalInput:
+      type: object
+      required: [version]
+      properties:
+        version:
+          type: integer
+          description: Current payment version (for optimistic locking)
+        comment:
+          type: string
+          description: Optional approval comment
+
+    RejectionInput:
+      type: object
+      required: [version]
+      properties:
+        version:
+          type: integer
+        comment:
+          type: string
+          description: Rejection reason
+
+    ExecutionInput:
+      type: object
+      required: [version, beneficiary]
+      properties:
+        version:
+          type: integer
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiarySnapshot'
+
+    BeneficiarySnapshot:
+      type: object
+      required: [accountNumber, routingNumber, bankName, accountName]
+      properties:
+        accountNumber:
+          type: string
+          description: Bank account number (snapshot at execution time)
+        routingNumber:
+          type: string
+          description: Bank routing number
+        bankName:
+          type: string
+        accountName:
+          type: string
+        swiftCode:
+          type: string
+          maxLength: 11
+
+    CompletionInput:
+      type: object
+      required: [version, bankConfirmationRef]
+      properties:
+        version:
+          type: integer
+        bankConfirmationRef:
+          type: string
+          description: Bank confirmation reference (creates GL entry)
+
+    FailureInput:
+      type: object
+      required: [version, failureReason]
+      properties:
+        version:
+          type: integer
+        failureReason:
+          type: string
+          description: Reason for failure
+
+    RetryInput:
+      type: object
+      required: [version]
+      properties:
+        version:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+
+  responses:
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Invalid request body"
+            code: "VALIDATION_ERROR"
+
+    NotFound:
+      description: Payment not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Payment not found"
+            code: "NOT_FOUND"
+
+    ConcurrencyConflict:
+      description: Version conflict (payment was modified)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Payment was modified. Expected v2, found v3"
+            code: "CONCURRENCY_CONFLICT"
+
+    SoDViolation:
+      description: Segregation of Duties violation (maker cannot approve)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "You cannot approve a payment you created"
+            code: "SOD_VIOLATION"
+
+    InvalidState:
+      description: Invalid state transition
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Cannot approve payment in 'draft' status"
+            code: "INVALID_STATE"
+
+    PeriodClosed:
+      description: Fiscal period is closed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Payment date falls in closed fiscal period"
+            code: "PERIOD_CLOSED"
+
+    IdempotencyConflict:
+      description: Idempotency key already used
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Idempotency key already used"
+            code: "IDEMPOTENCY_CONFLICT"

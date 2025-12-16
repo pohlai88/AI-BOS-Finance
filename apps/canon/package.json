@@ -5,5 +5,12 @@
   "description": "AI-BOS Canon - Business Logic Layer",
   "workspaces": [
     "finance/**/package.json"
-  ]
+  ],
+  "scripts": {
+    "test:integration": "vitest run finance/accounts-payable/cells/payment-execution/__tests__/integration"
+  },
+  "dependencies": {
+    "@aibos/canon-governance": "workspace:*",
+    "@aibos/kernel-core": "workspace:*"
+  }
 }

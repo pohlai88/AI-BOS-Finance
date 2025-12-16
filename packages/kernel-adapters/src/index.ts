@@ -23,6 +23,31 @@ export { InMemorySessionRepo } from './memory/sessionRepo.memory';
 export { InMemoryPermissionRepo } from './memory/permissionRepo.memory';
 export { InMemoryRolePermissionRepo } from './memory/rolePermissionRepo.memory';
 
+// AP-05 Payment Execution Cell Adapters (In-Memory)
+export {
+  createMemoryFiscalTimeAdapter,
+  setPeriodStatus,
+  clearPeriods,
+} from './memory/fiscalTime.memory';
+export {
+  createMemoryPolicyAdapter,
+  setUserRoles,
+  addSoDExemption,
+  clearPolicyData,
+} from './memory/policy.memory';
+export {
+  createMemoryPaymentRepository,
+  clearPaymentData,
+  getPaymentCount,
+  getRawPayment,
+} from './memory/paymentRepo.memory';
+export {
+  createMemoryGLPostingAdapter,
+  clearGLData,
+  getJournalCount,
+  getRawJournal,
+} from './memory/glPosting.memory';
+
 // SQL adapters (PostgreSQL)
 export {
   SqlTenantRepo,
@@ -36,6 +61,8 @@ export {
   SqlRouteRepo,
   SqlEventBus,
   SqlAuditRepo,
+  SqlPaymentRepository,
+  createSqlPaymentRepository,
 } from './sql';
 
 // Auth adapters (bcryptjs, jose)

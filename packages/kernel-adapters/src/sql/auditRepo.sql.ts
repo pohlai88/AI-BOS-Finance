@@ -13,30 +13,53 @@ import type {
   AuditQueryInput,
   AuditQueryOutput,
   DbAuditEventRow,
+  AuditEvent,
+  TransactionContext,
 } from '@aibos/kernel-core';
 import { TABLES, COLUMNS } from '@aibos/kernel-core';
-import type { Pool } from 'pg';
+import type { Pool, PoolClient } from 'pg';
 
 // Type-safe table/column references
-const TABLE = TABLES.AUDIT_EVENTS;
+const TABLE = `kernel.${TABLES.AUDIT_EVENTS}`; // Include schema prefix
 const COL = COLUMNS.audit_events;
 
 export class SqlAuditRepo implements AuditPort {
   constructor(private db: Pool) { }
 
   async append(input: AuditWriteInput): Promise<void> {
-    // Uses SSOT column names from @aibos/kernel-core
+    // Parse resource to extract type and id if it's a URN, otherwise use as resource_id
+    let resourceType: string | null = null;
+    let resourceId: string | null = null;
+
+    if (input.resource) {
+      if (input.resource.startsWith('urn:')) {
+        // URN format: urn:<domain>:<type>:<id>
+        const parts = input.resource.split(':');
+        if (parts.length >= 4) {
+          resourceType = parts[2];
+          resourceId = parts.slice(3).join(':'); // Handle IDs that might contain colons
+        } else {
+          resourceId = input.resource;
+        }
+      } else {
+        // Plain ID, try to infer type from action or use 'unknown'
+        resourceId = input.resource;
+        resourceType = 'unknown';
+      }
+    }
+
     await this.db.query(
       `INSERT INTO ${TABLE} (
-         ${COL.tenant_id}, ${COL.actor_id}, ${COL.action}, ${COL.resource}, 
-         ${COL.details}, ${COL.correlation_id}, ${COL.ip_address}, ${COL.created_at}
+         tenant_id, actor_id, action, resource_type, resource_id,
+         details, correlation_id, ip_address, created_at
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
       [
         input.tenant_id || null,
         input.actor_id || null,
         input.action,
-        input.resource,
+        resourceType,
+        resourceId,
         JSON.stringify({
           result: input.result,
           event_type: input.event_type,
@@ -49,6 +72,49 @@ export class SqlAuditRepo implements AuditPort {
         }),
         input.correlation_id,
         input.ip_address || null,
+      ]
+    );
+  }
+
+  /**
+   * Emit audit event within a database transaction (TRANSACTIONAL)
+   * 
+   * CRITICAL: This method writes to the same database transaction as the business operation.
+   * If audit write fails, the entire transaction will roll back.
+   */
+  async emitTransactional(
+    event: AuditEvent,
+    txContext: TransactionContext
+  ): Promise<void> {
+    const client = txContext.tx as PoolClient;
+
+    // Extract resource_type from entityUrn (e.g., "urn:finance:payment:123" -> "payment")
+    // Format: urn:<domain>:<resource_type>:<id>
+    const urnParts = event.entityUrn.split(':');
+    const resourceType = urnParts.length >= 3 ? urnParts[2] : 'unknown';
+    const resourceId = event.entityId;
+
+    // Insert into audit_events using the same transaction
+    await client.query(
+      `INSERT INTO ${TABLE} (
+         tenant_id, actor_id, action, resource_type, resource_id,
+         details, correlation_id, ip_address, created_at
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
+      [
+        event.actor.tenantId || null,
+        event.actor.userId || null,
+        event.eventType,
+        resourceType,
+        resourceId,
+        JSON.stringify({
+          result: 'OK',
+          event_type: event.eventType,
+          source: 'canon',
+          payload: event.payload,
+        }),
+        txContext.correlationId,
+        event.actor.ipAddress || null,
       ]
     );
   }
@@ -80,8 +146,10 @@ export class SqlAuditRepo implements AuditPort {
     }
 
     if (input.resource) {
-      conditions.push(`resource = $${paramIndex++}`);
+      // Support both resource_id and resource_type matching
+      conditions.push(`(resource_id = $${paramIndex} OR resource_type = $${paramIndex})`);
       params.push(input.resource);
+      paramIndex++;
     }
 
     if (input.start_time) {
@@ -105,7 +173,7 @@ export class SqlAuditRepo implements AuditPort {
 
     // Get total count
     const countResult = await this.db.query<{ count: string }>(
-      `SELECT COUNT(*) as count FROM audit_events ${whereClause}`,
+      `SELECT COUNT(*) as count FROM ${TABLE} ${whereClause}`,
       params
     );
     const total = parseInt(countResult.rows[0].count, 10);
@@ -119,14 +187,15 @@ export class SqlAuditRepo implements AuditPort {
       tenant_id: string | null;
       actor_id: string | null;
       action: string;
-      resource: string | null;
+      resource_type: string | null;
+      resource_id: string | null;
       details: unknown;
       correlation_id: string | null;
       ip_address: string | null;
       created_at: Date;
     }>(
-      `SELECT id, tenant_id, actor_id, action, resource, details, correlation_id, ip_address, created_at
-       FROM audit_events
+      `SELECT id, tenant_id, actor_id, action, resource_type, resource_id, details, correlation_id, ip_address, created_at
+       FROM ${TABLE}
        ${whereClause}
        ORDER BY created_at DESC
        LIMIT $${paramIndex++} OFFSET $${paramIndex++}`,
@@ -135,11 +204,16 @@ export class SqlAuditRepo implements AuditPort {
 
     const events = result.rows.map((row) => {
       const details = row.details as Record<string, unknown>;
+      // Reconstruct resource from resource_type and resource_id
+      const resource = row.resource_type && row.resource_id
+        ? `urn:${row.resource_type}:${row.resource_id}`
+        : row.resource_id || '';
+
       return {
         tenant_id: row.tenant_id || undefined,
         actor_id: row.actor_id || undefined,
         action: row.action,
-        resource: row.resource || '',
+        resource,
         result: (details.result as 'OK' | 'FAIL' | 'ALLOW' | 'DENY') || 'OK',
         correlation_id: row.correlation_id || '',
         payload: details.payload,
