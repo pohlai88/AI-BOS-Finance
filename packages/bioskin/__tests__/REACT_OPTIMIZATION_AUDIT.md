@@ -1,14 +1,23 @@
 # BioSkin React Optimization Audit
 
 > **Generated:** December 2024  
-> **Status:** Action Required  
+> **Status:** Phase 1 Complete ✅ | Phase 2-4 Identified  
 > **Priority:** Performance Enhancement
 
 ---
 
 ## Executive Summary
 
-Analysis of 93 BioSkin components revealed **15 optimization opportunities** across 4 categories. Implementing these changes will significantly reduce unnecessary re-renders, especially in list-heavy views like tables, trees, and calendars.
+Analysis of 93 BioSkin components revealed **23 optimization opportunities** across 7 categories. Phase 1 (high-priority memoization) is complete. Remaining phases focus on advanced patterns.
+
+### Current Status
+
+| Phase | Category | Status |
+|-------|----------|--------|
+| **Phase 1** | React.memo + useCallback | ✅ **COMPLETE** |
+| **Phase 2** | Dynamic Imports / Code Splitting | 🔴 TODO |
+| **Phase 3** | Server Component Extraction | 🟡 EVALUATE |
+| **Phase 4** | State Isolation (Jotai Scoping) | 🟡 EVALUATE |
 
 ---
 
@@ -202,14 +211,249 @@ All 435+ tests should pass. Additionally, consider adding React DevTools Profile
 
 ---
 
+---
+
+## 9. Phase 2: Dynamic Imports / Code Splitting
+
+### 🔴 HIGH PRIORITY (Bundle Size)
+
+Heavy components should be dynamically imported to reduce initial bundle size. BioSkin is a UI library, so this is **consumer-side optimization**, but we can provide utilities.
+
+| Component | Estimated Size | Recommendation |
+|-----------|---------------|----------------|
+| `BioChart` | ~15KB (SVG rendering) | Lazy load |
+| `BioGantt` | ~12KB (date math) | Lazy load |
+| `BioKanban` | ~20KB (@dnd-kit) | Lazy load |
+| `BioCalendar` | ~10KB (date grid) | Lazy load |
+| `BioTable` | ~25KB (@tanstack/react-table) | Lazy load |
+| `BioCommandPalette` | ~8KB (cmdk) | Lazy load on demand |
+
+### Recommended Pattern for Consumers
+
+```typescript
+// apps/web/components/LazyBioChart.tsx
+import dynamic from 'next/dynamic';
+import { Spinner } from '@aibos/bioskin';
+
+export const LazyBioChart = dynamic(
+  () => import('@aibos/bioskin').then(mod => mod.BioChart),
+  { 
+    loading: () => <Spinner />,
+    ssr: false // Charts don't need SSR
+  }
+);
+```
+
+### Library-Side Optimization: Split Entry Points
+
+Create granular entry points for tree-shaking:
+
+```typescript
+// Instead of importing everything:
+import { BioChart, BioTable } from '@aibos/bioskin';
+
+// Allow granular imports:
+import { BioChart } from '@aibos/bioskin/chart';
+import { BioTable } from '@aibos/bioskin/table';
+```
+
+---
+
+## 10. Phase 3: Server Component Extraction
+
+### 🟡 MEDIUM PRIORITY
+
+Some components have static parts that could be Server Components in Next.js App Router.
+
+| Component | Server-Safe Part | Client Part |
+|-----------|-----------------|-------------|
+| `Surface` | ✅ Could be RSC | N/A |
+| `Txt` | ✅ Could be RSC | N/A |
+| `StatusBadge` | ❌ Uses motion | animation |
+| `BioTable` | Schema introspection | interactivity |
+| `BioChart` | Color/data prep | SVG rendering |
+
+### Current Architecture (Correct)
+
+BioSkin already has proper directive separation:
+
+```typescript
+// src/index.ts
+'use client' // All components are client
+
+// src/server.ts  
+import 'server-only' // Server utilities
+export { introspectZodSchema } from './introspector';
+```
+
+### Opportunity: Headless Server Components
+
+Create server-safe "headless" versions that compute data:
+
+```typescript
+// New: src/server/table.ts
+import 'server-only';
+
+export function prepareTableData<T>(schema: ZodObject<T>, data: T[]) {
+  const definition = introspectZodSchema(schema);
+  const columns = generateColumns(definition.fields);
+  return { definition, columns }; // Serialize to client
+}
+```
+
+---
+
+## 11. Phase 4: State Isolation (Jotai Scoping)
+
+### 🟡 MEDIUM PRIORITY (Multiple Instances)
+
+**Issue:** `useBioTable` uses global Jotai atoms. Multiple tables on one page share state!
+
+```typescript
+// Current: Global atoms (problematic for multiple tables)
+export const sortingAtom = atom<SortingState>([]);
+export const paginationAtom = atom<PaginationState>({ pageIndex: 0, pageSize: 10 });
+```
+
+### Fix: Scoped Atoms per Instance
+
+```typescript
+// Better: Create atoms per table instance
+export function useBioTable<TData>(options: UseBioTableOptions<TData>) {
+  // Create instance-scoped atoms
+  const sortingAtom = React.useMemo(() => atom<SortingState>([]), []);
+  const paginationAtom = React.useMemo(
+    () => atom<PaginationState>({ pageIndex: 0, pageSize: options.pageSize }),
+    [options.pageSize]
+  );
+  
+  // ... rest of hook
+}
+```
+
+### Alternative: Jotai Provider per Table
+
+```typescript
+// BioTable.tsx already does this correctly!
+export function BioTable<T extends z.ZodRawShape>(props: BioTableProps<T>) {
+  return (
+    <JotaiProvider> {/* Each table gets its own scope */}
+      <BioTableInternal {...props} />
+    </JotaiProvider>
+  );
+}
+```
+
+**Status:** ✅ Already implemented correctly with `JotaiProvider` wrapper.
+
+---
+
+## 12. Phase 5: Spinner Variant Memoization
+
+### 🟢 LOW PRIORITY
+
+Spinner variants (`DotsSpinner`, `BarsSpinner`, etc.) could be memoized:
+
+```typescript
+// Current
+function DotsSpinner({ size, color }: Props) { ... }
+
+// Optimized
+const DotsSpinner = React.memo(function DotsSpinner({ size, color }: Props) {
+  // ...
+});
+```
+
+**Impact:** Minimal - Spinners rarely re-render with changed props.
+
+---
+
+## 13. Phase 6: Motion Preset Extraction
+
+### 🟢 LOW PRIORITY (Already Good)
+
+The `presets` object in `MotionEffect.tsx` is already defined at module level (✅ good).
+
+Further optimization: Memoize the transition object:
+
+```typescript
+// Current: New object every render
+const transition: Transition = { duration, delay, ease: 'easeOut' };
+
+// Better: Memoize when deps change
+const transition = React.useMemo(
+  () => ({ duration, delay, ease: 'easeOut' }),
+  [duration, delay]
+);
+```
+
+---
+
+## 14. Next.js App Router Integration Recommendations
+
+### Image Optimization
+
+For any images in BioSkin (avatars, thumbnails):
+
+```typescript
+// Use next/image for automatic optimization
+import Image from 'next/image';
+
+// In BioNavbar user avatar
+<Image
+  src={user.avatar}
+  alt={user.name}
+  width={32}
+  height={32}
+  className="rounded-full"
+/>
+```
+
+### Streaming with Suspense
+
+Recommend wrapping heavy components:
+
+```typescript
+// In consumer app
+import { Suspense } from 'react';
+import { BioTable, LoadingState } from '@aibos/bioskin';
+
+<Suspense fallback={<LoadingState />}>
+  <BioTable schema={schema} data={data} />
+</Suspense>
+```
+
+---
+
 ## Summary
 
 | Category | Items | Priority | Status |
 |----------|-------|----------|--------|
-| `React.memo` | 5 components | HIGH | 🔴 TODO |
-| `useCallback` | 3 components | MEDIUM | 🟡 TODO |
-| Motion constants | 5 components | LOW | 🟢 TODO |
-| Already optimized | 4 components | N/A | ✅ DONE |
-| Don't need memo | 4 components | N/A | ✅ SKIP |
+| `React.memo` | 5 components | HIGH | ✅ DONE |
+| `useCallback` | 3 components | MEDIUM | ✅ DONE |
+| Motion constants | 5 components | LOW | ✅ DONE |
+| Dynamic imports | 6 components | HIGH | 📋 Consumer-side |
+| Server extraction | 2 patterns | MEDIUM | 🔍 Evaluate |
+| State isolation | 1 hook | MEDIUM | ✅ Already correct |
+| Spinner memo | 8 variants | LOW | 📋 Optional |
 
-**Total estimated impact:** 30-50% reduction in unnecessary re-renders for complex views.
+### Completed Optimizations (Phase 1)
+
+- ✅ `StatusBadge` wrapped in `React.memo`
+- ✅ `BioTreeNode` wrapped in `React.memo`
+- ✅ `CalendarDay` wrapped in `React.memo`
+- ✅ `BioKanbanCard` wrapped in `React.memo`
+- ✅ `BioCalendar` handlers wrapped in `useCallback`
+- ✅ Animation constants extracted to module scope
+- ✅ `PulsingDot` wrapped in `React.memo`
+
+### Next Steps for Maximum Performance
+
+1. **Consumer-side:** Use `next/dynamic` for heavy components
+2. **Consumer-side:** Wrap data-fetching components in `<Suspense>`
+3. **Library-side (optional):** Create granular entry points
+4. **Library-side (optional):** Memo Spinner variants
+
+**Total estimated impact:** 
+- Phase 1 (Complete): 30-50% fewer re-renders
+- Phase 2-6: 20-40% smaller initial bundle (consumer-dependent)
