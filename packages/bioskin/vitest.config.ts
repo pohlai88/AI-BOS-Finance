@@ -18,19 +18,23 @@ export default defineConfig({
       '@dnd-kit/utilities',
       'jotai',
       'motion',
+      'axe-core',
     ],
   },
   test: {
     name: 'bioskin',
     globals: true,
 
-    // Browser Mode - real browser testing
+    // Browser Mode - real browser testing (cross-browser)
     browser: {
       provider: playwright(),
       enabled: true,
       headless: true, // Set to false to see browser during tests
       instances: [
         { browser: 'chromium' },
+        // Enable for full cross-browser testing:
+        // { browser: 'firefox' },
+        // { browser: 'webkit' },
       ],
     },
 
