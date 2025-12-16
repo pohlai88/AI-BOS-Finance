@@ -43,3 +43,4 @@ export { BioTable, type BioTableProps } from './organisms/BioTable';
 export { BioForm, type BioFormProps } from './organisms/BioForm';
 export { BioObject, type BioObjectProps } from './organisms/BioObject';
 export { BioKanban, type BioKanbanProps, type KanbanCard, type KanbanColumn } from './organisms/BioKanban';
+export { BioTree, type BioTreeProps, type TreeNode } from './organisms/BioTree';

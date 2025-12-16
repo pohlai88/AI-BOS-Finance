@@ -62,3 +62,19 @@ export {
   type UseBioKanbanOptions,
   type UseBioKanbanReturn,
 } from './BioKanban';
+
+// BioTree - hierarchical data view (Sprint 5 - ERPNext Expansion)
+export {
+  BioTree,
+  type BioTreeProps,
+  COMPONENT_META as BIO_TREE_META,
+  // Sub-components
+  BioTreeNode,
+  type BioTreeNodeProps,
+  // Hook + types
+  useBioTree,
+  type TreeNode,
+  type TreeState,
+  type UseBioTreeOptions,
+  type UseBioTreeReturn,
+} from './BioTree';
