@@ -37,6 +37,8 @@ export { LoadingState, type LoadingStateProps } from './molecules/LoadingState';
 export { ErrorState, type ErrorStateProps } from './molecules/ErrorState';
 export { BioApprovalActions, type BioApprovalActionsProps } from './molecules/BioApprovalActions';
 export { BioDiffViewer, useDiff, type BioDiffViewerProps, type DiffEntry } from './molecules/BioDiffViewer';
+export { BioBreadcrumb, generateBreadcrumbs, type BioBreadcrumbProps, type BioBreadcrumbItem } from './molecules/BioBreadcrumb';
+export { BioToastProvider, bioToast, type BioToastProviderProps, type BioToastPosition } from './molecules/BioToast';
 
 // ============================================================
 // ORGANISMS (Layer 3) - Schema-driven components
@@ -51,6 +53,12 @@ export { BioDropzone, type BioDropzoneProps, type UploadedFile } from './organis
 export { BioCalendar, type BioCalendarProps, type CalendarEvent } from './organisms/BioCalendar';
 export { BioGantt, type BioGanttProps, type GanttTask } from './organisms/BioGantt';
 export { BioChart, type BioChartProps, type ChartDataPoint } from './organisms/BioChart';
+
+// Layout Components (Sprint Layout - Full Rewrite Support)
+export { BioSidebar, type BioSidebarProps, type BioNavItem } from './organisms/BioSidebar';
+export { BioNavbar, type BioNavbarProps, type BioNavbarUser, type BioNavbarAction } from './organisms/BioNavbar';
+export { BioAppShell, useAppShell, type BioAppShellProps } from './organisms/BioAppShell';
+export { BioCommandPalette, type BioCommandPaletteProps, type BioCommand } from './organisms/BioCommandPalette';
 
 // ============================================================
 // PROVIDERS (Cross-cutting) - Context providers

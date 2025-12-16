@@ -41,3 +41,24 @@ export {
   type DiffEntry,
   COMPONENT_META as BIO_DIFF_VIEWER_META,
 } from './BioDiffViewer';
+
+// Navigation (Sprint Layout)
+export {
+  BioBreadcrumb,
+  generateBreadcrumbs,
+  type BioBreadcrumbProps,
+  type BioBreadcrumbItem,
+  type BreadcrumbConfig,
+  BREADCRUMB_META,
+} from './BioBreadcrumb';
+
+// Notifications (Sprint Layout)
+export {
+  BioToastProvider,
+  bioToast,
+  type BioToastProviderProps,
+  type BioToastOptions,
+  type BioToastPosition,
+  type BioPromiseOptions,
+  TOAST_META,
+} from './BioToast';

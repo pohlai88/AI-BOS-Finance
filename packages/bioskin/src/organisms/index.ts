@@ -124,3 +124,40 @@ export {
   type ChartType,
   COMPONENT_META as BIO_CHART_META,
 } from './BioChart';
+
+// ============================================================
+// LAYOUT COMPONENTS (Sprint Layout - Full Rewrite Support)
+// ============================================================
+
+// BioSidebar - collapsible navigation
+export {
+  BioSidebar,
+  type BioSidebarProps,
+  type BioNavItem,
+  COMPONENT_META as BIO_SIDEBAR_META,
+} from './BioSidebar';
+
+// BioNavbar - top navigation bar
+export {
+  BioNavbar,
+  type BioNavbarProps,
+  type BioNavbarUser,
+  type BioNavbarAction,
+  COMPONENT_META as BIO_NAVBAR_META,
+} from './BioNavbar';
+
+// BioAppShell - root layout wrapper
+export {
+  BioAppShell,
+  useAppShell,
+  type BioAppShellProps,
+  COMPONENT_META as BIO_APP_SHELL_META,
+} from './BioAppShell';
+
+// BioCommandPalette - global search/actions (Cmd+K)
+export {
+  BioCommandPalette,
+  type BioCommandPaletteProps,
+  type BioCommand,
+  COMPONENT_META as BIO_COMMAND_PALETTE_META,
+} from './BioCommandPalette';
