@@ -337,7 +337,7 @@ export function BioLocaleProvider({
       });
       const parts = formatter.formatToParts(d);
       const get = (type: string) => parts.find(p => p.type === type)?.value || '0';
-      
+
       return new Date(
         parseInt(get('year')),
         parseInt(get('month')) - 1,
@@ -460,7 +460,7 @@ export function useLocale(): BioLocaleContextValue {
         'July', 'August', 'September', 'October', 'November', 'December'
       ],
       isRTL: false,
-      setLocaleConfig: () => {},
+      setLocaleConfig: () => { },
     };
   }
 

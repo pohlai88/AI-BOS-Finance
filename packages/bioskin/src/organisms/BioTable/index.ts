@@ -33,3 +33,16 @@ export {
   type UseBioTableOptions,
   type UseBioTableReturn,
 } from './useBioTable';
+
+// Export functionality (Sprint E4)
+export {
+  useBioTableExport,
+  type ExportOptions,
+  type PrintOptions,
+  type UseBioTableExportReturn,
+} from './useBioTableExport';
+
+export {
+  BioTableExportToolbar,
+  type BioTableExportToolbarProps,
+} from './BioTableExportToolbar';
