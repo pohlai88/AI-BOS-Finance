@@ -54,8 +54,27 @@ export { BioChart, type BioChartProps, type ChartDataPoint } from './organisms/B
 // PROVIDERS (Cross-cutting) - Context providers
 // ============================================================
 export {
+  // Locale (i18n)
   BioLocaleProvider,
   useLocale,
   type BioLocaleConfig,
   type BioLocaleProviderProps,
+  // Governance / RBAC (Sprint E6)
+  BioPermissionProvider,
+  usePermissions,
+  useAudit,
+  type BioUser,
+  type BioPermissionMap,
+  type BioFieldRule,
+  type BioFieldSecurityMap,
+  type BioAuditEvent,
+  type BioDocumentState,
+  type BioPermissionProviderProps,
+  // Field-level security
+  withFieldSecurity,
+  useFieldSecurity,
+  SecuredField,
+  ActionGate,
+  RoleGate,
+  StateGate,
 } from './providers';

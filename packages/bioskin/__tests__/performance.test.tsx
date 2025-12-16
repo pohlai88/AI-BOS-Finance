@@ -277,7 +277,7 @@ describe('Performance - BioKanban', () => {
           <BioKanban
             columns={columns}
             cards={cards}
-            onCardMove={() => {}}
+            onCardMove={() => { }}
           />
         </BioLocaleProvider>
       );
@@ -296,7 +296,7 @@ describe('Performance - BioKanban', () => {
           <BioKanban
             columns={columns}
             cards={cards}
-            onCardMove={() => {}}
+            onCardMove={() => { }}
           />
         </BioLocaleProvider>
       );
