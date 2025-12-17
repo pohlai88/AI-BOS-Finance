@@ -34,27 +34,15 @@
     /* Path Mapping */
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/views/*": [
-        "./src/views/*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ],
-      "@aibos/canon": [
-        "../../packages/canon"
-      ],
-      "@aibos/canon/*": [
-        "../../packages/canon/*"
-      ],
-      "@/canon-pages/*": [
-        "./canon-pages/*"
-      ],
-      "@/app/*": [
-        "./app/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/app/*": ["./app/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/ui": ["./src/features/shared/ui"],
+      "@/ui/*": ["./src/features/shared/ui/*"],
+      "@/canon-pages/*": ["./canon-pages/*"],
+      "@aibos/canon": ["../../packages/canon"],
+      "@aibos/canon/*": ["../../packages/canon/*"]
     }
   },
   "include": [

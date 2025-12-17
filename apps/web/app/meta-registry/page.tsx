@@ -1,12 +1,13 @@
 'use client';
 
-// ============================================================================
-// META_02 - REGISTRY // GOD VIEW
-// Route: /meta-registry
-// ============================================================================
+/**
+ * META_02 - Registry / God View Route
+ * Thin route - delegates to feature module
+ * @see FRONTEND_CLEAN_STATE_REVIEW.md
+ */
 
-import { MetadataGodView } from '@/views/META_02_MetadataGodView';
+import { META_02_MetadataGodView } from '@/features/metadata';
 
-export default function MetaRegistryPage() {
-  return <MetadataGodView />;
+export default function MetaRegistryRoute() {
+  return <META_02_MetadataGodView />;
 }

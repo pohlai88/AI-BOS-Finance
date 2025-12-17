@@ -1,11 +1,11 @@
 /**
  * Marketing Feature Module
- * Migrated from src/components/landing/ per CONT_09
+ * Self-contained marketing/landing domain with views and components
+ * @see FRONTEND_CLEAN_STATE_REVIEW.md
  */
 
-export * from './components/HeroSection';
-export * from './components/Header';
-export * from './components/LandingPageClient';
-export * from './components/LandingFooter';
-export * from './components/LinearFeatureCard';
-export * from './components/TruthBar';
+// Views (Pages)
+export { default as LandingPage } from './views/LandingPage';
+
+// Components
+export * from './components/index';

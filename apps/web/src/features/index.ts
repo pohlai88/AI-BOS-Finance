@@ -1,12 +1,21 @@
 /**
  * Features Index
- * Central export for all feature modules per CONT_09
+ * Central export for all feature modules
+ * @see FRONTEND_CLEAN_STATE_REVIEW.md
  */
 
-export * as payment from './payment';
+// Primary feature modules
+export * as payments from './payments';
 export * as metadata from './metadata';
-export * as dashboard from './dashboard';
-export * as health from './health';
-export * as marketing from './marketing';
-export * as shell from './shell';
+export * as system from './system';
 export * as auth from './auth';
+export * as dashboard from './dashboard';
+export * as marketing from './marketing';
+
+// Support modules
+export * as health from './health';
+export * as shell from './shell';
+export * as shared from './shared';
+
+// Legacy (to be deprecated)
+export * as payment from './payment';
