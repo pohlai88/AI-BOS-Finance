@@ -180,6 +180,56 @@ export interface PaymentQueryFilters {
 }
 
 // ============================================================================
+// DASHBOARD TYPES
+// ============================================================================
+
+/**
+ * Status count with total amount
+ */
+export interface StatusAggregate {
+  status: PaymentStatus;
+  count: number;
+  totalAmount: string;
+  currency: string;
+}
+
+/**
+ * Company payment aggregate
+ */
+export interface CompanyAggregate {
+  companyId: string;
+  companyName?: string;
+  pendingCount: number;
+  pendingAmount: string;
+  completedCount: number;
+  completedAmount: string;
+  totalCount: number;
+  totalAmount: string;
+  currency: string;
+}
+
+/**
+ * Cash position projection
+ */
+export interface CashPositionEntry {
+  date: Date;
+  scheduledAmount: string;
+  paymentCount: number;
+  currency: string;
+}
+
+/**
+ * Dashboard filters
+ */
+export interface DashboardFilters {
+  tenantId: string;
+  companyId?: string;
+  fromDate?: Date;
+  toDate?: Date;
+  currency?: string;
+}
+
+// ============================================================================
 // 2. PORT INTERFACE
 // ============================================================================
 
@@ -294,4 +344,52 @@ export interface PaymentRepositoryPort {
     paymentId: string,
     tenantId: string
   ): Promise<PaymentApproval[]>;
+
+  // ==========================================================================
+  // DASHBOARD QUERIES
+  // ==========================================================================
+
+  /**
+   * Get payment counts and amounts grouped by status
+   * 
+   * @param filters - Dashboard filters
+   * @returns Aggregates by status
+   */
+  getStatusAggregates(
+    filters: DashboardFilters
+  ): Promise<StatusAggregate[]>;
+
+  /**
+   * Get payment aggregates by company (for group-of-companies view)
+   * 
+   * @param filters - Dashboard filters
+   * @returns Aggregates by company
+   */
+  getCompanyAggregates(
+    filters: DashboardFilters
+  ): Promise<CompanyAggregate[]>;
+
+  /**
+   * Get cash position projection (scheduled outflows)
+   * 
+   * @param filters - Dashboard filters
+   * @param days - Number of days to project (default 90)
+   * @returns Daily cash position entries
+   */
+  getCashPosition(
+    filters: DashboardFilters,
+    days?: number
+  ): Promise<CashPositionEntry[]>;
+
+  /**
+   * Get count of payments pending approval for a specific approver
+   * 
+   * @param approverId - User ID of approver
+   * @param tenantId - Tenant ID
+   * @returns Count of pending approvals
+   */
+  getPendingApprovalCount(
+    approverId: string,
+    tenantId: string
+  ): Promise<number>;
 }

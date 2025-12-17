@@ -6,6 +6,7 @@
 
 // Primary feature modules
 export * as payments from './payments';
+export * as vendor from './vendor';
 export * as metadata from './metadata';
 export * as system from './system';
 export * as auth from './auth';

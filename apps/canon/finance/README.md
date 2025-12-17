@@ -20,8 +20,8 @@ This Canon implements the **Kernel-Molecule-Cell** architecture with strict adhe
 
 | Molecule | Code | Cycle | Status | Description |
 |----------|------|-------|--------|-------------|
-| **General Ledger** | GL | R2R | ⬜ Planned | Record to Report — The Hub of accounting |
-| **Accounts Payable** | AP | P2P | 🟡 Active | Procure to Pay — Cash Out Control |
+| **Accounts Payable** | AP | P2P | ✅ **Backend Complete** | Procure to Pay — Cash Out Control |
+| **General Ledger** | GL | R2R | 🟡 Partial | Record to Report — The Hub of accounting |
 | **Accounts Receivable** | AR | O2C | ⬜ Planned | Order to Cash — Revenue Recognition |
 | **Treasury** | TR | — | ⬜ Planned | Cash & Liquidity Management |
 
@@ -29,26 +29,36 @@ This Canon implements the **Kernel-Molecule-Cell** architecture with strict adhe
 
 ## 📊 Cell Registry
 
-### AP Molecule (Procure to Pay)
+### AP Molecule — Procure to Pay ✅
 
 | Cell | Code | Status | AIS Justification |
 |------|------|--------|------------------|
-| Vendor Master | AP-01 | ⬜ Planned | Master Data Management |
-| Supplier Invoice | AP-02 | ⬜ Planned | Liability Recognition |
-| 3-Way Match | AP-03 | ⬜ Planned | Validity Assertion |
-| Invoice Approval | AP-04 | ⬜ Planned | Authorization Control |
-| **Payment Execution** | **AP-05** | **🟡 MVP** | **Custody of Assets** |
+| **Vendor Master** | AP-01 | ✅ Complete | Master Data Management |
+| **Supplier Invoice** | AP-02 | ✅ Complete | Liability Recognition |
+| **3-Way Match** | AP-03 | ✅ Complete | Validity Assertion |
+| **Invoice Approval** | AP-04 | ✅ Complete | Authorization Control |
+| **Payment Execution** | AP-05 | ✅ Complete | Custody of Assets |
 | AP Aging | AP-06 | ⬜ Planned | Valuation Assertion |
 
-### GL Molecule (Record to Report)
+### GL Molecule — Record to Report 🟡
 
 | Cell | Code | Status | AIS Justification |
 |------|------|--------|------------------|
-| Chart of Accounts | GL-01 | ⬜ Planned | Classification Assertion |
-| Journal Entry | GL-02 | ⬜ Planned | Journalizing Process |
-| Posting Engine | GL-03 | ⬜ Planned | Processing Integrity |
+| Chart of Accounts | GL-01 | 🟡 Port Defined | Classification Assertion |
+| Journal Entry | GL-02 | 🟡 Port Defined | Journalizing Process |
+| **Posting Engine** | GL-03 | ✅ Complete | Processing Integrity |
 | Period Close | GL-04 | ⬜ Planned | Cutoff Assertion |
 | Trial Balance | GL-05 | ⬜ Planned | Mathematical Accuracy |
+
+### Kernel Services
+
+| Service | Code | Status | Purpose |
+|---------|------|--------|---------|
+| **Sequence Generator** | K_SEQ | ✅ Complete | Governed number generation |
+| **Chart of Accounts** | K_COA | ✅ Complete | Account validation & lookup |
+| Fiscal Time | K_TIME | ✅ Integrated | Period open/close validation |
+| Policy Engine | K_POLICY | ✅ Integrated | SoD, approval limits |
+| Audit Logger | K_LOG | ✅ Integrated | Transactional audit events |
 
 ---
 
@@ -56,13 +66,33 @@ This Canon implements the **Kernel-Molecule-Cell** architecture with strict adhe
 
 ```
 finance/
-├── accounts-payable/
-│   ├── payment-hub-demo/      # AP-05: Payment Execution (MVP)
-│   ├── vendor-master/         # AP-01: Vendor Master (Planned)
-│   └── invoice-matching/      # AP-03: 3-Way Match (Planned)
-├── accounts-receivable/       # AR Cells (Planned)
-├── treasury/                  # TR Cells (Planned)
-└── general-ledger/            # GL Cells (Planned)
+├── dom03-accounts-payable/           # AP Molecule ✅
+│   ├── cells/
+│   │   ├── ap01-vendor-master/       # ✅ Complete
+│   │   ├── ap02-invoice-entry/       # ✅ Complete
+│   │   ├── ap03-3way-engine/         # ✅ Complete
+│   │   ├── ap04-invoice-submit-approval/  # ✅ Complete
+│   │   └── ap05-payment-execution/   # ✅ Complete
+│   └── types/                        # Shared AP types
+│
+├── dom04-accounts-receivable/        # AR Molecule (Planned)
+├── dom05-general-ledger/             # GL Molecule (Partial)
+└── dom06-treasury/                   # TR Molecule (Planned)
+```
+
+---
+
+## 🧪 Test Status
+
+| Molecule | Unit Tests | Control Tests | Integration Tests | Total |
+|----------|------------|---------------|-------------------|-------|
+| **AP (DOM03)** | ✅ 180+ | ✅ 40+ | ✅ 38 (DB required) | 222+ |
+| GL | ⬜ | ⬜ | ⬜ | — |
+| AR | ⬜ | ⬜ | ⬜ | — |
+
+**Run AP Tests:**
+```bash
+pnpm test:vitest run apps/canon/finance/dom03-accounts-payable/cells
 ```
 
 ---
@@ -76,4 +106,5 @@ finance/
 
 ---
 
-**End of Finance Canon README**
+**Last Updated:** December 2025  
+**Maintainer:** Finance Cell Team

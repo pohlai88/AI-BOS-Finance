@@ -1,8 +1,19 @@
-﻿{
+{
   "mcpServers": {
     "react-aria": {
       "command": "npx",
       "args": ["-y", "@react-aria/mcp@latest"]
+    },
+    "vitest": {
+      "command": "npx",
+      "args": ["-y", "@djankies/vitest-mcp"],
+      "env": {
+        "VITEST_PROJECT_DIR": "${workspaceFolder}/apps/web"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/playwright-mcp-server"]
     }
   }
 }

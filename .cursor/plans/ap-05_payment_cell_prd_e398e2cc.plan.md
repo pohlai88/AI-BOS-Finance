@@ -123,7 +123,7 @@ CONFIRMED: Monolithic Database with Schema Isolation
 
 | **Molecule** | AP cluster orchestration | `apps/canon/finance/ap/` | Finance Team |
 
-| **Cell** | AP-05 Payment Execution logic | `apps/canon/finance/ap/cells/payment-execution/` | Finance Team |
+| **Cell** | AP-05 Payment Execution logic | `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/` | Finance Team |
 
 | **Frontend** | UI/UX, API Client, State | `apps/web/src/modules/payment/` | Frontend Team |
 
@@ -638,7 +638,7 @@ CREATE POLICY approvals_tenant_isolation ON finance.payment_approvals
 
 #### D.3.1 PaymentService
 
-**File:** `apps/canon/finance/ap/cells/payment-execution/PaymentService.ts`
+**File:** `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/PaymentService.ts`
 
 ```typescript
 export class PaymentService {
@@ -713,7 +713,7 @@ export class PaymentService {
 
 #### D.3.2 ApprovalService
 
-**File:** `apps/canon/finance/ap/cells/payment-execution/ApprovalService.ts`
+**File:** `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/ApprovalService.ts`
 
 ```typescript
 export class ApprovalService {
@@ -876,7 +876,7 @@ export class ApprovalService {
 
 #### D.3.3 ExecutionService
 
-**File:** `apps/canon/finance/ap/cells/payment-execution/ExecutionService.ts`
+**File:** `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/ExecutionService.ts`
 
 ```typescript
 export class ExecutionService {
@@ -1234,9 +1234,9 @@ export interface PaymentPostingInput {
 
 | D2 | `PaymentRepositoryPort` | `apps/canon/finance/ap/ports/` | P2 |
 
-| D3 | `PaymentService` | `apps/canon/finance/ap/cells/payment-execution/` | P3 |
+| D3 | `PaymentService` | `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/` | P3 |
 
-| D4 | `ApprovalService` | `apps/canon/finance/ap/cells/payment-execution/` | P3 |
+| D4 | `ApprovalService` | `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/` | P3 |
 
 | D5 | `PgPaymentRepository` | `packages/kernel-adapters/src/sql/` | P3 |
 

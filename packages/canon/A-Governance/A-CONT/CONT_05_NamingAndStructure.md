@@ -123,7 +123,7 @@ The system follows a strict hierarchy enforcing boundaries and enabling safe com
 
 | Entity | Pattern | Example | Location |
 |--------|---------|---------|----------|
-| **Directory** | `apps/canon/<domain>/<molecule>/` | `apps/canon/finance/accounts-payable/` | Under Canon |
+| **Directory** | `apps/canon/<domain>/<molecule>/` | `apps/canon/finance/dom03-accounts-payable/` | Under Canon |
 | **Molecule Name** | `<domain>-<molecule>` | `finance-accounts-payable` | Service name |
 | **Package Name** | `@aibos/mol-<domain>-<molecule>` | `@aibos/mol-finance-accounts-payable` | package.json |
 | **Database Schema** | `<domain>` (shared) | `finance` | PostgreSQL |
@@ -152,7 +152,7 @@ The system follows a strict hierarchy enforcing boundaries and enabling safe com
 
 | Entity | Pattern | Example | Location |
 |--------|---------|---------|----------|
-| **Directory** | `apps/canon/<domain>/<molecule>/<cell>/` | `apps/canon/finance/accounts-payable/payment-hub/` | Under Molecule |
+| **Directory** | `apps/canon/<domain>/<molecule>/<cell>/` | `apps/canon/finance/dom03-accounts-payable/payment-hub/` | Under Molecule |
 | **Cell Name** | `cell-<domain>-<molecule>-<cell>` | `cell-finance-accounts-payable-payment-hub` | Service name |
 | **Package Name** | `@aibos/cell-<domain>-<molecule>-<cell>` | `@aibos/cell-finance-accounts-payable-payment-hub` | package.json |
 | **Canon Code** | `CELL_<DOMAIN>_<MOL>_<CELL>` | `CELL_FINANCE_AP_PAYHUB` | CONT_01 |
@@ -280,10 +280,10 @@ The following directory names are **reserved** and MUST NOT be used unless expli
 
 | Violation | Example | Correct |
 |-----------|---------|---------|
-| Cell outside Molecule | `apps/canon/finance/payment-hub/` | `apps/canon/finance/accounts-payable/payment-hub/` |
-| Molecule outside Canon | `apps/molecules/accounts-payable/` | `apps/canon/finance/accounts-payable/` |
+| Cell outside Molecule | `apps/canon/finance/payment-hub/` | `apps/canon/finance/dom03-accounts-payable/payment-hub/` |
+| Molecule outside Canon | `apps/molecules/accounts-payable/` | `apps/canon/finance/dom03-accounts-payable/` |
 | Nested Cells | `apps/canon/finance/payment-hub/invoice-matching/` | Separate cells under molecule |
-| Mixed naming | `apps/canon/Finance/AccountsPayable/` | `apps/canon/finance/accounts-payable/` |
+| Mixed naming | `apps/canon/Finance/AccountsPayable/` | `apps/canon/finance/dom03-accounts-payable/` |
 
 ### Naming Violations
 
@@ -357,7 +357,7 @@ rules: {
 ```typescript
 // Validates dependency rules
 const violations = await checkBoundaries({
-  cell: 'apps/canon/finance/accounts-payable/payment-hub/',
+  cell: 'apps/canon/finance/dom03-accounts-payable/payment-hub/',
   forbidden: [
     '../other-cell',
     '@aibos/canon-hr',
@@ -417,7 +417,7 @@ apps/
 │   └── package.json                 # ✅ @aibos/kernel
 ├── canon/
 │   └── finance/                     # ✅ Canon Finance
-│       ├── accounts-payable/         # ✅ Molecule AP
+│       ├── dom03-accounts-payable/         # ✅ Molecule AP
 │       │   ├── payment-hub-demo/     # ✅ Cell (demo suffix documented)
 │       │   │   ├── src/
 │       │   │   └── package.json     # ✅ @aibos/cell-finance-accounts-payable-payment-hub-demo
@@ -462,8 +462,8 @@ apps/
 
 ```bash
 # 1. Rename directory
-git mv apps/canon/finance/accounts-payable/payment-hub \
-       apps/canon/finance/accounts-payable/payment-hub-demo
+git mv apps/canon/finance/dom03-accounts-payable/payment-hub \
+       apps/canon/finance/dom03-accounts-payable/payment-hub-demo
 
 # 2. Update package.json
 # Change: "name": "@aibos/cell-finance-accounts-payable-payment-hub"
@@ -472,8 +472,8 @@ git mv apps/canon/finance/accounts-payable/payment-hub \
 # 3. Update docker-compose.yml service name
 # Change: cell-finance-accounts-payable-payment-hub:
 # To:     cell-finance-accounts-payable-payment-hub-demo:
-# Change: context: ../canon/finance/accounts-payable/payment-hub
-# To:     context: ../canon/finance/accounts-payable/payment-hub-demo
+# Change: context: ../canon/finance/dom03-accounts-payable/payment-hub
+# To:     context: ../canon/finance/dom03-accounts-payable/payment-hub-demo
 
 # 4. Update PRD documentation
 # Add note: "This is a demo implementation (suffix: -demo)"
@@ -535,7 +535,7 @@ pnpm validate:structure
 
 | Pitfall | Why It's Wrong | How to Fix |
 |---------|----------------|------------|
-| **Creating `apps/payment-hub/`** | Cell outside molecule | Move to `apps/canon/finance/accounts-payable/payment-hub/` |
+| **Creating `apps/payment-hub/`** | Cell outside molecule | Move to `apps/canon/finance/dom03-accounts-payable/payment-hub/` |
 | **Naming service `paymentHub`** | Missing `cell-` prefix | Use `cell-payment-hub` |
 | **Package name `@aibos/payment-hub`** | Missing `cell-` prefix | Use `@aibos/cell-payment-hub` |
 | **Importing `../other-cell`** | Cell → Cell violation | Use Kernel Gateway or Event Bus |
@@ -621,7 +621,7 @@ The validator supports JSON output for CI/CD integration:
   "valid": false,
   "violations": [
     {
-      "path": "apps/canon/finance/accounts-payable/PaymentHub",
+      "path": "apps/canon/finance/dom03-accounts-payable/PaymentHub",
       "rule": "Cell names MUST be kebab-case",
       "expected": "/^[a-z]+(-[a-z]+)*(-demo|-test|-stub)?$/",
       "actual": "PaymentHub",

@@ -20,11 +20,11 @@ services:
       - kernel_net
 
   # Cell: Payment Hub (Finance Domain - Demo)
-  # Location: apps/canon/finance/accounts-payable/payment-hub-demo
+  # Location: apps/canon/finance/dom03-accounts-payable/payment-hub-demo
   # Demonstrates cell-based resilient architecture
   cell-payment-hub:
     build:
-      context: ../canon/finance/accounts-payable/payment-hub-demo
+      context: ../canon/finance/dom03-accounts-payable/payment-hub-demo
       dockerfile: Dockerfile
     container_name: cell_payment_hub
     restart: always

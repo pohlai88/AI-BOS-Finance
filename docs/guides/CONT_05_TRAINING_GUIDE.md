@@ -54,7 +54,7 @@ apps/
 │
 ├── canon/                     ← Layer 2: Business Domain
 │   └── finance/               ← Domain (e.g., finance, hr)
-│       └── accounts-payable/  ← Layer 3: Molecule (Cluster)
+│       └── dom03-accounts-payable/  ← Layer 3: Molecule (Cluster)
 │           └── payment-hub-demo/ ← Layer 4: Cell (Atomic)
 │
 └── db/                        ← Data Fabric
@@ -64,7 +64,7 @@ apps/
 
 | Question | Answer |
 |----------|--------|
-| "Where does payment logic go?" | `apps/canon/finance/accounts-payable/<cell>/` |
+| "Where does payment logic go?" | `apps/canon/finance/dom03-accounts-payable/<cell>/` |
 | "Where does authentication go?" | `apps/kernel/` |
 | "Can I create `apps/payment-hub/`?" | ❌ No - Cells must be under Molecules |
 | "Can I create `apps/canon/payment-hub/`?" | ❌ No - Cells must be under Molecules |
@@ -192,8 +192,8 @@ pnpm check:boundaries --json
 **Task:** Create a new "Invoice Matching" cell for Accounts Payable.
 
 **Steps:**
-1. ✅ Choose location: `apps/canon/finance/accounts-payable/invoice-matching/`
-2. ✅ Create directory: `mkdir -p apps/canon/finance/accounts-payable/invoice-matching`
+1. ✅ Choose location: `apps/canon/finance/dom03-accounts-payable/invoice-matching/`
+2. ✅ Create directory: `mkdir -p apps/canon/finance/dom03-accounts-payable/invoice-matching`
 3. ✅ Set package name: `"name": "@aibos/cell-finance-accounts-payable-invoice-matching"`
 4. ✅ Validate: `pnpm validate:structure`
 
@@ -261,8 +261,8 @@ apps/
 Where should these components go?
 
 1. User authentication → `apps/kernel/`
-2. Payment processing → `apps/canon/finance/accounts-payable/<cell>/`
-3. Vendor management → `apps/canon/finance/accounts-payable/vendor-master/`
+2. Payment processing → `apps/canon/finance/dom03-accounts-payable/<cell>/`
+3. Vendor management → `apps/canon/finance/dom03-accounts-payable/vendor-master/`
 4. Database migrations → `apps/db/migrations/<schema>/`
 
 ---

@@ -40,10 +40,51 @@ export * from './ports/rolePermissionRepoPort';
 export * from './ports/fiscalTimePort';
 export * from './ports/policyPort';
 export * from './ports/paymentRepositoryPort';
+export * from './ports/vendorRepositoryPort';
 export * from './ports/glPostingPort';
+
+// AP-02 Invoice Entry Cell Ports
+export * from './ports/invoiceRepositoryPort';
+
+// AP-03 3-Way Match Engine Ports
+export * from './ports/matchingRepositoryPort';
+
+// AP-04 Invoice Approval Workflow Ports
+export * from './ports/approvalRepositoryPort';
+
+// AR-01 Customer Master Ports
+export * from './ports/customerRepositoryPort';
+
+// AR-02 Sales Invoice Ports
+export * from './ports/invoiceRepositoryPort';
+
+// AR-03 Receipt Processing Ports
+export * from './ports/receiptRepositoryPort';
+
+// AR-04 Credit Note Ports
+export * from './ports/creditNoteRepositoryPort';
+
+// AR-05 AR Aging Ports
+export * from './ports/agingRepositoryPort';
+
+// GL-02 Journal Entry Ports
+export * from './ports/journalEntryRepositoryPort';
+
+// Kernel Services Ports
+export * from './ports/sequencePort';  // K_SEQ - Sequence generation
+export * from './ports/coaPort';        // K_COA - Chart of Accounts
+export * from './ports/fxPort';         // K_FX - Foreign Exchange (Multi-Currency)
+
+// Procurement Integration Ports (for AP-03)
+export * from './ports/purchaseOrderPort';   // PO data
+export * from './ports/goodsReceiptPort';    // GRN data
+
+// Canvas/Lively Layer Ports (DOM-03)
+export * from './ports/canvasRepositoryPort'; // Canvas objects & zones
 
 // Export TransactionContext for use in other ports
 export type { TransactionContext } from './ports/paymentRepositoryPort';
+export type { AuditEvent } from './ports/auditPort';
 
 // Constants
 export { KERNEL_PERMISSIONS } from './constants/permissions';

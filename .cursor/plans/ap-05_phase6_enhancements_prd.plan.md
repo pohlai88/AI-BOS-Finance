@@ -84,7 +84,7 @@ AP-05 Payment Cell achieved **100% completion** of the original PRD with all ent
 
 #### 2.3.1 Exception Detection Service
 
-**File:** `apps/canon/finance/accounts-payable/cells/payment-execution/ExceptionService.ts`
+**File:** `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/ExceptionService.ts`
 
 ```typescript
 export interface PaymentException {
@@ -551,7 +551,7 @@ export async function POST(request: NextRequest) {
 
 #### 3.3.2 Webhook Trigger Service
 
-**File:** `apps/canon/finance/accounts-payable/cells/payment-execution/WebhookService.ts`
+**File:** `apps/canon/finance/dom03-accounts-payable/cells/ap05-payment-execution/WebhookService.ts`
 
 ```typescript
 import crypto from 'crypto';

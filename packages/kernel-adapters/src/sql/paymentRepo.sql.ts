@@ -252,7 +252,8 @@ export class SqlPaymentRepository implements PaymentRepositoryPort {
     const client = txContext.tx as PoolClient;
 
     // Build dynamic UPDATE query based on provided fields
-    const setClauses: string[] = ['status = $1', 'updated_at = NOW()'];
+    // OPTIMIZED: Added version increment for optimistic locking
+    const setClauses: string[] = ['status = $1', 'version = version + 1', 'updated_at = NOW()'];
     const values: unknown[] = [input.status];
     let paramIndex = 2;
 
@@ -348,6 +349,10 @@ export class SqlPaymentRepository implements PaymentRepositoryPort {
     return mapApprovalRow(result.rows[0]);
   }
 
+  /**
+   * OPTIMIZED: Single query with COUNT(*) OVER() window function
+   * Reduces database round-trips from 2 to 1
+   */
   async list(
     filters: PaymentQueryFilters
   ): Promise<{ payments: Payment[]; total: number }> {
@@ -391,21 +396,23 @@ export class SqlPaymentRepository implements PaymentRepositoryPort {
     const limit = filters.limit || 50;
     const offset = filters.offset || 0;
 
-    // Get count
-    const countResult = await this.pool.query(
-      `SELECT COUNT(*) as total FROM finance.payments WHERE ${whereClause}`,
-      values
-    );
-    const total = parseInt(countResult.rows[0].total, 10);
+    // OPTIMIZED: Single query with window function for count
+    values.push(limit);
+    values.push(offset);
 
-    // Get payments
     const listSql = `
-      SELECT * FROM finance.payments
+      SELECT *, COUNT(*) OVER() as total
+      FROM finance.payments
       WHERE ${whereClause}
       ORDER BY created_at DESC
-      LIMIT ${limit} OFFSET ${offset}
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `;
+
     const result = await this.pool.query(listSql, values);
+
+    const total = result.rows.length > 0
+      ? parseInt(result.rows[0].total as string, 10)
+      : 0;
     const payments = result.rows.map(mapPaymentRow);
 
     return { payments, total };

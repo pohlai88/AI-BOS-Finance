@@ -16,12 +16,14 @@ import type {
 // 1. DEFAULT CONFIGURATION
 // ============================================================================
 
+// Approval thresholds define the MINIMUM amount at which each role level is required.
+// These should align with DEFAULT_APPROVAL_LIMITS.maxAmount for each role.
 const DEFAULT_APPROVAL_THRESHOLDS = {
-  AUTO_APPROVE: '500',
-  MANAGER_REQUIRED: '5000',
-  DIRECTOR_REQUIRED: '25000',
-  VP_REQUIRED: '50000',
-  CFO_REQUIRED: '100000',
+  AUTO_APPROVE: '500',        // Amounts <= $500: Auto-approve (no approval needed)
+  MANAGER_REQUIRED: '25000',  // Amounts <= $25K: Manager+ can approve
+  DIRECTOR_REQUIRED: '50000', // Amounts <= $50K: Director+ can approve  
+  VP_REQUIRED: '100000',      // Amounts <= $100K: VP+ can approve
+  CFO_REQUIRED: 'UNLIMITED',  // Amounts > $100K: CFO only
 };
 
 const DEFAULT_APPROVAL_LIMITS: ApprovalLimit[] = [
@@ -137,7 +139,7 @@ export function createMemoryPolicyAdapter(): PolicyPort {
     ): Promise<ApprovalRequirement> {
       const amountNum = parseFloat(amount);
 
-      // Auto-approve small amounts
+      // Auto-approve small amounts (<= $500)
       if (amountNum <= parseAmount(DEFAULT_APPROVAL_THRESHOLDS.AUTO_APPROVE)) {
         return {
           levels: 0,
@@ -147,7 +149,7 @@ export function createMemoryPolicyAdapter(): PolicyPort {
         };
       }
 
-      // Manager can approve up to $5K
+      // Manager can approve up to $25K
       if (amountNum <= parseAmount(DEFAULT_APPROVAL_THRESHOLDS.MANAGER_REQUIRED)) {
         return {
           levels: 1,
@@ -157,7 +159,7 @@ export function createMemoryPolicyAdapter(): PolicyPort {
         };
       }
 
-      // Director required for $5K-$25K
+      // Director required for $25K-$50K
       if (amountNum <= parseAmount(DEFAULT_APPROVAL_THRESHOLDS.DIRECTOR_REQUIRED)) {
         return {
           levels: 1,
@@ -167,7 +169,7 @@ export function createMemoryPolicyAdapter(): PolicyPort {
         };
       }
 
-      // VP required for $25K-$50K
+      // VP required for $50K-$100K
       if (amountNum <= parseAmount(DEFAULT_APPROVAL_THRESHOLDS.VP_REQUIRED)) {
         return {
           levels: 1,
@@ -177,7 +179,7 @@ export function createMemoryPolicyAdapter(): PolicyPort {
         };
       }
 
-      // CFO required for $50K+
+      // CFO required for $100K+
       return {
         levels: 1,
         requiredRoles: [['ROLE_CFO']],

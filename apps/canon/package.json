@@ -7,10 +7,14 @@
     "finance/**/package.json"
   ],
   "scripts": {
-    "test:integration": "vitest run finance/accounts-payable/cells/payment-execution/__tests__/integration"
+    "test:integration": "vitest run finance/dom03-accounts-payable/cells/ap05-payment-execution/__tests__/integration"
   },
   "dependencies": {
     "@aibos/canon-governance": "workspace:*",
     "@aibos/kernel-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0",
+    "pg": "^8.16.3"
   }
 }

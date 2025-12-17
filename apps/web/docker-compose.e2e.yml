@@ -1,0 +1,83 @@
+# Docker Compose for E2E Testing
+# This setup includes the database and web app for running Playwright E2E tests
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # PostgreSQL Database
+  # ============================================================================
+  # Database is already running (aibos_db), so we'll connect to it via network
+  # If you need a separate DB, uncomment the db service below
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: aibos_db_e2e
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: aibos
+  #     POSTGRES_PASSWORD: aibos_password
+  #     POSTGRES_DB: aibos_local
+  #   ports:
+  #     - "5434:5432"
+  #   volumes:
+  #     - aibos_pg_data_e2e:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: [ "CMD-SHELL", "pg_isready -U aibos -d aibos_local" ]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - e2e_net
+
+  # ============================================================================
+  # Next.js Web Application
+  # ============================================================================
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile.dev
+    container_name: aibos_web_e2e
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - NEXT_PUBLIC_APP_URL=http://localhost:3002
+      - DATABASE_URL=postgresql://aibos:aibos_password@db:5432/aibos_local
+      - POSTGRES_USER=aibos
+      - POSTGRES_PASSWORD=aibos_password
+      - POSTGRES_DB=aibos_local
+      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_PORT=5433
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/api/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - e2e_net
+      - aibos_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Mount source code for hot reload (development)
+      - ../../apps/web:/app/apps/web
+      - ../../packages:/app/packages
+      - /app/apps/web/.next
+      - /app/node_modules
+
+networks:
+  e2e_net:
+    driver: bridge
+    name: aibos_e2e_network
+  # Connect to existing database network
+  aibos_network:
+    external: true
+
+volumes:
+  aibos_pg_data_e2e:

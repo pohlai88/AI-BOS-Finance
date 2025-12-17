@@ -10,7 +10,7 @@
 ```
 apps/canon/
 ├── finance/                    # Finance Domain (Canon)
-│   ├── accounts-payable/       # AP Molecule/Cluster
+│   ├── dom03-accounts-payable/       # AP Molecule/Cluster
 │   │   ├── payment-hub-demo/   # Payment Hub Cell (Demo)
 │   │   ├── vendor-master/      # Vendor Master Cell (future)
 │   │   └── invoice-matching/   # Invoice Matching Cell (future)
@@ -30,7 +30,7 @@ apps/canon/
 | Level | Name | Example | Description |
 |-------|------|---------|-------------|
 | **Domain** | Canon | `finance/` | Bounded context (ERP domain) |
-| **Cluster** | Molecule | `accounts-payable/` | Functional group of related cells |
+| **Cluster** | Molecule | `dom03-accounts-payable/` | Functional group of related cells |
 | **Unit** | Cell | `payment-hub/` | Atomic transaction ledger |
 
 ---
@@ -65,7 +65,7 @@ DB (via apps/db)
 
 ```bash
 # Start a specific cell (from repo root)
-cd apps/canon/finance/accounts-payable/payment-hub-demo
+cd apps/canon/finance/dom03-accounts-payable/payment-hub-demo
 pnpm dev
 
 # Or via Docker Compose (from kernel)
