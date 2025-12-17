@@ -109,12 +109,12 @@ export function useBioCalendarExport(events: CalendarEvent[]): UseBioCalendarExp
         lines.push('BEGIN:VEVENT');
         lines.push(`UID:${generateUID()}`);
         lines.push(`DTSTAMP:${formatICSDate(new Date())}`);
-        lines.push(`DTSTART:${formatICSDate(event.start)}`);
-        lines.push(`DTEND:${formatICSDate(event.end)}`);
+        lines.push(`DTSTART:${formatICSDate(new Date(event.start))}`);
+        lines.push(`DTEND:${formatICSDate(new Date(event.end ?? event.start))}`);
         lines.push(`SUMMARY:${escapeICSText(event.title)}`);
 
-        if (event.color) {
-          lines.push(`X-COLOR:${event.color}`);
+        if (event.type) {
+          lines.push(`X-TYPE:${event.type}`);
         }
 
         lines.push('END:VEVENT');
@@ -145,21 +145,21 @@ export function useBioCalendarExport(events: CalendarEvent[]): UseBioCalendarExp
 
       const headers = ['ID', 'Title', 'Start', 'End'];
       if (includeAllDay) headers.push('All Day');
-      headers.push('Color');
+      headers.push('Type');
 
       const rows = events.map((event) => {
         const row = [
           event.id,
           event.title,
-          formatDate(event.start, dateFormat),
-          formatDate(event.end, dateFormat),
+          formatDate(new Date(event.start), dateFormat),
+          formatDate(new Date(event.end ?? event.start), dateFormat),
         ];
 
         if (includeAllDay) {
           row.push(event.allDay ? 'Yes' : 'No');
         }
 
-        row.push(event.color ?? '');
+        row.push(event.type ?? '');
 
         return row;
       });

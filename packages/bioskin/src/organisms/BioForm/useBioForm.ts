@@ -21,6 +21,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { introspectZodSchema, type BioFieldDefinition, type BioSchemaDefinition } from '../../introspector/ZodSchemaIntrospector';
+import { useDebounce } from '../../hooks/useDebounce';
 
 // ============================================================
 // Types
@@ -39,6 +40,8 @@ export interface UseBioFormOptions<TSchema extends z.ZodObject<z.ZodRawShape>> {
   mode?: FormMode;
   /** Validation mode */
   validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
+  /** Debounce validation (ms) - only applies to onChange mode */
+  debounceValidation?: number;
   /** Fields to include */
   include?: string[];
   /** Fields to exclude */
@@ -64,6 +67,8 @@ export interface UseBioFormReturn<TData extends FieldValues> {
   isDirty: boolean;
   /** Field errors */
   errors: FieldErrors<TData>;
+  /** Is form currently validating (debounced) */
+  isValidating: boolean;
   /** Handle form submit */
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   /** Reset form to default values */
@@ -88,6 +93,7 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
   onSubmit,
   mode = 'create',
   validationMode = 'onBlur',
+  debounceValidation = 300,
   include,
   exclude,
   resetOnSuccess = false,
@@ -128,8 +134,24 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
     getValues,
     clearErrors,
     trigger,
+    watch,
     formState: { isSubmitting, isValid, isDirty, errors },
   } = form;
+
+  // Debounced validation for onChange mode
+  const watchedValues = watch();
+  const debouncedValues = useDebounce(watchedValues, debounceValidation);
+  const [isValidating, setIsValidating] = React.useState(false);
+
+  React.useEffect(() => {
+    if (validationMode === 'onChange' && debounceValidation > 0) {
+      setIsValidating(true);
+      const timer = setTimeout(() => {
+        trigger().finally(() => setIsValidating(false));
+      }, debounceValidation);
+      return () => clearTimeout(timer);
+    }
+  }, [debouncedValues, validationMode, debounceValidation, trigger]);
 
   // Wrapped submit handler
   const handleSubmit = React.useCallback(
@@ -160,6 +182,7 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
     isValid,
     isDirty,
     errors,
+    isValidating,
     handleSubmit,
     reset: handleReset,
     setValue,

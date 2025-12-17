@@ -26,7 +26,7 @@ const mockGanttTasks: GanttTask[] = [
     start: new Date('2024-01-01'),
     end: new Date('2024-01-15'),
     progress: 50,
-    dependencies: ['2'],
+    data: { dependencies: ['2'] },
   },
   {
     id: '2',
@@ -43,7 +43,7 @@ const mockCalendarEvents: CalendarEvent[] = [
     title: 'Meeting',
     start: new Date('2024-01-15T10:00:00'),
     end: new Date('2024-01-15T11:00:00'),
-    color: '#blue',
+    type: 'primary',
   },
   {
     id: '2',
@@ -188,7 +188,7 @@ describe('useBioGanttExport', () => {
     expect(rows[0][0]).toBe('1'); // ID
     expect(rows[0][1]).toBe('Task 1'); // Name
     expect(rows[0][4]).toBe('50'); // Progress
-    expect(rows[0][5]).toBe('2'); // Dependencies
+    expect(rows[0][5]).toBe('2'); // Dependencies from data.dependencies
   });
 
   it('getExportData respects includeDependencies option', () => {
@@ -253,7 +253,7 @@ describe('useBioCalendarExport', () => {
     expect(headers).toContain('Start');
     expect(headers).toContain('End');
     expect(headers).toContain('All Day');
-    expect(headers).toContain('Color');
+    expect(headers).toContain('Type');
   });
 
   it('getExportData returns correct row count', () => {

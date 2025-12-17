@@ -207,8 +207,8 @@ async function main() {
       console.log(`❌ ${name.padEnd(15)} ERROR: ${result.error}`);
     } else {
       const status = result.overBudget ? '❌' : '✅';
-      const budgetInfo = result.budget 
-        ? ` (budget: ${result.budget}KB)` 
+      const budgetInfo = result.budget
+        ? ` (budget: ${result.budget}KB)`
         : '';
       console.log(
         `${status} ${name.padEnd(15)} ` +
@@ -247,11 +247,11 @@ async function main() {
   const atomsResult = results.find(r => r.name === 'atoms');
   const calendarResult = results.find(r => r.name === 'calendar');
   const fullResult = results.find(r => r.name === 'full');
-  
+
   if (atomsResult && fullResult && !atomsResult.error && !fullResult.error) {
     const reduction = ((1 - atomsResult.gzipSize / fullResult.gzipSize) * 100).toFixed(1);
     console.log(`   - atoms is ${reduction}% smaller than full bundle`);
-    
+
     if (atomsResult.gzipSize < fullResult.gzipSize * 0.05) {
       console.log('   ✅ Tree-shaking is working! Atoms are < 5% of full bundle.');
     } else if (atomsResult.gzipSize < fullResult.gzipSize * 0.1) {

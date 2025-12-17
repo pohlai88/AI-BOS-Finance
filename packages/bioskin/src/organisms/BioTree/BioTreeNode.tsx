@@ -230,6 +230,5 @@ function BioTreeNodeInner<T = Record<string, unknown>>({
 
 // Wrap in React.memo for optimal performance with large trees
 // Uses generic type assertion pattern for memo with generics
+BioTreeNodeInner.displayName = 'BioTreeNode';
 export const BioTreeNode = React.memo(BioTreeNodeInner) as typeof BioTreeNodeInner;
-
-BioTreeNode.displayName = 'BioTreeNode';

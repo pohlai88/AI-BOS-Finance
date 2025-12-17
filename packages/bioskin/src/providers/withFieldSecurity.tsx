@@ -79,7 +79,7 @@ export function withFieldSecurity<P extends object>(
       'aria-readonly': isReadonly || undefined,
       __securityRules: rules,
       __isSecured: true,
-    } as P & SecuredFieldProps;
+    } as unknown as P & SecuredFieldProps;
 
     return <WrappedComponent {...securedProps} />;
   };

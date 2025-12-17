@@ -84,8 +84,8 @@ export function useBioGanttExport(
         const row = [
           task.id,
           task.name,
-          formatDate(task.start, dateFormat),
-          formatDate(task.end, dateFormat),
+          formatDate(new Date(task.start), dateFormat),
+          formatDate(new Date(task.end), dateFormat),
         ];
 
         if (includeProgress) {
@@ -93,7 +93,9 @@ export function useBioGanttExport(
         }
 
         if (includeDependencies) {
-          row.push(task.dependencies?.join(', ') ?? '');
+          // Dependencies may be in task.data if present
+          const deps = (task.data as Record<string, unknown> | undefined)?.dependencies;
+          row.push(Array.isArray(deps) ? deps.join(', ') : '');
         }
 
         return row;

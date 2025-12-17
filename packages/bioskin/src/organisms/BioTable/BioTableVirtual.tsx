@@ -296,7 +296,7 @@ function BioTableVirtualInternal<T extends z.ZodRawShape>({
               <Txt variant="subheading" as="h3">
                 {displayTitle}
               </Txt>
-              <Txt variant="caption" color="muted">
+              <Txt variant="caption" color="secondary">
                 {meta.filteredRows.toLocaleString()} rows
               </Txt>
             </div>
@@ -399,7 +399,7 @@ function BioTableVirtualInternal<T extends z.ZodRawShape>({
 
       {/* Footer with stats */}
       <div className="px-6 py-3 border-t border-default bg-surface-subtle">
-        <Txt variant="small" color="muted">
+        <Txt variant="small" color="secondary">
           Showing {virtualRows.length} of {meta.filteredRows.toLocaleString()} rows
           {meta.totalRows !== meta.filteredRows && (
             <span> (filtered from {meta.totalRows.toLocaleString()})</span>

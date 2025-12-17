@@ -2,6 +2,10 @@
  * EmptyState - Placeholder for empty content areas
  * 
  * Layer 2 (molecules) per CONT_10 BioSkin Architecture
+ * 
+ * Enhanced with:
+ * - Hints for onboarding
+ * - Quick actions for common tasks
  */
 
 import * as React from 'react';
@@ -20,6 +24,15 @@ export interface EmptyStateProps {
     onClick: () => void;
     variant?: BtnProps['variant'];
   };
+  /** Helpful hints/tips to show below description */
+  hints?: string[];
+  /** Quick action buttons (e.g., Import CSV, Use Template, Watch Tutorial) */
+  quickActions?: Array<{
+    label: string;
+    icon?: LucideIcon;
+    onClick: () => void;
+    variant?: BtnProps['variant'];
+  }>;
   className?: string;
 }
 
@@ -28,6 +41,8 @@ export function EmptyState({
   title,
   description,
   action,
+  hints,
+  quickActions,
   className,
 }: EmptyStateProps) {
   return (
@@ -42,17 +57,29 @@ export function EmptyState({
       <div className="w-12 h-12 rounded-full bg-surface-nested flex items-center justify-center mb-4">
         <Icon className="w-6 h-6 text-text-tertiary" aria-hidden="true" />
       </div>
-      
+
       <Txt variant="subheading" color="primary" weight="medium">
         {title}
       </Txt>
-      
+
       {description && (
         <Txt variant="body" color="secondary" className="mt-2 max-w-sm">
           {description}
         </Txt>
       )}
-      
+
+      {/* Hints */}
+      {hints && hints.length > 0 && (
+        <div className="mt-4 space-y-1 max-w-md">
+          {hints.map((hint, idx) => (
+            <Txt key={idx} variant="caption" color="tertiary" className="text-small">
+              💡 {hint}
+            </Txt>
+          ))}
+        </div>
+      )}
+
+      {/* Primary Action */}
       {action && (
         <Btn
           variant={action.variant || 'primary'}
@@ -61,6 +88,26 @@ export function EmptyState({
         >
           {action.label}
         </Btn>
+      )}
+
+      {/* Quick Actions */}
+      {quickActions && quickActions.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          {quickActions.map((quickAction, idx) => {
+            const ActionIcon = quickAction.icon;
+            return (
+              <Btn
+                key={idx}
+                variant={quickAction.variant || 'secondary'}
+                onClick={quickAction.onClick}
+                className="text-small"
+              >
+                {ActionIcon && <ActionIcon className="h-3.5 w-3.5 mr-1.5" />}
+                {quickAction.label}
+              </Btn>
+            );
+          })}
+        </div>
       )}
     </Surface>
   );

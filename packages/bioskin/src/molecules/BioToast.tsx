@@ -203,7 +203,7 @@ export const bioToast = {
   /**
    * Show a custom toast with JSX
    */
-  custom: (jsx: React.ReactNode, options?: BioToastOptions) => {
+  custom: (jsx: React.ReactElement, options?: BioToastOptions) => {
     return toast.custom(() => jsx, options);
   },
 

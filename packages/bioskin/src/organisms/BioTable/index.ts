@@ -1,6 +1,6 @@
 /**
  * @aibos/bioskin - BioTable (Organism Layer)
- * 
+ *
  * Production-grade data table powered by TanStack Table + Jotai.
  * Sprint 2 deliverable per BIOSKIN 2.1 PRD.
  */
@@ -26,6 +26,46 @@ export {
   type BioTableFilterBarProps,
 } from './BioTableFilters';
 export { BioTablePagination, type BioTablePaginationProps } from './BioTablePagination';
+
+// Column Management (Phase P1-A)
+export {
+  BioTableColumnManager,
+  type BioTableColumnManagerProps,
+} from './BioTableColumnManager';
+
+// CSV Import (Phase P1-A)
+export {
+  BioTableImport,
+  type BioTableImportProps,
+} from './BioTableImport';
+
+// Column Resizing (Phase P1-A)
+export {
+  BioTableResizer,
+  useColumnResize,
+  type BioTableResizerProps,
+  type UseColumnResizeOptions,
+} from './BioTableResizer';
+
+// Keyboard Navigation (Phase P1-A)
+export {
+  useTableKeyboard,
+  type UseTableKeyboardOptions,
+  type UseTableKeyboardReturn,
+  type CellPosition,
+} from './useTableKeyboard';
+
+// Inline Editing (Phase Final)
+export {
+  BioTableInlineEdit,
+  BioTableBulkEdit,
+  useBioTableInlineEdit,
+  type BioTableInlineEditProps,
+  type BioTableBulkEditProps,
+  type UseBioTableInlineEditOptions,
+  type UseBioTableInlineEditReturn,
+  type CellEdit,
+} from './BioTableInlineEdit';
 
 // Hook + atoms (for custom implementations)
 export {

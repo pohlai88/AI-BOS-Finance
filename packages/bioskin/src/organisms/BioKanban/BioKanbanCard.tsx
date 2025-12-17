@@ -207,6 +207,5 @@ function BioKanbanCardInner<T = Record<string, unknown>>({
 }
 
 // Wrap in React.memo for optimal performance with many cards
+BioKanbanCardInner.displayName = 'BioKanbanCard';
 export const BioKanbanCard = React.memo(BioKanbanCardInner) as typeof BioKanbanCardInner;
-
-BioKanbanCard.displayName = 'BioKanbanCard';

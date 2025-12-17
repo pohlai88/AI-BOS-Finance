@@ -134,7 +134,7 @@ function UserMenu({ user, actions, onSignOut }: UserMenuProps) {
         <div className="hidden md:block text-left">
           <Txt variant="label" className="block leading-tight">{user.name}</Txt>
           {user.role && (
-            <Txt variant="caption" color="muted" className="block leading-tight">{user.role}</Txt>
+            <Txt variant="caption" color="secondary" className="block leading-tight">{user.role}</Txt>
           )}
         </div>
         <ChevronDown className={cn('w-4 h-4 transition-transform', open && 'rotate-180')} />
@@ -143,13 +143,13 @@ function UserMenu({ user, actions, onSignOut }: UserMenuProps) {
       {/* Dropdown */}
       {open && (
         <Surface
-          variant="elevated"
+          variant="card"
           className="absolute right-0 top-full mt-2 w-56 py-2 z-50 shadow-lg"
         >
           {/* User info */}
           <div className="px-4 py-2 border-b border-border-default">
             <Txt variant="label" className="block">{user.name}</Txt>
-            {user.email && <Txt variant="caption" color="muted">{user.email}</Txt>}
+            {user.email && <Txt variant="caption" color="secondary">{user.email}</Txt>}
           </div>
 
           {/* Custom actions */}

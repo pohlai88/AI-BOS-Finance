@@ -46,6 +46,37 @@
     "./atoms": {
       "types": "./src/atoms.ts",
       "import": "./src/atoms.ts"
+    },
+    "./finance": {
+      "types": "./src/finance.ts",
+      "import": "./src/finance.ts"
+    },
+    "./registry": {
+      "types": "./src/registry/index.ts",
+      "import": "./src/registry/index.ts"
+    },
+    "./registry/types": {
+      "types": "./src/registry/types.ts",
+      "import": "./src/registry/types.ts"
+    },
+    "./capabilities": {
+      "types": "./src/capabilities/index.ts",
+      "import": "./src/capabilities/index.ts"
+    },
+    "./capabilities/types": {
+      "types": "./src/capabilities/types.ts",
+      "import": "./src/capabilities/types.ts"
+    },
+    "./tokens": {
+      "types": "./src/tokens/index.ts",
+      "import": "./src/tokens/index.ts"
+    },
+    "./tokens/types": {
+      "types": "./src/tokens/types.ts",
+      "import": "./src/tokens/types.ts"
+    },
+    "./tokens/tokens.css": {
+      "import": "./src/tokens/tokens.css"
     }
   },
   "typesVersions": {
@@ -76,6 +107,27 @@
       ],
       "atoms": [
         "./src/atoms.ts"
+      ],
+      "finance": [
+        "./src/finance.ts"
+      ],
+      "registry": [
+        "./src/registry/index.ts"
+      ],
+      "registry/types": [
+        "./src/registry/types.ts"
+      ],
+      "capabilities": [
+        "./src/capabilities/index.ts"
+      ],
+      "capabilities/types": [
+        "./src/capabilities/types.ts"
+      ],
+      "tokens": [
+        "./src/tokens/index.ts"
+      ],
+      "tokens/types": [
+        "./src/tokens/types.ts"
       ]
     }
   },

@@ -231,7 +231,7 @@ export function BioCommandPalette({
               {/* Results */}
               <Command.List className="max-h-80 overflow-y-auto p-2">
                 <Command.Empty className="py-8 text-center">
-                  <Txt variant="body" color="muted">No results found.</Txt>
+                  <Txt variant="body" color="secondary">No results found.</Txt>
                 </Command.Empty>
 
                 {/* Recent searches */}

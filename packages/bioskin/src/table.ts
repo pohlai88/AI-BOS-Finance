@@ -14,5 +14,5 @@
 export { BioTable, type BioTableProps } from './organisms/BioTable';
 export { BioTableVirtual, type BioTableVirtualProps } from './organisms/BioTable/BioTableVirtual';
 export { useBioTable, useResetBioTable, type UseBioTableOptions, type UseBioTableReturn } from './organisms/BioTable/useBioTable';
-export { useBioTableExport, type UseBioTableExportOptions } from './organisms/BioTable/useBioTableExport';
+export { useBioTableExport, type ExportOptions, type PrintOptions, type UseBioTableExportReturn } from './organisms/BioTable/useBioTableExport';
 export { BioTableExportToolbar, type BioTableExportToolbarProps } from './organisms/BioTable/BioTableExportToolbar';

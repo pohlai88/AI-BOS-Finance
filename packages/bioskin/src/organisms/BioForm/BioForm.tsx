@@ -34,6 +34,9 @@ import { Btn } from '../../atoms/Btn';
 
 import { useBioForm, type FormMode } from './useBioForm';
 import { BioFormField } from './BioFormField';
+import { useTemplates, type Template } from '../../providers/BioTemplateProvider';
+import { BioTemplateSelector } from '../../molecules/BioTemplateSelector';
+import { FileText, Copy } from 'lucide-react';
 
 // ============================================================
 // Types
@@ -83,6 +86,20 @@ export interface BioFormProps<T extends z.ZodRawShape> {
   /** Fields to exclude */
   exclude?: string[];
 
+  // Templates & Cloning
+  /** Available templates */
+  templates?: Template<z.infer<z.ZodObject<T>>>[];
+  /** Called when template is selected */
+  onUseTemplate?: (template: Template<z.infer<z.ZodObject<T>>>) => void;
+  /** Show template selector */
+  showTemplateSelector?: boolean;
+  /** Clone from existing record ID */
+  cloneFrom?: string;
+  /** Load clone data function */
+  loadCloneData?: (id: string) => Promise<Partial<z.infer<z.ZodObject<T>>> | null>;
+  /** Called when clone is requested */
+  onClone?: (sourceId: string, modifications?: Partial<z.infer<z.ZodObject<T>>>) => void;
+
   // External state
   /** External loading state */
   loading?: boolean;
@@ -125,11 +142,34 @@ export function BioForm<T extends z.ZodRawShape>({
   resetOnSuccess = false,
   include,
   exclude,
+  templates,
+  onUseTemplate,
+  showTemplateSelector = false,
+  cloneFrom,
+  loadCloneData,
+  onClone,
   loading: externalLoading = false,
   error: externalError = null,
   className,
 }: BioFormProps<T>) {
   const [showSuccess, setShowSuccess] = React.useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = React.useState(false);
+  const [cloneData, setCloneData] = React.useState<Partial<z.infer<z.ZodObject<T>>> | null>(null);
+
+  // Use templates hook (optional - returns null if provider not available)
+  const templatesContext = useTemplates();
+
+  // Load clone data
+  React.useEffect(() => {
+    if (cloneFrom && loadCloneData) {
+      loadCloneData(cloneFrom).then(setCloneData).catch(console.error);
+    }
+  }, [cloneFrom, loadCloneData]);
+
+  // Merge clone data with default values
+  const effectiveDefaultValues = React.useMemo(() => {
+    return { ...defaultValues, ...cloneData };
+  }, [defaultValues, cloneData]);
 
   // Use the form hook
   const {
@@ -140,11 +180,13 @@ export function BioForm<T extends z.ZodRawShape>({
     isValid,
     isDirty,
     errors,
+    isValidating,
     handleSubmit,
     reset,
+    setValue,
   } = useBioForm({
     schema,
-    defaultValues,
+    defaultValues: effectiveDefaultValues,
     onSubmit: async (data) => {
       await onSubmit(data);
       if (showSuccessMessage) {
@@ -156,7 +198,33 @@ export function BioForm<T extends z.ZodRawShape>({
     include,
     exclude,
     resetOnSuccess,
+    debounceValidation: 300,
   });
+
+  // Handle template selection
+  const handleTemplateSelect = React.useCallback(
+    (template: Template<z.infer<z.ZodObject<T>>>) => {
+      // Populate form with template data
+      Object.entries(template.data).forEach(([key, value]) => {
+        setValue(key as never, value as never);
+      });
+
+      onUseTemplate?.(template);
+      if (templatesContext) {
+        templatesContext.useTemplate(template.id);
+      }
+      setShowTemplateDialog(false);
+    },
+    [onUseTemplate, templatesContext, setValue]
+  );
+
+  // Handle clone
+  const handleClone = React.useCallback(() => {
+    if (cloneFrom && onClone) {
+      const currentValues = form.getValues();
+      onClone(cloneFrom, currentValues);
+    }
+  }, [cloneFrom, onClone, form]);
 
   const { register } = form;
   const displayTitle = title || (definition.name !== 'Object' ? definition.name : undefined);
@@ -173,20 +241,50 @@ export function BioForm<T extends z.ZodRawShape>({
     <Surface className={cn('space-y-6', className)} data-testid="bio-form">
       <form onSubmit={handleSubmit} className="space-y-6" data-testid="bio-form-element">
         {/* Header */}
-        {(showTitle && displayTitle) || description ? (
-          <div className="space-y-1">
-            {showTitle && displayTitle && (
-              <Txt variant="heading" as="h3">
-                {displayTitle}
-              </Txt>
-            )}
-            {description && (
-              <Txt variant="body" color="secondary">
-                {description}
-              </Txt>
-            )}
-          </div>
-        ) : null}
+        <div className="space-y-4">
+          {(showTitle && displayTitle) || description ? (
+            <div className="space-y-1">
+              {showTitle && displayTitle && (
+                <Txt variant="heading" as="h3">
+                  {displayTitle}
+                </Txt>
+              )}
+              {description && (
+                <Txt variant="body" color="secondary">
+                  {description}
+                </Txt>
+              )}
+            </div>
+          ) : null}
+
+          {/* Template & Clone Actions */}
+          {(showTemplateSelector || templates?.length || cloneFrom) && (
+            <div className="flex items-center gap-2">
+              {showTemplateSelector && (templatesContext || templates?.length) && (
+                <Btn
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowTemplateDialog(true)}
+                  disabled={isLoading}
+                >
+                  <FileText className="h-4 w-4 mr-1.5" />
+                  Use Template
+                </Btn>
+              )}
+              {cloneFrom && (
+                <Btn
+                  type="button"
+                  variant="secondary"
+                  onClick={handleClone}
+                  disabled={isLoading}
+                >
+                  <Copy className="h-4 w-4 mr-1.5" />
+                  Clone
+                </Btn>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Success Message */}
         <AnimatePresence>
@@ -265,6 +363,9 @@ export function BioForm<T extends z.ZodRawShape>({
                 register={register(field.name as never)}
                 error={(errors[field.name as keyof typeof errors] as { message?: string })?.message}
                 disabled={isDisabled || isLoading}
+                value={form.watch(field.name as never)}
+                showSuccess={!errors[field.name as keyof typeof errors]}
+                isValidating={isValidating}
               />
             </motion.div>
           ))}
@@ -308,6 +409,18 @@ export function BioForm<T extends z.ZodRawShape>({
           </div>
         )}
       </form>
+
+      {/* Template Selector Dialog */}
+      {showTemplateDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-surface-base rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <BioTemplateSelector
+              onSelect={handleTemplateSelect}
+              onClose={() => setShowTemplateDialog(false)}
+            />
+          </div>
+        </div>
+      )}
     </Surface>
   );
 }

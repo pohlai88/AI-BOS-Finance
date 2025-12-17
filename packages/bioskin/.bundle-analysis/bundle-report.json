@@ -1,0 +1,92 @@
+[
+  {
+    "name": "atoms",
+    "rawSize": 25648,
+    "gzipSize": 8720,
+    "brotliSize": 7722,
+    "moduleCount": 10,
+    "budget": 10,
+    "overBudget": false
+  },
+  {
+    "name": "spinner",
+    "rawSize": 137927,
+    "gzipSize": 45724,
+    "brotliSize": 40800,
+    "moduleCount": 542,
+    "budget": 50,
+    "overBudget": false
+  },
+  {
+    "name": "table",
+    "rawSize": 244197,
+    "gzipSize": 76303,
+    "brotliSize": 67294,
+    "moduleCount": 426,
+    "budget": 80,
+    "overBudget": false
+  },
+  {
+    "name": "chart",
+    "rawSize": 140871,
+    "gzipSize": 46956,
+    "brotliSize": 41872,
+    "moduleCount": 402,
+    "budget": 50,
+    "overBudget": false
+  },
+  {
+    "name": "kanban",
+    "rawSize": 206972,
+    "gzipSize": 69939,
+    "brotliSize": 61899,
+    "moduleCount": 413,
+    "budget": 75,
+    "overBudget": false
+  },
+  {
+    "name": "calendar",
+    "rawSize": 33268,
+    "gzipSize": 11188,
+    "brotliSize": 9947,
+    "moduleCount": 16,
+    "budget": 15,
+    "overBudget": false
+  },
+  {
+    "name": "gantt",
+    "rawSize": 145917,
+    "gzipSize": 48539,
+    "brotliSize": 43314,
+    "moduleCount": 408,
+    "budget": 50,
+    "overBudget": false
+  },
+  {
+    "name": "form",
+    "rawSize": 176568,
+    "gzipSize": 59547,
+    "brotliSize": 53107,
+    "moduleCount": 408,
+    "budget": 65,
+    "overBudget": false
+  },
+  {
+    "name": "layout",
+    "rawSize": 201368,
+    "gzipSize": 67009,
+    "brotliSize": 59177,
+    "moduleCount": 469,
+    "budget": 70,
+    "overBudget": false
+  },
+  {
+    "name": "full",
+    "rawSize": 486724,
+    "gzipSize": 152814,
+    "brotliSize": 131425,
+    "moduleCount": 542,
+    "budget": 160,
+    "overBudget": false
+  }
+]

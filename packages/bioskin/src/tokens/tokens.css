@@ -1,0 +1,257 @@
+/**
+ * @fileoverview BioSkin Design Tokens
+ *
+ * CSS custom properties for industry-agnostic theming.
+ * Per CONT_14: Design Tokens Architecture
+ *
+ * @module @aibos/bioskin/tokens
+ * @version 1.0.0
+ */
+
+:root {
+  /* ================================================================
+     PRIMITIVE TOKENS (Raw Values) - Do NOT use directly in components
+     Use semantic tokens instead
+     ================================================================ */
+
+  /* Color Primitives */
+  --bio-raw-white: #ffffff;
+  --bio-raw-black: #000000;
+
+  /* Gray Scale */
+  --bio-raw-gray-50: #f9fafb;
+  --bio-raw-gray-100: #f3f4f6;
+  --bio-raw-gray-200: #e5e7eb;
+  --bio-raw-gray-300: #d1d5db;
+  --bio-raw-gray-400: #9ca3af;
+  --bio-raw-gray-500: #6b7280;
+  --bio-raw-gray-600: #4b5563;
+  --bio-raw-gray-700: #374151;
+  --bio-raw-gray-800: #1f2937;
+  --bio-raw-gray-900: #111827;
+  --bio-raw-gray-950: #030712;
+
+  /* Blue */
+  --bio-raw-blue-50: #eff6ff;
+  --bio-raw-blue-100: #dbeafe;
+  --bio-raw-blue-500: #3b82f6;
+  --bio-raw-blue-600: #2563eb;
+  --bio-raw-blue-700: #1d4ed8;
+
+  /* Green */
+  --bio-raw-green-50: #f0fdf4;
+  --bio-raw-green-500: #22c55e;
+  --bio-raw-green-600: #16a34a;
+
+  /* Red */
+  --bio-raw-red-50: #fef2f2;
+  --bio-raw-red-500: #ef4444;
+  --bio-raw-red-600: #dc2626;
+
+  /* Amber */
+  --bio-raw-amber-50: #fffbeb;
+  --bio-raw-amber-500: #f59e0b;
+  --bio-raw-amber-600: #d97706;
+
+  /* Spacing */
+  --bio-raw-space-0: 0;
+  --bio-raw-space-1: 0.25rem;
+  --bio-raw-space-2: 0.5rem;
+  --bio-raw-space-3: 0.75rem;
+  --bio-raw-space-4: 1rem;
+  --bio-raw-space-5: 1.25rem;
+  --bio-raw-space-6: 1.5rem;
+  --bio-raw-space-8: 2rem;
+  --bio-raw-space-10: 2.5rem;
+  --bio-raw-space-12: 3rem;
+  --bio-raw-space-16: 4rem;
+
+  /* Font Sizes */
+  --bio-raw-font-xs: 0.75rem;
+  --bio-raw-font-sm: 0.875rem;
+  --bio-raw-font-base: 1rem;
+  --bio-raw-font-lg: 1.125rem;
+  --bio-raw-font-xl: 1.25rem;
+  --bio-raw-font-2xl: 1.5rem;
+  --bio-raw-font-3xl: 1.875rem;
+
+  /* Border Radius */
+  --bio-raw-radius-none: 0;
+  --bio-raw-radius-sm: 0.25rem;
+  --bio-raw-radius-md: 0.375rem;
+  --bio-raw-radius-lg: 0.5rem;
+  --bio-raw-radius-xl: 0.75rem;
+  --bio-raw-radius-2xl: 1rem;
+  --bio-raw-radius-full: 9999px;
+
+  /* ================================================================
+     SEMANTIC TOKENS (Use these in components)
+     Named by purpose, not appearance
+     ================================================================ */
+
+  /* Primary Colors */
+  --bio-primary: var(--bio-raw-blue-600);
+  --bio-primary-hover: var(--bio-raw-blue-700);
+  --bio-primary-light: var(--bio-raw-blue-50);
+  --bio-secondary: var(--bio-raw-gray-600);
+  --bio-secondary-hover: var(--bio-raw-gray-700);
+
+  /* Background */
+  --bio-bg: var(--bio-raw-white);
+  --bio-bg-subtle: var(--bio-raw-gray-50);
+  --bio-bg-muted: var(--bio-raw-gray-100);
+  --bio-bg-elevated: var(--bio-raw-white);
+
+  /* Text */
+  --bio-text-primary: var(--bio-raw-gray-900);
+  --bio-text-secondary: var(--bio-raw-gray-600);
+  --bio-text-muted: var(--bio-raw-gray-400);
+  --bio-text-inverted: var(--bio-raw-white);
+
+  /* Borders */
+  --bio-border: var(--bio-raw-gray-200);
+  --bio-border-subtle: var(--bio-raw-gray-100);
+  --bio-border-focus: var(--bio-raw-blue-500);
+
+  /* Status Colors */
+  --bio-status-success: var(--bio-raw-green-500);
+  --bio-status-success-bg: var(--bio-raw-green-50);
+  --bio-status-warning: var(--bio-raw-amber-500);
+  --bio-status-warning-bg: var(--bio-raw-amber-50);
+  --bio-status-danger: var(--bio-raw-red-500);
+  --bio-status-danger-bg: var(--bio-raw-red-50);
+  --bio-status-info: var(--bio-raw-blue-500);
+  --bio-status-info-bg: var(--bio-raw-blue-50);
+
+  /* Spacing (Semantic) */
+  --bio-space-xs: var(--bio-raw-space-1);
+  --bio-space-sm: var(--bio-raw-space-2);
+  --bio-space-md: var(--bio-raw-space-4);
+  --bio-space-lg: var(--bio-raw-space-6);
+  --bio-space-xl: var(--bio-raw-space-8);
+  --bio-space-2xl: var(--bio-raw-space-12);
+
+  /* Typography */
+  --bio-font-family: ui-sans-serif, system-ui, sans-serif;
+  --bio-font-mono: ui-monospace, monospace;
+  --bio-font-size-xs: var(--bio-raw-font-xs);
+  --bio-font-size-sm: var(--bio-raw-font-sm);
+  --bio-font-size-base: var(--bio-raw-font-base);
+  --bio-font-size-lg: var(--bio-raw-font-lg);
+  --bio-font-size-xl: var(--bio-raw-font-xl);
+  --bio-font-size-2xl: var(--bio-raw-font-2xl);
+  --bio-font-size-3xl: var(--bio-raw-font-3xl);
+
+  /* Border Radius */
+  --bio-radius-sm: var(--bio-raw-radius-sm);
+  --bio-radius-md: var(--bio-raw-radius-md);
+  --bio-radius-lg: var(--bio-raw-radius-lg);
+  --bio-radius-xl: var(--bio-raw-radius-xl);
+  --bio-radius-full: var(--bio-raw-radius-full);
+
+  /* Shadows */
+  --bio-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --bio-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --bio-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --bio-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Z-Index */
+  --bio-z-base: 0;
+  --bio-z-dropdown: 50;
+  --bio-z-sticky: 100;
+  --bio-z-modal: 200;
+  --bio-z-popover: 300;
+  --bio-z-tooltip: 400;
+  --bio-z-toast: 500;
+
+  /* Transitions */
+  --bio-transition-fast: 150ms ease;
+  --bio-transition-normal: 200ms ease;
+  --bio-transition-slow: 300ms ease;
+  --bio-transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ================================================================
+   DARK MODE OVERRIDES
+   Per CONT_14: Theme-specific token overrides
+   ================================================================ */
+
+[data-theme="dark"] {
+  /* Background */
+  --bio-bg: var(--bio-raw-gray-950);
+  --bio-bg-subtle: var(--bio-raw-gray-900);
+  --bio-bg-muted: var(--bio-raw-gray-800);
+  --bio-bg-elevated: var(--bio-raw-gray-900);
+
+  /* Text */
+  --bio-text-primary: var(--bio-raw-gray-50);
+  --bio-text-secondary: var(--bio-raw-gray-300);
+  --bio-text-muted: var(--bio-raw-gray-500);
+  --bio-text-inverted: var(--bio-raw-gray-900);
+
+  /* Borders */
+  --bio-border: var(--bio-raw-gray-700);
+  --bio-border-subtle: var(--bio-raw-gray-800);
+
+  /* Status (adjusted for dark mode visibility) */
+  --bio-status-success: var(--bio-raw-green-500);
+  --bio-status-success-bg: color-mix(in srgb, var(--bio-raw-green-500) 20%, transparent);
+  --bio-status-warning: var(--bio-raw-amber-500);
+  --bio-status-warning-bg: color-mix(in srgb, var(--bio-raw-amber-500) 20%, transparent);
+  --bio-status-danger: var(--bio-raw-red-500);
+  --bio-status-danger-bg: color-mix(in srgb, var(--bio-raw-red-500) 20%, transparent);
+  --bio-status-info: var(--bio-raw-blue-500);
+  --bio-status-info-bg: color-mix(in srgb, var(--bio-raw-blue-500) 20%, transparent);
+}
+
+/* ================================================================
+   INDUSTRY ADAPTER OVERRIDES
+   Per CONT_14: Adapter-specific theming
+   ================================================================ */
+
+/* Corporate - Navy for trust (Finance/Holding) */
+[data-adapter="corporate"] {
+  --bio-primary: #1e40af;
+  --bio-primary-hover: #1e3a8a;
+  --bio-primary-light: #dbeafe;
+}
+
+/* Supply Chain - Sky blue for cold chain */
+[data-adapter="supplychain"] {
+  --bio-primary: #0ea5e9;
+  --bio-primary-hover: #0284c7;
+  --bio-primary-light: #e0f2fe;
+
+  /* Temperature-specific status colors */
+  --bio-status-cold: #0ea5e9;
+  --bio-status-cold-bg: #e0f2fe;
+  --bio-status-frozen: #3b82f6;
+  --bio-status-frozen-bg: #dbeafe;
+}
+
+/* Production - Slate for industrial (Manufacturing) */
+[data-adapter="production"] {
+  --bio-primary: #475569;
+  --bio-primary-hover: #334155;
+  --bio-primary-light: #f1f5f9;
+}
+
+/* AgriOps - Green for growth (Plantation/Farming) */
+[data-adapter="agriops"] {
+  --bio-primary: #16a34a;
+  --bio-primary-hover: #15803d;
+  --bio-primary-light: #dcfce7;
+
+  /* Harvest-specific status colors */
+  --bio-status-ready: #16a34a;
+  --bio-status-ready-bg: #dcfce7;
+  --bio-status-growing: #84cc16;
+  --bio-status-growing-bg: #ecfccb;
+  --bio-status-dormant: #78716c;
+  --bio-status-dormant-bg: #f5f5f4;
+}
+
+/* Outlet - Standard palette (F&B/Retail) */
+[data-adapter="outlet"] {
+  /* Uses default colors */
+}
