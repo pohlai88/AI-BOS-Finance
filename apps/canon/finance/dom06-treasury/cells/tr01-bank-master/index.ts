@@ -7,3 +7,4 @@
 export * from './types';
 export * from './errors';
 export { BankMasterService, createBankMasterService } from './BankMasterService';
+export { BankMasterDashboardService, createBankMasterDashboardService } from './DashboardService';

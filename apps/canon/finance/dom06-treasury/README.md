@@ -7,15 +7,15 @@
 
 ## 📊 Status Summary
 
-| Cell | Code | Status | Description |
-|------|------|--------|-------------|
-| **Bank Master** | TR-01 | ✅ PRD Complete | Bank accounts, signatories, payment rails |
-| **Cash Pooling** | TR-02 | 📋 Planned | Intercompany cash concentration/sweeping |
-| **FX Hedging** | TR-03 | 📋 Planned | Forward contracts, currency risk management |
-| **Intercompany Settlement** | TR-04 | 📋 Planned | IC netting, elimination entries |
-| **Bank Reconciliation** | TR-05 | 📋 Planned | GL ↔ Bank statement tie-out |
+| Cell | Code | PRD | Service | Migration | API | Status |
+|------|------|:---:|:-------:|:---------:|:---:|:------:|
+| **Bank Master** | TR-01 | ✅ | ✅ | ✅ | ✅ | 🚀 **Ready** |
+| **Cash Pooling** | TR-02 | 📋 | ⬜ | ✅ | ⬜ | 📋 Planned |
+| **FX Hedging** | TR-03 | 📋 | ⬜ | ⬜ | ⬜ | 📋 Planned |
+| **Intercompany Settlement** | TR-04 | 📋 | ⬜ | ⬜ | ⬜ | 📋 Planned |
+| **Bank Reconciliation** | TR-05 | 📋 | ⬜ | ✅ | ✅ | 📋 Planned |
 
-**Overall Backend Completion: 20%**
+**Overall Backend Completion: 40%**
 
 ---
 
@@ -24,84 +24,98 @@
 ```
 dom06-treasury/
 ├── cells/
-│   ├── tr01-bank-master/           # Bank account management
-│   │   ├── BankMasterService.ts    # 📋 Planned
-│   │   ├── DashboardService.ts     # 📋 Planned
-│   │   ├── errors.ts               # 📋 Planned
-│   │   ├── index.ts                # 📋 Planned
-│   │   ├── ARCHITECTURE-BRIEF.md   # 📋 Planned
+│   ├── tr01-bank-master/           # ✅ COMPLETE
+│   │   ├── BankMasterService.ts    # ✅ Complete
+│   │   ├── DashboardService.ts     # ✅ Complete
+│   │   ├── errors.ts               # ✅ Complete
+│   │   ├── types.ts                # ✅ Complete
+│   │   ├── index.ts                # ✅ Complete
+│   │   ├── ARCHITECTURE-BRIEF.md   # ✅ Complete
 │   │   └── PRD-tr01-bank-master.md # ✅ Complete
 │   │
-│   ├── tr02-cash-pooling/          # Cash concentration
-│   │   └── PRD-tr02-cash-pooling.md # 📋 Planned
+│   ├── tr02-cash-pooling/          # 📋 PLANNED
+│   │   └── PRD-tr02-cash-pooling.md # 📋 Placeholder
 │   │
-│   ├── tr03-fx-hedging/            # FX risk management
-│   │   └── PRD-tr03-fx-hedging.md  # 📋 Planned
+│   ├── tr03-fx-hedging/            # 📋 PLANNED
+│   │   └── PRD-tr03-fx-hedging.md  # 📋 Placeholder
 │   │
-│   ├── tr04-intercompany-settlement/ # IC netting
-│   │   └── PRD-tr04-intercompany-settlement.md # 📋 Planned
+│   ├── tr04-intercompany-settlement/ # 📋 PLANNED
+│   │   └── PRD-tr04-intercompany-settlement.md # 📋 Placeholder
 │   │
-│   └── tr05-bank-reconciliation/   # Bank reconciliation
-│       └── PRD-tr05-bank-reconciliation.md # 📋 Planned
+│   └── tr05-bank-reconciliation/   # 📋 PLANNED
+│       └── PRD-tr05-bank-reconciliation.md # 📋 Placeholder
 │
-└── README.md                        # This file
+├── TRManagerDashboardService.ts    # ✅ Complete (placeholder data)
+└── README.md                       # This file
 ```
+
+---
+
+## 💾 Database Migrations
+
+| Migration | Description | Status |
+|-----------|-------------|:------:|
+| `170_tr_bank_master.sql` | Bank accounts, signatories | ✅ |
+| `171_tr_cash_pooling.sql` | Cash pools, sweep executions | ✅ |
+| `172_tr_bank_reconciliation.sql` | Statements, reconciliations | ✅ |
+
+---
+
+## 🔌 API Routes
+
+### Bank Accounts (TR-01)
+| Method | Route | Status |
+|--------|-------|:------:|
+| GET | `/api/treasury/bank-accounts` | ✅ |
+| POST | `/api/treasury/bank-accounts` | ✅ |
+| GET | `/api/treasury/bank-accounts/:id` | ✅ |
+| PATCH | `/api/treasury/bank-accounts/:id` | ✅ |
+| POST | `/api/treasury/bank-accounts/:id/submit-verification` | ✅ |
+| POST | `/api/treasury/bank-accounts/:id/verify` | ✅ |
+| POST | `/api/treasury/bank-accounts/:id/suspend` | ✅ |
+| POST | `/api/treasury/bank-accounts/:id/reactivate` | ✅ |
+
+### Cash Position
+| Method | Route | Status |
+|--------|-------|:------:|
+| GET | `/api/treasury/cash-position` | ✅ |
+
+### Reconciliations (TR-05)
+| Method | Route | Status |
+|--------|-------|:------:|
+| GET | `/api/treasury/reconciliations` | ✅ |
+| POST | `/api/treasury/reconciliations` | ✅ |
+
+### Manager Dashboard
+| Method | Route | Status |
+|--------|-------|:------:|
+| GET | `/api/treasury/manager/dashboard` | ✅ |
 
 ---
 
 ## ✅ Control Framework (ICFR-Ready)
 
 | Control | TR-01 | TR-02 | TR-03 | TR-04 | TR-05 |
-|---------|-------|-------|-------|-------|-------|
+|---------|:-----:|:-----:|:-----:|:-----:|:-----:|
 | **Segregation of Duties** | ✅ | 📋 | 📋 | 📋 | 📋 |
 | **Transactional Audit** | ✅ | 📋 | 📋 | 📋 | 📋 |
 | **Optimistic Locking** | ✅ | 📋 | 📋 | 📋 | 📋 |
 | **Period Lock (Cutoff)** | — | 📋 | 📋 | 📋 | 📋 |
 | **Dual Authorization** | ✅ | 📋 | 📋 | 📋 | 📋 |
-| **Tenant Isolation (RLS)** | ✅ | 📋 | 📋 | 📋 | 📋 |
+| **Tenant Isolation (RLS)** | ✅ | ✅ | 📋 | 📋 | ✅ |
 
 ---
 
 ## 🔗 Kernel Integrations
 
 | Kernel Service | Purpose | Status |
-|----------------|---------|--------|
-| **K_LOG** | Transactional audit events | 📋 Planned |
+|----------------|---------|:------:|
+| **K_LOG** | Transactional audit events | ✅ Integrated |
 | **K_POLICY** | SoD, signatory limits | 📋 Planned |
 | **K_TIME** | Fiscal period validation | 📋 Planned |
 | **K_SEQ** | Sequence generation | 📋 Planned |
 | **K_FX** | FX rate service | 📋 Planned |
 | **GL-03** | GL Posting Engine | 📋 Planned |
-
----
-
-## 📁 BFF Routes (API) — Planned
-
-### TR Cell Routes
-- `/api/tr/banks/*` — TR-01 Bank Master endpoints
-- `/api/tr/pooling/*` — TR-02 Cash Pooling endpoints  
-- `/api/tr/hedging/*` — TR-03 FX Hedging endpoints
-- `/api/tr/intercompany/*` — TR-04 Intercompany endpoints
-- `/api/tr/reconciliation/*` — TR-05 Reconciliation endpoints
-
-### Dashboard Routes
-- `/api/tr/manager/dashboard` — Treasury Manager cluster dashboard
-- `/api/tr/banks/dashboard` — TR-01 cell dashboard
-- `/api/tr/pooling/dashboard` — TR-02 cell dashboard
-- `/api/tr/hedging/dashboard` — TR-03 cell dashboard
-- `/api/tr/intercompany/dashboard` — TR-04 cell dashboard
-- `/api/tr/reconciliation/dashboard` — TR-05 cell dashboard
-
----
-
-## 📚 Related Documents
-
-### Cell PRDs
-- [PRD-tr01-bank-master.md](./cells/tr01-bank-master/PRD-tr01-bank-master.md) — ✅ Complete
-- PRD-tr02-cash-pooling.md — 📋 Planned
-- PRD-tr03-fx-hedging.md — 📋 Planned
-- PRD-tr04-intercompany-settlement.md — 📋 Planned
-- PRD-tr05-bank-reconciliation.md — 📋 Planned
 
 ---
 
@@ -120,7 +134,8 @@ dom06-treasury/
 ┌───▼────┐   ┌─────▼─────┐   ┌─────▼─────┐   ┌─────▼─────┐   ┌────▼────┐
 │ TR-01  │   │   TR-02   │   │   TR-03   │   │   TR-04   │   │  TR-05  │
 │  Bank  │   │   Cash    │   │    FX     │   │   Inter-  │   │  Bank   │
-│ Master │   │  Pooling  │   │  Hedging  │   │  company  │   │ Recon   │
+│ Master │◄──┤  Pooling  │   │  Hedging  │   │  company  │   │ Recon   │
+│   ✅   │   │    📋     │   │    📋     │   │    📋     │   │   📋    │
 └────────┘   └───────────┘   └───────────┘   └───────────┘   └─────────┘
      │              │               │               │              │
      │              │               │               │              │
@@ -134,9 +149,23 @@ dom06-treasury/
 
 ---
 
+## 📚 Related Documents
+
+### Cell PRDs
+- [PRD-tr01-bank-master.md](./cells/tr01-bank-master/PRD-tr01-bank-master.md) — ✅ Complete
+- [PRD-tr02-cash-pooling.md](./cells/tr02-cash-pooling/PRD-tr02-cash-pooling.md) — 📋 Placeholder
+- [PRD-tr03-fx-hedging.md](./cells/tr03-fx-hedging/PRD-tr03-fx-hedging.md) — 📋 Placeholder
+- [PRD-tr04-intercompany-settlement.md](./cells/tr04-intercompany-settlement/PRD-tr04-intercompany-settlement.md) — 📋 Placeholder
+- [PRD-tr05-bank-reconciliation.md](./cells/tr05-bank-reconciliation/PRD-tr05-bank-reconciliation.md) — 📋 Placeholder
+
+### Architecture
+- [TR-01 ARCHITECTURE-BRIEF.md](./cells/tr01-bank-master/ARCHITECTURE-BRIEF.md) — ✅ Complete
+
+---
+
 ## 🎨 TR-Specific Features
 
-### Cash Position Dashboard (Planned)
+### Cash Position Dashboard
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                  DAILY CASH POSITION — Dec 18, 2024               │
@@ -170,7 +199,7 @@ dom06-treasury/
 ## 🧪 Running Tests
 
 ```bash
-# Run all TR cell tests (when implemented)
+# Run all TR cell tests
 pnpm test:vitest run apps/canon/finance/dom06-treasury/cells
 
 # Run specific cell tests
@@ -181,13 +210,13 @@ pnpm test:vitest run apps/canon/finance/dom06-treasury/cells/tr01-bank-master
 
 ## 📅 Implementation Roadmap
 
-| Phase | Cells | Priority | Dependencies |
-|-------|-------|----------|--------------|
-| **Phase 1** | TR-01 Bank Master | P3 | GL-03 |
-| **Phase 2** | TR-05 Bank Reconciliation | P3 | TR-01, GL-05 |
-| **Phase 3** | TR-02 Cash Pooling | P3 | TR-01 |
-| **Phase 4** | TR-04 Intercompany Settlement | P3 | GL-03, AR/AP |
-| **Phase 5** | TR-03 FX Hedging | P3 | K_FX, GL-03 |
+| Phase | Cells | Priority | Dependencies | Status |
+|-------|-------|----------|--------------|:------:|
+| **Phase 1** | TR-01 Bank Master | P3 | GL-03 | ✅ Complete |
+| **Phase 2** | TR-05 Bank Reconciliation | P3 | TR-01, GL-05 | 📋 Planned |
+| **Phase 3** | TR-02 Cash Pooling | P3 | TR-01 | 📋 Planned |
+| **Phase 4** | TR-04 Intercompany Settlement | P3 | GL-03, AR/AP | 📋 Planned |
+| **Phase 5** | TR-03 FX Hedging | P3 | K_FX, GL-03 | 📋 Planned |
 
 ---
 
