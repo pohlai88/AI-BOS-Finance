@@ -95,6 +95,8 @@ export {
   createSqlMatchingRepository,
   SqlApprovalRepository,
   createSqlApprovalRepository,
+  // GL-02 Journal Entry
+  createJournalEntryRepository,
 } from './sql';
 
 // Auth adapters (bcryptjs, jose)

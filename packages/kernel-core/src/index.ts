@@ -52,9 +52,28 @@ export * from './ports/matchingRepositoryPort';
 // AP-04 Invoice Approval Workflow Ports
 export * from './ports/approvalRepositoryPort';
 
+// AR-01 Customer Master Ports
+export * from './ports/customerRepositoryPort';
+
+// AR-02 Sales Invoice Ports
+export * from './ports/invoiceRepositoryPort';
+
+// AR-03 Receipt Processing Ports
+export * from './ports/receiptRepositoryPort';
+
+// AR-04 Credit Note Ports
+export * from './ports/creditNoteRepositoryPort';
+
+// AR-05 AR Aging Ports
+export * from './ports/agingRepositoryPort';
+
+// GL-02 Journal Entry Ports
+export * from './ports/journalEntryRepositoryPort';
+
 // Kernel Services Ports
 export * from './ports/sequencePort';  // K_SEQ - Sequence generation
 export * from './ports/coaPort';        // K_COA - Chart of Accounts
+export * from './ports/fxPort';         // K_FX - Foreign Exchange (Multi-Currency)
 
 // Procurement Integration Ports (for AP-03)
 export * from './ports/purchaseOrderPort';   // PO data

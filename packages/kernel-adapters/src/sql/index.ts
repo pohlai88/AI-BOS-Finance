@@ -32,6 +32,12 @@ export { SqlMatchingRepository, createSqlMatchingRepository } from './matchingRe
 // AP-04 Invoice Approval Workflow
 export { SqlApprovalRepository, createSqlApprovalRepository } from './approvalRepo.sql';
 
+// AR-01 Customer Master Cell
+export { SqlCustomerAdapter, createSqlCustomerAdapter } from './customerRepo.sql';
+
+// GL-02 Journal Entry Cell
+export { createJournalEntryRepository } from './journalEntryRepo.sql';
+
 // GL Posting (GL-03)
 export {
   SqlGLPostingAdapter,

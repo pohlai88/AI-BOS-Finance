@@ -157,6 +157,7 @@ export {
   
   // Permissions
   APPermissions,
+  ARPermissions,
   
   // Types
   type ActorContext,

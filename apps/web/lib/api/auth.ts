@@ -123,6 +123,51 @@ export const APPermissions = {
   CANVAS_ADMIN: 'canvas:admin',
 } as const;
 
+/**
+ * AR-specific permissions
+ */
+export const ARPermissions = {
+  // Customer (AR-01)
+  CUSTOMER_VIEW: 'ar01:customer:view',
+  CUSTOMER_CREATE: 'ar01:customer:create',
+  CUSTOMER_UPDATE: 'ar01:customer:update',
+  CUSTOMER_APPROVE: 'ar01:customer:approve',
+  CUSTOMER_SUSPEND: 'ar01:customer:suspend',
+  CUSTOMER_ARCHIVE: 'ar01:customer:archive',
+  CREDIT_LIMIT_REQUEST: 'ar01:credit:request',
+  CREDIT_LIMIT_APPROVE: 'ar01:credit:approve',
+  
+  // Invoice (AR-02)
+  INVOICE_VIEW: 'ar02:invoice:view',
+  INVOICE_CREATE: 'ar02:invoice:create',
+  INVOICE_SUBMIT: 'ar02:invoice:submit',
+  INVOICE_APPROVE: 'ar02:invoice:approve',
+  INVOICE_POST: 'ar02:invoice:post',
+  INVOICE_VOID: 'ar02:invoice:void',
+  
+  // Receipt (AR-03)
+  RECEIPT_VIEW: 'ar03:receipt:view',
+  RECEIPT_CREATE: 'ar03:receipt:create',
+  RECEIPT_ALLOCATE: 'ar03:receipt:allocate',
+  RECEIPT_POST: 'ar03:receipt:post',
+  RECEIPT_REVERSE: 'ar03:receipt:reverse',
+  
+  // Credit Note (AR-04)
+  CREDIT_NOTE_VIEW: 'ar04:credit:view',
+  CREDIT_NOTE_CREATE: 'ar04:credit:create',
+  CREDIT_NOTE_APPROVE: 'ar04:credit:approve',
+  CREDIT_NOTE_POST: 'ar04:credit:post',
+  
+  // Aging (AR-05)
+  AGING_VIEW: 'ar05:aging:view',
+  AGING_GENERATE: 'ar05:aging:generate',
+  COLLECTION_ACTION: 'ar05:collection:action',
+  
+  // Dashboard
+  DASHBOARD_VIEW: 'ar:dashboard:view',
+  DASHBOARD_EXPORT: 'ar:dashboard:export',
+} as const;
+
 // ============================================================================
 // 2. SESSION HANDLING
 // ============================================================================
@@ -163,7 +208,10 @@ async function extractSession(request: NextRequest): Promise<{
       tenantId: 'tenant-1',
       companyId: 'company-1',
       role: 'manager',
-      permissions: Object.values(APPermissions), // Grant all for demo
+      permissions: [
+        ...Object.values(APPermissions), 
+        ...Object.values(ARPermissions),
+      ], // Grant all for demo
       sessionId: 'session-123',
     };
   }
