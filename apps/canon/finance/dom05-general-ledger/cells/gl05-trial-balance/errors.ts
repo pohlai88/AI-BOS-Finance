@@ -1,71 +1,159 @@
 /**
- * GL-05 Trial Balance — Error Factory
+ * GL-05 Trial Balance - Domain Errors
  * 
- * Centralized error definitions for trial balance operations.
+ * Custom error classes for trial balance operations.
+ * Maps to API error responses in the BFF layer.
  * 
  * @module GL-05
  */
 
+// =============================================================================
+// Error Codes
+// =============================================================================
+
+export const TrialBalanceErrorCode = {
+  // Not found
+  PERIOD_NOT_FOUND: 'PERIOD_NOT_FOUND',
+  SNAPSHOT_NOT_FOUND: 'SNAPSHOT_NOT_FOUND',
+  ACCOUNT_NOT_FOUND: 'ACCOUNT_NOT_FOUND',
+  
+  // Snapshot
+  SNAPSHOT_ALREADY_EXISTS: 'SNAPSHOT_ALREADY_EXISTS',
+  IMMUTABLE_SNAPSHOT: 'IMMUTABLE_SNAPSHOT',
+  
+  // Verification
+  HASH_MISMATCH: 'HASH_MISMATCH',
+  UNBALANCED_TB: 'UNBALANCED_TB',
+  
+  // Data
+  NO_LEDGER_DATA: 'NO_LEDGER_DATA',
+  
+  // Authorization
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  
+  // System
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+} as const;
+
+export type TrialBalanceErrorCodeType = typeof TrialBalanceErrorCode[keyof typeof TrialBalanceErrorCode];
+
+// =============================================================================
+// HTTP Status Mapping
+// =============================================================================
+
+const ERROR_HTTP_STATUS: Record<TrialBalanceErrorCodeType, number> = {
+  PERIOD_NOT_FOUND: 404,
+  SNAPSHOT_NOT_FOUND: 404,
+  ACCOUNT_NOT_FOUND: 404,
+  SNAPSHOT_ALREADY_EXISTS: 409,
+  IMMUTABLE_SNAPSHOT: 422,
+  HASH_MISMATCH: 500,
+  UNBALANCED_TB: 500,
+  NO_LEDGER_DATA: 400,
+  UNAUTHORIZED: 403,
+  INTERNAL_ERROR: 500,
+};
+
+// =============================================================================
+// Error Class
+// =============================================================================
+
+/**
+ * Trial Balance Cell Error
+ * 
+ * Domain error for trial balance operations.
+ */
 export class TrialBalanceCellError extends Error {
+  readonly code: TrialBalanceErrorCodeType;
+  readonly httpStatus: number;
+  readonly details?: Record<string, unknown>;
+  readonly isOperational: boolean = true;
+
   constructor(
+    code: TrialBalanceErrorCodeType,
     message: string,
-    public readonly code: string,
-    public readonly statusCode: number = 400,
-    public readonly details?: Record<string, unknown>
+    details?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'TrialBalanceCellError';
+    this.code = code;
+    this.httpStatus = ERROR_HTTP_STATUS[code] ?? 500;
+    this.details = details;
+
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+
+  toJSON() {
+    return {
+      code: this.code,
+      message: this.message,
+      details: this.details,
+    };
   }
 }
 
-export const TrialBalanceError = {
-  periodNotFound: (periodCode: string) =>
-    new TrialBalanceCellError(`Period not found: ${periodCode}`, 'PERIOD_NOT_FOUND', 404, { periodCode }),
+// =============================================================================
+// Error Factory Helpers
+// =============================================================================
 
-  snapshotNotFound: (snapshotId: string) =>
-    new TrialBalanceCellError(`Snapshot not found: ${snapshotId}`, 'SNAPSHOT_NOT_FOUND', 404, { snapshotId }),
+export function periodNotFoundError(periodCode: string): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.PERIOD_NOT_FOUND,
+    `Period not found: ${periodCode}`,
+    { periodCode }
+  );
+}
 
-  snapshotAlreadyExists: (periodCode: string) =>
-    new TrialBalanceCellError(`Snapshot already exists for: ${periodCode}`, 'SNAPSHOT_EXISTS', 409, { periodCode }),
+export function snapshotNotFoundError(snapshotId: string): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.SNAPSHOT_NOT_FOUND,
+    `Snapshot not found: ${snapshotId}`,
+    { snapshotId }
+  );
+}
 
-  hashMismatch: (expectedHash: string, actualHash: string) =>
-    new TrialBalanceCellError(
-      `CRITICAL: TB hash mismatch detected!`,
-      'HASH_MISMATCH',
-      500,
-      { expectedHash, actualHash }
-    ),
+export function snapshotAlreadyExistsError(periodCode: string): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.SNAPSHOT_ALREADY_EXISTS,
+    `Snapshot already exists for period: ${periodCode}`,
+    { periodCode }
+  );
+}
 
-  unbalanced: (totalDebit: string, totalCredit: string) =>
-    new TrialBalanceCellError(
-      `Trial balance is unbalanced: Debit ${totalDebit} ≠ Credit ${totalCredit}`,
-      'UNBALANCED_TB',
-      500,
-      { totalDebit, totalCredit }
-    ),
+export function hashMismatchError(
+  expectedHash: string,
+  actualHash: string
+): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.HASH_MISMATCH,
+    'CRITICAL: TB hash mismatch detected!',
+    { expectedHash, actualHash }
+  );
+}
 
-  immutableSnapshot: (snapshotId: string) =>
-    new TrialBalanceCellError(
-      `Cannot modify immutable snapshot: ${snapshotId}`,
-      'IMMUTABLE_SNAPSHOT',
-      400,
-      { snapshotId }
-    ),
+export function unbalancedTBError(
+  totalDebit: string,
+  totalCredit: string
+): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.UNBALANCED_TB,
+    `Trial balance is unbalanced. Debit: ${totalDebit}, Credit: ${totalCredit}`,
+    { totalDebit, totalCredit }
+  );
+}
 
-  noLedgerData: (periodCode: string) =>
-    new TrialBalanceCellError(
-      `No ledger data found for period: ${periodCode}`,
-      'NO_LEDGER_DATA',
-      400,
-      { periodCode }
-    ),
+export function immutableSnapshotError(snapshotId: string): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.IMMUTABLE_SNAPSHOT,
+    `Cannot modify immutable snapshot: ${snapshotId}`,
+    { snapshotId }
+  );
+}
 
-  accountNotFound: (accountCode: string) =>
-    new TrialBalanceCellError(`Account not found: ${accountCode}`, 'ACCOUNT_NOT_FOUND', 404, { accountCode }),
-
-  unauthorized: (operation: string) =>
-    new TrialBalanceCellError(`Unauthorized: ${operation}`, 'UNAUTHORIZED', 403, { operation }),
-
-  internal: (operation: string) =>
-    new TrialBalanceCellError(`Internal error: ${operation}`, 'INTERNAL_ERROR', 500, { operation }),
-};
+export function noLedgerDataError(periodCode: string): TrialBalanceCellError {
+  return new TrialBalanceCellError(
+    TrialBalanceErrorCode.NO_LEDGER_DATA,
+    `No ledger data found for period: ${periodCode}`,
+    { periodCode }
+  );
+}

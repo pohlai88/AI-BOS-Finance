@@ -1,7 +1,7 @@
 /**
- * GL-05 Trial Balance — Public API
+ * GL-05 Trial Balance Cell — Barrel Export
  * 
- * Barrel exports for the Trial Balance cell.
+ * Exports all public APIs for the Trial Balance Cell.
  * 
  * @module GL-05
  */
@@ -28,5 +28,16 @@ export type {
   TBDashboardServiceDeps,
 } from './DashboardService';
 
-// Errors
-export { TrialBalanceCellError, TrialBalanceError } from './errors';
+// Domain Errors
+export {
+  TrialBalanceCellError,
+  TrialBalanceErrorCode,
+  periodNotFoundError,
+  snapshotNotFoundError,
+  snapshotAlreadyExistsError,
+  hashMismatchError,
+  unbalancedTBError,
+  immutableSnapshotError,
+  noLedgerDataError,
+} from './errors';
+export type { TrialBalanceErrorCodeType } from './errors';
