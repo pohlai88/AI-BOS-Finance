@@ -98,13 +98,13 @@ export function getPaymentServiceContainer(): PaymentServiceContainer {
 // ============================================================================
 
 // Dynamic imports to avoid bundling issues in Edge runtime
-let PaymentServiceClass: typeof import('../../canon/finance/accounts-payable/cells/payment-execution').PaymentService | null = null;
-let ApprovalServiceClass: typeof import('../../canon/finance/accounts-payable/cells/payment-execution').ApprovalService | null = null;
-let ExecutionServiceClass: typeof import('../../canon/finance/accounts-payable/cells/payment-execution').ExecutionService | null = null;
+let PaymentServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').PaymentService | null = null;
+let ApprovalServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').ApprovalService | null = null;
+let ExecutionServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').ExecutionService | null = null;
 
 async function loadServices() {
   if (!PaymentServiceClass || !ApprovalServiceClass || !ExecutionServiceClass) {
-    const module = await import('../../canon/finance/accounts-payable/cells/payment-execution');
+    const module = await import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution');
     PaymentServiceClass = module.PaymentService;
     ApprovalServiceClass = module.ApprovalService;
     ExecutionServiceClass = module.ExecutionService;

@@ -297,7 +297,7 @@ AI-BOS-Finance/
 │   │
 │   ├── canon/                       # Pillar 2-4: Business Logic
 │   │   ├── finance/                 # Canon: Finance
-│   │   │   ├── accounts-payable/    # Molecule: AP
+│   │   │   ├── dom03-accounts-payable/    # Molecule: AP
 │   │   │   │   ├── payment-hub/     # Cell: Payment Hub
 │   │   │   │   └── vendor-master/   # Cell: Vendor Master
 │   │   │   ├── treasury/            # Molecule: Treasury

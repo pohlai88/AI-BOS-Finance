@@ -19,6 +19,22 @@ export { SqlCredentialRepo } from './credentialRepo.sql';
 
 // AP-05 Payment Execution Cell
 export { SqlPaymentRepository, createSqlPaymentRepository } from './paymentRepo.sql';
+
+// AP-01 Vendor Master Cell
+export { SqlVendorRepository, createSqlVendorRepository } from './vendorRepo.sql';
+
+// AP-02 Invoice Entry Cell
+export { SqlInvoiceRepository, createSqlInvoiceRepository } from './invoiceRepo.sql';
+
+// AP-03 3-Way Match Engine
+export { SqlMatchingRepository, createSqlMatchingRepository } from './matchingRepo.sql';
+
+// AP-04 Invoice Approval Workflow
+export { SqlApprovalRepository, createSqlApprovalRepository } from './approvalRepo.sql';
+
+// Database utilities
+export * from './pool-config';
+export * from './db-errors';
 export {
   OutboxDispatcher,
   createOutboxDispatcher,

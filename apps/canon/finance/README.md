@@ -56,7 +56,7 @@ This Canon implements the **Kernel-Molecule-Cell** architecture with strict adhe
 
 ```
 finance/
-├── accounts-payable/
+├── dom03-accounts-payable/
 │   ├── payment-hub-demo/      # AP-05: Payment Execution (MVP)
 │   ├── vendor-master/         # AP-01: Vendor Master (Planned)
 │   └── invoice-matching/      # AP-03: 3-Way Match (Planned)

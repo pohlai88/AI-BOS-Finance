@@ -4,6 +4,7 @@
  */
 
 export * as payment from './payment';
+export * as vendor from './vendor';
 export * as metadata from './metadata';
 export * as dashboard from './dashboard';
 export * as health from './health';

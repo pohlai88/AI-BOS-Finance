@@ -178,7 +178,7 @@ export type { PaymentRequestTable, CreatePaymentRequest } from '@aibos/schemas/f
 #### Step 6: Export from Kernel Core
 
 ```typescript
-// apps/canon/finance/accounts-payable/payment-hub/src/index.ts
+// apps/canon/finance/dom03-accounts-payable/payment-hub/src/index.ts
 import { CreatePaymentRequestSchema, type CreatePaymentRequest } from '@aibos/kernel-core/db/schemas';
 import { TenantDb } from '@aibos/db/lib/tenant-db';
 

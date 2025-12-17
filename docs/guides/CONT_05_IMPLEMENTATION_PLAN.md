@@ -139,7 +139,7 @@ export default {
 **Example Output:**
 ```
 ❌ Violation: Cell imports Cell
-   File: apps/canon/finance/accounts-payable/payment-hub/src/index.ts
+   File: apps/canon/finance/dom03-accounts-payable/payment-hub/src/index.ts
    Line 5: import { ... } from '../vendor-master'
    Fix: Use Kernel Gateway or Events instead
 ```

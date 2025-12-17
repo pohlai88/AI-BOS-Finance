@@ -42,11 +42,35 @@ export {
   getRawPayment,
 } from './memory/paymentRepo.memory';
 export {
+  createMemoryVendorRepository,
+  clearVendorData,
+  getVendorCount,
+  getRawVendor,
+} from './memory/vendorRepo.memory';
+export {
   createMemoryGLPostingAdapter,
   clearGLData,
   getJournalCount,
   getRawJournal,
 } from './memory/glPosting.memory';
+
+// AP-02 Invoice Entry Cell Adapters (In-Memory)
+export {
+  MemoryInvoiceRepository,
+  createMemoryInvoiceRepository,
+} from './memory/invoiceRepo.memory';
+
+// AP-03 3-Way Match Engine Adapters (In-Memory)
+export {
+  MemoryMatchingRepository,
+  createMemoryMatchingRepository,
+} from './memory/matchingRepo.memory';
+
+// AP-04 Invoice Approval Workflow Adapters (In-Memory)
+export {
+  MemoryApprovalRepository,
+  createMemoryApprovalRepository,
+} from './memory/approvalRepo.memory';
 
 // SQL adapters (PostgreSQL)
 export {
@@ -63,6 +87,14 @@ export {
   SqlAuditRepo,
   SqlPaymentRepository,
   createSqlPaymentRepository,
+  SqlVendorRepository,
+  createSqlVendorRepository,
+  SqlInvoiceRepository,
+  createSqlInvoiceRepository,
+  SqlMatchingRepository,
+  createSqlMatchingRepository,
+  SqlApprovalRepository,
+  createSqlApprovalRepository,
 } from './sql';
 
 // Auth adapters (bcryptjs, jose)

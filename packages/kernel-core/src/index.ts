@@ -40,10 +40,21 @@ export * from './ports/rolePermissionRepoPort';
 export * from './ports/fiscalTimePort';
 export * from './ports/policyPort';
 export * from './ports/paymentRepositoryPort';
+export * from './ports/vendorRepositoryPort';
 export * from './ports/glPostingPort';
+
+// AP-02 Invoice Entry Cell Ports
+export * from './ports/invoiceRepositoryPort';
+
+// AP-03 3-Way Match Engine Ports
+export * from './ports/matchingRepositoryPort';
+
+// AP-04 Invoice Approval Workflow Ports
+export * from './ports/approvalRepositoryPort';
 
 // Export TransactionContext for use in other ports
 export type { TransactionContext } from './ports/paymentRepositoryPort';
+export type { AuditEvent } from './ports/auditPort';
 
 // Constants
 export { KERNEL_PERMISSIONS } from './constants/permissions';
