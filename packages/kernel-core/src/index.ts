@@ -52,6 +52,17 @@ export * from './ports/matchingRepositoryPort';
 // AP-04 Invoice Approval Workflow Ports
 export * from './ports/approvalRepositoryPort';
 
+// Kernel Services Ports
+export * from './ports/sequencePort';  // K_SEQ - Sequence generation
+export * from './ports/coaPort';        // K_COA - Chart of Accounts
+
+// Procurement Integration Ports (for AP-03)
+export * from './ports/purchaseOrderPort';   // PO data
+export * from './ports/goodsReceiptPort';    // GRN data
+
+// Canvas/Lively Layer Ports (DOM-03)
+export * from './ports/canvasRepositoryPort'; // Canvas objects & zones
+
 // Export TransactionContext for use in other ports
 export type { TransactionContext } from './ports/paymentRepositoryPort';
 export type { AuditEvent } from './ports/auditPort';

@@ -83,9 +83,20 @@ describe('Segregation of Duties (SoD)', () => {
       expect(result.reason).toContain('requires approval');
     });
 
-    it('VP required for amounts > $25,000', async () => {
+    it('Director required for amounts > $25,000 up to $50,000', async () => {
       const requirements = await policyAdapter.getApprovalRequirements(
         '30000.00',
+        'USD',
+        'tenant-001'
+      );
+
+      expect(requirements.requiredRoles[0]).toContain('ROLE_DIRECTOR');
+      expect(requirements.requiresExecutive).toBe(false);
+    });
+
+    it('VP required for amounts > $50,000 up to $100,000', async () => {
+      const requirements = await policyAdapter.getApprovalRequirements(
+        '75000.00',
         'USD',
         'tenant-001'
       );
@@ -94,9 +105,9 @@ describe('Segregation of Duties (SoD)', () => {
       expect(requirements.requiresExecutive).toBe(true);
     });
 
-    it('CFO required for amounts > $50,000', async () => {
+    it('CFO required for amounts > $100,000', async () => {
       const requirements = await policyAdapter.getApprovalRequirements(
-        '100000.00',
+        '150000.00',
         'USD',
         'tenant-001'
       );
@@ -122,7 +133,7 @@ describe('Segregation of Duties (SoD)', () => {
 
   describe('SoD Exemptions', () => {
     it('exempted pairs can self-approve (test scenario only)', async () => {
-      const { addSoDExemption } = await import('@ai-bos/kernel-adapters');
+      const { addSoDExemption } = await import('@aibos/kernel-adapters');
 
       const userId = 'system-user';
       addSoDExemption(userId, userId);

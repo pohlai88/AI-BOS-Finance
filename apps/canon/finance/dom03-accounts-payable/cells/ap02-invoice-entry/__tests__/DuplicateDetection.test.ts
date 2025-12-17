@@ -150,9 +150,14 @@ describe('AP02-C05: Duplicate Detection Control', () => {
         actor
       );
 
+      // Re-fetch the invoice to get the updated duplicate flag
+      // (markAsDuplicate is called during create but the returned object
+      // is created before the flag is set)
+      const refetched = await invoiceService.getById(second.id, actor);
+
       // Second invoice should be flagged as potential duplicate
-      expect(second.duplicateFlag).toBe(true);
-      expect(second.duplicateOfInvoiceId).toBe(first.id);
+      expect(refetched?.duplicateFlag).toBe(true);
+      expect(refetched?.duplicateOfInvoiceId).toBe(first.id);
     });
   });
 
@@ -172,8 +177,16 @@ describe('AP02-C05: Duplicate Detection Control', () => {
         actor
       );
 
+      // Create duplicate service with blockOnExactDuplicate: false
+      // so it returns a result instead of throwing
+      const nonBlockingDuplicateService = new DuplicateDetectionService(
+        invoiceRepo,
+        auditPort,
+        { blockOnExactDuplicate: false }
+      );
+
       // Check for duplicate
-      const result = await duplicateService.checkDuplicate(
+      const result = await nonBlockingDuplicateService.checkDuplicate(
         {
           vendorId: testVendorId,
           invoiceNumber: 'INV-003',

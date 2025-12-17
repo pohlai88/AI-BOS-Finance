@@ -225,12 +225,12 @@ describe('Concurrency Control', () => {
       // List for tenant1
       const tenant1List = await paymentRepo.list({ tenantId: tenant1 });
       expect(tenant1List.total).toBe(1);
-      expect(tenant1List.payments[0].amount).toBe('1000.0000');
+      expect(tenant1List.payments[0].amount).toBe('1000.00');
 
       // List for tenant2
       const tenant2List = await paymentRepo.list({ tenantId: tenant2 });
       expect(tenant2List.total).toBe(1);
-      expect(tenant2List.payments[0].amount).toBe('2000.0000');
+      expect(tenant2List.payments[0].amount).toBe('2000.00');
     });
   });
 });

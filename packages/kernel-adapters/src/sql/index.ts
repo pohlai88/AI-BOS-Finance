@@ -32,6 +32,25 @@ export { SqlMatchingRepository, createSqlMatchingRepository } from './matchingRe
 // AP-04 Invoice Approval Workflow
 export { SqlApprovalRepository, createSqlApprovalRepository } from './approvalRepo.sql';
 
+// GL Posting (GL-03)
+export {
+  SqlGLPostingAdapter,
+  createSqlGLPostingAdapter,
+  createAndInitGLPostingAdapter,
+} from './glPosting.sql';
+
+// Kernel Services (K_SEQ, K_COA)
+export {
+  SqlSequenceAdapter,
+  createSqlSequenceAdapter,
+  createAndInitSequenceAdapter,
+} from './sequence.sql';
+
+export {
+  SqlCOAAdapter,
+  createSqlCOAAdapter,
+} from './coa.sql';
+
 // Database utilities
 export * from './pool-config';
 export * from './db-errors';

@@ -40,6 +40,7 @@ export { ApprovalService } from './ApprovalService';
 export { ExecutionService } from './ExecutionService';
 export { ExceptionService } from './ExceptionService';
 export { WebhookService, verifyWebhookSignature, PAYMENT_EVENT_TYPES } from './WebhookService';
+export { PaymentDashboardService, createPaymentDashboardService } from './DashboardService';
 
 // ============================================================================
 // SERVICE TYPES
@@ -77,3 +78,12 @@ export type {
   CreateWebhookInput,
   PaymentEventType,
 } from './WebhookService';
+
+export type {
+  DashboardMetrics,
+  CashSummary,
+  ControlHealthMetrics,
+  CashPositionResponse,
+  ControlHealthResponse,
+  CompanyBreakdownResponse,
+} from './DashboardService';

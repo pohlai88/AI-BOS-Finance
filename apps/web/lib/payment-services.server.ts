@@ -101,13 +101,15 @@ export function getPaymentServiceContainer(): PaymentServiceContainer {
 let PaymentServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').PaymentService | null = null;
 let ApprovalServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').ApprovalService | null = null;
 let ExecutionServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').ExecutionService | null = null;
+let PaymentDashboardServiceClass: typeof import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution').PaymentDashboardService | null = null;
 
 async function loadServices() {
-  if (!PaymentServiceClass || !ApprovalServiceClass || !ExecutionServiceClass) {
+  if (!PaymentServiceClass || !ApprovalServiceClass || !ExecutionServiceClass || !PaymentDashboardServiceClass) {
     const module = await import('../../canon/finance/dom03-accounts-payable/cells/ap05-payment-execution');
     PaymentServiceClass = module.PaymentService;
     ApprovalServiceClass = module.ApprovalService;
     ExecutionServiceClass = module.ExecutionService;
+    PaymentDashboardServiceClass = module.PaymentDashboardService;
   }
 }
 
@@ -153,6 +155,18 @@ export async function getExecutionService() {
     container.auditPort,
     container.eventBusPort,
     container.glPostingPort
+  );
+}
+
+/**
+ * Get PaymentDashboardService instance
+ */
+export async function getDashboardService() {
+  await loadServices();
+  const container = getPaymentServiceContainer();
+
+  return new PaymentDashboardServiceClass!(
+    container.paymentRepo
   );
 }
 

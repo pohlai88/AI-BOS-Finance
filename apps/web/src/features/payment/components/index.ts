@@ -55,3 +55,8 @@ export {
 
 // Phase 6 Proof of Concept
 export { PaymentBioTableDemo, type PaymentBioTableDemoProps } from './PaymentBioTableDemo';
+
+// Dashboard Components (AP-05 Backend Integration)
+export { PaymentDashboardCards } from './PaymentDashboardCards';
+export { CashPositionWidget } from './CashPositionWidget';
+export { ControlHealthWidget } from './ControlHealthWidget';

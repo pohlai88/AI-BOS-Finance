@@ -52,3 +52,18 @@ export {
   type PaymentApprovalState,
 } from './usePaymentApproval';
 
+// Dashboard Hooks (AP-05 Dashboard Service)
+export {
+  useDashboard,
+  useCashPosition,
+  useControlHealth,
+  useCompanyBreakdown,
+  type DashboardMetrics,
+  type CashSummary,
+  type StatusAggregate,
+  type CompanyAggregate,
+  type ControlHealthMetrics,
+  type CashPositionResponse,
+  type ControlHealthResponse,
+  type CompanyBreakdownResponse,
+} from './useDashboard';

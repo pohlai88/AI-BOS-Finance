@@ -172,10 +172,25 @@ describe('InvoiceService - Unit Tests', () => {
     it('should list invoices for tenant', async () => {
       const actor = createTestActor({ tenantId: testTenantId });
       
-      // Create multiple invoices
-      await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
-      await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
-      await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
+      // Create multiple invoices with unique invoice numbers
+      await invoiceService.create(createTestInvoiceInput({ 
+        vendorId: testVendorId,
+        invoiceNumber: `LIST-${Date.now()}-1`,
+        invoiceDate: new Date('2025-01-01'),
+        dueDate: new Date('2025-02-01'),
+      }), actor);
+      await invoiceService.create(createTestInvoiceInput({ 
+        vendorId: testVendorId,
+        invoiceNumber: `LIST-${Date.now()}-2`,
+        invoiceDate: new Date('2025-01-02'),
+        dueDate: new Date('2025-02-02'),
+      }), actor);
+      await invoiceService.create(createTestInvoiceInput({ 
+        vendorId: testVendorId,
+        invoiceNumber: `LIST-${Date.now()}-3`,
+        invoiceDate: new Date('2025-01-03'),
+        dueDate: new Date('2025-02-03'),
+      }), actor);
 
       const result = await invoiceService.list({}, actor);
 
@@ -186,9 +201,19 @@ describe('InvoiceService - Unit Tests', () => {
     it('should filter by status', async () => {
       const actor = createTestActor({ tenantId: testTenantId });
       
-      // Create invoices
-      const inv1 = await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
-      await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
+      // Create invoices with unique invoice numbers
+      const inv1 = await invoiceService.create(createTestInvoiceInput({ 
+        vendorId: testVendorId,
+        invoiceNumber: `FILTER-${Date.now()}-1`,
+        invoiceDate: new Date('2025-02-01'),
+        dueDate: new Date('2025-03-01'),
+      }), actor);
+      await invoiceService.create(createTestInvoiceInput({ 
+        vendorId: testVendorId,
+        invoiceNumber: `FILTER-${Date.now()}-2`,
+        invoiceDate: new Date('2025-02-02'),
+        dueDate: new Date('2025-03-02'),
+      }), actor);
       
       // Submit one
       await invoiceService.submit(inv1.id, actor, inv1.version);
@@ -203,9 +228,14 @@ describe('InvoiceService - Unit Tests', () => {
     it('should paginate results', async () => {
       const actor = createTestActor({ tenantId: testTenantId });
       
-      // Create 5 invoices
+      // Create 5 invoices with unique invoice numbers
       for (let i = 0; i < 5; i++) {
-        await invoiceService.create(createTestInvoiceInput({ vendorId: testVendorId }), actor);
+        await invoiceService.create(createTestInvoiceInput({ 
+          vendorId: testVendorId,
+          invoiceNumber: `PAGINATE-${Date.now()}-${i}`,
+          invoiceDate: new Date(`2025-03-0${i + 1}`),
+          dueDate: new Date(`2025-04-0${i + 1}`),
+        }), actor);
       }
 
       const result = await invoiceService.list({ limit: 2, offset: 0 }, actor);
