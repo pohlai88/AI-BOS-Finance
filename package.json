@@ -6,6 +6,8 @@
   "packageManager": "pnpm@10.23.0",
   "scripts": {
     "dev": "turbo run dev",
+    "dev:payment-hub": "cd apps/canon/finance/accounts-payable/payment-hub-demo && pnpm dev",
+    "dev:web": "pnpm --filter @aibos/web dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
@@ -24,6 +26,7 @@
     "test:coverage": "vitest run --coverage",
     "figma:sync": "tsx canon/D-Operations/D-TOOL/figma-sync.ts",
     "figma:sync:watch": "tsx watch canon/D-Operations/D-TOOL/figma-sync.ts",
+    "fix:exception-colors": "tsx scripts/TOOL_27_FixExceptionColors.ts",
     "figma:push": "tsx canon/D-Operations/D-TOOL/figma-push.ts",
     "figma:populate": "tsx canon/D-Operations/D-TOOL/figma-push.ts",
     "canon:sync": "tsx canon/D-Operations/D-TOOL/sync-canon.ts",

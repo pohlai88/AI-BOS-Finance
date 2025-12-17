@@ -151,12 +151,11 @@
   /* figma.token: text.micro */
   --text-micro: 0.625rem;            /* 10px - Micro */
   
-  /* Font stacks */
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Consolas', monospace;
-  --font-jetbrains: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  /* Font stacks - Geist (Sharp, Modern, Vercel) */
+  --font-heading: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), 'JetBrains Mono', 'Consolas', monospace;
 
   /* Letter spacing (tracking) */
   /* figma.token: tracking.tight */

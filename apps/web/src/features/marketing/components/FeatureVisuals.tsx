@@ -1,3 +1,12 @@
+/**
+ * Feature Visuals - Abstract Illustrations
+ * 
+ * Design Philosophy:
+ * - Subtle, non-distracting animations
+ * - Consistent primary color usage
+ * - Clean, minimal aesthetic
+ */
+
 import { motion } from 'motion/react';
 
 /**
@@ -5,42 +14,42 @@ import { motion } from 'motion/react';
  * Represents immutable blockchain-style data locking
  */
 export const CrystallizationVisual = () => (
-  <div className="w-full h-full flex items-center justify-center relative">
+  <div className="w-full h-full flex items-center justify-center relative px-6">
     {/* Abstract Blockchain */}
-    <div className="flex gap-4">
+    <div className="flex gap-3">
       {[1, 2, 3].map((i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: i * 0.15, duration: 0.5 }}
-          className="relative w-16 h-20 rounded border border-white/10 bg-white/5 flex flex-col items-center justify-center gap-2"
+          transition={{ delay: i * 0.1, duration: 0.4 }}
+          className="relative w-14 h-16 rounded-lg border border-border-subtle bg-surface-subtle flex flex-col items-center justify-center gap-1.5"
         >
-          <div className="w-8 h-1 bg-white/10 rounded-full" />
-          <div className="w-6 h-1 bg-white/10 rounded-full" />
-          <div className="w-4 h-1 bg-white/10 rounded-full" />
+          <div className="w-7 h-1 bg-border-subtle rounded-full" />
+          <div className="w-5 h-1 bg-border-subtle rounded-full" />
+          <div className="w-3 h-1 bg-border-subtle rounded-full" />
           {i === 3 && (
             <motion.div
-              className="absolute inset-0 bg-primary/20 border border-primary rounded"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute inset-0 bg-primary/10 border border-primary/40 rounded-lg"
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             />
           )}
         </motion.div>
       ))}
     </div>
-    
-    {/* Connector Lines */}
-    <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-    
-    {/* Lock Icon at the end */}
+
+    {/* Connector Line */}
+    <div className="absolute top-1/2 left-10 right-10 h-px bg-gradient-to-r from-transparent via-border-subtle to-transparent" />
+
+    {/* Lock Indicator */}
     <motion.div
-      className="absolute right-6 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center"
-      animate={{ scale: [1, 1.1, 1] }}
-      transition={{ duration: 2, repeat: Infinity }}
+      className="absolute right-4 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center"
+      animate={{ scale: [1, 1.05, 1] }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
     >
-      <div className="w-3 h-3 border-2 border-primary rounded-sm" />
+      <div className="w-2.5 h-2.5 border-2 border-primary rounded-sm" />
     </motion.div>
   </div>
 );
@@ -52,36 +61,29 @@ export const CrystallizationVisual = () => (
 export const InterrogationVisual = () => (
   <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
     {/* Radar Rings */}
-    <div className="absolute w-48 h-48 border border-white/5 rounded-full" />
-    <div className="absolute w-32 h-32 border border-white/10 rounded-full" />
-    <div className="absolute w-16 h-16 border border-primary/30 rounded-full bg-primary/5" />
-    
+    <div className="absolute w-36 h-36 border border-border-subtle rounded-full opacity-50" />
+    <div className="absolute w-24 h-24 border border-border-subtle rounded-full opacity-70" />
+    <div className="absolute w-12 h-12 border border-primary/30 rounded-full bg-primary/5" />
+
     {/* Center Pulse */}
     <motion.div
-      className="absolute w-4 h-4 bg-primary rounded-full"
-      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-      transition={{ duration: 2, repeat: Infinity }}
+      className="absolute w-3 h-3 bg-primary rounded-full"
+      animate={{ scale: [1, 1.3, 1], opacity: [0.8, 0.4, 0.8] }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
     />
-    
-    {/* Scanning Line */}
-    <motion.div
-      className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-nexus-green/50 to-transparent"
-      animate={{ top: ['20%', '80%', '20%'] }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-    />
-    
+
     {/* Data Points */}
     {[
-      { x: '25%', y: '30%', delay: 0 },
-      { x: '70%', y: '45%', delay: 0.5 },
-      { x: '40%', y: '70%', delay: 1 },
+      { x: '30%', y: '35%', delay: 0 },
+      { x: '65%', y: '45%', delay: 0.6 },
+      { x: '45%', y: '65%', delay: 1.2 },
     ].map((point, i) => (
       <motion.div
         key={i}
-        className="absolute w-2 h-2 bg-white/20 rounded-full"
+        className="absolute w-1.5 h-1.5 bg-primary/40 rounded-full"
         style={{ left: point.x, top: point.y }}
-        animate={{ opacity: [0.3, 1, 0.3] }}
-        transition={{ duration: 2, repeat: Infinity, delay: point.delay }}
+        animate={{ opacity: [0.2, 0.8, 0.2] }}
+        transition={{ duration: 2, repeat: Infinity, delay: point.delay, ease: 'easeInOut' }}
       />
     ))}
   </div>
@@ -92,44 +94,39 @@ export const InterrogationVisual = () => (
  * Represents schema validation and data enforcement
  */
 export const GovernanceVisual = () => (
-  <div className="w-full h-full p-6 flex flex-col gap-3 relative">
-    {/* Background Grid */}
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:16px_16px]" />
-
+  <div className="w-full h-full p-5 flex flex-col gap-2.5 relative">
     {/* Mock Schema Validation Lines */}
     {[
+      { status: 'pass', width: 'w-24' },
+      { status: 'pass', width: 'w-16' },
       { status: 'pass', width: 'w-28' },
-      { status: 'pass', width: 'w-20' },
-      { status: 'pass', width: 'w-32' },
-      { status: 'fail', width: 'w-24' },
+      { status: 'fail', width: 'w-20' },
     ].map((line, i) => (
       <motion.div
         key={i}
-        initial={{ opacity: 0, x: -10 }}
+        initial={{ opacity: 0, x: -8 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: i * 0.1, duration: 0.4 }}
-        className="flex items-center gap-3 pl-4 border-l border-white/10 relative z-10"
+        transition={{ delay: i * 0.08, duration: 0.3 }}
+        className="flex items-center gap-2.5 pl-3 border-l border-border-subtle relative z-10"
       >
-        <motion.div
-          className={`w-3 h-3 rounded-full ${line.status === 'fail' ? 'bg-red-500/50' : 'bg-primary/50'}`}
-          animate={line.status === 'fail' ? { opacity: [0.5, 1, 0.5] } : {}}
-          transition={{ duration: 1.5, repeat: Infinity }}
+        <div
+          className={`w-2 h-2 rounded-full ${line.status === 'fail' ? 'bg-red-500/50' : 'bg-primary/50'}`}
         />
-        <div className={`h-2 ${line.width} bg-white/10 rounded-full`} />
-        <div className="h-2 w-12 bg-white/5 rounded-full" />
+        <div className={`h-1.5 ${line.width} bg-border-subtle rounded-full`} />
+        <div className="h-1.5 w-10 bg-surface-subtle rounded-full" />
       </motion.div>
     ))}
 
-    {/* "Rejected" Badge overlay for the last item */}
+    {/* Rejected Badge */}
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ delay: 0.5, duration: 0.3 }}
-      className="absolute bottom-6 right-6 px-2 py-1 bg-red-500/10 border border-red-500/50 text-[10px] text-red-400 font-mono rounded z-10"
+      transition={{ delay: 0.4, duration: 0.25 }}
+      className="absolute bottom-4 right-4 px-2 py-1 bg-red-500/10 border border-red-500/30 text-[9px] text-red-400 font-mono rounded z-10"
     >
-      SCHEMA_INVALID
+      INVALID
     </motion.div>
   </div>
 );

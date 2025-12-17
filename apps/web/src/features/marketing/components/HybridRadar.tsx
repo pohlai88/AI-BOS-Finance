@@ -20,30 +20,30 @@ interface HybridRadarProps {
   activeRisks: number;
 }
 
-export const HybridRadar = ({ 
-  backgroundImage = '/images/radar-bg.jpg', 
-  activeRisks 
+export const HybridRadar = ({
+  backgroundImage = '/images/radar-bg.jpg',
+  activeRisks
 }: HybridRadarProps) => {
   const isCritical = activeRisks >= 5;
   const isWarning = activeRisks === 4;
 
-  const theme = isCritical 
+  const theme = isCritical
     ? { color: '#EF4444', label: 'CRITICAL', glow: 'rgba(239, 68, 68, 0.5)' }
-    : isWarning 
-    ? { color: '#F97316', label: 'WARNING', glow: 'rgba(249, 115, 22, 0.5)' }
-    : { color: '#10B981', label: 'SECURE', glow: 'rgba(16, 185, 129, 0.4)' };
+    : isWarning
+      ? { color: '#F97316', label: 'WARNING', glow: 'rgba(249, 115, 22, 0.5)' }
+      : { color: '#10B981', label: 'SECURE', glow: 'rgba(16, 185, 129, 0.4)' };
 
   return (
     <div className={cn(
       "relative w-full aspect-square max-h-[420px] mx-auto rounded-2xl border overflow-hidden group",
-      "bg-[#020617] border-white/10",
+      "bg-surface-nested border-white/10",
       isCritical && "shadow-[0_0_60px_rgba(239,68,68,0.2)]"
     )}>
-      
+
       {/* 1. THE BASE PLATE (High Quality Image) */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center opacity-70 transition-opacity duration-700 group-hover:opacity-85"
-        style={{ 
+        style={{
           backgroundImage: `url(${backgroundImage})`,
           filter: isCritical ? 'hue-rotate(-40deg) saturate(1.5)' : isWarning ? 'hue-rotate(-20deg) saturate(1.2)' : 'none'
         }}
@@ -51,7 +51,7 @@ export const HybridRadar = ({
 
       {/* Fallback gradient if no image */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/80" />
-      
+
       {/* 2. CONIC SCAN ANIMATION (Code Layer) */}
       <motion.div
         className="absolute inset-[10%] rounded-full pointer-events-none"
@@ -74,14 +74,14 @@ export const HybridRadar = ({
                 className="absolute rounded-full border-2"
                 style={{ borderColor: theme.color }}
                 initial={{ width: 100, height: 100, opacity: 0.8 }}
-                animate={{ 
-                  width: isCritical ? 500 : 350, 
-                  height: isCritical ? 500 : 350, 
-                  opacity: 0 
+                animate={{
+                  width: isCritical ? 500 : 350,
+                  height: isCritical ? 500 : 350,
+                  opacity: 0
                 }}
-                transition={{ 
-                  duration: isCritical ? 2 : 3, 
-                  repeat: Infinity, 
+                transition={{
+                  duration: isCritical ? 2 : 3,
+                  repeat: Infinity,
                   delay: i * (isCritical ? 0.6 : 1),
                   ease: "easeOut"
                 }}
@@ -93,25 +93,25 @@ export const HybridRadar = ({
 
       {/* 4. CENTER HUD (Live Data Display) */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <motion.div 
+        <motion.div
           className="relative flex flex-col items-center justify-center rounded-full border backdrop-blur-xl"
-          style={{ 
+          style={{
             width: 140,
             height: 140,
             backgroundColor: 'rgba(0, 0, 0, 0.85)',
             borderColor: theme.color,
             boxShadow: `0 0 30px ${theme.glow}, inset 0 0 20px ${theme.glow}`
           }}
-          animate={{ 
+          animate={{
             scale: isCritical ? [1, 1.02, 1] : 1,
-            boxShadow: isCritical 
+            boxShadow: isCritical
               ? [`0 0 30px ${theme.glow}`, `0 0 50px ${theme.glow}`, `0 0 30px ${theme.glow}`]
               : `0 0 30px ${theme.glow}`
           }}
           transition={{ duration: 1, repeat: isCritical ? Infinity : 0 }}
         >
           {/* Threat Count */}
-          <motion.div 
+          <motion.div
             className="text-5xl font-mono font-bold tracking-tighter"
             style={{ color: theme.color }}
             animate={{ scale: isWarning ? 1.1 : isCritical ? [1, 1.1, 1] : 1 }}
@@ -119,16 +119,16 @@ export const HybridRadar = ({
           >
             {activeRisks}
           </motion.div>
-          
+
           {/* Label */}
           <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/60 mt-1">
             Threats
           </div>
 
           {/* Shield Icon Ring */}
-          <div 
+          <div
             className="absolute -bottom-4 px-3 py-1 rounded-full flex items-center gap-1.5"
-            style={{ 
+            style={{
               backgroundColor: '#0a0a0a',
               border: `1px solid ${theme.color}`,
               boxShadow: `0 0 15px ${theme.glow}`
@@ -141,7 +141,7 @@ export const HybridRadar = ({
             ) : (
               <Lock className="w-3 h-3" style={{ color: theme.color }} />
             )}
-            <span 
+            <span
               className="text-[8px] font-mono font-bold uppercase tracking-widest"
               style={{ color: theme.color }}
             >
@@ -150,7 +150,7 @@ export const HybridRadar = ({
           </div>
 
           {/* Inner Decorative Ring */}
-          <div 
+          <div
             className="absolute inset-3 rounded-full border border-dashed opacity-30"
             style={{ borderColor: theme.color }}
           />
@@ -159,17 +159,17 @@ export const HybridRadar = ({
 
       {/* 5. STATUS BADGE */}
       <div className="absolute top-4 left-4 z-20">
-        <div 
+        <div
           className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-black/70 backdrop-blur-md"
           style={{ borderColor: theme.color }}
         >
-          <motion.div 
+          <motion.div
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: theme.color }}
             animate={{ opacity: [1, 0.4, 1] }}
             transition={{ duration: isCritical ? 0.5 : 1.5, repeat: Infinity }}
           />
-          <span 
+          <span
             className="text-[9px] font-mono uppercase tracking-widest font-bold"
             style={{ color: theme.color }}
           >
@@ -184,7 +184,7 @@ export const HybridRadar = ({
       ))}
 
       {/* 7. SCANLINES OVERLAY */}
-      <div 
+      <div
         className="absolute inset-0 z-30 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage: `repeating-linear-gradient(0deg, ${theme.color} 0px, ${theme.color} 1px, transparent 1px, transparent 3px)`

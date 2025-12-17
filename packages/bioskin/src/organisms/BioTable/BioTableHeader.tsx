@@ -33,7 +33,7 @@ function SortIndicator({ isSorted, canSort }: SortIndicatorProps) {
   return (
     <span className="ml-1.5 inline-flex items-center">
       {isSorted === false && (
-        <ArrowUpDown className="h-3.5 w-3.5 text-text-muted opacity-50 group-hover:opacity-100 transition-opacity" />
+        <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
       )}
       {isSorted === 'asc' && (
         <motion.span
@@ -41,7 +41,7 @@ function SortIndicator({ isSorted, canSort }: SortIndicatorProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15 }}
         >
-          <ArrowUp className="h-3.5 w-3.5 text-text-primary" />
+          <ArrowUp className="h-3.5 w-3.5 text-foreground" />
         </motion.span>
       )}
       {isSorted === 'desc' && (
@@ -50,7 +50,7 @@ function SortIndicator({ isSorted, canSort }: SortIndicatorProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15 }}
         >
-          <ArrowDown className="h-3.5 w-3.5 text-text-primary" />
+          <ArrowDown className="h-3.5 w-3.5 text-foreground" />
         </motion.span>
       )}
     </span>
@@ -66,9 +66,9 @@ function HeaderCell<TData>({ header }: { header: Header<TData, unknown> }) {
       key={header.id}
       colSpan={header.colSpan}
       className={cn(
-        'px-4 py-3 text-left text-label font-medium',
-        'bg-surface-subtle border-b border-default',
-        canSort && 'cursor-pointer select-none group hover:bg-surface-hover transition-colors'
+        'px-4 py-3 text-left text-small font-medium',
+        'bg-muted/50 border-b border-border',
+        canSort && 'cursor-pointer select-none group hover:bg-muted transition-colors'
       )}
       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
       aria-sort={
@@ -79,7 +79,7 @@ function HeaderCell<TData>({ header }: { header: Header<TData, unknown> }) {
     >
       {header.isPlaceholder ? null : (
         <div className="flex items-center">
-          <span className="text-text-secondary">
+          <span className="text-muted-foreground">
             {flexRender(header.column.columnDef.header, header.getContext())}
           </span>
           <SortIndicator isSorted={isSorted} canSort={canSort} />
@@ -94,7 +94,7 @@ function SelectionHeaderCell<TData>({ table }: { table: Table<TData> }) {
   const isSomeSelected = table.getIsSomePageRowsSelected();
 
   return (
-    <th className="w-12 px-4 py-3 bg-surface-subtle border-b border-default">
+    <th className="w-12 px-4 py-3 bg-muted/50 border-b border-border">
       <input
         type="checkbox"
         checked={isAllSelected}
@@ -105,8 +105,8 @@ function SelectionHeaderCell<TData>({ table }: { table: Table<TData> }) {
         }}
         onChange={table.getToggleAllPageRowsSelectedHandler()}
         className={cn(
-          'h-4 w-4 rounded border-border-default',
-          'text-accent-primary focus:ring-accent-primary focus:ring-offset-0',
+          'h-4 w-4 rounded border-border',
+          'text-primary focus:ring-ring focus:ring-offset-0',
           'cursor-pointer'
         )}
         aria-label="Select all rows"

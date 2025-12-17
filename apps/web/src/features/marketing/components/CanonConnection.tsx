@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Database, ShieldCheck, Lock, Search } from 'lucide-react';
-import { NexusIcon } from '../nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 
 const DATA_ASSETS = [
   { id: 'src_1', label: 'SALES PIPELINE', source: 'SALESFORCE', connectsTo: 'std_1' },
@@ -34,32 +34,32 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
   };
 
   return (
-    <div className="relative w-full py-16">
+    <div className="relative w-full py-layout-xl">
       {/* Stage Labels */}
-      <div className="grid grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto px-8">
+      <div className="grid grid-cols-3 gap-layout-lg mb-layout-2xl max-w-6xl mx-auto px-layout-lg">
         <div className="text-center">
-          <p className="text-3xl text-white font-light mb-2">Reveal</p>
-          <p className="text-xs text-emerald-500 font-mono uppercase tracking-[0.2em]">Ingestion</p>
+          <p className="text-subheading text-white font-light mb-2">Reveal</p>
+          <p className="text-micro text-primary font-mono uppercase tracking-widest">Ingestion</p>
         </div>
         <div className="text-center">
-          <p className="text-3xl text-white font-light mb-2">Lock</p>
-          <p className="text-xs text-emerald-500 font-mono uppercase tracking-[0.2em]">
+          <p className="text-subheading text-white font-light mb-2">Lock</p>
+          <p className="text-micro text-primary font-mono uppercase tracking-widest">
             Logic Core
           </p>
         </div>
         <div className="text-center">
-          <p className="text-3xl text-white font-light mb-2">Trace</p>
-          <p className="text-xs text-emerald-500 font-mono uppercase tracking-[0.2em]">
+          <p className="text-subheading text-white font-light mb-2">Trace</p>
+          <p className="text-micro text-primary font-mono uppercase tracking-widest">
             Governance
           </p>
         </div>
       </div>
 
       {/* BENTO BOX GRID - Everything scales together */}
-      <div className="max-w-6xl mx-auto px-8">
-        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-4 items-center">
+      <div className="max-w-6xl mx-auto px-layout-lg">
+        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-layout-sm items-center">
           {/* === COLUMN 1: SOURCE CARDS === */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-layout-sm">
             {DATA_ASSETS.map((asset, i) => (
               <motion.div
                 key={asset.id}
@@ -70,23 +70,22 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                 onMouseLeave={() => setHoveredId(null)}
                 whileHover={{ x: 5 }}
                 className={`
-                  p-4 rounded-r-xl border-l-2 cursor-pointer transition-all duration-300
-                  ${
-                    hoveredId === asset.id || isPathActive('left', asset.id)
-                      ? 'bg-zinc-900/80 border-l-red-500 shadow-[20px_0_40px_rgba(239,68,68,0.1)]'
-                      : 'bg-zinc-950/30 border-l-zinc-700 hover:border-l-red-500/50 hover:bg-zinc-900/50'
+                  p-layout-md rounded-r-xl border-l-2 cursor-pointer transition-all duration-300
+                  ${hoveredId === asset.id || isPathActive('left', asset.id)
+                    ? 'bg-surface-hover border-l-status-warning shadow-[20px_0_40px_rgba(245,158,11,0.1)]'
+                    : 'bg-surface-subtle border-l-border-subtle hover:border-l-status-warning/50 hover:bg-surface-hover'
                   }
                 `}
               >
                 <div className="flex justify-between items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <motion.div
-                      className={`text-sm font-bold tracking-wide ${hoveredId === asset.id ? 'text-white' : 'text-zinc-400'}`}
+                      className={`text-sm font-bold tracking-wide ${hoveredId === asset.id ? 'text-white' : 'text-text-secondary'}`}
                       animate={
                         hoveredId === asset.id
                           ? {
-                              x: [0, 2, -2, 0],
-                            }
+                            x: [0, 2, -2, 0],
+                          }
                           : {}
                       }
                       transition={{
@@ -97,12 +96,12 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                     >
                       {asset.label}
                     </motion.div>
-                    <div className="text-[10px] text-zinc-600 font-mono mt-1 tracking-widest uppercase">
+                    <div className="text-micro text-text-tertiary font-mono mt-1 tracking-widest uppercase">
                       {asset.source}
                     </div>
                   </div>
                   <div
-                    className={`p-1.5 rounded-lg shrink-0 ${hoveredId === asset.id ? 'bg-red-500/10 text-red-400' : 'bg-white/5 text-zinc-600'}`}
+                    className={`p-1.5 rounded-lg shrink-0 ${hoveredId === asset.id ? 'bg-status-warning/10 text-status-warning' : 'bg-white/5 text-text-tertiary'}`}
                   >
                     {hoveredId === asset.id ? (
                       <Search className="w-3 h-3" />
@@ -116,21 +115,20 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
           </div>
 
           {/* === COLUMN 2: LEFT CONNECTORS === */}
-          <div className="flex flex-col items-center justify-center h-full gap-4 -mx-2">
+          <div className="flex flex-col items-center justify-center h-full gap-layout-sm -mx-2">
             {DATA_ASSETS.map((asset, i) => (
               <div key={i} className="h-[76px] flex items-center">
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={isLoaded ? { scaleX: 1 } : {}}
                   transition={{ delay: i * 0.1, duration: 0.8 }}
-                  className={`h-[2px] w-12 origin-left transition-all duration-300 ${
-                    isPathActive('left', asset.id)
-                      ? 'bg-gradient-to-r from-red-500 to-red-500/50 shadow-[0_0_8px_rgba(239,68,68,0.6)]'
-                      : 'bg-gradient-to-r from-zinc-700 to-zinc-800'
-                  }`}
+                  className={`h-[2px] w-12 origin-left transition-all duration-300 ${isPathActive('left', asset.id)
+                    ? 'bg-gradient-to-r from-status-warning to-status-warning/50 shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+                    : 'bg-gradient-to-r from-zinc-700 to-zinc-800'
+                    }`}
                   style={{
                     boxShadow: isPathActive('left', asset.id)
-                      ? '0 0 8px rgba(239,68,68,0.6)'
+                      ? '0 0 8px rgba(245,158,11,0.6)'
                       : 'none',
                   }}
                 />
@@ -155,7 +153,7 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 border border-t-emerald-500/30 border-r-transparent border-b-emerald-500/10 border-l-transparent rounded-full"
+                className="absolute inset-0 border border-t-primary/30 border-r-transparent border-b-primary/10 border-l-transparent rounded-full"
               />
 
               {/* Inner Ring */}
@@ -167,15 +165,15 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
 
               {/* Logo Core */}
               <div className="relative z-20 scale-125 cursor-pointer group">
-                <div className="absolute inset-0 bg-emerald-500/5 blur-xl rounded-full group-hover:bg-emerald-500/10 transition-all duration-500" />
+                <div className="absolute inset-0 bg-primary/5 blur-xl rounded-full group-hover:bg-primary/10 transition-all duration-500" />
 
                 <motion.div
                   animate={
                     hoveredId
                       ? {
-                          scale: [1, 1.05, 1],
-                          filter: ['brightness(1)', 'brightness(1.3)', 'brightness(1)'],
-                        }
+                        scale: [1, 1.05, 1],
+                        filter: ['brightness(1)', 'brightness(1.3)', 'brightness(1)'],
+                      }
                       : {}
                   }
                   transition={{ duration: 0.5, repeat: hoveredId ? Infinity : 0 }}
@@ -187,29 +185,27 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
               {/* LOCK Gate (Left) */}
               <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30">
                 <div
-                  className={`w-10 h-10 bg-black border rounded-full flex items-center justify-center transition-all duration-300 ${
-                    hoveredId &&
+                  className={`w-10 h-10 bg-black border rounded-full flex items-center justify-center transition-all duration-300 ${hoveredId &&
                     DATA_ASSETS.some((a) => a.id === hoveredId || isPathActive('left', a.id))
-                      ? 'border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-110'
-                      : 'border-zinc-800'
-                  }`}
+                    ? 'border-status-warning shadow-[0_0_20px_rgba(245,158,11,0.4)] scale-110'
+                    : 'border-border-subtle'
+                    }`}
                 >
-                  <Lock className={`w-4 h-4 ${hoveredId ? 'text-red-500' : 'text-zinc-600'}`} />
+                  <Lock className={`w-4 h-4 ${hoveredId ? 'text-status-warning' : 'text-text-tertiary'}`} />
                 </div>
               </div>
 
               {/* VALIDATE Gate (Right) */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30">
                 <div
-                  className={`w-10 h-10 bg-black border rounded-full flex items-center justify-center transition-all duration-300 ${
-                    hoveredId &&
+                  className={`w-10 h-10 bg-black border rounded-full flex items-center justify-center transition-all duration-300 ${hoveredId &&
                     STANDARDS.some((s) => s.id === hoveredId || isPathActive('right', s.id))
-                      ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)] scale-110'
-                      : 'border-zinc-800'
-                  }`}
+                    ? 'border-primary shadow-[0_0_20px_rgba(74,144,226,0.4)] scale-110'
+                    : 'border-border-subtle'
+                    }`}
                 >
                   <ShieldCheck
-                    className={`w-4 h-4 ${hoveredId ? 'text-emerald-500' : 'text-zinc-600'}`}
+                    className={`w-4 h-4 ${hoveredId ? 'text-primary' : 'text-text-tertiary'}`}
                   />
                 </div>
               </div>
@@ -224,14 +220,13 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                   initial={{ scaleX: 0 }}
                   animate={isLoaded ? { scaleX: 1 } : {}}
                   transition={{ delay: i * 0.1 + 0.4, duration: 0.8 }}
-                  className={`h-[2px] w-12 origin-right transition-all duration-300 ${
-                    isPathActive('right', std.id)
-                      ? 'bg-gradient-to-l from-emerald-500 to-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.6)]'
-                      : 'bg-gradient-to-l from-zinc-700 to-zinc-800'
-                  }`}
+                  className={`h-[2px] w-12 origin-right transition-all duration-300 ${isPathActive('right', std.id)
+                    ? 'bg-gradient-to-l from-primary to-primary/50 shadow-[0_0_8px_rgba(74,144,226,0.6)]'
+                    : 'bg-gradient-to-l from-zinc-700 to-zinc-800'
+                    }`}
                   style={{
                     boxShadow: isPathActive('right', std.id)
-                      ? '0 0 8px rgba(16,185,129,0.6)'
+                      ? '0 0 8px rgba(74,144,226,0.6)'
                       : 'none',
                   }}
                 />
@@ -251,26 +246,25 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                 onMouseLeave={() => setHoveredId(null)}
                 className={`
                   p-4 rounded-l-xl border-r-2 cursor-pointer transition-all duration-300 text-right relative
-                  ${
-                    hoveredId === std.id || isPathActive('right', std.id)
-                      ? 'bg-zinc-900/80 border-r-emerald-500 shadow-[-20px_0_40px_rgba(16,185,129,0.1)]'
-                      : 'bg-zinc-950/30 border-r-zinc-700 hover:border-r-emerald-500/50 hover:bg-zinc-900/50'
+                  ${hoveredId === std.id || isPathActive('right', std.id)
+                    ? 'bg-surface-hover border-r-primary shadow-[-20px_0_40px_rgba(74,144,226,0.1)]'
+                    : 'bg-surface-subtle border-r-border-subtle hover:border-r-primary/50 hover:bg-surface-hover'
                   }
                 `}
               >
                 <div className="flex justify-between items-start flex-row-reverse gap-3">
                   <div className="flex-1 min-w-0">
                     <div
-                      className={`text-sm font-bold tracking-wide ${hoveredId === std.id ? 'text-white' : 'text-zinc-400'}`}
+                      className={`text-sm font-bold tracking-wide ${hoveredId === std.id ? 'text-white' : 'text-text-secondary'}`}
                     >
                       {std.label}
                     </div>
-                    <div className="text-[10px] text-zinc-600 font-mono mt-1 tracking-widest uppercase">
+                    <div className="text-micro text-text-tertiary font-mono mt-1 tracking-widest uppercase">
                       {std.sub}
                     </div>
                   </div>
                   <div
-                    className={`p-1.5 rounded-lg shrink-0 ${hoveredId === std.id ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-zinc-600'}`}
+                    className={`p-1.5 rounded-lg shrink-0 ${hoveredId === std.id ? 'bg-primary/10 text-primary' : 'bg-white/5 text-text-tertiary'}`}
                   >
                     <ShieldCheck className="w-3 h-3" />
                   </div>
@@ -281,12 +275,12 @@ export const CanonConnection = ({ isCrystallized }: { isCrystallized: boolean })
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-3 pt-3 border-t border-emerald-500/20"
+                    className="mt-3 pt-3 border-t border-primary/20"
                   >
-                    <div className="text-[9px] font-mono text-emerald-500 uppercase tracking-widest mb-1">
+                    <div className="text-micro font-mono text-primary uppercase tracking-widest mb-1">
                       Risk Prevention
                     </div>
-                    <div className="text-xs text-zinc-400">{std.risk}</div>
+                    <div className="text-small text-text-secondary">{std.risk}</div>
                   </motion.div>
                 )}
               </motion.div>

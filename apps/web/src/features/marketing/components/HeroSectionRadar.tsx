@@ -5,7 +5,7 @@ export const BlackboxRadar = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 max-w-7xl mx-auto">
       {/* LEFT: THE PANOPTICON WEB - Blackbox Cryptographic Radar */}
       <div className="w-full">
-        <div className="relative w-full aspect-square mx-auto rounded-2xl border border-white/10 bg-[#0A0A0A] p-8 lg:p-12 overflow-hidden">
+        <div className="relative w-full aspect-square mx-auto rounded-2xl border border-white/10 bg-background p-8 lg:p-12 overflow-hidden">
           {/* Radar SVG - CRYPTOGRAPHIC CLARITY */}
           <svg viewBox="0 0 400 400" className="w-full h-full relative z-10">
             {/* SHARP GRID LAYER - No blur, 1px crisp vectors */}
@@ -482,7 +482,7 @@ export const BlackboxRadar = () => {
 
       {/* RIGHT: TERMINAL EVENT FEED - System Log */}
       <div className="w-full">
-        <div className="rounded-xl border border-white/10 bg-[#0A0A0A] p-8 h-full flex flex-col min-h-[500px]">
+        <div className="rounded-xl border border-white/10 bg-background p-8 h-full flex flex-col min-h-[500px]">
           {/* Terminal Header */}
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
             <div className="flex gap-2">

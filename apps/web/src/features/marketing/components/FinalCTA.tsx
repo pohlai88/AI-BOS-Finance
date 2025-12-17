@@ -20,7 +20,7 @@ export const FinalCTA = ({ onTryIt }: { onTryIt: () => void }) => {
   }, [isHovered]);
 
   return (
-    <section className="relative py-32 px-6 border-t border-white/5 overflow-hidden bg-[#050505]">
+    <section className="relative py-32 px-6 border-t border-white/5 overflow-hidden bg-surface-nested">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03),transparent_70%)] pointer-events-none" />
 
@@ -66,7 +66,7 @@ export const FinalCTA = ({ onTryIt }: { onTryIt: () => void }) => {
             onClick={onTryIt}
             onMouseEnter={() => setIsHovered(true)} // STOPS THE TICKER
             onMouseLeave={() => setIsHovered(false)}
-            className="group relative inline-flex items-center gap-6 px-8 py-4 bg-[#0A0A0A] border-2 border-emerald-500/30 hover:border-emerald-500 text-white rounded transition-all duration-300 hover:bg-[#0F0F0F] overflow-hidden"
+            className="group relative inline-flex items-center gap-6 px-8 py-4 bg-background border-2 border-emerald-500/30 hover:border-emerald-500 text-white rounded transition-all duration-300 hover:bg-surface-subtle overflow-hidden"
           >
             {/* Corner Technical Markers */}
             <div className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-emerald-500/20 pointer-events-none" />

@@ -58,11 +58,11 @@ export interface BioExceptionDashboardProps {
 }
 
 const SEVERITY_CONFIG: Record<ExceptionSeverity, { color: string; bgColor: string; icon: typeof AlertTriangle; label: string }> = {
-  critical: { color: 'text-red-700', bgColor: 'bg-red-50 border-red-200', icon: AlertTriangle, label: 'Critical' },
-  high: { color: 'text-orange-700', bgColor: 'bg-orange-50 border-orange-200', icon: AlertCircle, label: 'High' },
-  medium: { color: 'text-amber-700', bgColor: 'bg-amber-50 border-amber-200', icon: AlertCircle, label: 'Medium' },
-  low: { color: 'text-blue-700', bgColor: 'bg-blue-50 border-blue-200', icon: Info, label: 'Low' },
-  info: { color: 'text-gray-700', bgColor: 'bg-gray-50 border-gray-200', icon: Info, label: 'Info' },
+  critical: { color: 'text-status-danger/90', bgColor: 'bg-status-danger/10 border-status-danger/20', icon: AlertTriangle, label: 'Critical' },
+  high: { color: 'text-status-warning/90', bgColor: 'bg-status-warning/10 border-status-warning/20', icon: AlertCircle, label: 'High' },
+  medium: { color: 'text-status-warning/80', bgColor: 'bg-status-warning/8 border-status-warning/15', icon: AlertCircle, label: 'Medium' },
+  low: { color: 'text-status-info/90', bgColor: 'bg-status-info/10 border-status-info/20', icon: Info, label: 'Low' },
+  info: { color: 'text-muted-foreground', bgColor: 'bg-muted/50 border-border', icon: Info, label: 'Info' },
 };
 
 const SEVERITY_ORDER: ExceptionSeverity[] = ['critical', 'high', 'medium', 'low', 'info'];

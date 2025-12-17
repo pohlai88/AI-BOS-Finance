@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -22,11 +22,14 @@ interface SysConfigState {
 const SysConfigContext = createContext<SysConfigState | undefined>(undefined);
 
 export function SysConfigProvider({ children }: { children: ReactNode }) {
+  // Track if we're still hydrating from localStorage
+  const isHydratingRef = useRef(true);
+
   // Initialize with defaults first (SSR-safe), then hydrate from localStorage
   const [steps, setSteps] = useState({
-          profile: false,
-          organization: false,
-          team: false,
+    profile: false,
+    organization: false,
+    team: false,
   });
 
   // Hydrate from localStorage after mount (client-side only)
@@ -34,15 +37,21 @@ export function SysConfigProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem('nexus_sys_config');
     if (saved) {
       try {
-        setSteps(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        setSteps(parsed);
       } catch {
         // Invalid JSON, use defaults
       }
     }
+    // Mark hydration as complete
+    isHydratingRef.current = false;
   }, []);
 
-  // Persist to localStorage on change
+  // Persist to localStorage on change (but skip during hydration)
   useEffect(() => {
+    // Don't write during initial hydration to prevent infinite loop
+    if (isHydratingRef.current) return;
+
     localStorage.setItem('nexus_sys_config', JSON.stringify(steps));
   }, [steps]);
 

@@ -40,6 +40,8 @@
       "@/features/*": ["./src/features/*"],
       "@/ui": ["./src/features/shared/ui"],
       "@/ui/*": ["./src/features/shared/ui/*"],
+      "@/components/ui/*": ["./src/features/shared/ui/*"],
+      "@/views/*": ["./src/features/*/views/*", "./src/views/*"],
       "@/canon-pages/*": ["./canon-pages/*"],
       "@aibos/canon": ["../../packages/canon"],
       "@aibos/canon/*": ["../../packages/canon/*"]

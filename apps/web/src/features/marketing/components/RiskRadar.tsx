@@ -32,8 +32,8 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
   const theme = isCritical
     ? { primary: '#EF4444', secondary: '#991B1B', name: 'critical' }
     : isWarning
-    ? { primary: '#F97316', secondary: '#C2410C', name: 'warning' }
-    : { primary: '#00D9FF', secondary: '#006699', name: 'normal' };
+      ? { primary: '#F97316', secondary: '#C2410C', name: 'warning' }
+      : { primary: '#00D9FF', secondary: '#006699', name: 'normal' };
 
   // Generate stable particles
   const particles = useMemo<ParticleData[]>(() => {
@@ -65,13 +65,13 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
 
   return (
     <div className={cn(
-      "relative w-full aspect-square max-h-[420px] mx-auto rounded-xl border border-white/10 bg-[#000814] overflow-hidden transition-all duration-700",
+      "relative w-full aspect-square max-h-[420px] mx-auto rounded-xl border border-white/10 bg-background overflow-hidden transition-all duration-700",
       isCritical && "overflow-visible shadow-[0_0_60px_rgba(239,68,68,0.3)]"
     )}>
-      
+
       {/* STATUS BADGE */}
       <div className="absolute top-4 left-4 z-20">
-        <div 
+        <div
           className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-black/60 backdrop-blur-md"
           style={{ borderColor: theme.primary }}
         >
@@ -82,7 +82,7 @@ export const RiskRadar = ({ activeRisks }: RiskRadarProps) => {
           ) : (
             <Scan className="w-3.5 h-3.5" style={{ color: theme.primary }} />
           )}
-          <span 
+          <span
             className="text-[9px] font-mono uppercase tracking-widest font-bold"
             style={{ color: theme.primary }}
           >

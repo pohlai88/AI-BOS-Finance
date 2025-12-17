@@ -8,13 +8,7 @@
  * Shows the most severe exception with count indicator for multiple issues.
  */
 
-import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { StatusBadge, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@aibos/bioskin';
 import {
   AlertTriangle,
   AlertCircle,
@@ -76,42 +70,48 @@ const EXCEPTION_CONFIG: Record<ExceptionType, ExceptionConfig> = {
     icon: FileWarning,
     label: 'Missing Invoice',
     shortLabel: 'No Invoice',
-    color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+    // Muted amber - professional warning (not alarming)
+    color: 'text-status-warning/90 bg-status-warning/10 border-status-warning/20',
     badgeVariant: 'secondary',
   },
   STALE_APPROVAL: {
     icon: Clock,
     label: 'Stale Approval',
     shortLabel: 'Stale',
-    color: 'text-red-600 bg-red-50 border-red-200',
+    // Muted red - serious but not screaming
+    color: 'text-status-danger/90 bg-status-danger/10 border-status-danger/20',
     badgeVariant: 'destructive',
   },
   DUPLICATE_RISK: {
     icon: Ban,
     label: 'Potential Duplicate',
     shortLabel: 'Duplicate?',
-    color: 'text-orange-600 bg-orange-50 border-orange-200',
+    // Muted amber - requires attention but professional
+    color: 'text-status-warning/90 bg-status-warning/10 border-status-warning/20',
     badgeVariant: 'destructive',
   },
   BANK_DETAIL_CHANGED: {
     icon: CreditCard,
     label: 'Bank Details Changed',
     shortLabel: 'Bank Changed',
-    color: 'text-orange-600 bg-orange-50 border-orange-200',
+    // Muted amber - informational warning
+    color: 'text-status-warning/90 bg-status-warning/10 border-status-warning/20',
     badgeVariant: 'secondary',
   },
   OVER_LIMIT: {
     icon: DollarSign,
     label: 'Over Approval Limit',
     shortLabel: 'Over Limit',
-    color: 'text-red-600 bg-red-50 border-red-200',
+    // Muted red - critical but professional
+    color: 'text-status-danger/90 bg-status-danger/10 border-status-danger/20',
     badgeVariant: 'destructive',
   },
   PERIOD_WARNING: {
     icon: Calendar,
     label: 'Period Warning',
     shortLabel: 'Period',
-    color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+    // Muted amber - informational
+    color: 'text-status-warning/90 bg-status-warning/10 border-status-warning/20',
     badgeVariant: 'secondary',
   },
 };
@@ -146,26 +146,39 @@ export function ExceptionBadge({
   const Icon = config.icon;
   const hasMultiple = exceptions.length > 1;
 
+  // Map severity to StatusBadge status
+  const statusMap: Record<ExceptionSeverity, string> = {
+    block: 'error',
+    critical: 'error',
+    warning: 'warning',
+    info: 'pending',
+  };
+
+  const badgeStatus = statusMap[primary.severity] || 'warning';
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={200}>
         <TooltipTrigger asChild>
-          <Badge
-            variant={config.badgeVariant}
-            className={cn(
-              'gap-1 cursor-help font-normal',
-              config.color,
-              size === 'sm' && 'text-[10px] h-5 px-1.5',
-            )}
-          >
-            <Icon className={cn(
-              size === 'sm' ? 'h-2.5 w-2.5' : 'h-3 w-3'
-            )} />
-            <span>{config.shortLabel}</span>
-            {showCount && hasMultiple && (
-              <span className="opacity-70">+{exceptions.length - 1}</span>
-            )}
-          </Badge>
+          <div className="inline-flex items-center gap-1 cursor-help">
+            <StatusBadge
+              status={badgeStatus}
+              size={size === 'sm' ? 'sm' : 'md'}
+              className={cn(
+                'gap-1 font-normal',
+                config.color,
+                size === 'sm' && 'text-[10px] h-5 px-1.5',
+              )}
+            >
+              <Icon className={cn(
+                size === 'sm' ? 'h-2.5 w-2.5' : 'h-3 w-3'
+              )} />
+              <span>{config.shortLabel}</span>
+              {showCount && hasMultiple && (
+                <span className="opacity-70">+{exceptions.length - 1}</span>
+              )}
+            </StatusBadge>
+          </div>
         </TooltipTrigger>
         <TooltipContent
           side="bottom"
@@ -254,18 +267,17 @@ export function ExceptionBadgeList({ exceptions, max = 3 }: ExceptionBadgeListPr
           <TooltipProvider key={type}>
             <Tooltip delayDuration={200}>
               <TooltipTrigger asChild>
-                <Badge
-                  variant={config?.badgeVariant || 'outline'}
-                  className={cn(
-                    'gap-1 cursor-help font-normal text-[10px] h-5 px-1.5',
-                    config?.color,
-                  )}
-                >
-                  <Icon className="h-2.5 w-2.5" />
-                  {typeExceptions.length > 1 && (
-                    <span>{typeExceptions.length}</span>
-                  )}
-                </Badge>
+                <div className="inline-flex items-center gap-1 cursor-help">
+                  <StatusBadge
+                    status={typeExceptions[0]?.severity === 'critical' || typeExceptions[0]?.severity === 'block' ? 'error' : 'warning'}
+                    size="sm"
+                    label={typeExceptions.length > 1 ? `${config?.shortLabel} (${typeExceptions.length})` : config?.shortLabel}
+                    className={cn(
+                      'gap-1 font-normal text-[10px] h-5 px-1.5',
+                      config?.color,
+                    )}
+                  />
+                </div>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="max-w-xs">
                 <ExceptionTooltipContent exceptions={typeExceptions} />
@@ -275,9 +287,12 @@ export function ExceptionBadgeList({ exceptions, max = 3 }: ExceptionBadgeListPr
         );
       })}
       {remaining > 0 && (
-        <Badge variant="outline" className="text-[10px] h-5 px-1.5">
-          +{remaining}
-        </Badge>
+        <StatusBadge
+          status="pending"
+          size="sm"
+          label={`+${remaining}`}
+          className="text-[10px] h-5 px-1.5"
+        />
       )}
     </div>
   );

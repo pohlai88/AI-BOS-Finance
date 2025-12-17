@@ -34,7 +34,7 @@ import {
   approvePaymentAction,
   rejectPaymentAction,
   retryPaymentAction,
-} from '../_actions';
+} from '@/app/payments/_actions';
 
 interface PaymentActionMenuProps {
   paymentId: string;

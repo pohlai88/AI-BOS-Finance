@@ -20,15 +20,16 @@ export {
   type ExceptionCounts,
   type RiskQueueDashboardProps,
 } from './RiskQueueDashboard';
-export {
-  ExceptionBadge,
-  ExceptionBadgeList,
-  SeverityIndicator,
-  type PaymentException,
-  type ExceptionType,
-  type ExceptionSeverity,
-  type ExceptionBadgeProps,
-} from './ExceptionBadge';
+// Temporarily commented out - uses Tooltip from foundation (not exported)
+// export {
+//   ExceptionBadge,
+//   ExceptionBadgeList,
+//   SeverityIndicator,
+//   type PaymentException,
+//   type ExceptionType,
+//   type ExceptionSeverity,
+//   type ExceptionBadgeProps,
+// } from './ExceptionBadge';
 export {
   ApprovalChainTimeline,
   CompactApprovalChain,

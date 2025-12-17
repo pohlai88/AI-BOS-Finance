@@ -254,14 +254,14 @@ interface NexusColumnProps {
 const NexusColumn = memo(function NexusColumn({ stage, progress, isComplete }: NexusColumnProps) {
   return (
     <div className="relative flex flex-col justify-end items-center">
-      <div className="absolute inset-0 bg-[#020403] border border-white/5 overflow-hidden">
+      <div className="absolute inset-0 bg-surface-nested border border-white/5 overflow-hidden">
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nexus-green/5 to-transparent" />
       </div>
 
       <VShapeExoskeleton progress={progress} />
 
       <div className="relative w-full pb-12 z-10 flex flex-col-reverse items-center min-h-[400px]">
-        <div className="absolute left-1/2 bottom-12 top-0 w-1.5 bg-[#0f1f15] border-x border-primary/20 -translate-x-1/2 z-0" />
+        <div className="absolute left-1/2 bottom-12 top-0 w-1.5 bg-surface-nested border-x border-primary/20 -translate-x-1/2 z-0" />
 
         <AnimatePresence mode="popLayout">
           {NEXUS_STACK.slice(0, stage).map((block, index) => (
@@ -290,7 +290,7 @@ const NexusColumn = memo(function NexusColumn({ stage, progress, isComplete }: N
 const SingularityPoint = memo(function SingularityPoint({ stage }: { stage: number }) {
   return (
     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
-      <div className="w-4 h-4 bg-primary rotate-45 shadow-[0_0_30px_#28E7A2]" />
+      <div className="w-4 h-4 bg-primary rotate-45 shadow-[0_0_30px_var(--color-nexus-green)]" />
       <div className="w-1 h-1 bg-white absolute top-1.5 left-1.5 rounded-full" />
       <ShockwaveEffect trigger={stage} />
     </div>
@@ -309,7 +309,7 @@ const CompletionBadge = memo(function CompletionBadge() {
       transition={{ type: 'tween', duration: 0.3 }}
       className="absolute -top-16 left-1/2 -translate-x-1/2"
     >
-      <div className="px-4 py-1.5 bg-[#050a07] border border-primary shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
+      <div className="px-4 py-1.5 bg-surface-nested border border-primary shadow-[0_0_15px_rgba(40,231,162,0.3)] flex items-center gap-2 rounded-sm">
         <ShieldCheck className="w-3 h-3 text-primary fill-nexus-green" />
         <span className="text-[10px] font-mono tracking-widest text-white uppercase">
           Architecture Stabilized
@@ -349,7 +349,7 @@ const LegacyBlock = memo(function LegacyBlock({ data, shakeLevel }: LegacyBlockP
       }}
       className={cn(
         'w-64 h-14 flex items-center justify-between px-4 border mb-1',
-        'bg-[#111] border-[#333] text-text-secondary',
+        'bg-surface-subtle border-border-default text-text-secondary',
         'will-change-transform',
         isShaking && 'border-red-500/50 text-red-400 bg-red-950/10',
       )}
@@ -389,7 +389,7 @@ const NexusInvertedBlock = memo(function NexusInvertedBlock({ data, index, isNew
       className={cn(
         'relative flex items-center justify-between px-6 overflow-hidden h-14',
         currentWidth,
-        'bg-[#030805]',
+        'bg-surface-nested',
         'border-t border-t-white/10 border-b border-b-black/80',
         'border-x border-x-nexus-green/30',
         'will-change-transform',

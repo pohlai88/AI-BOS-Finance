@@ -11,20 +11,23 @@ import { Toaster } from 'sonner'
  * - RouterAdapterProvider (unified routing for hybrid app)
  * - SysConfigProvider (uses localStorage)
  * - Toaster (uses client-side rendering)
+ * 
+ * SCROLLING: The body handles scrolling (set in globals.css).
+ * This wrapper is just for styling and providers.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <RouterAdapterProvider>
       <SysConfigProvider>
-      {/* Global app wrapper with styling */}
-      <div className="antialiased text-text-primary bg-background min-h-screen font-sans selection:bg-primary/30">
-        {/* THE CINEMATIC VIGNETTE - Focus the eye to center */}
-        <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
-        
-        {children}
-        
-        <Toaster position="bottom-right" theme="dark" />
-      </div>
+        {/* 
+          Global app wrapper - NO height/overflow constraints.
+          Body scrolling is handled by globals.css.
+        */}
+        <div className="antialiased bg-background font-sans selection:bg-primary/30">
+          {children}
+
+          <Toaster position="bottom-right" theme="dark" />
+        </div>
       </SysConfigProvider>
     </RouterAdapterProvider>
   )

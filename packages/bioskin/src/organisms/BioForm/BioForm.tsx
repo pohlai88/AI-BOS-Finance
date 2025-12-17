@@ -179,6 +179,7 @@ export function BioForm<T extends z.ZodRawShape>({
     isSubmitting,
     isValid,
     isDirty,
+    isSubmitted,
     errors,
     isValidating,
     handleSubmit,
@@ -320,9 +321,9 @@ export function BioForm<T extends z.ZodRawShape>({
           )}
         </AnimatePresence>
 
-        {/* Validation Summary */}
+        {/* Validation Summary - only show after form submission attempt */}
         <AnimatePresence>
-          {showValidationSummary && errorList.length > 0 && (
+          {showValidationSummary && isSubmitted && errorList.length > 0 && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -351,7 +352,19 @@ export function BioForm<T extends z.ZodRawShape>({
 
         {/* Form Fields */}
         <div className={layoutStyles[layout]}>
-          {fields.map((field, index) => (
+          {fields.map((field, index) => {
+            // For number fields, use setValueAs to convert string to number
+            const fieldRegister = field.type === 'number'
+              ? register(field.name as never, {
+                setValueAs: (value: string) => {
+                  if (value === '' || value === '-' || value === '.') return undefined;
+                  const num = Number(value);
+                  return isNaN(num) ? undefined : num;
+                },
+              })
+              : register(field.name as never);
+
+            return (
             <motion.div
               key={field.name}
               initial={{ opacity: 0, y: 10 }}
@@ -360,7 +373,7 @@ export function BioForm<T extends z.ZodRawShape>({
             >
               <BioFormField
                 definition={field}
-                register={register(field.name as never)}
+                  register={fieldRegister}
                 error={(errors[field.name as keyof typeof errors] as { message?: string })?.message}
                 disabled={isDisabled || isLoading}
                 value={form.watch(field.name as never)}
@@ -368,7 +381,8 @@ export function BioForm<T extends z.ZodRawShape>({
                 isValidating={isValidating}
               />
             </motion.div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Actions */}

@@ -60,7 +60,7 @@ const SEVERITY_CARDS = [
     key: 'block',
     label: 'Blocked',
     icon: Ban,
-    activeColor: 'text-orange-600 bg-orange-50 border-orange-200 hover:bg-orange-100',
+    activeColor: 'text-status-warning/90 bg-status-warning/10 border-status-warning/20 hover:bg-status-warning/15',
     inactiveColor: 'bg-gray-50 border-gray-200 hover:bg-gray-100 text-gray-500',
     badgeVariant: 'destructive' as const,
     description: 'Cannot proceed without action',

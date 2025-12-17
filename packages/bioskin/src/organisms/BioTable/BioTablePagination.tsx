@@ -69,10 +69,10 @@ function PaginationButton({
       aria-label={ariaLabel}
       className={cn(
         'p-2 rounded-lg transition-colors',
-        'border border-default',
+        'border border-border',
         disabled
-          ? 'bg-surface-subtle text-text-disabled cursor-not-allowed'
-          : 'bg-surface-base text-text-secondary hover:bg-surface-hover hover:text-text-primary'
+          ? 'bg-muted text-muted-foreground/50 cursor-not-allowed'
+          : 'bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
       )}
     >
       {children}
@@ -97,8 +97,8 @@ function PageNumber({
         'min-w-[36px] h-9 px-3 rounded-lg transition-colors',
         'text-small font-medium',
         isActive
-          ? 'bg-accent-primary text-white'
-          : 'bg-surface-base text-text-secondary hover:bg-surface-hover hover:text-text-primary border border-default'
+          ? 'bg-primary text-primary-foreground'
+          : 'bg-background text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
       )}
     >
       {page}
@@ -171,7 +171,7 @@ export function BioTablePagination({
     <div
       className={cn(
         'flex flex-col sm:flex-row items-center justify-between gap-4',
-        'px-4 py-3 border-t border-default bg-surface-subtle',
+        'px-4 py-3 border-t border-border bg-muted/50',
         className
       )}
     >
@@ -183,11 +183,11 @@ export function BioTablePagination({
               'No results'
             ) : (
               <>
-                Showing <span className="font-medium text-text-primary">{startRow}</span>
+                Showing <span className="font-medium text-foreground">{startRow}</span>
                 {' '}to{' '}
-                <span className="font-medium text-text-primary">{endRow}</span>
+                <span className="font-medium text-foreground">{endRow}</span>
                 {' '}of{' '}
-                <span className="font-medium text-text-primary">{totalRows}</span>
+                <span className="font-medium text-foreground">{totalRows}</span>
               </>
             )}
           </Txt>
@@ -203,9 +203,9 @@ export function BioTablePagination({
               onChange={e => onPageSizeChange(Number(e.target.value))}
               className={cn(
                 'px-2 py-1 rounded-lg',
-                'bg-surface-base border border-default',
-                'text-small text-text-primary',
-                'focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary',
+                'bg-background border border-border',
+                'text-small text-foreground',
+                'focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-ring',
                 'cursor-pointer'
               )}
             >
@@ -246,7 +246,7 @@ export function BioTablePagination({
               page === 'ellipsis' ? (
                 <span
                   key={`ellipsis-${index}`}
-                  className="px-2 text-text-muted"
+                  className="px-2 text-muted-foreground"
                 >
                   …
                 </span>

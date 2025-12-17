@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
 /**
  * Client wrapper for LandingPage
  * Handles client-side navigation using RouterAdapter
  */
 
-import { LandingPage } from '@/views/LandingPage'
-import { useRouterAdapter } from '@/hooks/useRouterAdapter'
+import { LandingPage } from '../views/LandingPage';
+import { useRouterAdapter } from '@/hooks/useRouterAdapter';
 
 export function LandingPageClient() {
   const { navigate } = useRouterAdapter()

@@ -119,7 +119,7 @@ const RegistryCard = ({
       className="relative group"
     >
       {/* The Bento Cell */}
-      <div className="relative h-64 rounded-2xl border border-white/5 bg-[#0A0A0A] overflow-hidden transition-all duration-500 group-hover:border-white/10">
+      <div className="relative h-64 rounded-2xl border border-white/5 bg-background overflow-hidden transition-all duration-500 group-hover:border-white/10">
         {/* Noise Texture */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -184,22 +184,20 @@ const RegistryCard = ({
                 <motion.div
                   animate={item.status === 'syncing' ? { rotate: 360 } : {}}
                   transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                  className={`w-2 h-2 rounded-full ${
-                    item.status === 'active'
+                  className={`w-2 h-2 rounded-full ${item.status === 'active'
                       ? 'bg-green-500'
                       : item.status === 'syncing'
                         ? 'bg-yellow-500'
                         : 'bg-gray-600'
-                  }`}
+                    }`}
                 />
                 <span
-                  className={`font-mono capitalize ${
-                    item.status === 'active'
+                  className={`font-mono capitalize ${item.status === 'active'
                       ? 'text-green-400'
                       : item.status === 'syncing'
                         ? 'text-yellow-400'
                         : 'text-gray-400'
-                  }`}
+                    }`}
                 >
                   {item.status}
                 </span>

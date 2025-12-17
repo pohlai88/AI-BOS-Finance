@@ -7,13 +7,13 @@ interface ForensicHeroProps {
 
 export const ForensicHero = ({ onGetStarted }: ForensicHeroProps) => {
   return (
-    <div className="relative min-h-screen w-full bg-[#000000] flex flex-col items-center justify-center overflow-hidden pt-20">
+    <div className="relative min-h-screen w-full bg-background flex flex-col items-center justify-center overflow-hidden pt-20">
       {/* --- BACKGROUND GRID --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {/* Vertical center line */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#1F1F1F]" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border-default" />
         {/* Horizontal center line */}
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-[#1F1F1F]" />
+        <div className="absolute top-1/2 left-0 right-0 h-px bg-border-default" />
 
         {/* Grid Pattern */}
         <div
@@ -38,10 +38,10 @@ export const ForensicHero = ({ onGetStarted }: ForensicHeroProps) => {
       </div>
 
       {/* Corner Crosshairs */}
-      <div className="absolute top-24 left-4 w-4 h-4 border-t border-l border-[#333]" />
-      <div className="absolute top-24 right-4 w-4 h-4 border-t border-r border-[#333]" />
-      <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-[#333]" />
-      <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-[#333]" />
+      <div className="absolute top-24 left-4 w-4 h-4 border-t border-l border-border-emphasis" />
+      <div className="absolute top-24 right-4 w-4 h-4 border-t border-r border-border-emphasis" />
+      <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-border-emphasis" />
+      <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-border-emphasis" />
 
       {/* --- MAIN CONTENT --- */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
@@ -53,8 +53,8 @@ export const ForensicHero = ({ onGetStarted }: ForensicHeroProps) => {
           className="flex justify-center mb-12"
         >
           <div className="relative group">
-            <div className="absolute -inset-4 bg-[#28E7A2]/5 rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
-            <div className="relative w-16 h-16 flex items-center justify-center border border-[#1F1F1F] bg-[#0A0A0A] shadow-[0_0_0_1px_rgba(31,31,31,1)] backdrop-blur-sm">
+            <div className="absolute -inset-4 bg-primary/5 rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
+            <div className="relative w-16 h-16 flex items-center justify-center border border-border-default bg-background shadow-[0_0_0_1px_rgba(31,31,31,1)] backdrop-blur-sm">
               {/* Top Highlight */}
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#333] to-transparent" />
 
@@ -64,8 +64,8 @@ export const ForensicHero = ({ onGetStarted }: ForensicHeroProps) => {
               />
 
               {/* Decor corners on the icon box */}
-              <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-[#28E7A2]" />
-              <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-[#28E7A2]" />
+              <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-primary" />
+              <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-primary" />
             </div>
           </div>
         </motion.div>
@@ -104,7 +104,7 @@ export const ForensicHero = ({ onGetStarted }: ForensicHeroProps) => {
           {/* Primary Button: Access Terminal */}
           <button
             onClick={onGetStarted}
-            className="group relative px-8 py-4 bg-[#0A0A0A]/80 border border-[#1F1F1F] hover:border-[#28E7A2]/50 overflow-hidden transition-all duration-300"
+            className="group relative px-8 py-4 bg-background/80 border border-border-default hover:border-primary/50 overflow-hidden transition-all duration-300"
           >
             {/* Scanline effect */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />

@@ -63,7 +63,7 @@ export function BioTableGlobalFilter({
 
   return (
     <div className={cn('relative', className)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <input
         ref={inputRef}
         type="text"
@@ -72,9 +72,9 @@ export function BioTableGlobalFilter({
         placeholder={placeholder}
         className={cn(
           'w-full pl-9 pr-9 py-2 rounded-lg',
-          'bg-surface-subtle border border-default',
-          'text-body text-text-primary placeholder:text-text-muted',
-          'focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary',
+          'bg-background border border-input',
+          'text-body text-foreground placeholder:text-muted-foreground',
+          'focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-ring',
           'transition-colors'
         )}
       />
@@ -88,8 +88,8 @@ export function BioTableGlobalFilter({
             onClick={handleClear}
             className={cn(
               'absolute right-2 top-1/2 -translate-y-1/2',
-              'p-1 rounded-full hover:bg-surface-hover',
-              'text-text-muted hover:text-text-secondary',
+              'p-1 rounded-full hover:bg-muted/50',
+              'text-muted-foreground hover:text-foreground',
               'transition-colors'
             )}
             aria-label="Clear search"
@@ -149,9 +149,9 @@ export function BioTableColumnFilter<TData, TValue>({
       placeholder={placeholder ?? `Filter ${columnName}...`}
       className={cn(
         'w-full px-2 py-1 rounded',
-        'bg-surface-base border border-default',
-        'text-small text-text-primary placeholder:text-text-muted',
-        'focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary',
+        'bg-background border border-input',
+        'text-small text-foreground placeholder:text-muted-foreground',
+        'focus:outline-none focus:ring-1 focus:ring-ring/30 focus:border-ring',
         'transition-colors',
         className
       )}
@@ -217,9 +217,9 @@ export function BioTableFilterBar<TData>({
               onClick={onClearFilters}
               className={cn(
                 'flex items-center gap-1.5 px-3 py-2 rounded-lg',
-                'bg-surface-subtle hover:bg-surface-hover',
-                'text-small text-text-secondary hover:text-text-primary',
-                'border border-default',
+                'bg-secondary hover:bg-muted',
+                'text-small text-muted-foreground hover:text-foreground',
+                'border border-border',
                 'transition-colors'
               )}
             >
@@ -241,7 +241,7 @@ export function BioTableFilterBar<TData>({
             exit={{ opacity: 0, scale: 0.9 }}
             className={cn(
               'inline-flex items-center gap-1 px-2 py-1 rounded-full',
-              'bg-accent-primary/10 text-accent-primary',
+              'bg-primary/10 text-primary',
               'text-small font-medium'
             )}
           >
@@ -249,7 +249,7 @@ export function BioTableFilterBar<TData>({
             <span>{filter.id}: {String(filter.value)}</span>
             <button
               onClick={() => table.getColumn(filter.id)?.setFilterValue(undefined)}
-              className="hover:bg-accent-primary/20 rounded-full p-0.5 transition-colors"
+              className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
               aria-label={`Clear ${filter.id} filter`}
             >
               <X className="h-3 w-3" />

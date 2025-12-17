@@ -2,7 +2,7 @@
  * Btn - Button primitive with semantic variants
  * 
  * Layer 1 (atoms) per CONT_10 BioSkin Architecture
- * Uses design tokens from globals.css
+ * Uses foundation classes directly from globals-foundation.css
  */
 
 import * as React from 'react';
@@ -16,17 +16,19 @@ export interface BtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   fullWidth?: boolean;
 }
 
+// Foundation button variants
 const variantClasses = {
-  primary: 'bg-primary text-primary-foreground hover:bg-primary-hover',
-  secondary: 'bg-surface-subtle text-text-primary hover:bg-surface-hover border border-default',
-  ghost: 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
-  outline: 'border border-default text-text-primary hover:bg-surface-hover',
-  danger: 'bg-status-danger text-white hover:bg-status-danger/90',
+  primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
+  ghost: 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+  outline: 'border border-border text-foreground hover:bg-muted/50',
+  danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
 } as const;
 
+// Standard sizing with foundation typography
 const sizeClasses = {
   sm: 'h-8 px-3 text-small',
-  md: 'h-10 px-4 text-body',
+  md: 'h-10 px-4 text-small',
   lg: 'h-12 px-6 text-body',
 } as const;
 
@@ -44,8 +46,8 @@ export function Btn({
     <button
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-lg font-medium',
-        'transition-colors duration-fast',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+        'transition-colors duration-150',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:pointer-events-none disabled:opacity-50',
         variantClasses[variant],
         sizeClasses[size],

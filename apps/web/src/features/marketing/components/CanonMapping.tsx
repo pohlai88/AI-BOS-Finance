@@ -9,7 +9,7 @@ import {
   Lock,
   Link2,
 } from 'lucide-react';
-import { NexusIcon } from '../nexus/NexusIcon';
+import { NexusIcon } from '@/components/icons/NexusIcon';
 
 export const CanonMapping = () => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
@@ -85,16 +85,16 @@ export const CanonMapping = () => {
           animate={
             isLocked
               ? {
-                  borderColor: '#10b981',
-                  boxShadow: '0 0 80px rgba(16,185,129,0.4)', // Stronger Glow
-                  scale: 1,
-                }
+                borderColor: '#10b981',
+                boxShadow: '0 0 80px rgba(16,185,129,0.4)', // Stronger Glow
+                scale: 1,
+              }
               : {
-                  scale: [1, 1.02, 1],
-                }
+                scale: [1, 1.02, 1],
+              }
           }
           transition={!isLocked ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : {}}
-          className="w-32 h-32 bg-[#050505] border-2 border-emerald-500/30 rounded-full flex items-center justify-center relative z-20 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] group-active:scale-95"
+          className="w-32 h-32 bg-surface-nested border-2 border-emerald-500/30 rounded-full flex items-center justify-center relative z-20 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] group-active:scale-95"
         >
           {/* The Spinners */}
           {!isLocked && (
@@ -126,8 +126,8 @@ export const CanonMapping = () => {
             animate={
               isLocked
                 ? {
-                    scale: [1, 1.2, 1],
-                  }
+                  scale: [1, 1.2, 1],
+                }
                 : {}
             }
             transition={{ duration: 0.6 }}
@@ -165,11 +165,10 @@ export const CanonMapping = () => {
           <button
             className={`
                px-6 py-2 rounded-full font-mono text-xs font-bold tracking-[0.2em] uppercase border transition-all duration-300 flex items-center gap-2
-               ${
-                 isLocked
-                   ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
-                   : 'bg-zinc-900 border-emerald-500/50 text-emerald-500 hover:bg-emerald-500 hover:text-black shadow-[0_0_20px_rgba(16,185,129,0.2)]'
-               }
+               ${isLocked
+                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
+                : 'bg-zinc-900 border-emerald-500/50 text-emerald-500 hover:bg-emerald-500 hover:text-black shadow-[0_0_20px_rgba(16,185,129,0.2)]'
+              }
             `}
           >
             {isLocked ? (
@@ -295,13 +294,13 @@ const Tether = ({ angle, color, active }: { angle: number; color: string; active
         animate={
           active
             ? {
-                opacity: 0.8,
-                boxShadow: `0 0 20px ${stroke}, 0 0 40px ${stroke}`,
-              }
+              opacity: 0.8,
+              boxShadow: `0 0 20px ${stroke}, 0 0 40px ${stroke}`,
+            }
             : {
-                opacity: 0.3,
-                boxShadow: 'none',
-              }
+              opacity: 0.3,
+              boxShadow: 'none',
+            }
         }
         transition={{ duration: 0.5 }}
         style={{

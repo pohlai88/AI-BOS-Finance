@@ -1,16 +1,84 @@
-import { HeroSection } from '@/components/landing/HeroSection';
-import { Header } from '@/components/landing/Header';
-import { BackgroundGrid } from '@/components/landing/BackgroundGrid';
-import { CrystallizationSphere } from '@/components/landing/CrystallizationSphere';
-import { StabilitySimulation } from '@/components/simulation';
-import { LivingLens } from '@/components/landing/LivingLens';
-import { TruthBar } from '@/components/landing/TruthBar';
-import { LinearFeatureCard } from '@/components/landing/LinearFeatureCard';
-import { CrystallizationVisual, InterrogationVisual, GovernanceVisual } from '@/components/landing/FeatureVisuals';
-import { ForensicCard as NexusCard } from '@/components/ui/card';
-import { Button as NexusButton } from '@/components/ui/button';
-import { LandingFooter } from '@/components/landing/LandingFooter';
-import { ArrowRight, ShieldCheck, Activity, Terminal, GitBranch, Zap, Layers, Search } from 'lucide-react';
+/**
+ * LandingPage — "Technical Elegance" Edition
+ *
+ * DESIGN SYSTEM UPGRADES:
+ * 1. Background: Technical Grid (Palantir precision)
+ * 2. Cards: Spotlight hover effects (Linear "magic")
+ * 3. Typography: Mixed Sans (Headings) + Mono (Labels)
+ * 4. Micro-UI: Corner brackets and raw data aesthetics
+ */
+
+import React from 'react';
+import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
+import { Header } from '../components/Header';
+import { HeroSection } from '../components/HeroSection';
+import { LandingFooter } from '../components/LandingFooter';
+import { Shield, Zap, Eye, Lock, ChevronRight } from 'lucide-react';
+
+// --- UTILITY COMPONENTS -----------------------------------------------------
+
+/**
+ * Palantir-style background grid.
+ * Creates a sense of infinite, measured space.
+ */
+const GridBackground = () => (
+  <div className="fixed inset-0 pointer-events-none overflow-hidden select-none z-0">
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+    <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+  </div>
+);
+
+/**
+ * Linear-style Spotlight Card.
+ * The border glows based on mouse position.
+ */
+const SpotlightCard = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <div
+      className={`group relative border border-white/10 bg-white/[0.02] overflow-hidden ${className}`}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Spotlight Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(74,144,226,0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      {/* Content */}
+      <div className="relative h-full">{children}</div>
+
+      {/* Palantir-style decorative corners */}
+      <div className="absolute top-0 left-0 w-3 h-3 border-l border-t border-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute top-0 right-0 w-3 h-3 border-r border-t border-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute bottom-0 left-0 w-3 h-3 border-l border-b border-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 border-r border-b border-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+    </div>
+  );
+};
+
+// --- MAIN PAGE --------------------------------------------------------------
 
 export const LandingPage = ({
   onTryIt,
@@ -20,174 +88,182 @@ export const LandingPage = ({
   onCanonClick: () => void;
 }) => {
   return (
-    <div className="relative min-h-screen bg-background selection:bg-primary/30">
-      {/* 0. LIVING BACKGROUND (Z-Layer 0) */}
-      <BackgroundGrid />
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 font-sans">
+      <GridBackground />
 
-      {/* 1. Header (Fixed Z-Layer 50) */}
-      <Header onGetStarted={onTryIt} onCanonClick={onCanonClick} />
+      {/* Z-Index wrapper to sit above grid */}
+      <div className="relative z-10">
+        <Header onGetStarted={onTryIt} onCanonClick={onCanonClick} />
 
-      {/* 2. Main Scrollable Content */}
-      <main className="relative z-10">
-        {/* HERO SECTION */}
-        <div className="pt-20">
+        <main>
+          {/* HERO */}
           <HeroSection onGetStarted={onTryIt} />
-        </div>
 
-        {/* SECTION 1: STABILITY (The Hook) */}
-        <section id="lineage" className="py-32 px-6">
-          <div className="max-w-7xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-              <span className="nexus-label text-primary flex items-center justify-center gap-2">
-                <Layers className="w-3 h-3" />
-                Structural Integrity Protocol
-              </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
-                The Inevitable{' '}
-                <span className="text-zinc-400">Divergence</span>
-              </h2>
+          {/* ═══════════════════════════════════════════════════════════════════
+              CAPABILITIES — "Bento" Grid Style
+          ═══════════════════════════════════════════════════════════════════ */}
+          <section className="py-32 relative">
+            <div className="max-w-[1200px] mx-auto px-6">
+              {/* Section Header with "Mono" accent */}
+              <div className="mb-20">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="flex items-center gap-3 mb-6"
+                >
+                  <div className="h-px w-8 bg-primary" />
+                  <span className="text-xs font-mono text-primary tracking-widest uppercase">
+                    System Capabilities
+                  </span>
+                </motion.div>
+
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-4xl md:text-6xl font-medium tracking-tight text-white max-w-2xl"
+                >
+                  Precision engineered for <br />
+                  <span className="text-white/40">absolute audit confidence.</span>
+                </motion.h2>
+              </div>
+
+              {/* Bento Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    id: '01',
+                    icon: Eye,
+                    title: 'Real-Time Visibility',
+                    desc: 'Trace every transaction to its governing standard instantly.',
+                  },
+                  {
+                    id: '02',
+                    icon: Shield,
+                    title: 'Continuous Validation',
+                    desc: 'IFRS, GAAP, and SOX validated continuously, not annually.',
+                  },
+                  {
+                    id: '03',
+                    icon: Zap,
+                    title: 'Instant Detection',
+                    desc: 'Compliance gaps surface in seconds. Fix before auditors find.',
+                  },
+                  {
+                    id: '04',
+                    icon: Lock,
+                    title: 'Immutable Evidence',
+                    desc: 'Cryptographic proof of every validation. Audit-ready.',
+                  },
+                ].map((cap) => (
+                  <SpotlightCard key={cap.title} className="rounded-xl p-8 md:p-10 min-h-[280px]">
+                    <div className="flex flex-col h-full justify-between">
+                      <div className="flex justify-between items-start">
+                        <div className="p-3 bg-white/5 rounded-lg border border-white/5">
+                          <cap.icon className="w-6 h-6 text-white" strokeWidth={1.5} />
+                        </div>
+                        <span className="font-mono text-xs text-white/20 tracking-widest">
+                          {cap.id}
+                        </span>
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-medium text-white mb-2">{cap.title}</h3>
+                        <p className="text-base text-white/50 leading-relaxed max-w-[90%]">
+                          {cap.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </SpotlightCard>
+                ))}
+              </div>
             </div>
+          </section>
 
-            {/* The Simulation Component (Now framed in a NexusCard) */}
-            <NexusCard variant="glass" className="p-0 border-nexus-subtle/50">
-              <StabilitySimulation />
-            </NexusCard>
-          </div>
-        </section>
+          {/* ═══════════════════════════════════════════════════════════════════
+              METRICS — Dashboard / HUD Style
+          ═══════════════════════════════════════════════════════════════════ */}
+          <section className="py-32 border-y border-white/5 bg-white/[0.01]">
+            <div className="max-w-[1200px] mx-auto px-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
+                {[
+                  { value: '94%', label: 'Reduction in findings' },
+                  { value: '3×', label: 'Faster close speed' },
+                  { value: '<48h', label: 'Audit prep time' },
+                  { value: '100%', label: 'Traceability coverage' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="relative group"
+                  >
+                    {/* Decorative left border that lights up */}
+                    <div className="absolute left-0 top-0 bottom-0 w-px bg-white/10 group-hover:bg-primary/50 transition-colors" />
 
-        {/* SECTION 2: THE TRIPLE THREAT (Linear Style) */}
-        <section id="logic" className="py-32 px-6 border-t border-default bg-[#020403]">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-20 text-center md:text-left">
-              <span className="nexus-label text-primary flex items-center justify-center md:justify-start gap-2">
-                <ShieldCheck className="w-3 h-3" />
-                Core Capabilities
-              </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white mt-4">
-                Forensic{' '}
-                <span className="text-zinc-400">Architecture</span>
-              </h2>
-              <p className="mt-4 text-text-secondary max-w-xl text-lg">
-                Built on first principles of cryptographic verification. We don't just audit data; we anchor it to mathematical truth.
-              </p>
+                    <div className="pl-6">
+                      <div className="text-5xl md:text-7xl font-semibold tracking-tighter text-white mb-2">
+                        {stat.value}
+                      </div>
+                      <div className="font-mono text-xs text-white/40 uppercase tracking-widest">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
+          </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Feature 1: Crystallization */}
-              <LinearFeatureCard
-                icon={ShieldCheck}
-                title="Immutable Period Control"
-                description="Cryptographically freeze your data state. Once a period is locked, the numbers never move again without a digital signature trace."
+          {/* ═══════════════════════════════════════════════════════════════════
+              CTA — The "Singularity"
+          ═══════════════════════════════════════════════════════════════════ */}
+          <section className="py-40 relative overflow-hidden">
+            {/* Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full pointer-events-none opacity-50" />
+
+            <div className="max-w-[800px] mx-auto px-6 text-center relative z-10">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-5xl md:text-7xl font-semibold tracking-tighter mb-10"
               >
-                <CrystallizationVisual />
-              </LinearFeatureCard>
+                Close the gap.
+              </motion.h2>
 
-              {/* Feature 2: Interrogation */}
-              <LinearFeatureCard
-                icon={Activity}
-                title="Active Living Lens"
-                description="Standard audits are passive. NexusCanon proactively dismantles transactions against IFRS and Tax Pillars in real-time."
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
-                <InterrogationVisual />
-              </LinearFeatureCard>
+                <button
+                  onClick={onTryIt}
+                  className="group relative h-12 px-8 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-all flex items-center gap-2 overflow-hidden"
+                >
+                  <span className="relative z-10">Request Demo</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                </button>
 
-              {/* Feature 3: Governance */}
-              <LinearFeatureCard
-                icon={Terminal}
-                title="Schema Enforcement"
-                description="Data cannot enter the system unless it matches the strict schema definitions. Zero tolerance for 'bad data'."
-              >
-                <GovernanceVisual />
-              </LinearFeatureCard>
+                <button
+                  onClick={onCanonClick}
+                  className="px-8 h-12 rounded-full border border-white/10 text-white/70 hover:text-white hover:bg-white/5 font-medium text-sm transition-all flex items-center gap-2"
+                >
+                  Contact Sales
+                  <ChevronRight className="w-4 h-4 opacity-50" />
+                </button>
+              </motion.div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* SECTION 3: THE TRUTH ENGINE (Live Demo) */}
-        <section id="engine" className="py-32 px-6 border-t border-default">
-          <div className="max-w-7xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-              <span className="nexus-label text-primary flex items-center justify-center gap-2">
-                <GitBranch className="w-3 h-3" />
-                Deterministic Logic Processor
-              </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
-                The Truth{' '}
-                <span className="text-zinc-400">Engine</span>
-              </h2>
-              <p className="text-text-secondary max-w-2xl mx-auto text-base">
-                Watch transactions flow through our Glass Box audit system. 
-                Every decision is traced. Every rule is visible. Zero hallucinations.
-              </p>
-            </div>
-
-            {/* Living Lens Demo */}
-            <LivingLens />
-          </div>
-        </section>
-
-        {/* SECTION 4: INTERACTIVE TRUTH BAR */}
-        <section id="query" className="py-32 px-6 border-t border-default bg-surface-card/30">
-          <div className="max-w-7xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-              <span className="nexus-label text-primary flex items-center justify-center gap-2">
-                <Search className="w-3 h-3" />
-                Interactive Query Interface
-              </span>
-<h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
-                Ask the{' '}
-                <span className="text-zinc-400">System</span>
-              </h2>
-              <p className="text-text-secondary max-w-2xl mx-auto text-base">
-                Select a transaction and see the full logic traversal path. 
-                Click "Show Proof" to reveal exactly how the verdict was reached.
-              </p>
-            </div>
-
-            {/* Truth Bar */}
-            <TruthBar />
-          </div>
-        </section>
-
-        {/* SECTION 5: FINAL CTA - The Crystallization Event */}
-        <section className="py-24 px-6 border-t border-default relative overflow-hidden bg-background">
-          {/* Background Radial for Depth */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)]" />
-
-          {/* Header */}
-          <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10 mb-12">
-            <span className="nexus-label text-primary flex items-center justify-center gap-2">
-              <Zap className="w-4 h-4" />
-              State Transformation Event
-            </span>
-            <h2 className="text-4xl md:text-7xl font-medium tracking-tighter text-white">
-              Freeze Your <br/>
-<span className="text-zinc-400">Financial Truth.</span>
-            </h2>
-            <p className="text-text-secondary max-w-xl mx-auto text-lg leading-relaxed">
-              Drifting data is a liability. NexusCanon locks your ledger into an 
-              immutable crystalline state, ready for instant audit.
-            </p>
-          </div>
-
-          {/* THE CRYSTALLIZATION SPHERE */}
-          <div className="relative z-10 -my-12 scale-90 md:scale-100">
-            <CrystallizationSphere />
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-16 relative z-10">
-            <NexusButton variant="primary" size="lg" onClick={onTryIt}>
-              Crystallize Now
-            </NexusButton>
-            <NexusButton variant="secondary" size="lg" onClick={onCanonClick} icon={<ArrowRight className="w-4 h-4" />}>
-              Read the Canon
-            </NexusButton>
-          </div>
-        </section>
-
-        <LandingFooter />
-      </main>
+          <LandingFooter />
+        </main>
+      </div>
     </div>
   );
 };

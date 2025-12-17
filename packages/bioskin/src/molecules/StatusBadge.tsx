@@ -52,7 +52,7 @@ export interface StatusBadgeProps {
   label?: string;
 }
 
-// Semantic color mapping - auto-detects status meaning
+// Semantic color mapping - uses foundation classes directly
 const STATUS_COLORS: Record<string, {
   bg: string;
   text: string;
@@ -62,30 +62,30 @@ const STATUS_COLORS: Record<string, {
   label?: string;
   defaultPulse?: boolean;
 }> = {
-  // Success states
-  completed: { bg: 'bg-status-success/10', text: 'text-status-success', border: 'border-status-success/30', dot: 'bg-status-success', icon: CheckCircle, label: 'Completed' },
-  approved: { bg: 'bg-status-success/10', text: 'text-status-success', border: 'border-status-success/30', dot: 'bg-status-success', icon: CheckCircle, label: 'Approved' },
-  active: { bg: 'bg-status-success/10', text: 'text-status-success', border: 'border-status-success/30', dot: 'bg-status-success', icon: CheckCircle, label: 'Active', defaultPulse: true },
-  executed: { bg: 'bg-status-success/10', text: 'text-status-success', border: 'border-status-success/30', dot: 'bg-status-success', icon: CheckCircle, label: 'Executed' },
-  success: { bg: 'bg-status-success/10', text: 'text-status-success', border: 'border-status-success/30', dot: 'bg-status-success', icon: CheckCircle, label: 'Success' },
+  // Success states (green)
+  completed: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30', dot: 'bg-green-500', icon: CheckCircle, label: 'Completed' },
+  approved: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30', dot: 'bg-green-500', icon: CheckCircle, label: 'Approved' },
+  active: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30', dot: 'bg-green-500', icon: CheckCircle, label: 'Active', defaultPulse: true },
+  executed: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30', dot: 'bg-green-500', icon: CheckCircle, label: 'Executed' },
+  success: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30', dot: 'bg-green-500', icon: CheckCircle, label: 'Success' },
 
-  // Warning states
-  pending: { bg: 'bg-status-warning/10', text: 'text-status-warning', border: 'border-status-warning/30', dot: 'bg-status-warning', icon: Clock, label: 'Pending' },
-  pending_approval: { bg: 'bg-status-warning/10', text: 'text-status-warning', border: 'border-status-warning/30', dot: 'bg-status-warning', icon: Clock, label: 'Pending Approval' },
-  processing: { bg: 'bg-status-warning/10', text: 'text-status-warning', border: 'border-status-warning/30', dot: 'bg-status-warning', icon: Clock, label: 'Processing', defaultPulse: true },
-  in_progress: { bg: 'bg-status-warning/10', text: 'text-status-warning', border: 'border-status-warning/30', dot: 'bg-status-warning', icon: Clock, label: 'In Progress', defaultPulse: true },
-  warning: { bg: 'bg-status-warning/10', text: 'text-status-warning', border: 'border-status-warning/30', dot: 'bg-status-warning', icon: AlertCircle, label: 'Warning' },
+  // Warning states (yellow/amber)
+  pending: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30', dot: 'bg-yellow-500', icon: Clock, label: 'Pending' },
+  pending_approval: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30', dot: 'bg-yellow-500', icon: Clock, label: 'Pending Approval' },
+  processing: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30', dot: 'bg-yellow-500', icon: Clock, label: 'Processing', defaultPulse: true },
+  in_progress: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30', dot: 'bg-yellow-500', icon: Clock, label: 'In Progress', defaultPulse: true },
+  warning: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30', dot: 'bg-yellow-500', icon: AlertCircle, label: 'Warning' },
 
-  // Danger states
-  failed: { bg: 'bg-status-danger/10', text: 'text-status-danger', border: 'border-status-danger/30', dot: 'bg-status-danger', icon: XCircle, label: 'Failed' },
-  rejected: { bg: 'bg-status-danger/10', text: 'text-status-danger', border: 'border-status-danger/30', dot: 'bg-status-danger', icon: XCircle, label: 'Rejected' },
-  error: { bg: 'bg-status-danger/10', text: 'text-status-danger', border: 'border-status-danger/30', dot: 'bg-status-danger', icon: XCircle, label: 'Error' },
-  cancelled: { bg: 'bg-status-danger/10', text: 'text-status-danger', border: 'border-status-danger/30', dot: 'bg-status-danger', icon: XCircle, label: 'Cancelled' },
+  // Danger states (red)
+  failed: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30', dot: 'bg-red-500', icon: XCircle, label: 'Failed' },
+  rejected: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30', dot: 'bg-red-500', icon: XCircle, label: 'Rejected' },
+  error: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30', dot: 'bg-red-500', icon: XCircle, label: 'Error' },
+  cancelled: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30', dot: 'bg-red-500', icon: XCircle, label: 'Cancelled' },
 
-  // Neutral states
-  draft: { bg: 'bg-surface-subtle', text: 'text-text-secondary', border: 'border-default', dot: 'bg-text-muted', icon: FileEdit, label: 'Draft' },
-  inactive: { bg: 'bg-surface-subtle', text: 'text-text-secondary', border: 'border-default', dot: 'bg-text-muted', icon: Pause, label: 'Inactive' },
-  unknown: { bg: 'bg-surface-subtle', text: 'text-text-secondary', border: 'border-default', dot: 'bg-text-muted', icon: AlertCircle, label: 'Unknown' },
+  // Neutral states (gray)
+  draft: { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border', dot: 'bg-muted-foreground', icon: FileEdit, label: 'Draft' },
+  inactive: { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border', dot: 'bg-muted-foreground', icon: Pause, label: 'Inactive' },
+  unknown: { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border', dot: 'bg-muted-foreground', icon: AlertCircle, label: 'Unknown' },
 };
 
 function getStatusConfig(status: string) {

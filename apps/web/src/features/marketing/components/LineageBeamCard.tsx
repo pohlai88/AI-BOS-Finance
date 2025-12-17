@@ -17,7 +17,7 @@ export const LineageBeamCard = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-4xl h-64 bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden group hover:border-green-500/30 transition-colors duration-500"
+      className="relative w-full max-w-4xl h-64 bg-background border border-white/10 rounded-2xl overflow-hidden group hover:border-green-500/30 transition-colors duration-500"
     >
       {/* Background Grid - The "Void" Structure */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -91,7 +91,7 @@ const Node = ({
     transition={{ delay, type: 'spring', stiffness: 200 }}
     className={`relative z-10 flex flex-col items-center gap-3 ${isCentral ? 'scale-125' : ''}`}
   >
-    <div className="w-12 h-12 rounded-xl bg-[#111] border border-white/10 flex items-center justify-center shadow-2xl backdrop-blur-md">
+    <div className="w-12 h-12 rounded-xl bg-surface-subtle border border-white/10 flex items-center justify-center shadow-2xl backdrop-blur-md">
       <span className="text-xl">{icon}</span>
     </div>
     <span

@@ -2,7 +2,7 @@
  * Surface - Card/panel wrapper with semantic variants
  * 
  * Layer 1 (atoms) per CONT_10 BioSkin Architecture
- * Uses design tokens from globals.css
+ * Uses foundation classes directly from globals-foundation.css
  */
 
 import * as React from 'react';
@@ -16,18 +16,20 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   border?: boolean;
 }
 
+// Foundation surface hierarchy (from globals-foundation.css)
 const variantClasses = {
-  card: 'bg-surface-card border-default',
-  subtle: 'bg-surface-subtle border-subtle',
-  nested: 'bg-surface-nested border-subtle',
-  glass: 'bg-surface-card/60 backdrop-blur-md border-default',
+  card: 'bg-card',                              // Surface level
+  subtle: 'bg-background',                      // Base level
+  nested: 'bg-elevated',                        // Elevated level
+  glass: 'bg-card/60 backdrop-blur-md',         // Glass effect
 } as const;
 
+// Standard Tailwind padding
 const paddingClasses = {
   none: '',
-  sm: 'p-layout-xs',
-  md: 'p-layout-md',
-  lg: 'p-layout-lg',
+  sm: 'p-3',    // 12px
+  md: 'p-4',    // 16px
+  lg: 'p-6',    // 24px
 } as const;
 
 const roundedClasses = {

@@ -137,7 +137,7 @@ function formatCellValue(
   type: BioFieldDefinition['type']
 ): React.ReactNode {
   if (value === null || value === undefined) {
-    return <span className="text-text-disabled">—</span>;
+    return <span className="text-muted-foreground">—</span>;
   }
 
   // Auto-detect status fields
@@ -148,7 +148,7 @@ function formatCellValue(
   switch (type) {
     case 'boolean':
       return (
-        <span className={value ? 'text-status-success' : 'text-text-secondary'}>
+        <span className={value ? 'text-green-500' : 'text-muted-foreground'}>
           {value ? 'Yes' : 'No'}
         </span>
       );
@@ -171,10 +171,10 @@ function formatCellValue(
       }
       return String(value);
     case 'object':
-      return <span className="text-text-tertiary">[Object]</span>;
+      return <span className="text-muted-foreground">[Object]</span>;
     case 'enum':
       return (
-        <span className="px-2 py-0.5 text-small bg-surface-subtle rounded">
+        <span className="px-2 py-0.5 text-small bg-muted rounded">
           {String(value)}
         </span>
       );
@@ -290,7 +290,7 @@ function BioTableInternal<T extends z.ZodRawShape>({
     return (
       <Surface padding="lg" className={cn('overflow-hidden', className)}>
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-text-muted" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
       </Surface>
     );
@@ -312,7 +312,7 @@ function BioTableInternal<T extends z.ZodRawShape>({
     <Surface padding="none" className={cn('overflow-hidden', className)} data-testid="bio-table">
       {/* Header */}
       {(showTitle && displayTitle) || enableFiltering ? (
-        <div className="px-6 py-4 border-b border-default space-y-4">
+        <div className="px-6 py-4 border-b border-border space-y-4">
           {showTitle && displayTitle && (
             <Txt variant="subheading" as="h3">
               {displayTitle}
@@ -338,7 +338,7 @@ function BioTableInternal<T extends z.ZodRawShape>({
             enableSelection={enableSelection}
           />
 
-          <tbody className="divide-y divide-border-subtle">
+          <tbody className="divide-y divide-border">
             <AnimatePresence mode="popLayout">
               {table.getRowModel().rows.map((row, index) => (
                 <motion.tr
@@ -350,8 +350,8 @@ function BioTableInternal<T extends z.ZodRawShape>({
                   onClick={() => onRowClick?.(row.original, row.index)}
                   className={cn(
                     'transition-colors',
-                    onRowClick && 'cursor-pointer hover:bg-surface-hover',
-                    row.getIsSelected() && 'bg-accent-primary/5'
+                    onRowClick && 'cursor-pointer hover:bg-muted/50',
+                    row.getIsSelected() && 'bg-primary/5'
                   )}
                 >
                   {/* Selection checkbox */}
@@ -363,8 +363,8 @@ function BioTableInternal<T extends z.ZodRawShape>({
                         disabled={!row.getCanSelect()}
                         onChange={row.getToggleSelectedHandler()}
                         className={cn(
-                          'h-4 w-4 rounded border-border-default',
-                          'text-accent-primary focus:ring-accent-primary focus:ring-offset-0',
+                          'h-4 w-4 rounded border-border',
+                          'text-primary focus:ring-ring focus:ring-offset-0',
                           'cursor-pointer'
                         )}
                         aria-label={`Select row ${row.index + 1}`}
@@ -376,7 +376,7 @@ function BioTableInternal<T extends z.ZodRawShape>({
                   {row.getVisibleCells().map(cell => (
                     <td
                       key={cell.id}
-                      className="px-4 py-3 text-body text-text-primary"
+                      className="px-4 py-3 text-body text-foreground"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>

@@ -9,7 +9,7 @@
 'use client';
 
 import * as React from 'react';
-import { BioPaymentTable, type PaymentTableRow } from '@/features/payment';
+import { BioPaymentTable, type PaymentTableRow } from '@/features/payments';
 import { Txt, Surface } from '@aibos/bioskin';
 
 // ============================================================================

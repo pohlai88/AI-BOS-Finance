@@ -6,6 +6,7 @@
 
 // Views (Pages)
 export { default as PAY_01_PaymentHubPage } from './views/PAY_01_PaymentHubPage';
+export { default as PAY_02_PaymentHubDemoPage } from './views/PAY_02_PaymentHubDemoPage';
 
 // Components
 export * from './components/index';

@@ -1,202 +1,214 @@
-// ============================================================================
-// HERO SECTION - "The Command Center"
-// Left: The Pitch | Right: The Brain Visualization (Radar + Terminal Stack)
-// Wired to Truth Engine via useRiskTelemetry hook
-// ============================================================================
+/**
+ * HERO SECTION — "Technical Elegance" Edition
+ *
+ * DESIGN PRINCIPLES:
+ * - Massive typography with tight tracking
+ * - HUD-style product preview
+ * - Mono labels for technical feel
+ * - Single ambient glow, not decorations
+ */
 
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Shield, Lock, Database, Terminal } from 'lucide-react';
-import { Button as NexusButton } from '@/components/ui/button';
-import { useRiskTelemetry, type TelemetryEvent, type Severity } from '@/hooks/useRiskTelemetry';
-import { APP_CONFIG } from '@/constants/app';
-import { ThreatRadar } from '@/components/radar';
+'use client';
 
-// --- SEVERITY COLOR MAP ---
-const severityColors: Record<Severity, { text: string; bg: string; border: string }> = {
-  low: { text: 'text-primary', bg: 'bg-primary', border: 'border-primary' },
-  medium: { text: 'text-yellow-400', bg: 'bg-yellow-400', border: 'border-yellow-400' },
-  high: { text: 'text-orange-400', bg: 'bg-orange-400', border: 'border-orange-400' },
-  critical: { text: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500' },
-};
+import { motion } from 'motion/react';
+import { ArrowRight, Activity } from 'lucide-react';
 
-// ThreatRadar uses canvas-based RadarDisplay with threat logic
-
-// --- SUB-COMPONENT: THE TERMINAL ---
-const RiskTerminal = ({ events }: { events: TelemetryEvent[] }) => (
-  <div className="border-x border-b border-default bg-[#050505] p-4 h-[180px] overflow-hidden flex flex-col font-mono text-[11px]">
-    {/* Header */}
-    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-default">
-      <div className="flex gap-1.5">
-        <div className="w-2 h-2 rounded-full bg-red-500/80" />
-        <div className="w-2 h-2 rounded-full bg-yellow-500/80" />
-        <div className="w-2 h-2 rounded-full bg-green-500/80" />
-      </div>
-      <Terminal className="w-3 h-3 text-text-secondary ml-2" />
-      <span className="text-text-secondary uppercase tracking-widest text-[9px]">system.log</span>
-    </div>
-    
-    {/* Event Feed */}
-    <div className="flex-1 overflow-hidden relative">
-      <AnimatePresence initial={false}>
-        {events.slice(0, 5).map((event) => (
-          <motion.div
-            key={event.id}
-            initial={{ opacity: 0, x: -20, height: 0 }}
-            animate={{ opacity: 1, x: 0, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex gap-2 py-1"
-          >
-            <span className="text-nexus-structure min-w-[60px]">{event.time}</span>
-            <span className={`font-bold min-w-[70px] ${severityColors[event.severity].text}`}>
-              [{event.severity.toUpperCase()}]
-            </span>
-            <span className="text-text-primary truncate flex-1">{event.message}</span>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-      
-      {/* Scanline overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] pointer-events-none opacity-30" />
-    </div>
-    
-    {/* Footer */}
-    <div className="flex items-center gap-2 pt-2 border-t border-default mt-auto">
-      <motion.div
-        className="w-1.5 h-1.5 rounded-full bg-primary"
-        animate={{ opacity: [1, 0.3, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-      />
-      <span className="text-[9px] text-text-secondary uppercase tracking-widest">Live monitoring active</span>
-    </div>
-  </div>
-);
-
-// --- MAIN HERO SECTION ---
 export const HeroSection = ({ onGetStarted }: { onGetStarted: () => void }) => {
-  const { events, activeRisks, systemStatus } = useRiskTelemetry();
-
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center px-6 md:px-12 border-b border-default overflow-hidden">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-      
-      {/* Metadata Decoration */}
-      <div className="absolute top-32 left-8 hidden lg:block">
-        <motion.div 
-          className="w-[1px] h-20 bg-gradient-to-b from-nexus-green to-transparent"
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          style={{ transformOrigin: 'top' }}
-        />
-        <motion.p 
-          className="mt-3 font-mono text-[9px] text-text-secondary tracking-widest -rotate-90 origin-top-left translate-y-full"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          SYS_INIT // {APP_CONFIG.versionDisplay}
-        </motion.p>
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
+      {/* ═══════════════════════════════════════════════════════════════════
+          AMBIENT GLOW — Single, dramatic, not decorative
+      ═══════════════════════════════════════════════════════════════════ */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1000px] h-[800px] bg-primary/15 rounded-full blur-[150px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-12 lg:py-0">
-        
-        {/* LEFT COLUMN: THE PITCH */}
-        <motion.div 
-          className="lg:col-span-7 space-y-6 z-10 flex flex-col justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Micro-Label */}
-          <div className="flex items-center gap-3">
-            <div className="h-[1px] w-8 bg-primary" />
-            <span className="text-primary font-mono text-[11px] tracking-widest uppercase">
-              Immutable Ledger Control
-            </span>
-          </div>
-
-          {/* Headline */}
-          <motion.h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.9] text-white"
-            initial={{ opacity: 0, y: 20 }}
+      {/* Main Content */}
+      <div className="relative z-10 py-20">
+        <div className="max-w-[1200px] mx-auto px-6">
+          {/* Status Badge — HUD style */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center justify-center gap-3 mb-12"
           >
-            Trust is <br />
-            <span className="text-zinc-400">Mathematical.</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.02]">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-mono text-white/50 uppercase tracking-widest">
+                System Online
+              </span>
+            </div>
+          </motion.div>
+
+          {/* THE HEADLINE — Massive, confident */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center text-[56px] md:text-[80px] lg:text-[100px] xl:text-[120px] font-semibold tracking-[-0.04em] leading-[0.9] mb-8"
+          >
+            <span className="text-white">Compliance.</span>
+            <br />
+            <span className="text-white/30">Crystallized.</span>
           </motion.h1>
 
-          {/* Subhead */}
-          <motion.p 
-            className="text-lg md:text-xl text-text-secondary max-w-xl leading-relaxed border-l border-default pl-6"
+          {/* Subhead — short, punchy */}
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center text-lg md:text-xl text-white/40 max-w-[550px] mx-auto mb-14 leading-relaxed"
           >
-            Eliminate retroactive data drift. NexusCanon cryptographically freezes your financial
-            state, rendering audits instantaneous and irrefutable.
+            Real-time audit intelligence. Every transaction traced.
+            Every gap found. Before anyone else.
           </motion.p>
 
-          {/* CTAs */}
-          <motion.div 
-            className="flex flex-wrap items-center gap-4 pt-4"
+          {/* CTAs — clean, restrained */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center justify-center gap-4 mb-24"
           >
-            <NexusButton variant="primary" size="lg" onClick={onGetStarted}>
-              Initialize Protocol
-            </NexusButton>
-            <NexusButton variant="secondary" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
-              Enter the Canon
-            </NexusButton>
+            <button
+              onClick={onGetStarted}
+              className="group relative h-12 px-8 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-all flex items-center gap-2 overflow-hidden"
+            >
+              <span className="relative z-10">Request Demo</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            </button>
+            <button className="group flex items-center gap-2 px-6 h-12 text-sm text-white/60 hover:text-white transition-colors">
+              Watch Video
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           </motion.div>
-          
-          {/* Metrics */}
-          <motion.div 
-            className="flex gap-6 lg:gap-8 pt-6 border-t border-default"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {[
-              { icon: Shield, label: 'INTEGRITY', value: '100%' },
-              { icon: Lock, label: 'LOCKED', value: '2,847' },
-              { icon: Database, label: 'RECORDS', value: '1.2M' },
-            ].map((m, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <m.icon className="w-4 h-4 text-primary/50" />
-                <div>
-                  <div className="text-[9px] font-mono text-nexus-structure uppercase tracking-widest">{m.label}</div>
-                  <div className="text-sm text-text-primary font-mono">{m.value}</div>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            PRODUCT PREVIEW — HUD Dashboard Style
+        ═══════════════════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-[1300px] mx-auto px-6"
+        >
+          <div className="relative">
+            {/* Glow behind product */}
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent blur-3xl scale-90" />
+
+            {/* Product frame */}
+            <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
+              {/* Terminal-style header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-white/[0.01]">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                  </div>
+                  <span className="text-[11px] font-mono text-white/30">
+                    nexuscanon://audit-engine
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Activity className="w-3 h-3 text-primary" />
+                  <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
+                    Live
+                  </span>
                 </div>
               </div>
-            ))}
-          </motion.div>
-        </motion.div>
 
-        {/* RIGHT COLUMN: THE BRAIN VISUALIZATION - MAXIMUM SIZE */}
-        <motion.div 
-          className="lg:col-span-5 relative flex items-center justify-end"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          {/* THE STACK: Radar + Terminal - Full width, no constraints */}
-          <div className="flex flex-col shadow-2xl shadow-nexus-green/5 w-full">
-            <ThreatRadar activeRisks={activeRisks} showLog={false} size={560} className="w-full" />
-            <RiskTerminal events={events} />
+              {/* Dashboard content */}
+              <div className="p-6 min-h-[380px]">
+                {/* Header row */}
+                <div className="flex items-start justify-between mb-8">
+                  <div>
+                    <div className="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-2">
+                      Compliance Dashboard
+                    </div>
+                    <div className="text-2xl font-medium text-white tracking-tight">
+                      Q4 2024 Audit Status
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10 border border-primary/20">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    <span className="text-xs font-mono text-primary">MONITORING</span>
+                  </div>
+                </div>
+
+                {/* Stats grid */}
+                <div className="grid grid-cols-4 gap-4 mb-6">
+                  {[
+                    { label: 'TRANSACTIONS_SCANNED', value: '847,293', delta: '+12.4%' },
+                    { label: 'STANDARDS_ACTIVE', value: '24', delta: 'ALL_PASS' },
+                    { label: 'GAPS_DETECTED', value: '3', delta: 'CRITICAL', isAlert: true },
+                    { label: 'AUDIT_READINESS', value: '94%', delta: '↑ 8.2%' },
+                  ].map((stat) => (
+                    <div
+                      key={stat.label}
+                      className={`p-4 rounded-lg border ${stat.isAlert
+                          ? 'bg-rose-500/5 border-rose-500/20'
+                          : 'bg-white/[0.02] border-white/5'
+                        }`}
+                    >
+                      <div className="font-mono text-[9px] text-white/30 uppercase tracking-widest mb-2">
+                        {stat.label}
+                      </div>
+                      <div className="text-2xl font-semibold text-white tracking-tight mb-1">
+                        {stat.value}
+                      </div>
+                      <div
+                        className={`font-mono text-[10px] ${stat.isAlert ? 'text-rose-400' : 'text-primary'
+                          }`}
+                      >
+                        {stat.delta}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Live feed */}
+                <div className="rounded-lg bg-white/[0.01] border border-white/5 overflow-hidden">
+                  <div className="px-4 py-2.5 border-b border-white/5 flex items-center justify-between">
+                    <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
+                      Validation Stream
+                    </span>
+                    <span className="font-mono text-[10px] text-white/20">REAL_TIME</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {[
+                      { txn: 'TXN-847293', standard: 'IFRS_15', status: 'PASS', time: '0.3s' },
+                      { txn: 'TXN-847292', standard: 'SOX_404', status: 'PASS', time: '0.2s' },
+                      { txn: 'TXN-847291', standard: 'IAS_16', status: 'WARN', time: '0.4s' },
+                    ].map((item) => (
+                      <div key={item.txn} className="px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-xs text-white/50">{item.txn}</span>
+                          <span className="font-mono text-[10px] text-white/30 px-2 py-0.5 rounded bg-white/5">
+                            {item.standard}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-[10px] text-white/20">{item.time}</span>
+                          <div
+                            className={`w-2 h-2 rounded-full ${item.status === 'PASS' ? 'bg-emerald-400' : 'bg-amber-400'
+                              }`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none" />
           </div>
-          
-          {/* Decorative Glow */}
-          <div className="absolute -inset-8 bg-primary/5 blur-3xl -z-10 rounded-full opacity-50" />
         </motion.div>
       </div>
-
-      {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-nexus-void to-transparent" />
     </section>
   );
 };

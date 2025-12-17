@@ -16,6 +16,3 @@ export * as marketing from './marketing';
 export * as health from './health';
 export * as shell from './shell';
 export * as shared from './shared';
-
-// Legacy (to be deprecated)
-export * as payment from './payment';

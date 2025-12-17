@@ -385,12 +385,12 @@ function ExceptionBadges({ exceptions }: { exceptions: PaymentException[] }) {
   const primary = sorted[0];
 
   const config: Record<string, { icon: typeof AlertCircle; color: string }> = {
-    MISSING_INVOICE: { icon: FileText, color: 'text-yellow-600 bg-yellow-50' },
-    STALE_APPROVAL: { icon: Clock, color: 'text-red-600 bg-red-50' },
-    DUPLICATE_RISK: { icon: Ban, color: 'text-red-600 bg-red-50' },
-    BANK_DETAIL_CHANGED: { icon: CreditCard, color: 'text-orange-600 bg-orange-50' },
-    OVER_LIMIT: { icon: AlertCircle, color: 'text-red-600 bg-red-50' },
-    PERIOD_WARNING: { icon: Calendar, color: 'text-yellow-600 bg-yellow-50' },
+    MISSING_INVOICE: { icon: FileText, color: 'text-status-warning/90 bg-status-warning/10' },
+    STALE_APPROVAL: { icon: Clock, color: 'text-status-danger/90 bg-status-danger/10' },
+    DUPLICATE_RISK: { icon: Ban, color: 'text-status-danger/90 bg-status-danger/10' },
+    BANK_DETAIL_CHANGED: { icon: CreditCard, color: 'text-status-warning/90 bg-status-warning/10' },
+    OVER_LIMIT: { icon: AlertCircle, color: 'text-status-danger/90 bg-status-danger/10' },
+    PERIOD_WARNING: { icon: Calendar, color: 'text-status-warning/90 bg-status-warning/10' },
   };
 
   const { icon: Icon, color } = config[primary.type] || { icon: AlertTriangle, color: 'text-gray-600 bg-gray-50' };

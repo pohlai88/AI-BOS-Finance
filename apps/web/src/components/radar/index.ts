@@ -30,9 +30,9 @@ export { ThreatRadar } from './ThreatRadar';
 // SVG-based radar components
 export { TacticalRadar } from './TacticalRadar';
 
-// Re-export from landing folder for backwards compatibility
-export { MagicUIRadar } from '../landing/MagicUIRadar';
-export { HybridRadar } from '../landing/HybridRadar';
-export { RiskRadar } from '../landing/RiskRadar';
-export { ForensicRadarEnhanced } from '../landing/ForensicRadarEnhanced';
+// Re-export from marketing feature for backwards compatibility
+export { MagicUIRadar } from '@/features/marketing/components/MagicUIRadar';
+export { HybridRadar } from '@/features/marketing/components/HybridRadar';
+export { RiskRadar } from '@/features/marketing/components/RiskRadar';
+export { ForensicRadarEnhanced } from '@/features/marketing/components/ForensicRadarEnhanced';
 

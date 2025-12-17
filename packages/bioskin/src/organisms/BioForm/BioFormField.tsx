@@ -104,8 +104,18 @@ function TextInput({
   isValidating,
 }: BioFormFieldProps) {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [localValue, setLocalValue] = React.useState(value || '');
+  const [localValue, setLocalValue] = React.useState(() => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  });
   const [repairSuggestion, setRepairSuggestion] = React.useState<AutoRepairSuggestion | null>(null);
+
+  // Sync with prop changes
+  React.useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
 
   const isPassword = definition.name.toLowerCase().includes('password');
   const isEmail = definition.name.toLowerCase().includes('email');
@@ -141,11 +151,14 @@ function TextInput({
     setRepairSuggestion(null);
   }, [localValue, autoRepair, definition]);
 
+  // Extract register props but override onChange and value for controlled input
+  const { onChange: registerOnChange, ...registerProps } = register;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     onChange?.(newValue);
-    register.onChange(e);
+    registerOnChange(e);
   };
 
   const handleApplyRepair = () => {
@@ -158,7 +171,7 @@ function TextInput({
       target: { name: register.name, value: fixed },
       currentTarget: { name: register.name, value: fixed },
     } as React.ChangeEvent<HTMLInputElement>;
-    register.onChange(syntheticEvent);
+    registerOnChange(syntheticEvent);
     setRepairSuggestion(null);
   };
 
@@ -170,7 +183,7 @@ function TextInput({
       <input
         id={`field-${definition.name}`}
         type={inputType}
-        {...register}
+        {...registerProps}
         value={localValue}
         onChange={handleChange}
         disabled={disabled}
@@ -297,14 +310,45 @@ function NumberInput({
   showSuccess,
   isValidating,
 }: BioFormFieldProps) {
-  const [localValue, setLocalValue] = React.useState(value || '');
+  // Sync with react-hook-form value
+  const [localValue, setLocalValue] = React.useState(() => {
+    if (value !== undefined && value !== null) return String(value);
+    return '';
+  });
+
+  // Update local value when prop changes
+  React.useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
   const placeholder = definition.uiHints?.placeholder || `Enter ${definition.label.toLowerCase()}`;
+
+  // Extract register props but override onChange and value for controlled input
+  const { onChange: registerOnChange, ...registerProps } = register;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     onChange?.(newValue);
-    register.onChange(e);
+    // React Hook Form's setValueAs (configured in BioForm.tsx) handles number conversion
+    registerOnChange(e);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter, decimal point, minus
+    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', '-', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    const isCtrlKey = e.ctrlKey || e.metaKey;
+    const isAllowedKey = allowedKeys.includes(e.key) ||
+      (isCtrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase()));
+
+    // Allow numbers (0-9) and numpad numbers
+    const isNumber = /^[0-9]$/.test(e.key) || /^Numpad[0-9]$/.test(e.key);
+
+    if (!isAllowedKey && !isNumber) {
+      e.preventDefault();
+    }
   };
 
   const hasError = !!error;
@@ -315,11 +359,15 @@ function NumberInput({
       <input
         id={`field-${definition.name}`}
         type="number"
-        {...register}
+        {...registerProps}
         value={localValue}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder={placeholder}
+        step="any"
+        inputMode="decimal"
+        autoComplete="off"
         className={cn(
           inputBaseStyles,
           hasError && inputErrorStyles,
@@ -350,14 +398,27 @@ function TextAreaInput({
   showSuccess,
   isValidating,
 }: BioFormFieldProps) {
-  const [localValue, setLocalValue] = React.useState(value || '');
+  const [localValue, setLocalValue] = React.useState(() => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  });
   const placeholder = definition.uiHints?.placeholder || `Enter ${definition.label.toLowerCase()}`;
+
+  // Sync with prop changes
+  React.useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
+  // Extract register props but override onChange and value
+  const { onChange: registerOnChange, ...registerProps } = register;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     onChange?.(newValue);
-    register.onChange(e);
+    registerOnChange(e);
   };
 
   const hasError = !!error;
@@ -366,7 +427,7 @@ function TextAreaInput({
   return (
     <div className="relative">
       <textarea
-        {...register}
+        {...registerProps}
         value={localValue}
         onChange={handleChange}
         disabled={disabled}
@@ -396,14 +457,27 @@ function SelectInput({
   showSuccess,
   isValidating,
 }: BioFormFieldProps) {
-  const [localValue, setLocalValue] = React.useState(value || '');
+  const [localValue, setLocalValue] = React.useState(() => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  });
   const options = definition.validation?.options || [];
+
+  // Sync with prop changes
+  React.useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
+  // Extract register props but override onChange and value
+  const { onChange: registerOnChange, ...registerProps } = register;
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     onChange?.(newValue);
-    register.onChange(e);
+    registerOnChange(e);
   };
 
   const hasError = !!error;
@@ -413,7 +487,7 @@ function SelectInput({
     <div className="relative">
       <select
         id={`field-${definition.name}`}
-        {...register}
+        {...registerProps}
         value={localValue}
         onChange={handleChange}
         disabled={disabled}
@@ -484,13 +558,26 @@ function DateInput({
   showSuccess,
   isValidating,
 }: BioFormFieldProps) {
-  const [localValue, setLocalValue] = React.useState(value || '');
+  const [localValue, setLocalValue] = React.useState(() => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  });
+
+  // Sync with prop changes
+  React.useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
+  // Extract register props but override onChange and value
+  const { onChange: registerOnChange, ...registerProps } = register;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     onChange?.(newValue);
-    register.onChange(e);
+    registerOnChange(e);
   };
 
   const hasError = !!error;
@@ -501,7 +588,7 @@ function DateInput({
       <input
         id={`field-${definition.name}`}
         type="date"
-        {...register}
+        {...registerProps}
         value={localValue}
         onChange={handleChange}
         disabled={disabled}

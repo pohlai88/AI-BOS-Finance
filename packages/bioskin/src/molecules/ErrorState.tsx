@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * ErrorState - Error display component
  *

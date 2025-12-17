@@ -129,7 +129,7 @@ export const CommandPalette = ({
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              className="relative w-full max-w-2xl bg-[#0A0A0A] border border-white/10 rounded-xl shadow-2xl overflow-hidden flex flex-col font-inter"
+              className="relative w-full max-w-2xl bg-background border border-white/10 rounded-xl shadow-2xl overflow-hidden flex flex-col font-sans"
             >
               {/* Header / Input */}
               <div className="flex items-center gap-4 px-4 py-4 border-b border-white/5 relative">

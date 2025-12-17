@@ -27,31 +27,31 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
 
   // Theme colors based on threat level
   const theme = isCritical
-    ? { 
-        color: '#EF4444', 
-        label: 'CRITICAL', 
-        glow: 'rgba(239, 68, 68, 0.5)',
-        ringColor: 'rgba(239, 68, 68, 0.3)',
-        scanSpeed: 2
-      }
+    ? {
+      color: '#EF4444',
+      label: 'CRITICAL',
+      glow: 'rgba(239, 68, 68, 0.5)',
+      ringColor: 'rgba(239, 68, 68, 0.3)',
+      scanSpeed: 2
+    }
     : isWarning
-    ? { 
-        color: '#F97316', 
-        label: 'WARNING', 
+      ? {
+        color: '#F97316',
+        label: 'WARNING',
         glow: 'rgba(249, 115, 22, 0.5)',
         ringColor: 'rgba(249, 115, 22, 0.3)',
         scanSpeed: 4
       }
-    : { 
-        color: '#00D9FF', 
-        label: 'SECURE', 
+      : {
+        color: '#00D9FF',
+        label: 'SECURE',
         glow: 'rgba(0, 217, 255, 0.4)',
         ringColor: 'rgba(0, 217, 255, 0.2)',
         scanSpeed: 6
       };
 
   return (
-    <div 
+    <div
       className={cn(
         'relative w-full aspect-square max-w-[420px] mx-auto',
         isCritical && 'overflow-visible',
@@ -60,10 +60,10 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
       )}
     >
       {/* Background container */}
-      <div className="absolute inset-0 rounded-2xl bg-[#020617] border border-white/10">
-        
+      <div className="absolute inset-0 rounded-2xl bg-surface-nested border border-white/10">
+
         {/* Atmospheric haze */}
-        <div 
+        <div
           className="absolute inset-0 rounded-2xl opacity-30"
           style={{
             background: `radial-gradient(circle at center, ${theme.color}20 0%, transparent 70%)`
@@ -71,9 +71,9 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
         />
 
         {/* Ripple waves (Magic UI) */}
-        <Ripple 
-          mainCircleSize={80} 
-          numCircles={5} 
+        <Ripple
+          mainCircleSize={80}
+          numCircles={5}
           mainCircleOpacity={0.15}
           color={theme.color}
           className="[mask-image:radial-gradient(circle,white_30%,transparent_70%)]"
@@ -87,10 +87,10 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
               <stop offset="100%" stopColor={theme.color} stopOpacity="0" />
             </radialGradient>
           </defs>
-          
+
           {/* Glow background */}
           <circle cx="200" cy="200" r="180" fill="url(#magicRadarGlow)" />
-          
+
           {/* Rings */}
           {[60, 100, 140, 180].map((r, i) => (
             <circle
@@ -109,7 +109,7 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
           {/* Crosshairs */}
           <line x1="200" y1="20" x2="200" y2="380" stroke={theme.color} strokeWidth="0.5" strokeOpacity="0.15" />
           <line x1="20" y1="200" x2="380" y2="200" stroke={theme.color} strokeWidth="0.5" strokeOpacity="0.15" />
-          
+
           {/* Tick marks */}
           {Array.from({ length: 36 }).map((_, i) => {
             const angle = (i * 10) * Math.PI / 180;
@@ -133,14 +133,14 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
 
         {/* Orbiting scan line (Magic UI) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <OrbitingCircles 
-            radius={150} 
-            duration={theme.scanSpeed} 
+          <OrbitingCircles
+            radius={150}
+            duration={theme.scanSpeed}
             path={false}
             iconSize={160}
           >
             {/* Scan wedge */}
-            <div 
+            <div
               className="w-full h-full"
               style={{
                 background: `conic-gradient(from -30deg, transparent, ${theme.color}60, ${theme.color}, transparent 60deg)`,
@@ -160,7 +160,7 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
               exit={{ opacity: 0, scale: 0.8 }}
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
             >
-              <div 
+              <div
                 className="w-48 h-48 rounded-full border-2 animate-pulse-glow"
                 style={{ borderColor: '#84CC16' }}
               />
@@ -178,14 +178,14 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
                   className="absolute rounded-full border-2"
                   style={{ borderColor: theme.color }}
                   initial={{ width: 100, height: 100, opacity: 0.8 }}
-                  animate={{ 
-                    width: 600, 
-                    height: 600, 
-                    opacity: 0 
+                  animate={{
+                    width: 600,
+                    height: 600,
+                    opacity: 0
                   }}
-                  transition={{ 
-                    duration: 2.5, 
-                    repeat: Infinity, 
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
                     delay: i * 0.6,
                     ease: 'easeOut'
                   }}
@@ -197,22 +197,22 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
 
         {/* Center HUD */}
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <motion.div 
+          <motion.div
             className="relative flex flex-col items-center justify-center rounded-full border-2 backdrop-blur-xl"
-            style={{ 
+            style={{
               width: isWarning ? 130 : 120,
               height: isWarning ? 130 : 120,
               backgroundColor: 'rgba(0, 0, 0, 0.85)',
               borderColor: theme.color,
               boxShadow: `0 0 40px ${theme.glow}, inset 0 0 30px ${theme.glow}`
             }}
-            animate={{ 
+            animate={{
               scale: isCritical ? [1, 1.05, 1] : isWarning ? 1.1 : 1,
             }}
             transition={{ duration: 1, repeat: isCritical ? Infinity : 0 }}
           >
             {/* Threat Count */}
-            <motion.span 
+            <motion.span
               className="text-5xl font-mono font-bold tracking-tighter"
               style={{ color: theme.color }}
               animate={{ scale: isCritical ? [1, 1.1, 1] : 1 }}
@@ -220,14 +220,14 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
             >
               {activeRisks}
             </motion.span>
-            
+
             {/* Label */}
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/60 mt-1">
               Threats
             </span>
 
             {/* Inner ring */}
-            <div 
+            <div
               className="absolute inset-2 rounded-full border border-dashed opacity-20"
               style={{ borderColor: theme.color }}
             />
@@ -236,7 +236,7 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
 
         {/* Status badge */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-          <motion.div 
+          <motion.div
             className="flex items-center gap-2 px-4 py-2 rounded-full border bg-black/80 backdrop-blur-md"
             style={{ borderColor: theme.color }}
             initial={{ y: 20, opacity: 0 }}
@@ -250,15 +250,15 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
             ) : (
               <Lock className="w-4 h-4" style={{ color: theme.color }} />
             )}
-            <span 
+            <span
               className="text-xs font-mono font-bold uppercase tracking-widest"
               style={{ color: isCritical ? theme.color : isWarning ? '#84CC16' : theme.color }}
             >
               {theme.label}
             </span>
-            
+
             {/* Pulse indicator */}
-            <motion.div 
+            <motion.div
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: theme.color }}
               animate={{ opacity: [1, 0.3, 1] }}
@@ -274,7 +274,7 @@ export const MagicUIRadar = ({ activeRisks, className }: MagicUIRadarProps) => {
         <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 opacity-30" style={{ borderColor: theme.color }} />
 
         {/* Scanlines overlay */}
-        <div 
+        <div
           className="absolute inset-0 pointer-events-none opacity-[0.02] rounded-2xl"
           style={{
             backgroundImage: `repeating-linear-gradient(0deg, ${theme.color} 0px, ${theme.color} 1px, transparent 1px, transparent 4px)`

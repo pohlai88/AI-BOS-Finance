@@ -38,7 +38,13 @@ export interface UseBioFormOptions<TSchema extends z.ZodObject<z.ZodRawShape>> {
   onSubmit: (data: z.infer<TSchema>) => void | Promise<void>;
   /** Form mode */
   mode?: FormMode;
-  /** Validation mode */
+  /** Validation mode - when to show validation errors
+   * - 'onTouched': Show after user leaves field (default, best UX)
+   * - 'onBlur': Show on blur
+   * - 'onChange': Show on every change (can be noisy)
+   * - 'onSubmit': Only on form submit
+   * - 'all': Combine onBlur and onChange
+   */
   validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
   /** Debounce validation (ms) - only applies to onChange mode */
   debounceValidation?: number;
@@ -65,6 +71,8 @@ export interface UseBioFormReturn<TData extends FieldValues> {
   isValid: boolean;
   /** Is form dirty (has changes) */
   isDirty: boolean;
+  /** Has form been submitted at least once */
+  isSubmitted: boolean;
   /** Field errors */
   errors: FieldErrors<TData>;
   /** Is form currently validating (debounced) */
@@ -121,10 +129,12 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
   }, [definition.fields, include, exclude]);
 
   // Create form instance with Zod resolver
+  // Use 'onTouched' by default - shows errors after user leaves a field (best UX)
   const form = useForm<TData>({
     resolver: zodResolver(schema) as never,
     defaultValues: defaultValues as never,
     mode: validationMode,
+    reValidateMode: 'onBlur', // Re-validate on blur after initial validation
   });
 
   const {
@@ -135,7 +145,7 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
     clearErrors,
     trigger,
     watch,
-    formState: { isSubmitting, isValid, isDirty, errors },
+    formState: { isSubmitting, isValid, isDirty, isSubmitted, errors },
   } = form;
 
   // Debounced validation for onChange mode
@@ -181,6 +191,7 @@ export function useBioForm<TSchema extends z.ZodObject<z.ZodRawShape>>({
     isSubmitting,
     isValid,
     isDirty,
+    isSubmitted,
     errors,
     isValidating,
     handleSubmit,
