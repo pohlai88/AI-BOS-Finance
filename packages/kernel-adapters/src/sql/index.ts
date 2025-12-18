@@ -38,6 +38,12 @@ export { SqlCustomerAdapter, createSqlCustomerAdapter } from './customerRepo.sql
 // GL-02 Journal Entry Cell
 export { createJournalEntryRepository } from './journalEntryRepo.sql';
 
+// TR-02 Cash Pooling Cell
+export { SqlCashPoolRepository } from './cashPoolRepo.sql';
+
+// TR-05 Bank Reconciliation Cell
+export { SqlReconciliationRepository } from './reconciliationRepo.sql';
+
 // GL Posting (GL-03)
 export {
   SqlGLPostingAdapter,

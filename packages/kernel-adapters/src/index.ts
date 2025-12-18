@@ -72,6 +72,16 @@ export {
   createMemoryApprovalRepository,
 } from './memory/approvalRepo.memory';
 
+// TR-02 Cash Pooling Adapters (In-Memory)
+export {
+  MemoryCashPoolRepository,
+} from './memory/cashPoolRepo.memory';
+
+// TR-05 Bank Reconciliation Adapters (In-Memory)
+export {
+  MemoryReconciliationRepository,
+} from './memory/reconciliationRepo.memory';
+
 // SQL adapters (PostgreSQL)
 export {
   SqlTenantRepo,
@@ -97,6 +107,10 @@ export {
   createSqlApprovalRepository,
   // GL-02 Journal Entry
   createJournalEntryRepository,
+  // TR-02 Cash Pooling
+  SqlCashPoolRepository,
+  // TR-05 Bank Reconciliation
+  SqlReconciliationRepository,
 } from './sql';
 
 // Auth adapters (bcryptjs, jose)

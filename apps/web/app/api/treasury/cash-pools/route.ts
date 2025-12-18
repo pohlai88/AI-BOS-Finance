@@ -1,32 +1,23 @@
 /**
- * TR-05 Bank Reconciliation - List & Import Statements
+ * TR-02 Cash Pooling - List & Create Pools
  * 
- * GET  /api/treasury/reconciliations - List reconciliations
- * POST /api/treasury/reconciliations - Import bank statement
+ * GET  /api/treasury/cash-pools - List pools
+ * POST /api/treasury/cash-pools - Create pool
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const listQuerySchema = z.object({
-  bankAccountId: z.string().uuid().optional(),
-  status: z.enum(['draft', 'in_progress', 'reconciled', 'adjusted', 'finalized', 'exception', 'cancelled']).optional(),
-  periodStart: z.string().optional(),
-  periodEnd: z.string().optional(),
+  poolType: z.enum(['physical', 'notional', 'zero_balance']).optional(),
+  status: z.enum(['draft', 'active', 'suspended', 'inactive', 'cancelled']).optional(),
+  masterCompanyId: z.string().uuid().optional(),
   search: z.string().optional(),
   limit: z.string().transform(Number).default('20'),
   offset: z.string().transform(Number).default('0'),
 });
 
-const importStatementSchema = z.object({
-  bankAccountId: z.string().uuid(),
-  statementFormat: z.enum(['mt940', 'bai2', 'csv', 'ofx']),
-  statementData: z.string(), // Base64 encoded or raw string
-  statementDate: z.string().datetime(),
-  importSource: z.string().optional(),
-});
-
-// GET /api/treasury/reconciliations
+// GET /api/treasury/cash-pools
 export async function GET(request: NextRequest) {
   try {
     const tenantId = request.headers.get('x-tenant-id');
@@ -39,10 +30,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const query = listQuerySchema.parse(Object.fromEntries(searchParams));
 
-    // TODO: Wire up ReconciliationService
-    // const service = await getReconciliationService();
+    // TODO: Wire up CashPoolingService
+    // const service = await getCashPoolingService();
     // const actor = { tenantId, userId };
-    // const result = await service.listStatements(query, actor);
+    // const result = await service.listPools(query, query.limit, query.offset, actor);
 
     return NextResponse.json({
       data: [],
@@ -52,12 +43,12 @@ export async function GET(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid request', details: error.errors }, { status: 400 });
     }
-    console.error('TR Reconciliations GET error:', error);
+    console.error('TR Cash Pools GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
-// POST /api/treasury/reconciliations
+// POST /api/treasury/cash-pools
 export async function POST(request: NextRequest) {
   try {
     const tenantId = request.headers.get('x-tenant-id');
@@ -68,29 +59,25 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const input = importStatementSchema.parse(body);
+    // TODO: Add proper schema validation
 
-    // TODO: Wire up ReconciliationService
-    // const service = await getReconciliationService();
+    // TODO: Wire up CashPoolingService
+    // const service = await getCashPoolingService();
     // const actor = { tenantId, userId };
-    // const statement = await service.importStatement({
-    //   ...input,
-    //   statementDate: new Date(input.statementDate),
-    //   importedBy: userId,
-    // }, actor);
+    // const pool = await service.createPool(body, actor);
 
     return NextResponse.json({
       id: crypto.randomUUID(),
-      ...input,
+      ...body,
       status: 'draft',
-      importedBy: userId,
-      importedAt: new Date(),
+      createdBy: userId,
+      createdAt: new Date(),
     }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid request', details: error.errors }, { status: 400 });
     }
-    console.error('TR Reconciliations POST error:', error);
+    console.error('TR Cash Pools POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

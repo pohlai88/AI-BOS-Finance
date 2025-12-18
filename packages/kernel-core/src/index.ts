@@ -70,6 +70,12 @@ export * from './ports/agingRepositoryPort';
 // GL-02 Journal Entry Ports
 export * from './ports/journalEntryRepositoryPort';
 
+// TR-02 Cash Pooling Ports
+export * from './ports/cashPoolRepositoryPort';
+
+// TR-05 Bank Reconciliation Ports
+export * from './ports/reconciliationRepositoryPort';
+
 // Kernel Services Ports
 export * from './ports/sequencePort';  // K_SEQ - Sequence generation
 export * from './ports/coaPort';        // K_COA - Chart of Accounts
